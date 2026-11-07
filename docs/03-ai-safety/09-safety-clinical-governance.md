@@ -127,6 +127,12 @@ UI/API → Orchestrator (workout_engine / ai / nutrition)
 | SAF-R011 | در مسیر B هر کاربر بدون قاعده منتشرشده → B5 (بدون برنامه) |
 | SAF-R012 | بازگشت از B فقط با مجوز متخصص یا غربالگری منفی مجدد (§7.2.6) |
 | SAF-R010 | افزایش هم‌زمان بیش از یک متغیر بار در پیشرفت → رد (در Workout Engine بررسی می‌شود؛ مقدار آستانه توسط EXP) |
+| SAF-R013 | محتوای بالینی بازبینی‌نشده در حالت Production (`clinical_content_published=false`) → `ERROR_FAILSAFE` |
+| SAF-R014 | محدودیت متخصص منقضی‌شده؛ همچنان اعمال می‌شود + پرچم `REASSESSMENT_RECOMMENDED` |
+| SAF-R015 | هیچ حرکت مجازی باقی نمانده → `RESTRICT` |
+| SAF-R016 | درخواست مسیر C (Deferred) → `STOP_AND_REFER` |
+| SAF-R017 | پرچم خارج از دامنه (غیر از بارداری) → `BLOCK_OUT_OF_SCOPE` |
+| SAF-R018 | قاعده داده‌محور نامعتبر → `ERROR_FAILSAFE` |
 
 ### 6.2 قواعد بالینی `[EXP]` — **محتوا عمداً تعریف نشده**
 | شناسه | موضوع | وضعیت |
