@@ -22,8 +22,8 @@
 | M5 Catalog | Not Started | |
 | M6b Workout API | Not Started | |
 | M7 Logging/Dashboard | Not Started | |
-| `M8 AI Gateway` | Not Started | دامنه خالص قابل‌اجرا (Redactor/Validator) |
-| M9 Subscription/Admin | Not Started | منطق Entitlement دامنه خالص قابل‌اجرا |
+| `M8 AI Gateway` | Complete (domain) | Pipeline، Intent/Context/Redactor، Validator، StubProvider، `PolicyViolation`؛ ۱۷ تست؛ ادغام Django/Provider واقعی `Not Started` |
+| M9 Subscription/Admin | In Progress | منطق Entitlement (دامنه) Complete با ۴ تست؛ مدل/`API/Admin Not Started` |
 | M10 Release | Not Started | |
 
 ## ادامه کار (Resume)
