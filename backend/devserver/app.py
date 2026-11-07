@@ -15,6 +15,7 @@ from typing import Callable, List, Tuple
 
 from app_services.catalog import CatalogService
 from app_services.subscriptions import DisabledPaymentProvider, SubscriptionService
+from app_services.extras import ExtrasService
 from app_services.errors import AppError, AuthFailed, SafetyBlocked
 from app_services.health_profile import CONSENT_HEALTH, HealthProfileService
 from app_services.identity import IdentityService
@@ -48,6 +49,7 @@ class App:
         self.cat = CatalogService(store)
         self.sub = SubscriptionService(store, DisabledPaymentProvider())
         self.store = store
+        self.x = ExtrasService(store, self.h, self.w, day)
         self.routes: List[Tuple[str, "re.Pattern", Callable]] = []
         R = self._route
         R("GET", "/health/live", lambda c: {"status": "ok"}, auth=False)
@@ -81,6 +83,14 @@ class App:
             self._role(c), c["uid"], int(c["v"]), c["body"].get("expert_signoff_ref")))
         R("PUT", "/admin/plans/(?P<plan>[a-z]+)/features", lambda c: self.sub.set_plan_features(
             self._role(c), c["plan"], c["body"].get("features", [])) or {})
+        R("POST", "/body/measurements", lambda c: self.x.add_measurement(c["uid"], c["body"].get("weight_kg"), c["body"].get("height_cm")) or {})
+        R("GET", "/body/overview", lambda c: self.x.body_overview(c["uid"]))
+        R("POST", "/health/pain-logs", lambda c: self.x.log_pain(c["uid"], c["body"].get("region"), c["body"].get("intensity")))
+        R("GET", "/health/profile", lambda c: self.x.health_profile(c["uid"]))
+        R("GET", "/dashboard", lambda c: self.x.dashboard(c["uid"]))
+        R("GET", "/progress/monthly", lambda c: self.x.monthly_progress(c["uid"], date.today().toordinal() - 29, date.today().toordinal()))
+        R("POST", "/privacy/export", lambda c: self.x.export(c["uid"]))
+        R("POST", "/privacy/delete", lambda c: self.x.erase(c["uid"]) or {"erased": True})
         R("GET", "/progress/weekly", lambda c: self.w.weekly_progress(c["uid"], date.today().toordinal() - 6, date.today().toordinal()))
 
     def _route(self, method, pattern, fn, auth=True):

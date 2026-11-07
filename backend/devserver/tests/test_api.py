@@ -134,3 +134,19 @@ def test_admin_endpoints_enforce_roles():
     assert call(a, "POST", "/admin/safety/rule-sets/2/publish", {"expert_signoff_ref": "EXP-1"}, rev)[0] == 200
     assert call(a, "POST", "/admin/exercises/zzz/transition", {"target": "retired"}, rev)[0] == 404
     assert call(a, "POST", "/admin/exercises/demo_squat_a/transition", {"target": "retired"}, user)[0] == 403
+
+
+def test_extras_http_and_erasure():
+    a = make(); t = onboard(a); call(a, "POST", "/onboarding/complete", {}, t)
+    assert call(a, "POST", "/body/measurements", {"weight_kg": 70, "height_cm": 175}, t)[0] == 200
+    assert call(a, "GET", "/body/overview", None, t)[1]["bmi"] == 22.9
+    assert call(a, "GET", "/dashboard", None, t)[1]["has_plan"] is False
+    assert call(a, "GET", "/progress/monthly", None, t)[0] == 200
+    assert call(a, "POST", "/workouts/generate", {}, t)[0] == 200
+    st, body, _ = call(a, "POST", "/health/pain-logs", {"region": "lower_back", "intensity": 7}, t)
+    assert st == 200 and "متخصص" in body["guidance"]["fa"]
+    assert call(a, "POST", "/workouts/generate", {}, t)[0] == 409
+    assert call(a, "GET", "/health/profile", None, t)[1]["conditions"][0]["active_pain"] is True
+    assert "password" not in json.dumps(call(a, "POST", "/privacy/export", {}, t)[1])
+    assert call(a, "POST", "/privacy/delete", {}, t)[1] == {"erased": True}
+    assert call(a, "GET", "/dashboard", None, t)[0] == 401

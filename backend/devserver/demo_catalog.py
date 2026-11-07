@@ -14,5 +14,6 @@ def demo_catalog():
         for s in ("a", "b"):
             base = {r: "none" for r in REGIONS}; base.update(loads)
             cand = ExerciseCandidate(f"demo_{p}_{s}", "published", True, p, tuple(RegionLoad(r, l) for r, l in base.items()))
-            out[cand.code] = CatalogExercise(cand, role, muscle)
+            sup = ('lower_back',) if p == 'core' else ()      # DEMO tag, not clinical
+            out[cand.code] = CatalogExercise(cand, role, muscle, supports_regions=sup)
     return out

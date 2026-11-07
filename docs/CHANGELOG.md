@@ -11,5 +11,7 @@
 - مخزن GitHub راه‌اندازی شد؛ سیاست زبان + `lint_docs`/`normalize_docs`.
 - `safety_core`: engine، validate_plan، find_alternatives + ۷۲ تست.
 - `ai_gateway`، `entitlements`، `app_services` (identity، health_profile، workouts)، `devserver` (WSGI + UI آزمایشی)؛ ۱۶۹ تست سبز.
+- ترجیح حرکات حمایتی (`supports_regions`) برای سابقه بدون درد، پشت فیلتر ایمنی؛ `OPEN-008`.
+- اندازه‌گیری بدن، ثبت درد، داشبورد، پیشرفت ماهانه، خروجی و حذف داده؛ ۱۹۷ تست.
 
 </div>

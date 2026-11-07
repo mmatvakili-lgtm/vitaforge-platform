@@ -163,3 +163,24 @@ def test_progression_unknown_equipment_default_step():
 def test_deload():
     assert should_deload(6, [], 7, CFG) and not should_deload(2, [8], 7, CFG)
     assert should_deload(2, [9, 9], 7, CFG) and not should_deload(2, [9, 7], 7, CFG)
+
+
+def _cat_with_support():
+    cat = list(catalog())
+    cat = [dataclasses.replace(c, supports_regions=("lower_back",)) if c.code == "core_b" else c for c in cat]
+    return tuple(cat)
+
+
+def test_supportive_preferred_only_when_enabled_and_for_history_without_pain(base, gate):
+    inp = EngineInput("u", "general_fitness", "beginner", 3, 90, (), _cat_with_support(), supportive_regions=("lower_back",), supportive_enabled=True)
+    assert "core_b" in generate_plan(inp, base, gate).codes
+    r = generate_plan(inp, base, gate)
+    assert any("supportive" in e.reason for d in r.days for e in d.exercises)
+    off = dataclasses.replace(inp, supportive_enabled=False)
+    assert not any("supportive" in e.reason for d in generate_plan(off, base, gate).days for e in d.exercises)
+
+
+def test_supportive_never_overrides_safety(base, gate):
+    b = dataclasses.replace(base, restrictions=(Restriction(exercise_code="core_b"),))
+    inp = EngineInput("u", "general_fitness", "beginner", 3, 90, (), _cat_with_support(), supportive_regions=("lower_back",), supportive_enabled=True)
+    assert "core_b" not in generate_plan(inp, b, gate).codes

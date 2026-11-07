@@ -1,6 +1,8 @@
 """Plan generation (immutable versions), substitution, session logging, weekly progress."""
 from __future__ import annotations
 
+import dataclasses
+
 from safety_core import SafetyCore
 from workout_engine import EngineConfig, EngineInput, generate_plan
 
@@ -20,6 +22,10 @@ class WorkoutService:
                           st["schedule"]["session_minutes"], tuple(st["equipment"]["equipment"]),
                           tuple(self.s.catalog.values()), st["schedule"].get("preferred_structure"), config=self.cfg)
         base = self.h.safety_request(uid)
+        rs = self.gate.rule_set
+        supportive = tuple(sorted({c.region for c in base.conditions if not c.active_pain and c.status != "no_known_limitation"}))
+        inp = dataclasses.replace(inp, supportive_regions=supportive,
+                                  supportive_enabled=bool(rs.clinical_content_published or rs.allow_unreviewed_content))
         res = generate_plan(inp, base, self.gate)
         if res.status in ("BLOCKED", "ERROR_FAILSAFE"):
             raise SafetyBlocked(res.status, res.reasons, res.safety_decision_id)

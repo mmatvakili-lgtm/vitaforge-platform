@@ -20,6 +20,7 @@ class CatalogExercise:
     primary_muscle: str
     push_pull: Optional[str] = None  # push | pull | None
     default_exec_seconds: int = 40
+    supports_regions: Tuple[str, ...] = ()   # reviewed 'supportive' tag; only used when supportive content is published
 
     @property
     def code(self) -> str:
@@ -51,6 +52,8 @@ class EngineInput:
     catalog: Tuple[CatalogExercise, ...]
     preferred_structure: Optional[str] = None
     liked_codes: Tuple[str, ...] = ()
+    supportive_regions: Tuple[str, ...] = ()   # regions with a recorded history and NO active pain (Path A)
+    supportive_enabled: bool = False           # True only when reviewed supportive content is published
     config: EngineConfig = field(default_factory=EngineConfig)
 
 

@@ -116,6 +116,8 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
                 continue
             def score(c: CatalogExercise):
                 s = (2 if c.role == role else 0) + (1 if c.code in inp.liked_codes else 0)
+                if inp.supportive_enabled and set(c.supports_regions) & set(inp.supportive_regions):
+                    s += 1.5                       # prefer reviewed supportive exercises; Safety Core already filtered the pool
                 s -= 1 if c.code in caution else 0
                 s -= used_week.get(c.code, 0)
                 return (-s, c.code)                 # stable tie-break by code => deterministic
@@ -130,7 +132,8 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
             used_week[best.code] = used_week.get(best.code, 0) + 1
             day_codes.add(best.code)
             chosen.append(PlannedExercise(best.code, sets if role == "main" else max(2, sets - 1), rmin, rmax, rpe, rest, slot,
-                                          "slot-match" + ("+caution" if best.code in caution else "")))
+                                          "slot-match" + ("+caution" if best.code in caution else "")
+                                          + ("+supportive" if inp.supportive_enabled and set(best.supports_regions) & set(inp.supportive_regions) else "")))
         # WO-C01 time budget: drop accessories from the end
         def minutes(ex_list):
             t = cfg.warmup_minutes * 60
