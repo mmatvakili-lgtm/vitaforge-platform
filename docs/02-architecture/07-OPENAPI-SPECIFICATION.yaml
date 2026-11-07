@@ -1,0 +1,3392 @@
+openapi: 3.0.3
+info:
+  title: AI Fitness & Health Ecosystem API
+  version: 0.1.0
+  description: DOC-07 — پیش‌نویس کامل برای MVP. مسیرهای Backlog در بخش x-deferred فهرست شده‌اند. هیچ endpoint پرداخت واقعی بدون Provider پیکربندی‌شده
+    فعال نیست (501).
+servers:
+- url: /api/v1
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+      description: نشست HttpOnly؛ برای متدهای تغییردهنده هدر X-CSRFToken الزامی است.
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+        request_id:
+          type: string
+      additionalProperties: false
+      required:
+      - code
+      - message
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+      additionalProperties: false
+      required:
+      - message
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          pattern: ^\+[1-9]\d{6,14}$
+        password:
+          type: string
+          minLength: 10
+          maxLength: 128
+        date_of_birth:
+          type: string
+          format: date
+        language:
+          enum:
+          - fa
+          - en
+      additionalProperties: false
+      required:
+      - password
+      - date_of_birth
+    VerifyRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+        code:
+          type: string
+          minLength: 6
+          maxLength: 6
+      additionalProperties: false
+      required:
+      - identifier
+      - code
+    LoginRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+        password:
+          type: string
+      additionalProperties: false
+      required:
+      - identifier
+      - password
+    EmailOnlyRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+      additionalProperties: false
+      required:
+      - identifier
+    PasswordResetConfirm:
+      type: object
+      properties:
+        token:
+          type: string
+        new_password:
+          type: string
+          minLength: 10
+      additionalProperties: false
+      required:
+      - token
+      - new_password
+    SessionInfo:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        expires_at:
+          type: string
+          format: date-time
+        onboarding_status:
+          enum:
+          - not_started
+          - in_progress
+          - completed
+      additionalProperties: false
+    SessionList:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          last_seen_at:
+            type: string
+            format: date-time
+          user_agent:
+            type: string
+          current:
+            type: boolean
+        additionalProperties: false
+    Profile:
+      type: object
+      properties:
+        display_name:
+          type: string
+        sex:
+          enum:
+          - female
+          - male
+          - unspecified
+        country:
+          type: string
+        timezone:
+          type: string
+        language:
+          enum:
+          - fa
+          - en
+        calendar:
+          enum:
+          - jalali
+          - gregorian
+        unit_system:
+          enum:
+          - metric
+          - imperial
+        digit_style:
+          enum:
+          - latin
+          - persian
+        onboarding_status:
+          type: string
+      additionalProperties: false
+    ProfileUpdate:
+      type: object
+      properties:
+        display_name:
+          type: string
+          maxLength: 80
+        sex:
+          enum:
+          - female
+          - male
+          - unspecified
+        country:
+          type: string
+          minLength: 2
+          maxLength: 2
+        timezone:
+          type: string
+        language:
+          enum:
+          - fa
+          - en
+        calendar:
+          enum:
+          - jalali
+          - gregorian
+        unit_system:
+          enum:
+          - metric
+          - imperial
+        digit_style:
+          enum:
+          - latin
+          - persian
+      additionalProperties: false
+    ConsentDocumentList:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          type:
+            enum:
+            - terms
+            - health_data
+            - photo
+            - device
+          version:
+            type: integer
+          locale:
+            type: string
+          body:
+            type: string
+        additionalProperties: false
+    ConsentRequest:
+      type: object
+      properties:
+        document_id:
+          type: string
+          format: uuid
+        granted:
+          type: boolean
+      additionalProperties: false
+      required:
+      - document_id
+      - granted
+    Consent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        granted:
+          type: boolean
+        granted_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    DeleteRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        confirm:
+          const: true
+      additionalProperties: false
+      required:
+      - password
+      - confirm
+    DataRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          enum:
+          - export
+          - delete
+        status:
+          enum:
+          - requested
+          - processing
+          - completed
+          - failed
+      additionalProperties: false
+    Onboarding:
+      type: object
+      properties:
+        status:
+          type: string
+        current_step:
+          type: integer
+          minimum: 1
+          maximum: 14
+        answers:
+          type: object
+          additionalProperties: true
+        summary_ready:
+          type: boolean
+        safety_screening_complete:
+          type: boolean
+      additionalProperties: false
+    OnboardingStepRequest:
+      type: object
+      properties:
+        answers:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+      required:
+      - answers
+    MeasurementRequest:
+      type: object
+      properties:
+        metric:
+          enum:
+          - height
+          - weight
+          - waist
+          - abdomen
+          - chest
+          - arm
+          - forearm
+          - thigh
+          - calf
+          - body_fat_pct
+          - lean_mass
+        value:
+          type: number
+          exclusiveMinimum: 0
+        unit:
+          type: string
+        source:
+          enum:
+          - measured
+          - estimated
+        method:
+          type: string
+        measured_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+      required:
+      - metric
+      - value
+      - unit
+      - source
+    Measurement:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        metric:
+          type: string
+        value:
+          type: number
+        unit:
+          type: string
+        source:
+          type: string
+        measured_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    BodyOverview:
+      type: object
+      properties:
+        latest:
+          type: object
+          additionalProperties: true
+        bmi:
+          type: object
+          properties:
+            value:
+              type: number
+            label:
+              const: screening_index
+          additionalProperties: false
+        whtr:
+          type: object
+          properties:
+            value:
+              type: number
+            label:
+              const: screening_index
+          additionalProperties: false
+        trend_notes:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    HealthProfile:
+      type: object
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        out_of_scope:
+          type: array
+          items:
+            type: string
+        latest_decision:
+          $ref: '#/components/schemas/SafetyDecision'
+      additionalProperties: false
+    ConditionRequest:
+      type: object
+      properties:
+        region:
+          type: string
+        side:
+          enum:
+          - left
+          - right
+          - both
+          - na
+        problem_type:
+          enum:
+          - pain
+          - limited_motion
+          - diagnosed_injury
+          - surgery_history
+          - other
+        onset_date:
+          type: string
+          format: date
+        trend:
+          enum:
+          - better
+          - same
+          - worse
+          - unknown
+        self_severity:
+          type: integer
+          minimum: 0
+          maximum: 10
+        aggravating_factors:
+          type: string
+        relieving_factors:
+          type: string
+      additionalProperties: false
+      required:
+      - region
+      - problem_type
+      description: خوداظهاری؛ فیلدهای تشخیص/محدودیت متخصص پذیرفته نمی‌شوند (mass-assignment محافظت‌شده).
+    ConditionUpdate:
+      type: object
+      properties:
+        trend:
+          type: string
+        self_severity:
+          type: integer
+          minimum: 0
+          maximum: 10
+        aggravating_factors:
+          type: string
+        relieving_factors:
+          type: string
+      additionalProperties: false
+    Condition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        region:
+          type: string
+        side:
+          type: string
+        problem_type:
+          type: string
+        status:
+          type: string
+        source:
+          enum:
+          - self_reported
+          - professional
+        trend:
+          type: string
+        self_severity:
+          type: integer
+      additionalProperties: false
+    SymptomRequest:
+      type: object
+      properties:
+        context:
+          enum:
+          - screening
+          - before_session
+          - during_session
+          - after_session
+          - checkin
+        region:
+          type: string
+        severity:
+          type: integer
+          minimum: 0
+          maximum: 10
+        note:
+          type: string
+          maxLength: 500
+      additionalProperties: false
+      required:
+      - context
+      - region
+    Symptom:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        recorded_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    PainLogRequest:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: uuid
+        region:
+          type: string
+        side:
+          type: string
+        intensity:
+          type: integer
+          minimum: 0
+          maximum: 10
+        timing:
+          enum:
+          - before
+          - during
+          - after
+          - general
+      additionalProperties: false
+      required:
+      - region
+      - intensity
+      - timing
+    PainLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        decision:
+          $ref: '#/components/schemas/SafetyDecision'
+      additionalProperties: false
+    ScreeningRequest:
+      type: object
+      properties:
+        screening_version:
+          type: integer
+        answers:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+      required:
+      - screening_version
+      - answers
+    OutOfScopeRequest:
+      type: object
+      properties:
+        flag_type:
+          enum:
+          - pregnancy
+          - high_risk_condition
+          - other
+      additionalProperties: false
+      required:
+      - flag_type
+    SafetyDecision:
+      type: object
+      properties:
+        decision_id:
+          type: string
+          format: uuid
+        status:
+          enum:
+          - ALLOW
+          - ALLOW_WITH_MODIFICATION
+          - RESTRICT
+          - NEEDS_INFO
+          - STOP_AND_REFER
+          - BLOCK_OUT_OF_SCOPE
+          - BLOCK_CONSENT
+          - ERROR_FAILSAFE
+        reasons:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              message_key:
+                type: string
+            additionalProperties: false
+        required_questions:
+          type: array
+          items:
+            type: string
+        referral:
+          type: object
+          properties:
+            urgency:
+              enum:
+              - urgent
+              - non_urgent
+            message_key:
+              type: string
+            content_status:
+              enum:
+              - draft_unreviewed
+              - clinical_reviewed
+              - published
+          additionalProperties: false
+        rule_set_version:
+          type: integer
+        evaluated_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+      required:
+      - decision_id
+      - status
+    ExerciseList:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExerciseSummary'
+      additionalProperties: false
+    ExerciseSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        name_en:
+          type: string
+        difficulty:
+          type: string
+        muscles:
+          type: array
+          items:
+            type: string
+        equipment:
+          type: array
+          items:
+            type: string
+        has_media:
+          type: boolean
+      additionalProperties: false
+    ExerciseDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        name_en:
+          type: string
+        description:
+          type: string
+        steps:
+          type: array
+          items:
+            type: string
+        breathing:
+          type: string
+        common_mistakes:
+          type: array
+          items:
+            type: string
+        safety_notes:
+          type: string
+        compatibility:
+          type: object
+          properties:
+            status:
+              enum:
+              - allowed
+              - caution
+              - blocked
+              - unknown
+            reasons:
+              type: array
+              items:
+                type: string
+          additionalProperties: false
+        media:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              url:
+                type: string
+            additionalProperties: false
+        review_status:
+          type: string
+      additionalProperties: false
+    AlternativesResult:
+      type: object
+      properties:
+        alternatives:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExerciseSummary'
+        none_valid:
+          type: boolean
+        decision:
+          $ref: '#/components/schemas/SafetyDecision'
+      additionalProperties: false
+    GenerateRequest:
+      type: object
+      properties:
+        preferred_structure:
+          enum:
+          - auto
+          - full_body
+          - upper_lower
+          - push_pull_legs
+          - hybrid
+        regenerate_reason:
+          type: string
+      additionalProperties: false
+    GenerateResponse:
+      type: object
+      properties:
+        decision:
+          $ref: '#/components/schemas/SafetyDecision'
+        plan:
+          oneOf:
+          - $ref: '#/components/schemas/WorkoutPlan'
+          - type: 'null'
+      additionalProperties: false
+      required:
+      - decision
+      description: plan فقط وقتی decision.status ∈ {ALLOW, ALLOW_WITH_MODIFICATION}
+    WorkoutPlan:
+      type: object
+      properties:
+        plan_id:
+          type: string
+          format: uuid
+        version_no:
+          type: integer
+        structure:
+          type: string
+        goal:
+          type: string
+        confidence:
+          enum:
+          - high
+          - medium
+          - low
+        rationale:
+          type: object
+          additionalProperties: true
+        safety_decision_id:
+          type: string
+          format: uuid
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkoutDay'
+      additionalProperties: false
+      required:
+      - plan_id
+      - version_no
+      - safety_decision_id
+    WorkoutDay:
+      type: object
+      properties:
+        day_id:
+          type: string
+          format: uuid
+        day_index:
+          type: integer
+        title:
+          type: string
+        est_minutes:
+          type: integer
+        exercises:
+          type: array
+          items:
+            type: object
+            properties:
+              workout_exercise_id:
+                type: string
+                format: uuid
+              exercise_id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              role:
+                enum:
+                - warmup
+                - main
+                - accessory
+                - cooldown
+              sets:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    set_no:
+                      type: integer
+                    reps_min:
+                      type: integer
+                    reps_max:
+                      type: integer
+                    duration_sec:
+                      type: integer
+                    target_rpe:
+                      type: number
+                    rest_sec:
+                      type: integer
+                  additionalProperties: false
+              stop_criteria_key:
+                type: string
+            additionalProperties: false
+      additionalProperties: false
+    PlanVersionList:
+      type: array
+      items:
+        type: object
+        properties:
+          version_no:
+            type: integer
+          created_at:
+            type: string
+            format: date-time
+          safety_decision_id:
+            type: string
+            format: uuid
+        additionalProperties: false
+    SubstituteRequest:
+      type: object
+      properties:
+        workout_exercise_id:
+          type: string
+          format: uuid
+        reason:
+          enum:
+          - pain
+          - equipment
+          - preference
+          - other
+      additionalProperties: false
+      required:
+      - workout_exercise_id
+      - reason
+    SessionStartRequest:
+      type: object
+      properties:
+        day_id:
+          type: string
+          format: uuid
+      additionalProperties: false
+      required:
+      - day_id
+    WorkoutSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        started_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    SetLogRequest:
+      type: object
+      properties:
+        client_uuid:
+          type: string
+          format: uuid
+        exercise_id:
+          type: string
+          format: uuid
+        set_no:
+          type: integer
+          minimum: 1
+        reps:
+          type: integer
+          minimum: 0
+        load_kg:
+          type: number
+          minimum: 0
+        duration_sec:
+          type: integer
+          minimum: 0
+        rpe:
+          type: number
+          minimum: 1
+          maximum: 10
+        rir:
+          type: integer
+          minimum: 0
+          maximum: 10
+        rest_sec:
+          type: integer
+          minimum: 0
+        skipped:
+          type: boolean
+        skipped_reason:
+          type: string
+        substituted_exercise_id:
+          type: string
+          format: uuid
+      additionalProperties: false
+      required:
+      - client_uuid
+      - exercise_id
+      - set_no
+    SetLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        client_uuid:
+          type: string
+          format: uuid
+        personal_record:
+          type: boolean
+      additionalProperties: false
+    SessionFinishRequest:
+      type: object
+      properties:
+        perceived_difficulty:
+          type: integer
+          minimum: 1
+          maximum: 10
+        aborted_reason:
+          enum:
+          - pain
+          - fatigue
+          - time
+          - other
+        notes:
+          type: string
+          maxLength: 1000
+      additionalProperties: false
+    SessionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        volume_kg:
+          type: number
+        sets_done:
+          type: integer
+        duration_min:
+          type: integer
+        safety_followup:
+          $ref: '#/components/schemas/SafetyDecision'
+      additionalProperties: false
+    SessionList2:
+      type: array
+      items:
+        $ref: '#/components/schemas/WorkoutSession'
+    ProgressReport:
+      type: object
+      properties:
+        period:
+          type: string
+        planned_sessions:
+          type: integer
+        completed_sessions:
+          type: integer
+        adherence_pct:
+          type: number
+        volume_kg:
+          type: number
+        records:
+          type: array
+          items:
+            type: string
+        notes:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    Dashboard:
+      type: object
+      properties:
+        today:
+          type: object
+          additionalProperties: true
+        current_plan:
+          type: object
+          additionalProperties: true
+        weekly_summary:
+          type: object
+          additionalProperties: true
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SafetyDecision'
+      additionalProperties: false
+    PlanCatalog:
+      type: object
+      properties:
+        plans:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              is_free:
+                type: boolean
+              features:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    enabled:
+                      type: boolean
+                    safety_critical:
+                      type: boolean
+                  additionalProperties: false
+              quotas:
+                type: object
+                additionalProperties:
+                  type:
+                  - integer
+                  - 'null'
+            additionalProperties: false
+      additionalProperties: false
+    MySubscription:
+      type: object
+      properties:
+        plan_code:
+          type: string
+        status:
+          type: string
+        current_period_end:
+          type: string
+          format: date-time
+        quotas_remaining:
+          type: object
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+      additionalProperties: false
+    CheckoutRequest:
+      type: object
+      properties:
+        plan_code:
+          type: string
+        billing_cycle:
+          enum:
+          - monthly
+          - yearly
+      additionalProperties: false
+      required:
+      - plan_code
+      - billing_cycle
+    CheckoutSession:
+      type: object
+      properties:
+        redirect_url:
+          type: string
+        provider:
+          type: string
+      additionalProperties: false
+    AiChatRequest:
+      type: object
+      properties:
+        purpose:
+          enum:
+          - explain_plan
+          - technique
+          - general
+        message:
+          type: string
+          maxLength: 2000
+      additionalProperties: false
+      required:
+      - purpose
+      - message
+    AiChatResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+        uncertainty:
+          enum:
+          - none
+          - low
+          - medium
+          - high
+        sources:
+          type: array
+          items:
+            type: string
+        decision:
+          $ref: '#/components/schemas/SafetyDecision'
+        mode:
+          enum:
+          - llm
+          - rule_based_fallback
+      additionalProperties: false
+      required:
+      - answer
+      - mode
+    ExerciseAdminList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ExerciseAdmin'
+    ExerciseAdminWrite:
+      type: object
+      properties:
+        stable_code:
+          type: string
+        movement_pattern:
+          type: string
+        difficulty:
+          type: string
+        translations:
+          type: object
+          additionalProperties: true
+        muscles:
+          type: array
+          items:
+            type: string
+        equipment:
+          type: array
+          items:
+            type: string
+        region_loads:
+          type: object
+          additionalProperties:
+            type: string
+      additionalProperties: false
+      required:
+      - stable_code
+      - movement_pattern
+      - difficulty
+    ExerciseAdmin:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        stable_code:
+          type: string
+        review_status:
+          enum:
+          - draft
+          - scientific_review
+          - safety_review
+          - published
+          - retired
+        version:
+          type: integer
+        safety_tags_complete:
+          type: boolean
+      additionalProperties: false
+    TransitionRequest:
+      type: object
+      properties:
+        to_status:
+          enum:
+          - scientific_review
+          - safety_review
+          - published
+          - retired
+          - draft
+        notes:
+          type: string
+      additionalProperties: false
+      required:
+      - to_status
+    RuleSetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/RuleSet'
+    RuleSet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+        status:
+          enum:
+          - draft_unreviewed
+          - clinical_reviewed
+          - published
+          - retired
+        reviewed_by:
+          type: string
+          format: uuid
+      additionalProperties: false
+    PublishRuleSetRequest:
+      type: object
+      properties:
+        confirm_sources_attached:
+          const: true
+        notes:
+          type: string
+      additionalProperties: false
+      required:
+      - confirm_sources_attached
+    AdminUserList:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          status:
+            type: string
+          roles:
+            type: array
+            items:
+              type: string
+        additionalProperties: false
+    HealthGrantRequest:
+      type: object
+      properties:
+        grantee_id:
+          type: string
+          format: uuid
+        subject_user_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          minLength: 10
+        duration_minutes:
+          type: integer
+          minimum: 1
+          maximum: 240
+      additionalProperties: false
+      required:
+      - grantee_id
+      - subject_user_id
+      - reason
+      - duration_minutes
+    HealthGrant:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        expires_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    PlanFeaturesRequest:
+      type: object
+      properties:
+        features:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              enabled:
+                type: boolean
+            additionalProperties: false
+            required:
+            - code
+            - enabled
+      additionalProperties: false
+      required:
+      - features
+      description: تلاش برای خاموش‌کردن feature با safety_critical=true → 422
+paths:
+  /auth/register:
+    post:
+      operationId: api_auth_001
+      tags:
+      - auth
+      summary: ثبت‌نام (سن ≥ ۱۸)
+      x-id: API-AUTH-001
+      security: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+  /auth/verify:
+    post:
+      operationId: api_auth_002
+      tags:
+      - auth
+      summary: تأیید حساب
+      x-id: API-AUTH-002
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '410':
+          description: منقضی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequest'
+  /auth/login:
+    post:
+      operationId: api_auth_003
+      tags:
+      - auth
+      summary: ورود
+      x-id: API-AUTH-003
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionInfo'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '423':
+          description: حساب قفل
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+  /auth/logout:
+    post:
+      operationId: api_auth_004
+      tags:
+      - auth
+      summary: خروج
+      x-id: API-AUTH-004
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/password-reset/request:
+    post:
+      operationId: api_auth_005
+      tags:
+      - auth
+      summary: درخواست بازیابی رمز
+      x-id: API-AUTH-005
+      security: []
+      responses:
+        '202':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailOnlyRequest'
+  /auth/password-reset/confirm:
+    post:
+      operationId: api_auth_006
+      tags:
+      - auth
+      summary: تأیید بازیابی رمز
+      x-id: API-AUTH-006
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '410':
+          description: منقضی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+  /auth/sessions:
+    get:
+      operationId: api_auth_007
+      tags:
+      - auth
+      summary: نشست‌های فعال
+      x-id: API-AUTH-007
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/sessions/{session_id}:
+    delete:
+      operationId: api_auth_008
+      tags:
+      - auth
+      summary: ابطال نشست
+      x-id: API-AUTH-008
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /profile:
+    get:
+      operationId: api_pro_001
+      tags:
+      - profile
+      summary: دریافت پروفایل
+      x-id: API-PRO-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      operationId: api_pro_002
+      tags:
+      - profile
+      summary: به‌روزرسانی پروفایل/تنظیمات i18n
+      x-id: API-PRO-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileUpdate'
+  /consents/documents:
+    get:
+      operationId: api_priv_001
+      tags:
+      - privacy
+      summary: متن‌های رضایت فعال
+      x-id: API-PRIV-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentDocumentList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /consents:
+    post:
+      operationId: api_priv_002
+      tags:
+      - privacy
+      summary: ثبت/لغو رضایت
+      x-id: API-PRIV-002
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consent'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+  /privacy/export:
+    post:
+      operationId: api_priv_003
+      tags:
+      - privacy
+      summary: درخواست خروجی داده
+      x-id: API-PRIV-003
+      security:
+      - cookieAuth: []
+      responses:
+        '202':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataRequest'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /privacy/delete:
+    post:
+      operationId: api_priv_004
+      tags:
+      - privacy
+      summary: درخواست حذف حساب/داده
+      x-id: API-PRIV-004
+      security:
+      - cookieAuth: []
+      responses:
+        '202':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataRequest'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteRequest'
+  /privacy/requests/{request_id}:
+    get:
+      operationId: api_priv_005
+      tags:
+      - privacy
+      summary: وضعیت درخواست
+      x-id: API-PRIV-005
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataRequest'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /onboarding:
+    get:
+      operationId: api_onb_001
+      tags:
+      - onboarding
+      summary: وضعیت Onboarding
+      x-id: API-ONB-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Onboarding'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /onboarding/steps/{step}:
+    put:
+      operationId: api_onb_002
+      tags:
+      - onboarding
+      summary: ثبت پاسخ مرحله
+      x-id: API-ONB-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Onboarding'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: step
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingStepRequest'
+  /onboarding/complete:
+    post:
+      operationId: api_onb_003
+      tags:
+      - onboarding
+      summary: تأیید نهایی و تکمیل
+      x-id: API-ONB-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Onboarding'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /body/overview:
+    get:
+      operationId: api_body_001
+      tags:
+      - body
+      summary: خلاصه بدن (BMI/WHtR برچسب شاخص غربالگری)
+      x-id: API-BODY-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyOverview'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /body/measurements:
+    post:
+      operationId: api_body_002
+      tags:
+      - body
+      summary: ثبت اندازه‌گیری
+      x-id: API-BODY-002
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Measurement'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementRequest'
+  /health/profile:
+    get:
+      operationId: api_health_001
+      tags:
+      - health
+      summary: پروفایل سلامت (نیازمند رضایت)
+      x-id: API-HEALTH-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthProfile'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /health/conditions:
+    post:
+      operationId: api_health_002
+      tags:
+      - health
+      summary: ثبت محدودیت/درد/آسیب
+      x-id: API-HEALTH-002
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConditionRequest'
+  /health/conditions/{condition_id}:
+    patch:
+      operationId: api_health_003
+      tags:
+      - health
+      summary: به‌روزرسانی مورد
+      x-id: API-HEALTH-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: condition_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConditionUpdate'
+  /health/symptoms:
+    post:
+      operationId: api_health_004
+      tags:
+      - health
+      summary: ثبت علائم (فقط آنلاین)
+      x-id: API-HEALTH-004
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Symptom'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SymptomRequest'
+  /health/pain-logs:
+    post:
+      operationId: api_health_005
+      tags:
+      - health
+      summary: ثبت درد حین/بعد تمرین
+      x-id: API-HEALTH-005
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PainLog'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PainLogRequest'
+  /health/screening:
+    post:
+      operationId: api_health_006
+      tags:
+      - health
+      summary: ارسال غربالگری هشدار و دریافت SafetyDecision
+      x-id: API-HEALTH-006
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SafetyDecision'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScreeningRequest'
+  /health/out-of-scope-flags:
+    post:
+      operationId: api_health_007
+      tags:
+      - health
+      summary: ثبت بارداری/شرایط پرخطر
+      x-id: API-HEALTH-007
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SafetyDecision'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutOfScopeRequest'
+  /exercises:
+    get:
+      operationId: api_ex_001
+      tags:
+      - exercises
+      summary: فهرست حرکات منتشرشده
+      x-id: API-EX-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: q
+        in: query
+        schema:
+          type: string
+      - name: muscle
+        in: query
+        schema:
+          type: string
+      - name: equipment
+        in: query
+        schema:
+          type: string
+      - name: difficulty
+        in: query
+        schema:
+          type: string
+      - name: pattern
+        in: query
+        schema:
+          type: string
+  /exercises/{exercise_id}:
+    get:
+      operationId: api_ex_002
+      tags:
+      - exercises
+      summary: جزئیات حرکت (با سازگاری برای کاربر)
+      x-id: API-EX-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseDetail'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: exercise_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /exercises/{exercise_id}/alternatives:
+    get:
+      operationId: api_ex_003
+      tags:
+      - exercises
+      summary: جایگزین‌های معتبر (از Safety Core)
+      x-id: API-EX-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlternativesResult'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: exercise_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /workouts/generate:
+    post:
+      operationId: api_wo_001
+      tags:
+      - workouts
+      summary: تولید برنامه؛ فقط با SafetyDecision مجاز
+      x-id: API-WO-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateResponse'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateRequest'
+  /workouts/current:
+    get:
+      operationId: api_wo_002
+      tags:
+      - workouts
+      summary: برنامه فعال
+      x-id: API-WO-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutPlan'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /workouts/plans/{plan_id}/versions:
+    get:
+      operationId: api_wo_003
+      tags:
+      - workouts
+      summary: نسخه‌های برنامه
+      x-id: API-WO-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanVersionList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: plan_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /workouts/plans/{plan_id}/substitute:
+    post:
+      operationId: api_wo_004
+      tags:
+      - workouts
+      summary: جایگزینی حرکت
+      x-id: API-WO-004
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutPlan'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: plan_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubstituteRequest'
+  /workouts/sessions:
+    post:
+      operationId: api_log_001
+      tags:
+      - logs
+      summary: شروع جلسه
+      x-id: API-LOG-001
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSession'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionStartRequest'
+    get:
+      operationId: api_log_004
+      tags:
+      - logs
+      summary: تاریخچه جلسات
+      x-id: API-LOG-004
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionList2'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+  /workouts/sessions/{session_id}/logs:
+    post:
+      operationId: api_log_002
+      tags:
+      - logs
+      summary: ثبت ست (idempotent با client_uuid)
+      x-id: API-LOG-002
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetLog'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetLogRequest'
+  /workouts/sessions/{session_id}/finish:
+    post:
+      operationId: api_log_003
+      tags:
+      - logs
+      summary: پایان جلسه
+      x-id: API-LOG-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionSummary'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionFinishRequest'
+  /progress/weekly:
+    get:
+      operationId: api_prog_001
+      tags:
+      - progress
+      summary: گزارش هفتگی
+      x-id: API-PROG-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressReport'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /progress/monthly:
+    get:
+      operationId: api_prog_002
+      tags:
+      - progress
+      summary: گزارش ماهانه (Essential+)
+      x-id: API-PROG-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressReport'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '402':
+          description: نیازمند ارتقای پلن (غیرایمنی)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /dashboard:
+    get:
+      operationId: api_dash_001
+      tags:
+      - progress
+      summary: داشبورد امروز
+      x-id: API-DASH-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscriptions/plans:
+    get:
+      operationId: api_sub_001
+      tags:
+      - subscriptions
+      summary: پلن‌ها و Entitlementها
+      x-id: API-SUB-001
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanCatalog'
+  /subscriptions/me:
+    get:
+      operationId: api_sub_002
+      tags:
+      - subscriptions
+      summary: اشتراک و سهمیه من
+      x-id: API-SUB-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MySubscription'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscriptions/checkout:
+    post:
+      operationId: api_sub_003
+      tags:
+      - subscriptions
+      summary: شروع پرداخت (PaymentProvider)
+      x-id: API-SUB-003
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutSession'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '501':
+          description: درگاه پرداخت پیکربندی نشده
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+  /subscriptions/cancel:
+    post:
+      operationId: api_sub_004
+      tags:
+      - subscriptions
+      summary: لغو اشتراک
+      x-id: API-SUB-004
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MySubscription'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /ai/chat:
+    post:
+      operationId: api_ai_001
+      tags:
+      - ai
+      summary: گفتگو (Provider-agnostic؛ پس از Validator)
+      x-id: API-AI-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiChatResponse'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '402':
+          description: نیازمند ارتقای پلن (غیرایمنی)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: سرویس در دسترس نیست
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiChatRequest'
+  /admin/exercises:
+    get:
+      operationId: api_adm_001
+      tags:
+      - admin
+      summary: فهرست حرکات (همه وضعیت‌ها)
+      x-id: API-ADM-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseAdminList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - content_admin
+      - exercise_reviewer
+      - super_admin
+      description: 'نقش‌های مجاز: content_admin، exercise_reviewer، super_admin + بررسی Object-level.'
+    post:
+      operationId: api_adm_002
+      tags:
+      - admin
+      summary: ایجاد حرکت Draft
+      x-id: API-ADM-002
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseAdmin'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - content_admin
+      - super_admin
+      description: 'نقش‌های مجاز: content_admin، super_admin + بررسی Object-level.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseAdminWrite'
+  /admin/exercises/{exercise_id}/transition:
+    post:
+      operationId: api_adm_003
+      tags:
+      - admin
+      summary: انتقال در گردش بازبینی
+      x-id: API-ADM-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseAdmin'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - exercise_reviewer
+      - clinical_safety_reviewer
+      - super_admin
+      description: 'نقش‌های مجاز: exercise_reviewer، clinical_safety_reviewer، super_admin + بررسی Object-level.'
+      parameters:
+      - name: exercise_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransitionRequest'
+  /admin/safety/rule-sets:
+    get:
+      operationId: api_adm_004
+      tags:
+      - admin
+      summary: نسخه‌های قواعد ایمنی
+      x-id: API-ADM-004
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSetList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - clinical_safety_reviewer
+      - content_admin
+      - super_admin
+      description: 'نقش‌های مجاز: clinical_safety_reviewer، content_admin، super_admin + بررسی Object-level.'
+  /admin/safety/rule-sets/{rule_set_id}/publish:
+    post:
+      operationId: api_adm_005
+      tags:
+      - admin
+      summary: انتشار نسخه قواعد (نیازمند Reviewer)
+      x-id: API-ADM-005
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSet'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - clinical_safety_reviewer
+      description: 'نقش‌های مجاز: clinical_safety_reviewer + بررسی Object-level.'
+      parameters:
+      - name: rule_set_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishRuleSetRequest'
+  /admin/users:
+    get:
+      operationId: api_adm_006
+      tags:
+      - admin
+      summary: کاربران (بدون داده سلامت)
+      x-id: API-ADM-006
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - support_admin
+      - super_admin
+      description: 'نقش‌های مجاز: support_admin، super_admin + بررسی Object-level.'
+  /admin/health-access-grants:
+    post:
+      operationId: api_adm_007
+      tags:
+      - admin
+      summary: اعطای دسترسی زمان‌دار به داده سلامت
+      x-id: API-ADM-007
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthGrant'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - super_admin
+      description: 'نقش‌های مجاز: super_admin + بررسی Object-level.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthGrantRequest'
+  /admin/plans/{plan_id}/features:
+    put:
+      operationId: api_adm_008
+      tags:
+      - admin
+      summary: تنظیم قابلیت‌های پلن (safety_critical غیرقابل‌خاموش)
+      x-id: API-ADM-008
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanCatalog'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - super_admin
+      - finance_admin
+      description: 'نقش‌های مجاز: super_admin، finance_admin + بررسی Object-level.'
+      parameters:
+      - name: plan_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanFeaturesRequest'
+  /health/live:
+    get:
+      operationId: api_sys_001
+      tags:
+      - system
+      summary: Liveness (بدون وابستگی)
+      x-id: API-SYS-001
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /health/ready:
+    get:
+      operationId: api_sys_002
+      tags:
+      - system
+      summary: Readiness (DB/Redis)
+      x-id: API-SYS-002
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '503':
+          description: سرویس در دسترس نیست
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+x-global-rules:
+- 'همه endpointهای تغییردهنده: CSRF + rate limit؛ ورود/ثبت‌نام/AI: rate limit سخت‌گیرانه'
+- 'همه endpointهای health/*: رضایت health_data معتبر (وگرنه 403 با code=consent_required)'
+- هیچ endpoint نمی‌تواند برنامه/حرکت را بدون SafetyDecision معتبر برگرداند
+- 'خطا: Error{code,message,request_id}؛ بدون افشای جزئیات داخلی'
+- 'پاسخ‌های سلامت: Cache-Control: no-store'
+x-deferred:
+- /nutrition/*
+- /foods
+- /recipes
+- /supplements
+- /recovery/checkins
+- /calendar
+- /devices
+- /photos
+- /professional/*
+- /community/*
+- /billing/webhooks/{provider}
