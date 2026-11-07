@@ -1,4 +1,6 @@
-# سند ۱ — Product Requirements Document (PRD)
+<div dir="rtl">
+
+# سند ۱ — `Product Requirements Document` (PRD)
 
 | فیلد | مقدار |
 |---|---|
@@ -311,3 +313,5 @@
 5. کاربر Free همان ایمنی کاربر پولی را دارد.
 6. شمسی/میلادی و RTL/LTR در تمام صفحات MVP.
 7. Export و حذف داده کار می‌کند.
+
+</div>

@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۲ — User Stories & Acceptance Criteria
 
 | فیلد | مقدار |
@@ -170,7 +172,7 @@
 - AC: ادمین فنی بدون مجوز صریح داده سلامت را نمی‌بیند؛ هر دسترسی ممیزی می‌شود.
 
 **US-ADM-002** — مدیریت نسخه قواعد ایمنی. | P0 | FR-ADM-003 | TST-ADM-005..007
-- AC: قاعده بالینی بدون Clinical Safety Reviewer منتشر نشود؛ نسخه immutable؛ rollback با ثبت علت.
+- AC: قاعده بالینی بدون `Clinical Safety Reviewer` منتشر نشود؛ نسخه immutable؛ rollback با ثبت علت.
 
 ## 12. تکمیل پوشش (Coverage Addendum)
 
@@ -228,3 +230,5 @@ US-NUT-* (تغذیه)، US-FOOD-*، US-BUD-*، US-SUP-*، US-REC-*، US-AI-COACH
 
 ## 14. نگاشت اولیه به سناریوهای اجباری سند مادر
 مبتدی سالم→US-WO-001؛ بدون تجهیزات→US-WO-001 AC3؛ محدودیت کمر→US-SAFE-002/003؛ درد جدید→US-SAFE-004؛ علائم هشدار→US-SAFE-001؛ تشدید→US-SAFE-007؛ داده ناقص→US-SAFE-006/ONB؛ RTL/LTR→US-PRO-001؛ قطع اینترنت→US-LOG-002؛ لغو اشتراک و حذف→US-SUB-001/PRIV-002. سناریوهای تغذیه/بودجه/آلرژی/فیزیوتراپی‌تأییدشده/ورزشکار پیشرفته: `Deferred` یا `Pending Specialist Approval`.
+
+</div>

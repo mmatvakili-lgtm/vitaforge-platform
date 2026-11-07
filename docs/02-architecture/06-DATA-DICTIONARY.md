@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۶ — Data Dictionary
 
 | فیلد | مقدار |
@@ -33,7 +35,7 @@
 | `created_at` | `timestamptz` | خیر | `now()` | — | زمان ایجاد (UTC) |
 | `updated_at` | `timestamptz` | خیر | `now()` | — | زمان آخرین تغییر (UTC) |
 
-محدودیت‌های جدول: CK: email IS NOT NULL OR phone IS NOT NULL
+محدودیت‌های جدول: CK: `email IS NOT NULL OR phone IS NOT NULL`
 
 ### ENT-002 — `user_roles`
 نقش‌های کاربر
@@ -364,7 +366,7 @@ Outbox رویدادهای دامنه
 | `source` | `enum(professional)` | خیر | `professional` | — |  |
 | `created_at` | `timestamptz` | خیر | `now()` | — | زمان ایجاد (UTC) |
 
-محدودیت‌های جدول: CK: restricted_pattern_id OR restricted_exercise_id OR restricted_region IS NOT NULL
+محدودیت‌های جدول: CK: restricted_pattern_id OR restricted_exercise_id OR restricted_region `IS NOT NULL`
 
 ### ENT-025 — `professional_clearances`
 مجوز بازگشت به فعالیت
@@ -635,7 +637,7 @@ Outbox رویدادهای دامنه
 | `license_ref` | `varchar(300)` | بله | — | — |  |
 | `attribution` | `varchar(300)` | بله | — | — |  |
 
-محدودیت‌های جدول: CK: usable only when license_status='licensed'
+محدودیت‌های جدول: CK: `usable only when` license_status='licensed'
 
 ### ENT-044 — `exercise_sources`
 منابع حرکت
@@ -751,7 +753,7 @@ Outbox رویدادهای دامنه
 | `rest_sec` | `int` | خیر | `60` | CK:between 0 and 600 |  |
 | `tempo` | `varchar(20)` | بله | — | — |  |
 
-محدودیت‌های جدول: UQ(workout_exercise_id, set_no)؛ CK: (reps_min IS NOT NULL) <> (duration_sec IS NOT NULL) OR both allowed per type
+محدودیت‌های جدول: UQ(workout_exercise_id, set_no)؛ CK: (reps_min `IS NOT NULL`) <> (duration_sec `IS NOT NULL`) `OR both allowed per type`
 
 ### ENT-052 — `plan_change_events`
 رویداد تغییر برنامه
@@ -885,7 +887,7 @@ Outbox رویدادهای دامنه
 | `cancel_at` | `timestamptz` | بله | — | — |  |
 | `provider_ref` | `varchar(120)` | بله | — | — |  |
 
-محدودیت‌های جدول: UQ(user_id) WHERE status IN ('trial','active')
+محدودیت‌های جدول: UQ(user_id) `WHERE status IN` ('trial','active')
 
 ## ماژول `ai_gateway`
 
@@ -991,7 +993,9 @@ Outbox رویدادهای دامنه
 - recovery (Phase 2/4): daily_checkins، sleep_records، fatigue_records، activity_records، recovery_summaries
 - sports (Phase 4-5): sports، sport_disciplines
 - professionals (Phase 6): professionals، professional_credentials، client_relationships
-- protocols — Pending Specialist Approval (مسیر C): clinical_protocols، protocol_versions، protocol_steps، protocol_eligibility_rules، injury_records
+- protocols — `Pending Specialist Approval` (مسیر C): clinical_protocols، protocol_versions، protocol_steps، protocol_eligibility_rules، injury_records
 - body/vision (Phase 5): body_composition_records، progress_photos، photo_consents، device_connections
 - billing (Phase 6): invoices، payments، refunds، coupons
 - calendar/ai-ext: calendar_events، ai_recommendations، ai_tool_calls، ai_sources، ai_evaluations، kb_documents، kb_chunks (pgvector)، feedback_records، content_items
+
+</div>

@@ -1,10 +1,12 @@
-# سند ۱۰ — Exercise Database Specification
+<div dir="rtl">
+
+# سند ۱۰ — `Exercise Database Specification`
 
 | فیلد | مقدار |
 |---|---|
 | Document ID | DOC-10 |
 | Version | 0.1 |
-| Status | Draft — ساختار Complete؛ **محتوای حرکات: Pending Specialist Approval (EXP-003)** |
+| Status | Draft — ساختار Complete؛ **محتوای حرکات: `Pending Specialist Approval` (EXP-003)** |
 | Created / Updated | 2026-11-07 |
 | Owner | Exercise Content Lead |
 | Related Documents | DOC-05، DOC-06، DOC-09، DOC-11، DOC-14 |
@@ -77,3 +79,5 @@ trigram + GIN روی نام و مترادف (fa/en)، نرمال‌سازی فا
 | AC-EX-003 | حرکت retired/draft هرگز در API کاربر نیاید |
 | AC-EX-004 | رسانه unlicensed نمایش داده نشود |
 | AC-EX-005 | Seed نمونه در prod بارگذاری نشود |
+
+</div>

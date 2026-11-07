@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۱۷ — Deployment & DevOps Specification
 
 | فیلد | مقدار |
@@ -22,7 +24,7 @@
 `backend` (gunicorn)، `worker` (celery)، `beat`، `frontend` (Next.js)، `postgres` (pgvector image در Phase 4)، `redis`، `reverse-proxy` (TLS). ذخیره‌سازی شیء: Port (MinIO محلی/Provider بازار).
 
 ## 3. پیکربندی
-12-factor: همه تنظیمات از ENV؛ `.env.example` با مقادیر ساختگی؛ Secret ها از Secret Manager/Docker secrets؛ `settings/{base,dev,prod}.py`؛ validation پیکربندی در startup (رد اجرای prod با Fake provider، `DEBUG=True`، کلید پیش‌فرض، `external_health_data=true` بدون ADR).
+12-factor: همه تنظیمات از ENV؛ `.env.example` با مقادیر ساختگی؛ Secret ها از `Secret Manager/Docker secrets`؛ `settings/{base,dev,prod}.py`؛ validation پیکربندی در startup (رد اجرای prod با Fake provider، `DEBUG=True`، کلید پیش‌فرض، `external_health_data=true` بدون ADR).
 
 ## 4. CI/CD (طراحی)
 Pipeline: lint (ruff/eslint) → type (mypy/tsc) → unit → architecture (import-linter) → integration (Compose) → API contract → security (pip-audit, npm audit, bandit, secret scan) → build images → e2e (Playwright) → migration check → (CD) deploy staging → smoke → manual gate → prod.
@@ -50,3 +52,5 @@ Logging ساختاریافته JSON (`request_id`)، بدون PHI؛ `/health/liv
 | AC-OPS-002 | استارت prod با پیکربندی ناامن رد می‌شود (تست واحد قابل‌اجرا) |
 | AC-OPS-003 | migration up/down در CI |
 | AC-OPS-004 | بکاپ/بازیابی مستند و تمرین‌شده (Pending) |
+
+</div>

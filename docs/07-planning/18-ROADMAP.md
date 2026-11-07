@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۱۸ — Development Roadmap
 
 | فیلد | مقدار |
@@ -43,7 +45,7 @@
 ## 4. Backlog با وابستگی
 | قابلیت | فاز | پیش‌نیاز | وضعیت |
 |---|---|---|---|
-| مسیر B فعال | 2 | EXP-001/002/011 | Pending Specialist Approval |
+| مسیر B فعال | 2 | EXP-001/002/011 | `Pending Specialist Approval` |
 | مسیر C/پروتکل‌ها | 2+ | EXP-005، DEC-120، OPEN-004 | Blocked |
 | تغذیه/بانک غذا/بودجه | 3 | EXP-006، OPEN-007 | Deferred |
 | مکمل | 3 | EXP-007 | Deferred |
@@ -57,3 +59,5 @@
 
 ## 5. معیار خروج Phase 0 (DOC-15 Directive)
 اسناد ۲۰/۲۰؛ تناقض‌ها بسته؛ ADRها؛ Traceability؛ Index؛ ZIP؛ موارد Pending مشخص.
+
+</div>

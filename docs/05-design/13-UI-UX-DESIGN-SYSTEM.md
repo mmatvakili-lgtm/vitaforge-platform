@@ -1,4 +1,6 @@
-# سند ۱۳ — UI/UX Design System
+<div dir="rtl">
+
+# سند ۱۳ — `UI/UX Design System`
 
 | فیلد | مقدار |
 |---|---|
@@ -74,7 +76,7 @@ Premium، Modern، Scientific، Minimal، اعتمادآفرین. نه پنل م
 | ConsentGate | مانع نمایش داده سلامت تا رضایت |
 
 ## 5. الگوهای ناوبری
-- موبایل: Bottom Tab Bar (امروز، برنامه، حرکات، پیشرفت، من) + Header ساده؛ دسکتاپ: Sidebar + Topbar.
+- موبایل: `Bottom Tab Bar` (امروز، برنامه، حرکات، پیشرفت، من) + Header ساده؛ دسکتاپ: Sidebar + Topbar.
 - Breadcrumb در صفحات عمیق دسکتاپ؛ جهت ناوبری و FAB در RTL آینه.
 - ناوبری ادمین جدا با ظاهر همان Design System.
 
@@ -104,3 +106,5 @@ Tailwind + CSS variables (توکن‌ها در `frontend/src/styles/tokens.css`)
 | AC-DS-002 | هیچ CSS با `left/right` فیزیکی در کامپوننت‌ها (lint) |
 | AC-DS-003 | تضاد رنگ طبق جدول در هر دو تم (تست خودکار) |
 | AC-DS-004 | هر کامپوننت حالت‌های loading/error/empty را مستند و تست‌شده داشته باشد |
+
+</div>

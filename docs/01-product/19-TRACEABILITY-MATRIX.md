@@ -1,4 +1,6 @@
-# سند ۱۹ — Requirements Traceability Matrix
+<div dir="rtl">
+
+# سند ۱۹ — `Requirements Traceability Matrix`
 
 | فیلد | مقدار |
 |---|---|
@@ -145,3 +147,5 @@
 | AC-UI-001..005 | Playwright | DOC-14 |
 | AC-DS-001..004 | lint + a11y | DOC-13 |
 | AC-OPS-001..004 | CI | DOC-17 |
+
+</div>

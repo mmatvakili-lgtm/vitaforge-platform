@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۱۶ — Testing Strategy
 
 | فیلد | مقدار |
@@ -16,7 +18,7 @@
 | Unit (دامنه) | pytest | Safety Core، Workout Engine، محاسبات، Redactor، Validator | هر commit |
 | Property-based | hypothesis (در صورت نصب؛ وگرنه تولیدکننده سفارشی با seed) | «حرکت منع‌شده هرگز در خروجی نیست»، قطعیت | هر commit |
 | Integration (Django) | pytest-django + Postgres | مدل‌ها، migration، سرویس‌ها، ترنزاکشن | هر commit |
-| API/Contract | DRF test client + schemathesis/OpenAPI validator | پاسخ‌ها مطابق DOC-07 | هر commit |
+| API/Contract | `DRF test client` + schemathesis/OpenAPI validator | پاسخ‌ها مطابق DOC-07 | هر commit |
 | Permission | ماتریس خودکار | endpoint × نقش × مالکیت | هر commit |
 | Security | pip-audit، npm audit، bandit، secret scan، تست‌های AC-SEC | | هر commit/شبانه |
 | Architecture | import-linter + تست AST | AC-ARCH-*، AC-SAF-001 | هر commit |
@@ -56,3 +58,5 @@
 | Integration/API/Permission Django | **Not Run** تا نصب Django |
 | Frontend/E2E/a11y | **Not Run** تا نصب وابستگی‌های npm/Playwright browsers |
 | Architecture (AST) | قابل‌اجرا |
+
+</div>

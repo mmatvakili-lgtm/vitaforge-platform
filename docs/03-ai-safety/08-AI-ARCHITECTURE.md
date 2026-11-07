@@ -1,4 +1,6 @@
-# سند ۸ — AI Architecture Specification
+<div dir="rtl">
+
+# سند ۸ — `AI Architecture Specification`
 
 | فیلد | مقدار |
 |---|---|
@@ -45,7 +47,7 @@
 | `OutputValidator` | (۱) JSON-schema (۲) فهرست ممنوع (تشخیص، وعده درمان، دوز مکمل، تشویق به تحمل درد) (۳) هر نام حرکت ∈ مجموعه مجاز SafetyDecision (SAF-R009) (۴) استناد به منبع الزامی برای ادعای علمی (۵) نرمال‌سازی عدم قطعیت |
 | `QuotaService` | `plan_quotas` + `ai_usage`؛ 402 در اتمام سهمیه (غیر ایمنی) |
 | `AuditLogger` | `ai_messages` با `content_redacted`، نسخه prompt/model، `safety_decision_id` |
-| `EvalHarness` | مجموعه ارزیابی (Groundedness، Safety Violation Rate، Format)، اجرای CI روی Stub |
+| `EvalHarness` | مجموعه ارزیابی (Groundedness، `Safety Violation Rate`، Format)، اجرای CI روی Stub |
 
 ## 4. Provider Abstraction
 ```
@@ -72,7 +74,7 @@ class LLMProvider(Protocol):
 | متن کاربر آزاد | اسکن PII/سلامت؛ در صورت وجود → رد یا پاسخ ثابت | محدود | Redacted |
 
 ## 7. ارزیابی و معیارها
-Groundedness، Accuracy (روی مجموعه طلایی تأییدشده)، Safety Violation Rate (هدف: ۰ روی مجموعه منفی)، Refusal correctness، latency p95، هزینه/تعامل، نرخ پذیرش. مجموعه‌های ارزیابی بالینی: `Pending Specialist Approval`.
+Groundedness، Accuracy (روی مجموعه طلایی تأییدشده)، `Safety Violation Rate` (هدف: ۰ روی مجموعه منفی)، Refusal correctness، latency p95، هزینه/تعامل، نرخ پذیرش. مجموعه‌های ارزیابی بالینی: `Pending Specialist Approval`.
 
 ## 8. حالت‌های خطا
 | وضعیت | رفتار |
@@ -95,3 +97,5 @@ Groundedness، Accuracy (روی مجموعه طلایی تأییدشده)، Safe
 | AC-AI-004 | خروجی با نام حرکت خارج از مجموعه مجاز ← رد |
 | AC-AI-005 | پرامپت‌های prompt-injection نمونه ← بدون نشت/نقض (مجموعه تست) |
 | AC-AI-006 | لاگ‌ها فاقد PII/سلامت (تست اسکن) |
+
+</div>

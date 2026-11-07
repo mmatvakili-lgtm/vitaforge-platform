@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۴ — ADR Register
 
 | فیلد | مقدار |
@@ -19,4 +21,6 @@
 | ADR-0006 — استانداردهای فنی مستقل (گروه A) | Accepted | `04-adr/ADR-0006-technical-standards.md` |
 | ADR-0007 — محدودیت محیط اجرا و ترتیب پیاده‌سازی | Accepted | `04-adr/ADR-0007-environment-constraint.md` |
 
-ADRهای برنامه‌ریزی‌شده (هنگام تصمیم): ADR-0008 رمزنگاری فیلدهای سلامت؛ ADR-0009 مدل نشست/احراز؛ ADR-0010 استراتژی i18n/تقویم؛ ADR-0011 قالب Safety rule DSL؛ ADR-0012 AI Provider (Phase 4).
+ADRهای برنامه‌ریزی‌شده (هنگام تصمیم): ADR-0008 رمزنگاری فیلدهای سلامت؛ ADR-0009 مدل نشست/احراز؛ ADR-0010 استراتژی i18n/تقویم؛ ADR-0011 قالب `Safety rule DSL`؛ `ADR-0012 AI Provider` (Phase 4).
+
+</div>

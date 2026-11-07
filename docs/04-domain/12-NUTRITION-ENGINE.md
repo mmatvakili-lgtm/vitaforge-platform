@@ -1,10 +1,12 @@
-# سند ۱۲ — Nutrition Engine Specification
+<div dir="rtl">
+
+# سند ۱۲ — `Nutrition Engine Specification`
 
 | فیلد | مقدار |
 |---|---|
 | Document ID | DOC-12 |
 | Version | 0.1 |
-| Status | Draft — معماری/قواعد ساختاری Complete؛ **پیاده‌سازی: Deferred (Phase 3)**؛ سقف‌های ایمنی: Pending Specialist Approval (EXP-006) |
+| Status | Draft — معماری/قواعد ساختاری Complete؛ **پیاده‌سازی: Deferred (Phase 3)**؛ سقف‌های ایمنی: `Pending Specialist Approval` (EXP-006) |
 | Created / Updated | 2026-11-07 |
 | Owner | Nutrition Systems Lead |
 | Related Documents | DOC-01 (§5.11)، DOC-09، DOC-05 (جداول Deferred) |
@@ -51,8 +53,8 @@ N6  Shopping list + cost estimate (price rows با منبع/تاریخ/منطق�
 |---|---|
 | N0، NUT-R01..R07 (منطق ساختاری) | Draft — در Phase 3 |
 | فرمول و ضرایب انرژی | Draft — Unverified |
-| سقف/کف انرژی/ماکرو | Pending Specialist Approval (EXP-006) |
-| دانشنامه مکمل | Pending Specialist Approval (EXP-007) |
+| سقف/کف انرژی/ماکرو | `Pending Specialist Approval` (EXP-006) |
+| دانشنامه مکمل | `Pending Specialist Approval` (EXP-007) |
 | بانک غذا/دستور/قیمت | Deferred / Blocked (OPEN-007) |
 ## 8. معیارهای پذیرش (برای Phase 3)
 | ID | معیار |
@@ -61,3 +63,5 @@ N6  Shopping list + cost estimate (price rows با منبع/تاریخ/منطق�
 | AC-NUT-002 | نشانه اختلال خوردن ← بدون رژیم محدودکننده |
 | AC-NUT-003 | غیرفعال‌کردن تغذیه تمرین را تغییر نمی‌دهد |
 | AC-NUT-004 | هیچ مقدار بدون منبع نمایش داده نمی‌شود |
+
+</div>

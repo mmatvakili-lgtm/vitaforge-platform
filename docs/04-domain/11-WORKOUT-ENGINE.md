@@ -1,10 +1,12 @@
-# سند ۱۱ — Workout Engine Specification
+<div dir="rtl">
+
+# سند ۱۱ — `Workout Engine Specification`
 
 | فیلد | مقدار |
 |---|---|
 | Document ID | DOC-11 |
 | Version | 0.1 |
-| Status | Draft — الگوریتم Complete؛ **پارامترهای تمرینی: Unverified — Pending Specialist Approval (Exercise Reviewer)** |
+| Status | Draft — الگوریتم Complete؛ **پارامترهای تمرینی: Unverified — `Pending Specialist Approval` (Exercise Reviewer)** |
 | Created / Updated | 2026-11-07 |
 | Owner | Training Systems Lead |
 | Related Documents | DOC-09، DOC-10، DOC-05، DOC-07 |
@@ -44,7 +46,7 @@ Confidence: `high` اگر همه slotها با حرکت اولویت اول پر
 | ۳ | Full Body | Upper/Lower+FB hybrid |
 | ۴ | Upper/Lower | PPL-hybrid |
 | ۵–۶ | PPL یا Upper/Lower+ | hybrid |
-اگر کاربر ساختار ترجیحی داد و با روزها سازگار بود، همان؛ در غیر این صورت دلیل در rationale. Bro Split فقط در حالت `custom` و با برچسب «غیرپیش‌فرض».
+اگر کاربر ساختار ترجیحی داد و با روزها سازگار بود، همان؛ در غیر این صورت دلیل در `rationale. Bro Split` فقط در حالت `custom` و با برچسب «غیرپیش‌فرض».
 
 ## 5. امتیازدهی حرکت برای Slot (قطعی)
 `score = w1·pattern_match + w2·muscle_coverage + w3·equipment_pref + w4·difficulty_fit + w5·preference + w6·variety − w7·repeat_penalty − w8·caution_penalty`
@@ -102,3 +104,5 @@ Confidence: `high` اگر همه slotها با حرکت اولویت اول پر
 | AC-WO-005 | افزایش دو متغیری رد می‌شود |
 | AC-WO-006 | محتوای ناکافی ← NEEDS_CONTENT، نه برنامه ناقص بی‌اعلام |
 | AC-WO-007 | بلوک‌های محدودیت ناحیه‌ای: حرکت منع‌شده هرگز ظاهر نشود (تست property-based) |
+
+</div>

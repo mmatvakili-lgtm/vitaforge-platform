@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۵ — Database ERD
 
 | فیلد | مقدار |
@@ -296,7 +298,7 @@ erDiagram
 - **`workout_plan_versions`**: UQ(plan_id, version_no)؛ CK: safety_decision.status IN (ALLOW, ALLOW_WITH_MODIFICATION) (سرویس + تست)
 - **`workout_days`**: UQ(plan_version_id, day_index)
 - **`workout_exercises`**: UQ(day_id, order_no)
-- **`workout_sets`**: UQ(workout_exercise_id, set_no)؛ CK: (reps_min IS NOT NULL) <> (duration_sec IS NOT NULL) OR both allowed per type
+- **`workout_sets`**: UQ(workout_exercise_id, set_no)؛ CK: (reps_min `IS NOT NULL`) <> (duration_sec `IS NOT NULL`) `OR both allowed per type`
 - **`plan_features`**: UQ(plan_id, feature_id)؛ CK(سرویس+تست): feature.safety_critical → enabled=true برای همه پلن‌ها
 - **`plan_quotas`**: UQ(plan_id, quota_key)
 - **`subscriptions`**: UQ(user_id) WHERE status IN ('trial','active')
@@ -317,7 +319,7 @@ erDiagram
 - **recovery (Phase 2/4)**: `daily_checkins`، `sleep_records`، `fatigue_records`، `activity_records`، `recovery_summaries`
 - **sports (Phase 4-5)**: `sports`، `sport_disciplines`
 - **professionals (Phase 6)**: `professionals`، `professional_credentials`، `client_relationships`
-- **protocols — Pending Specialist Approval (مسیر C)**: `clinical_protocols`، `protocol_versions`، `protocol_steps`، `protocol_eligibility_rules`، `injury_records`
+- **protocols — `Pending Specialist Approval` (مسیر C)**: `clinical_protocols`، `protocol_versions`، `protocol_steps`، `protocol_eligibility_rules`، `injury_records`
 - **body/vision (Phase 5)**: `body_composition_records`، `progress_photos`، `photo_consents`، `device_connections`
 - **billing (Phase 6)**: `invoices`، `payments`، `refunds`، `coupons`
 - **calendar/ai-ext**: `calendar_events`، `ai_recommendations`، `ai_tool_calls`، `ai_sources`، `ai_evaluations`، `kb_documents`، `kb_chunks (pgvector)`، `feedback_records`، `content_items`
@@ -328,3 +330,5 @@ erDiagram
 - `exercises.review_status='published'` فقط با `safety_tags_complete=true` ← SAF-R005.
 - `exercise_logs.client_uuid` ← idempotency همگام‌سازی آفلاین (ADR-0004).
 - بخش‌های `Pending Specialist Approval`: محتوای `safety_rules`(غیرساختاری)، `screening_responses.screening_version`، `medical_restrictions.max_loading`، جداول پروتکل.
+
+</div>

@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # فهرست مرکزی مستندات — AI Fitness & Health Ecosystem
 
 | فیلد | مقدار |
@@ -40,8 +42,8 @@ FR-<MOD>-nnn، NFR-، SAF-، ST-، US-، AC-، TST-، ADR-nnnn، DEC-، ASM-، R
 | 6 | Data Dictionary | 0.1 | Draft — Complete (MVP) | `02-architecture/06-DATA-DICTIONARY.md` |
 | 7 | OpenAPI Specification | 0.1.0 | Draft — Complete (MVP) | `02-architecture/07-OPENAPI-SPECIFICATION.yaml` |
 | 8 | AI Architecture | 0.1 | Draft — LLM: Blocked (OPEN-002) | `03-ai-safety/08-AI-ARCHITECTURE.md` |
-| 9 | Safety & Clinical Governance | 0.2 | Draft — Pending Specialist Approval (محتوای بالینی) | `03-ai-safety/09-safety-clinical-governance.md` |
-| 10 | Exercise Database | 0.1 | Draft — ساختار Complete؛ محتوا Pending Specialist Approval | `04-domain/10-EXERCISE-DATABASE.md` |
+| 9 | Safety & Clinical Governance | 0.2 | Draft — `Pending Specialist Approval` (محتوای بالینی) | `03-ai-safety/09-safety-clinical-governance.md` |
+| 10 | Exercise Database | 0.1 | Draft — ساختار Complete؛ محتوا `Pending Specialist Approval` | `04-domain/10-EXERCISE-DATABASE.md` |
 | 11 | Workout Engine | 0.1 | Draft — پارامترها Unverified (EXP-013) | `04-domain/11-WORKOUT-ENGINE.md` |
 | 12 | Nutrition Engine | 0.1 | Draft — Deferred Phase 3 | `04-domain/12-NUTRITION-ENGINE.md` |
 | 13 | UI/UX Design System | 0.1 | Draft — Complete | `05-design/13-UI-UX-DESIGN-SYSTEM.md` |
@@ -63,3 +65,5 @@ FR-<MOD>-nnn، NFR-، SAF-، ST-، US-، AC-، TST-، ADR-nnnn، DEC-، ASM-، R
 - AI ↔ Safety: Validator + `external_health_data=false` (DOC-08 §4/§6).
 - بسته‌شده: CON-001، 002، 004، 008 (کامل)، CON-005 (طراحی؛ محتوا Pending)، CON-006/007 (ERD/API تولید شد).
 - **بررسی‌نشده:** اعتبارسنجی رسمی OpenAPI با validator خارجی (ابزار نصب نیست)؛ بازبینی انسانی/بالینی/حقوقی؛ هیچ منبع خارجی ثبت نشده.
+
+</div>

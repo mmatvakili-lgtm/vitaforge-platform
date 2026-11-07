@@ -1,10 +1,12 @@
+<div dir="rtl">
+
 # سند ۱۵ — Security & Privacy Specification
 
 | فیلد | مقدار |
 |---|---|
 | Document ID | DOC-15 |
 | Version | 0.1 |
-| Status | Draft — Complete (فنی)؛ **بررسی حقوقی/قانونی: Pending Legal Review (OPEN-004، EXP-010، EXP-012)** |
+| Status | Draft — Complete (فنی)؛ **بررسی حقوقی/قانونی: `Pending Legal Review` (OPEN-004، EXP-010، EXP-012)** |
 | Created / Updated | 2026-11-07 |
 | Owner | Security & Privacy Engineer |
 | Related Documents | DOC-03، DOC-05، DOC-08 |
@@ -57,7 +59,7 @@ RBAC (نقش‌ها DOC-03 §8) + Object-level (queryset فیلتر مالک)؛ 
 | حذف | حذف نرم فوری + حذف سخت پس از پنجره (DEC-112، پیش‌فرض ۳۰ روز، پیکربندی)؛ `audit_logs` ناشناس‌سازی (کاربر→NULL، فراداده بدون PHI) |
 | لغو رضایت | توقف پردازش سلامت؛ حفظ داده تا درخواست حذف (یا حذف طبق انتخاب) |
 | عدم استفاده تبلیغاتی | ممنوع؛ هیچ SDK تبلیغاتی/آنالیتیکس شخص‌ثالث روی داده سلامت |
-متن‌ها/مبنای قانونی/نگهداری: Pending Legal Review.
+متن‌ها/مبنای قانونی/نگهداری: `Pending Legal Review.`
 
 ## 7. آفلاین (ADR-0004)
 - داده درد/علائم/سلامت: هرگز در حافظه مرورگر (IndexedDB/localStorage/SW cache) ذخیره نمی‌شود؛ پاسخ‌های API سلامت `Cache-Control: no-store`.
@@ -65,7 +67,7 @@ RBAC (نقش‌ها DOC-03 §8) + Object-level (queryset فیلتر مالک)؛ 
 - `offline_workout_log` (پیش‌فرض خاموش): فقط ست‌های غیرحساس؛ WebCrypto AES-GCM؛ کلید مشتق از نشست، در حافظه (نه storage)؛ پاک‌سازی هنگام خروج/انقضا؛ `client_uuid` برای idempotency. فعال‌سازی نیازمند بازبینی امنیتی و ثبت در Decision Register.
 
 ## 8. امنیت اپلیکیشن
-CSP سخت (بدون inline)؛ XSS: escaping پیش‌فرض React/DRF؛ SQLi: ORM/پارامتری؛ SSRF: بدون fetch URL کاربر؛ headers (X-Content-Type-Options، Referrer-Policy، Permissions-Policy، frame-ancestors none)؛ CORS فهرست سفید؛ rate limit سراسری+سخت‌گیر برای auth/AI/export؛ اعتبارسنجی ورودی سمت سرور؛ خطای عمومی (بدون stack trace)؛ Secret ها فقط ENV/Secret Manager (`.env.example` ساختگی)؛ pre-commit secret scan.
+CSP سخت (بدون inline)؛ XSS: escaping پیش‌فرض React/DRF؛ SQLi: ORM/پارامتری؛ SSRF: بدون fetch URL کاربر؛ headers (X-Content-Type-Options، Referrer-Policy، Permissions-Policy، frame-ancestors none)؛ CORS فهرست سفید؛ rate limit سراسری+سخت‌گیر برای auth/AI/export؛ اعتبارسنجی ورودی سمت سرور؛ خطای عمومی (بدون stack trace)؛ Secret ها فقط ENV/Secret Manager (`.env.example` ساختگی)؛ `pre-commit secret scan.`
 ## 9. زنجیره تأمین
 قفل وابستگی (`uv.lock`/`package-lock`)، SCA در CI (pip-audit/npm audit)، Dependabot-like بروزرسانی، SBOM، حداقل وابستگی.
 ## 10. مدیریت رخداد
@@ -84,3 +86,5 @@ CSP سخت (بدون inline)؛ XSS: escaping پیش‌فرض React/DRF؛ SQLi: O
 | AC-SEC-007 | CSRF بدون توکن رد می‌شود |
 | AC-SEC-008 | rate limit ورود فعال |
 | AC-SEC-009 | هیچ Secret واقعی در repo (secret scan) |
+
+</div>

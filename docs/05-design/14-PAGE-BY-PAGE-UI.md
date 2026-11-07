@@ -1,4 +1,6 @@
-# سند ۱۴ — Page-by-Page UI Specification
+<div dir="rtl">
+
+# سند ۱۴ — `Page-by-Page UI Specification`
 
 | فیلد | مقدار |
 |---|---|
@@ -18,7 +20,7 @@
 |---|---|---|---|---|
 | PG-PUB-001 Landing | `/` | Hero (ارزش پیشنهادی ایمنی‌محور)، چگونه کار می‌کند، دوزبانه؛ بدون ادعای درمان؛ CTA ثبت‌نام | — | ✔ |
 | PG-PUB-002 Features/How/Pricing | `/pricing` و ... | جدول پلن‌ها از `GET /subscriptions/plans`؛ ردیف «ایمنی در همه پلن‌ها»؛ قیمت: «به‌زودی» تا DEC-104 | API-SUB-001 | ✔ |
-| PG-PUB-003 FAQ/About/Legal-Privacy | `/faq` `/about` `/legal/*` | محتوای ایستا؛ متن حقوقی Pending Legal Review (برچسب Draft در staging) | — | ✔ (محتوا Draft) |
+| PG-PUB-003 FAQ/About/Legal-Privacy | `/faq` `/about` `/legal/*` | محتوای ایستا؛ متن حقوقی `Pending Legal Review` (برچسب Draft در staging) | — | ✔ (محتوا Draft) |
 | PG-AUTH-001 Register | `/register` | ایمیل/موبایل، رمز (راهنمای قدرت)، تاریخ تولد (DatePicker)، زبان؛ خطای سن <۱۸ | API-AUTH-001 | ✔ |
 | PG-AUTH-002 Verify | `/verify` | کد ۶ رقمی، ارسال مجدد با شمارنده | API-AUTH-002 | ✔ |
 | PG-AUTH-003 Login | `/login` | شناسه+رمز؛ قفل/rate limit پیام | API-AUTH-003 | ✔ |
@@ -56,7 +58,7 @@
 | PG | هدف | نقش | API |
 |---|---|---|---|
 | PG-ADM-001 Exercises | فهرست/ایجاد/ویرایش حرکت؛ چک‌لیست انتشار (۱۵ ناحیه، رسانه، منبع)؛ گذار گردش؛ گزارش پوشش | content_admin, exercise_reviewer, clinical_safety_reviewer | API-ADM-001..003 |
-| PG-ADM-002 Safety Rules | نسخه‌های قواعد، مقایسه، انتشار (فقط Reviewer)، نمایش وضعیت EXP | clinical_safety_reviewer | API-ADM-004/005 |
+| `PG-ADM-002 Safety Rules` | نسخه‌های قواعد، مقایسه، انتشار (فقط Reviewer)، نمایش وضعیت EXP | clinical_safety_reviewer | API-ADM-004/005 |
 | PG-ADM-003 Users | فهرست کاربران بدون داده سلامت؛ اعطای grant زمان‌دار | support_admin, super_admin | API-ADM-006/007 |
 | PG-ADM-004 Plans | ماتریس قابلیت-پلن؛ toggleهای safety_critical قفل | super_admin, finance_admin | API-ADM-008 |
 هر اقدام حساس: تأیید و ثبت ممیزی؛ دسترسی غیرمجاز: AccessDenied.
@@ -76,3 +78,5 @@
 | AC-UI-003 | تغییر زبان ← `dir` و تاریخ‌ها فوراً درست |
 | AC-UI-004 | Session با صفحه‌کلید/تاچ قابل استفاده؛ هدف لمس ≥ 44px |
 | AC-UI-005 | صفحات Health بدون رضایت محتوا نشان نمی‌دهند |
+
+</div>

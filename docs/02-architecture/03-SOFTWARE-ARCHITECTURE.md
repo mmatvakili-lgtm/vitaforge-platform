@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # سند ۳ — Software Architecture
 
 | فیلد | مقدار |
@@ -117,10 +119,10 @@ Request → Intent → Context (با Redaction) → Safety pre-check → (Retrie
 `LLMProvider`، `PaymentProvider`، `NotificationChannel`، `ObjectStorage`، `FoodDataSource`، `VectorStore`، `Clock`، `SafetyGate`. هر Port با Adapter آزمایشی (Fake) برای تست؛ Fake در Production ممنوع (بررسی config در startup).
 
 ## 11. i18n و تقویم
-ترجمه رابط در فایل‌های JSON (Frontend) و جدول `translations` برای محتوا (حرکات). تاریخ: ذخیره UTC؛ نمایش با کتابخانه تاریخ (شمسی/میلادی) در Frontend؛ Backend ISO-8601. ارقام فارسی/لاتین از ترجیح. RTL/LTR با `dir` و logical CSS properties.
+ترجمه رابط در فایل‌های JSON (Frontend) و جدول `translations` برای محتوا (حرکات). تاریخ: ذخیره UTC؛ نمایش با کتابخانه تاریخ (شمسی/میلادی) در Frontend؛ Backend ISO-8601. ارقام فارسی/لاتین از ترجیح. RTL/LTR با `dir` و `logical CSS properties.`
 
 ## 12. امنیت (خلاصه؛ DOC-15)
-Session cookie HttpOnly/Secure/SameSite=Lax + CSRF؛ Argon2؛ rate limit؛ Validation سمت سرور (DRF serializers با فهرست سفید فیلد)؛ رمزنگاری فیلدهای حساس (فیلد رمزشده در سطح اپلیکیشن، کلیدها از Secret Manager/ENV)؛ لاگ بدون PII سلامت؛ dependency scan؛ headers (CSP، HSTS).
+`Session cookie HttpOnly/Secure/SameSite`=Lax + CSRF؛ Argon2؛ rate limit؛ Validation سمت سرور (DRF serializers با فهرست سفید فیلد)؛ رمزنگاری فیلدهای حساس (فیلد رمزشده در سطح اپلیکیشن، کلیدها از Secret Manager/ENV)؛ لاگ بدون PII سلامت؛ dependency scan؛ headers (CSP، HSTS).
 
 ## 13. مشاهده‌پذیری
 Structured logging (JSON) با `request_id`؛ Health endpoints `/health/live`، `/health/ready`؛ متریک‌ها؛ Error tracking (Provider-agnostic).
@@ -139,3 +141,5 @@ MOD-* ماژول، ENT-* موجودیت (DOC-05)، API-* مسیر (DOC-07)، TST
 | AC-ARCH-003 | همه Portها Fake و Real جدا دارند؛ Fake در prod رد می‌شود |
 | AC-ARCH-004 | همه endpointها OpenAPI دارند و permission صریح |
 | AC-ARCH-005 | هر مسیر ارائه برنامه SafetyDecision دارد |
+
+</div>

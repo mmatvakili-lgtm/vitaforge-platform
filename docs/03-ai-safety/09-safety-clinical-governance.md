@@ -1,4 +1,6 @@
-# سند ۹ — Safety & Clinical Governance Specification
+<div dir="rtl">
+
+# سند ۹ — Safety & `Clinical Governance Specification`
 
 | فیلد | مقدار |
 |---|---|
@@ -7,7 +9,7 @@
 | Status | Draft — طراحی فنی کامل؛ **محتوای بالینی: Pending Review (EXP)** |
 | Created | 2026-11-07 |
 | Updated | 2026-11-07 |
-| Owner | Safety Lead (با تأیید Clinical Safety Reviewer) |
+| Owner | Safety Lead (با تأیید `Clinical Safety Reviewer`) |
 | Related Documents | DOC-01، DOC-20، OPEN_DECISIONS، ADR-0003، ADR-0004 |
 | Related Decisions | DEC-001، 002، 004، 008، 116، 121، 123، 124 |
 
@@ -263,11 +265,11 @@ Draft → Scientific Review → Clinical Safety Review → (Translation FA/EN) �
 | Content Admin | نگارش |
 | Exercise Reviewer | بازبینی حرکت |
 | Nutrition Reviewer | تغذیه |
-| Clinical Safety Reviewer | قوانین ایمنی/بالینی |
+| `Clinical Safety Reviewer` | قوانین ایمنی/بالینی |
 | Super Admin | بدون حق انتشار قواعد بالینی بدون Reviewer |
 
 قواعد:
-- انتشار قاعده ایمنی نیازمند امضای Clinical Safety Reviewer (دو نفره برای severity=critical، پیشنهاد).
+- انتشار قاعده ایمنی نیازمند امضای `Clinical Safety Reviewer` (دو نفره برای severity=critical، پیشنهاد).
 - هر نسخه قانون تغییرناپذیر؛ تغییر = نسخه جدید.
 - Rollback نسخه با ثبت علت.
 - تأیید فهرست‌های EXP مستلزم ثبت: نام بازبین، صلاحیت، تاریخ، منابع. هیچ منبعی جعل نمی‌شود؛ تا ثبت منبع، `source_ref=NULL` و قاعده قابل انتشار نیست.
@@ -313,3 +315,5 @@ Draft → Scientific Review → Clinical Safety Review → (Translation FA/EN) �
 - محتوای بالینی مسیر B (DEC-116/124، EXP-011): طراحی فنی کامل شد؛ آستانه‌ها و فهرست‌ها Pending Review.
 - آستانه‌های زمانی بازبینی و درجه‌بندی شدت.
 - منابع علمی: ثبت نشده (هیچ منبعی جعل نشده است).
+
+</div>
