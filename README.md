@@ -9,5 +9,6 @@
 - برنامه اجرا: `docs/IMPLEMENTATION_PLAN.md`
 - تصمیم‌های باز: `docs/OPEN_DECISIONS.md`
 - اجرای تست‌های هسته ایمنی: `cd backend && python3 -m pytest -q`
+- اجرای نسخه توسعه: `cd backend && python3 -m devserver`
 
 </div>

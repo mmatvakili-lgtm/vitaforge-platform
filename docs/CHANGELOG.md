@@ -10,5 +10,6 @@
 ## 2026-11-07 (۲)
 - مخزن GitHub راه‌اندازی شد؛ سیاست زبان + `lint_docs`/`normalize_docs`.
 - `safety_core`: engine، validate_plan، find_alternatives + ۷۲ تست.
+- `ai_gateway`، `entitlements`، `app_services` (identity، health_profile، workouts)، `devserver` (WSGI + UI آزمایشی)؛ ۱۶۹ تست سبز.
 
 </div>

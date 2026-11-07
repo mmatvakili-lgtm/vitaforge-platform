@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VitaForge — نسخه آزمایشی توسعه</title>
+<style>
+:root{--bg:#fff;--fg:#1a1d24;--mut:#5b6472;--pri:#0b5fff;--bd:#d9dde5;--warn:#fff4d6}
+@media (prefers-color-scheme:dark){:root{--bg:#12151b;--fg:#e8ebf1;--mut:#9aa4b2;--pri:#6ea0ff;--bd:#2b3240;--warn:#3a3218}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 system-ui,Tahoma,sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px}
+.warn{background:var(--warn);padding:8px 12px;border-radius:8px}
+section{border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin:12px 0}
+input,select,button{font:inherit;padding:8px 10px;margin:4px 0;border:1px solid var(--bd);border-radius:8px;background:transparent;color:inherit;min-height:44px}
+button{background:var(--pri);color:#fff;border:0;cursor:pointer;padding-inline:16px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+pre{direction:ltr;text-align:left;overflow:auto;background:transparent;border:1px solid var(--bd);padding:8px;border-radius:8px}
+</style></head>
+<body><main>
+<h1>VitaForge</h1>
+<p class="warn" role="note">نسخه آزمایشی توسعه: داده‌ها موقت و حرکات نمونه‌اند؛ محتوای بالینی بازبینی نشده است. توصیه پزشکی نیست.</p>
+<section aria-labelledby="h1"><h2 id="h1">۱. ورود / ثبت‌نام</h2>
+<label>ایمیل <input id="email" type="email" autocomplete="email" value="demo@example.com"></label><br>
+<label>گذرواژه <input id="pw" type="password" autocomplete="current-password" value="Str0ngPassw0rd"></label><br>
+<button id="reg">ثبت‌نام و ورود</button></section>
+<section aria-labelledby="h2"><h2 id="h2">۲. آشناسازی و غربالگری</h2>
+<label>سن <input id="age" type="number" value="30" min="1" max="119"></label>
+<label>هدف <select id="goal"><option value="strength">قدرت</option><option value="muscle_gain">حجم</option><option value="general_fitness">تناسب عمومی</option><option value="fat_loss">کاهش چربی</option></select></label>
+<label>روز در هفته <input id="days" type="number" value="3" min="1" max="6"></label>
+<label>دقیقه هر جلسه <input id="mins" type="number" value="60" min="20" max="180"></label>
+<label><input id="consent" type="checkbox" checked> رضایت پردازش داده سلامت را می‌دهم</label>
+<fieldset><legend>غربالگری علائم هشدار</legend>
+<label><input type="checkbox" class="rf" data-q="chest_pain"> درد قفسه سینه</label><br>
+<label><input type="checkbox" class="rf" data-q="fainting"> غش</label><br>
+<label><input type="checkbox" class="rf" data-q="severe_unexplained_pain"> درد شدید بی‌دلیل</label><br>
+<label><input type="checkbox" class="rf" data-q="neurological_symptoms"> علائم عصبی</label></fieldset>
+<button id="gen">ساخت برنامه</button></section>
+<section aria-live="polite"><h2>نتیجه</h2><div id="out">—</div><pre id="raw"></pre></section>
+</main>
+<script>
+let token="";const $=id=>document.getElementById(id);
+async function api(m,p,b){const r=await fetch("/api/v1"+p,{method:m,headers:{"Content-Type":"application/json",...(token?{Authorization:"Bearer "+token}:{})},body:m==="GET"?undefined:JSON.stringify(b||{})});return{st:r.status,j:await r.json()}}
+$("reg").onclick=async()=>{const b={email:$("email").value,password:$("pw").value};await api("POST","/auth/register",b);
+const r=await api("POST","/auth/login",b);if(r.st===200){token=r.j.token;$("out").textContent="وارد شدید."}else $("out").textContent="ورود ناموفق ("+r.st+")"};
+$("gen").onclick=async()=>{if(!token){$("out").textContent="ابتدا وارد شوید.";return}
+await api("PUT","/onboarding/steps/basics",{age:+$("age").value});
+await api("PUT","/onboarding/steps/goal",{goal:$("goal").value,level:"beginner"});
+await api("PUT","/onboarding/steps/schedule",{days_per_week:+$("days").value,session_minutes:+$("mins").value});
+await api("PUT","/onboarding/steps/equipment",{equipment:[]});
+if($("consent").checked)await api("POST","/consents",{type:"health_data_processing"});
+const a={};document.querySelectorAll(".rf").forEach(c=>a[c.dataset.q]=c.checked);await api("POST","/health/screening",a);
+const c=await api("POST","/onboarding/complete",{});if(c.st!==200){$("out").textContent="برای ادامه رضایت لازم است.";return}
+const r=await api("POST","/workouts/generate",{});$("raw").textContent=JSON.stringify(r.j,null,1);
+if(r.st!==200){$("out").textContent="برنامه ساخته نشد: ارزیابی ایمنی ("+(r.j.status||r.j.error)+"). لطفاً با متخصص مشورت کنید.";return}
+$("out").innerHTML=r.j.result.days.map(d=>"<h3>"+d.name+"</h3><ul>"+d.exercises.map(e=>"<li>"+e.code+" — "+e.sets+"×"+e.reps_min+"–"+e.reps_max+"</li>").join("")+"</ul>").join("")};
+</script></body></html>
