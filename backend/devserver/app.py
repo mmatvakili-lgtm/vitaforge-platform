@@ -13,6 +13,8 @@ import time
 from datetime import date
 from typing import Callable, List, Tuple
 
+from app_services.catalog import CatalogService
+from app_services.subscriptions import DisabledPaymentProvider, SubscriptionService
 from app_services.errors import AppError, AuthFailed, SafetyBlocked
 from app_services.health_profile import CONSENT_HEALTH, HealthProfileService
 from app_services.identity import IdentityService
@@ -43,6 +45,9 @@ class App:
         self.id = IdentityService(store, lambda: int(time.time()))
         self.h = HealthProfileService(store, day, SCREENING)
         self.w = WorkoutService(store, self.h, SafetyCore(rule_set), day)
+        self.cat = CatalogService(store)
+        self.sub = SubscriptionService(store, DisabledPaymentProvider())
+        self.store = store
         self.routes: List[Tuple[str, "re.Pattern", Callable]] = []
         R = self._route
         R("GET", "/health/live", lambda c: {"status": "ok"}, auth=False)
@@ -64,10 +69,25 @@ class App:
         R("POST", "/workouts/sessions", lambda c: {"id": self.w.start_session(c["uid"], c["body"].get("day_name"))})
         R("POST", "/workouts/sessions/(?P<sid>[^/]+)/logs", self._log)
         R("POST", "/workouts/sessions/(?P<sid>[^/]+)/finish", lambda c: self.w.finish(c["uid"], c["sid"]) or {})
+        R("GET", "/exercises", lambda c: {"items": self.cat.list_public()})
+        R("GET", "/exercises/(?P<code>[^/]+)", lambda c: {"code": c["code"], "pattern": self.cat.get_public(c["code"]).candidate.movement_pattern})
+        R("GET", "/subscriptions/plans", lambda c: {"plans": self.sub.plans()})
+        R("GET", "/subscriptions/me", lambda c: self.sub.me(c["uid"]))
+        R("POST", "/subscriptions/checkout", lambda c: self.sub.checkout(c["uid"], c["body"].get("plan")))
+        R("POST", "/subscriptions/cancel", lambda c: self.sub.cancel(c["uid"]) or {})
+        R("POST", "/admin/exercises/(?P<code>[^/]+)/transition", lambda c: {"status": self.cat.transition(
+            self._role(c), c["uid"], c["code"], c["body"].get("target"), bool(c["body"].get("tags_complete")))["status"]})
+        R("POST", "/admin/safety/rule-sets/(?P<v>[0-9]+)/publish", lambda c: self.cat.publish_rule_set(
+            self._role(c), c["uid"], int(c["v"]), c["body"].get("expert_signoff_ref")))
+        R("PUT", "/admin/plans/(?P<plan>[a-z]+)/features", lambda c: self.sub.set_plan_features(
+            self._role(c), c["plan"], c["body"].get("features", [])) or {})
         R("GET", "/progress/weekly", lambda c: self.w.weekly_progress(c["uid"], date.today().toordinal() - 6, date.today().toordinal()))
 
     def _route(self, method, pattern, fn, auth=True):
         self.routes.append((method, re.compile("^/api/v1" + pattern + "$"), fn, auth))
+
+    def _role(self, c):
+        return self.store.users[c["uid"]]["role"]
 
     def _register(self, c):
         b = c["body"]

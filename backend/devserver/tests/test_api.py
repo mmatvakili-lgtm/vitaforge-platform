@@ -104,3 +104,33 @@ def test_static_index_served():
     env = {"REQUEST_METHOD": "GET", "PATH_INFO": "/", "CONTENT_LENGTH": "0", "wsgi.input": io.BytesIO(b"")}
     body = b"".join(make()(env, lambda st, h: out.update(st=st, h=dict(h))))
     assert out["st"].startswith("200") and b'dir="rtl"' in body and "Content-Security-Policy" in out["h"]
+
+
+def _login(a, email, role=None):
+    call(a, "POST", "/auth/register", {"email": email, "password": "Str0ngPassw0rd"})
+    uid = a.store.by_email[email]
+    if role: a.store.users[uid]["role"] = role
+    return call(a, "POST", "/auth/login", {"email": email, "password": "Str0ngPassw0rd"})[1]["token"]
+
+
+def test_public_catalog_and_subscriptions_http():
+    a = make(); t = _login(a, "u@ex.com")
+    items = call(a, "GET", "/exercises", None, t)[1]["items"]
+    assert len(items) == 16 and call(a, "GET", "/exercises/nope", None, t)[0] == 404
+    assert call(a, "GET", f"/exercises/{items[0]}", None, t)[0] == 200
+    assert call(a, "GET", "/subscriptions/plans", None, t)[1]["plans"] == ["free", "pro"]
+    assert call(a, "GET", "/subscriptions/me", None, t)[1]["plan"] == "free"
+    assert call(a, "POST", "/subscriptions/checkout", {"plan": "pro"}, t)[0] == 428
+    assert call(a, "POST", "/subscriptions/cancel", {}, t)[0] == 404
+
+
+def test_admin_endpoints_enforce_roles():
+    a = make(); user = _login(a, "u@ex.com"); adm = _login(a, "a@ex.com", "admin"); rev = _login(a, "r@ex.com", "clinical_safety_reviewer")
+    assert call(a, "PUT", "/admin/plans/free/features", {"features": ["safety_screening", "restrictions"]}, user)[0] == 403
+    assert call(a, "PUT", "/admin/plans/free/features", {"features": ["plan_generation"]}, adm)[0] == 422
+    assert call(a, "PUT", "/admin/plans/free/features", {"features": ["safety_screening", "restrictions"]}, adm)[0] == 200
+    assert call(a, "POST", "/admin/safety/rule-sets/2/publish", {"expert_signoff_ref": "EXP-1"}, adm)[0] == 403
+    assert call(a, "POST", "/admin/safety/rule-sets/2/publish", {}, rev)[0] == 422
+    assert call(a, "POST", "/admin/safety/rule-sets/2/publish", {"expert_signoff_ref": "EXP-1"}, rev)[0] == 200
+    assert call(a, "POST", "/admin/exercises/zzz/transition", {"target": "retired"}, rev)[0] == 404
+    assert call(a, "POST", "/admin/exercises/demo_squat_a/transition", {"target": "retired"}, user)[0] == 403
