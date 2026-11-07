@@ -15,7 +15,7 @@
 | M | وضعیت | یادداشت |
 |---|---|---|
 | M1 Foundation | In Progress | ساختار repo، `.env.example`، README؛ Docker/CI فایل‌ها نوشته‌شده، Not Run |
-| `M4 Safety Core` | In Progress | پکیج خالص پایتون + pytest قابل‌اجرا |
+| `M4 Safety Core` | Complete (engine) | ۷۲ تست pytest سبز؛ پوشش خطی ≈۹۶٪ (engine)؛ محتوای بالینی همچنان `Pending Expert`؛ کدهای دلیل جدید `SAF-R013..R018` باید در سند ۰۹ ثبت شوند |
 | `M6a Workout Engine` (domain) | Not Started | پس از M4 |
 | M2 Identity | Not Started | نیازمند Django |
 | M3 Profile/Onboarding/Health | Not Started | |
