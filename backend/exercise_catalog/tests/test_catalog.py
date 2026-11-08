@@ -85,3 +85,10 @@ def test_relations_and_unknown_region_assumed_high():
     assert ("goblet_squat", "alternative") in rel["bodyweight_squat"]
     r = dataclasses.replace(rows[0], region_loads={})
     assert all(rl.loading == "high" for rl in to_candidate(r, True).region_loads)
+
+
+def test_production_startup_guard():
+    from exercise_catalog.bridge import ProductionCatalogError, assert_production_catalog
+    with pytest.raises(ProductionCatalogError):
+        assert_production_catalog(load_starter())
+    assert_production_catalog([])

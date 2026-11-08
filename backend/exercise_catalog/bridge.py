@@ -34,3 +34,14 @@ def relations(records) -> dict:
 
 def publishable(records):
     return [r for r in records if not publication_blockers(r)]
+
+
+class ProductionCatalogError(Exception):
+    pass
+
+
+def assert_production_catalog(records) -> None:
+    """Startup guard (DOC-10): sample/unreviewed content must never be loaded in production."""
+    bad = [r.id for r in records if r.is_sample or r.publication_status != "published" or publication_blockers(r)]
+    if bad:
+        raise ProductionCatalogError(f"{len(bad)} records are not publishable, e.g. {bad[:3]}")

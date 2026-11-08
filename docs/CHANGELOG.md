@@ -14,5 +14,6 @@
 - ترجیح حرکات حمایتی (`supports_regions`) برای سابقه بدون درد، پشت فیلتر ایمنی؛ `OPEN-008`.
 - اندازه‌گیری بدن، ثبت درد، داشبورد، پیشرفت ماهانه، خروجی و حذف داده؛ ۱۹۷ تست.
 - پیاده‌سازی همه ۵۶ endpoint در آداپتور توسعه (بازیابی گذرواژه، پروفایل، علائم، نسخه‌های برنامه، ادمین، گفتگوی AI با Provider پیکربندی‌نشده → fallback)؛ ۲۰۲ تست.
+- `exercise_catalog` (schema، importer، منابع، ۲۵ حرکت نمونه)، `nutrition_engine`، `progression`/recovery، لایه تصمیم AI، توضیح ایمنی؛ `DECISION_REGISTRY` و `CAPABILITY_STATUS`؛ ۲۸۰ تست.
 
 </div>

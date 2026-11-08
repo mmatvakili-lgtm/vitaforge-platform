@@ -26,6 +26,22 @@
 | M9 Subscription/Admin | In Progress | منطق Entitlement (دامنه) Complete با ۴ تست؛ مدل/`API/Admin Not Started` |
 | M10 Release | In Progress | `Dockerfile`/`docker-compose`/CI و اسکلت Django/Next.js نوشته شد، `Not Run`؛ گزارش نهایی و `RELEASE_CHECKLIST` در انتظار |
 
+## دستور تکمیل منطق محصول و داده (۲۰۲۶-۱۱-۰۸)
+| مورد | وضعیت |
+|---|---|
+| ۱ Exercise Schema + Import | Implemented + Tested |
+| ۲ مجموعه اولیه حرکات | ۲۵ حرکت `experimental`، منبع علمی ندارد، `Pending Expert` |
+| ۳ Safety Core (توضیح، تجهیزات، سطح) | Implemented + Tested |
+| ۴ Workout Engine (ترتیب، تعادل، ریکاوری، تنوع) | Implemented + Tested، پارامترها `Unverified` |
+| ۵ Progression & Recovery | Implemented + Tested |
+| ۶ Nutrition Engine | Implemented + Tested (تخمین؛ هدف عددی غیرفعال) |
+| ۷ `AI Decision Layer` | Implemented + Tested |
+| ۸ اتصال API | آداپتور توسعه کامل؛ Django/Next.js `Not Run` |
+| ۹ E2E | ۸ سناریو روی محتوای نمونه |
+| ۱۰ مستندسازی | `DECISION_REGISTRY`، `CAPABILITY_STATUS`، `10A` |
+
+اعلام «MVP کامل» مجاز نیست: داده بازبینی‌شده، اتصال واقعی Frontend/Backend (Django/Next.js اجراشده) و تأیید تخصصی وجود ندارد. جزئیات: `CAPABILITY_STATUS.md`.
+
 ## ادامه کار (Resume)
 `cd backend && python3 -m pytest -q` برای تست‌های دامنه؛ سپس ادامه از اولین `Not Started` در جدول. محدودیت: Django/DRF/Next.js/Playwright در محیط نصب نیست (شبکه بسته) — کد آن‌ها نوشته شده ولی `Not Run`.
 

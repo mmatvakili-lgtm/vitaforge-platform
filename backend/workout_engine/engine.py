@@ -28,8 +28,8 @@ FULL_BODY = [("squat", "squat", "main"), ("hinge", "hinge", "main"), ("push", "p
 UPPER = [("push_h", "push_horizontal", "main"), ("pull_h", "pull_horizontal", "main"), ("push_v", "push_vertical", "accessory"),
          ("pull_v", "pull_vertical", "accessory")]
 LOWER = [("squat", "squat", "main"), ("hinge", "hinge", "main"), ("lunge", "lunge", "accessory"), ("core", "core", "accessory")]
-PUSH = [("push_h", "push_horizontal", "main"), ("push_v", "push_vertical", "accessory")]
-PULL = [("pull_h", "pull_horizontal", "main"), ("pull_v", "pull_vertical", "accessory")]
+PUSH = [("push_h", "push_horizontal", "main"), ("push_v", "push_vertical", "accessory"), ("core", "core", "accessory")]
+PULL = [("pull_h", "pull_horizontal", "main"), ("pull_v", "pull_vertical", "accessory"), ("core", "core", "accessory")]
 LEGS = LOWER
 
 DAY_TEMPLATES = {
@@ -51,8 +51,8 @@ def _day_names(structure: str, n: int) -> List[Tuple[str, list]]:
     return [base[i % len(base)] if structure != "ppl" else base[i % 3] for i in range(n)]
 
 
-def _fail(status, reasons, decision=None, cfg: Optional[EngineConfig] = None, flags=()):
-    return PlanResult(status=status, reasons=tuple(reasons), safety_decision_id=getattr(decision, "decision_id", None),
+def _fail(status, reasons, decision=None, cfg: Optional[EngineConfig] = None, flags=(), omissions=()):
+    return PlanResult(status=status, reasons=tuple(reasons), omissions=tuple(omissions), safety_decision_id=getattr(decision, "decision_id", None),
                       rule_set_version=getattr(decision, "rule_set_version", None),
                       config_version=getattr(cfg, "version", None), flags=tuple(flags))
 
@@ -111,6 +111,10 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
         for slot, pattern, role in slots:
             cands = [c for c in by_code.values() if c.candidate.movement_pattern == pattern and c.code not in day_codes
                      and used_week.get(c.code, 0) < cfg.max_repeat_per_week]
+            relaxed = False
+            if not cands:
+                cands = [c for c in by_code.values() if c.candidate.movement_pattern == pattern and c.code not in day_codes]
+                relaxed = bool(cands)                    # content gap: repeat an allowed exercise rather than drop the slot
             if not cands:
                 omissions.append(Omission(name, slot, "no-allowed-exercise"))
                 continue
@@ -133,7 +137,7 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
             used_week[best.code] = used_week.get(best.code, 0) + 1
             day_codes.add(best.code)
             chosen.append(PlannedExercise(best.code, sets if role == "main" else max(2, sets - 1), rmin, rmax, rpe, rest, slot,
-                                          "slot-match" + ("+caution" if best.code in caution else "")
+                                          "slot-match" + ("+repeat-relaxed" if relaxed else "") + ("+caution" if best.code in caution else "")
                                           + ("+supportive" if inp.supportive_enabled and set(best.supports_regions) & set(inp.supportive_regions) else "")))
         # WO-C01 time budget: drop accessories from the end
         def minutes(ex_list):
@@ -148,8 +152,8 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
             dropped = chosen.pop(idx)
             omissions.append(Omission(name, dropped.slot, "session-time"))
         # WO-C06 every session needs a main exercise
-        if not any(by_code[e.code].role == "main" for e in chosen) or minutes(chosen) > inp.session_minutes:
-            return _fail("NEEDS_CONTENT", reasons + [f"WO-C06:{name}"], decision, cfg, decision.flags)
+        if len(chosen) < cfg.min_exercises_per_day or not any(by_code[e.code].role == "main" for e in chosen) or minutes(chosen) > inp.session_minutes:
+            return _fail("NEEDS_CONTENT", reasons + [f"WO-C06:{name}"], decision, cfg, decision.flags, omissions)
         order = {s_[0]: i for i, s_ in enumerate(slots)}
         chosen.sort(key=lambda e: (by_code[e.code].role != "main", order[e.slot]))        # main lifts first, then accessories, slot order
         days.append(PlannedDay(name, tuple(chosen), minutes(chosen)))

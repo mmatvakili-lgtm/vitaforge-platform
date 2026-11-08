@@ -21,3 +21,11 @@ class SafetyBlocked(AppError):
     def __init__(self, status: str, reasons=(), decision_id=None):
         super().__init__(status)
         self.status, self.reasons, self.decision_id = status, tuple(reasons), decision_id
+
+
+class NeedsContent(AppError):
+    code, http = "needs_content", 422
+
+    def __init__(self, reasons=(), omissions=()):
+        super().__init__("needs_content")
+        self.reasons, self.omissions = tuple(reasons), tuple(omissions)

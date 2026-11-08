@@ -34,6 +34,7 @@ class EngineConfig:
     status: str = "unverified"
     warmup_minutes: int = 5
     max_repeat_per_week: int = 2
+    min_exercises_per_day: int = 3          # fewer => NEEDS_CONTENT (a 1-exercise 'plan' would be misleading)
     max_weekly_sets_per_muscle: Mapping[str, int] = field(default_factory=lambda: {"beginner": 12, "intermediate": 16, "advanced": 20})
     push_pull_ratio: Tuple[float, float] = (0.5, 2.0)
     load_step_kg: Mapping[str, float] = field(default_factory=lambda: {"barbell": 2.5, "dumbbell": 2.0, "machine": 2.5, "other": 1.0})

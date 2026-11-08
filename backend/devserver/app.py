@@ -17,7 +17,7 @@ from app_services.catalog import CatalogService
 from app_services.subscriptions import DisabledPaymentProvider, SubscriptionService
 from app_services.extras import ExtrasService
 from app_services.more import MoreService
-from app_services.errors import AppError, AuthFailed, SafetyBlocked
+from app_services.errors import AppError, AuthFailed, NeedsContent, SafetyBlocked
 from app_services.health_profile import CONSENT_HEALTH, HealthProfileService
 from app_services.identity import IdentityService
 from app_services.store import InMemoryStore
@@ -58,6 +58,11 @@ class App:
             code, external = 'unconfigured', False
             def generate(self, req): raise ProviderUnavailable('no provider configured')
         self.ai = AIGateway(StubProvider() if dev_mode else _Unconfigured())   # production: rule-based fallback until a provider is approved
+        from ai_gateway import DecisionLayer, ExerciseKnowledgeBase
+        from nutrition_engine import NutritionConfig, NutritionLog
+        self.layer = DecisionLayer(self.ai, ExerciseKnowledgeBase(getattr(self, 'records', []), allow_experimental=dev_mode), "fa")
+        self.nlog = NutritionLog(store, day)
+        self.ncfg = NutritionConfig(show_unverified_ranges=dev_mode)
         self.sent_resets: list = []     # dev 'mail outbox'
         self.routes: List[Tuple[str, "re.Pattern", Callable]] = []
         R = self._route
@@ -102,6 +107,13 @@ class App:
         R("POST", "/privacy/delete", self._delete)
         R("GET", "/privacy/requests/(?P<rid>[^/]+)", self._privacy_status)
         R("POST", "/ai/chat", self._chat)
+        R("POST", "/nutrition/estimate", self._nut_estimate)
+        R("POST", "/nutrition/meals", self._nut_meal)
+        R("DELETE", "/nutrition/meals/(?P<mid>[^/]+)", lambda c: self.nlog.delete_meal(c["uid"], c["mid"]) or {})
+        R("POST", "/nutrition/water", lambda c: self.nlog.add_water(c["uid"], c["body"].get("ml")) or {})
+        R("GET", "/nutrition/summary", lambda c: self.nlog.day_summary(c["uid"], estimate=self._nut_result(c["uid"])))
+        R("GET", "/safety/explain", self._explain)
+        R("GET", "/workouts/progression/(?P<code>[^/]+)", self._progression)
         R("POST", "/admin/exercises", self._admin_create_exercise)
         R("POST", "/auth/password-reset/request", self._reset_req, auth=False)
         R("POST", "/auth/password-reset/confirm", lambda c: self.m.confirm_reset(c["body"].get("token"), c["body"].get("new_password")) or {}, auth=False)
@@ -158,16 +170,65 @@ class App:
         uid = c["uid"]
         acc = self.sub.access(uid, "ai_chat")
         plan = self.store.plans.get(uid)
-        codes = plan[-1]["result"].codes if plan else ()
         decision = self.w.gate.evaluate(self.h.safety_request(uid, ()))
-        names = list(codes)
-        r = self.ai.respond(c["body"].get("message", ""), {"structure": plan[-1]["result"].structure if plan else None,
-                            "exercise_names": names}, decision, codes,
-                            quota_remaining=None if acc.allowed else 0)
-        if r.reason == "quota":
+        r = self.layer.respond(c["body"].get("message", ""), decision, plan[-1]["result"] if plan else None,
+                               self._nut_result(uid), quota_remaining=None if acc.allowed else 0)
+        if r.mode == "fixed" and r.trace[-1][1] == "quota" or ("generation", "quota") in r.trace:
             from app_services.errors import PaymentRequired
-            raise PaymentRequired()                       # non-safety feature only; safety answers above are never gated
-        return {"mode": r.mode, "text": r.text, "reason": r.reason, "decision_id": r.safety_decision_id}
+            raise PaymentRequired()                       # non-safety feature only; safety/rule answers are never gated
+        return {"mode": r.mode, "text": r.text, "trace": [list(t) for t in r.trace], "uncertainty": r.uncertainty,
+                "sources": list(r.sources), "labels": list(r.labels), "decision_id": r.safety_decision_id}
+
+    def _nut_profile(self, uid):
+        from nutrition_engine import NutritionProfile
+        n = self.store.__dict__.get("nutrition_profiles", {}).get(uid)
+        if not n:
+            return None
+        age = self.store.profiles.get(uid, {"steps": {}})["steps"].get("basics", {}).get("age")
+        return NutritionProfile(age, n.get("sex"), n.get("height_cm"), n.get("weight_kg"), n.get("activity"), n.get("goal") or "maintain",
+                                n.get("screening", {}))
+
+    def _nut_result(self, uid):
+        from nutrition_engine import estimate
+        p = self._nut_profile(uid)
+        return estimate(p, self.w.gate, self.h.safety_request(uid, ()), self.ncfg) if p else None
+
+    def _nut_estimate(self, c):
+        from app_services.errors import ValidationFailed
+        b = c["body"]
+        if not isinstance(b.get("screening", {}), dict):
+            raise ValidationFailed("screening")
+        self.store.__dict__.setdefault("nutrition_profiles", {})[c["uid"]] = {k: b.get(k) for k in ("sex", "height_cm", "weight_kg", "activity", "goal", "screening")}
+        r = self._nut_result(c["uid"])
+        return _plain(r)
+
+    def _nut_meal(self, c):
+        b = c["body"]
+        e = self.nlog.add_meal(c["uid"], b.get("name"), b.get("kcal"), b.get("protein_g"), b.get("carbs_g"), b.get("fat_g"))
+        return _plain(e)
+
+    def _explain(self, c):
+        from safety_core.explain import explain
+        from app_services.errors import NotFound
+        cands = tuple(x.candidate for x in self.store.catalog.values())
+        req = self.h.safety_request(c["uid"], cands)
+        import dataclasses as dc
+        st = self.store.profiles.get(c["uid"], {"steps": {}})["steps"]
+        req = dc.replace(req, equipment=tuple(st.get("equipment", {}).get("equipment", [])) if "equipment" in st else None,
+                         user_level=st.get("goal", {}).get("level"))
+        return explain(self.w.gate.evaluate(req), "fa")
+
+    def _progression(self, c):
+        from workout_engine.progression import SessionPerf, SetLog, decide
+        code = c["code"]
+        hist = []
+        for w in self.store.workout_sessions.values():
+            if w["user"] == c["uid"] and w["finished"]:
+                sets = tuple(SetLog(l["reps"], l["load_kg"], l["rpe"]) for l in w["logs"] if l["code"] == code)
+                if sets:
+                    hist.append(SessionPerf(w["start"], sets, len(sets), 8, 12, True, False, None))
+        flags = self.store.plans[c["uid"]][-1]["result"].flags if self.store.plans.get(c["uid"]) else ()
+        return _plain(decide(hist, flags, "other", self.w.cfg))
 
     def _admin_create_exercise(self, c):
         from safety_core.models import REGIONS, ExerciseCandidate, RegionLoad
@@ -251,6 +312,9 @@ class App:
                 except SafetyBlocked as e:
                     return self._resp(start_response, e.http, {"error": e.code, "status": e.status,
                                                                "reasons": list(e.reasons), "decision_id": e.decision_id})
+                except NeedsContent as e:
+                    return self._resp(start_response, e.http, {"error": e.code, "reasons": list(e.reasons), "omissions": list(e.omissions),
+                                                               "message": "not enough reviewed exercises for your equipment/restrictions"})
                 except AppError as e:
                     return self._resp(start_response, e.http, {"error": e.code})
         return self._resp(start_response, 404, {"error": "not_found"})

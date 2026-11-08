@@ -1,0 +1,59 @@
+# -*- coding: utf-8 -*-
+"""Single source for DOC-DR (Decision Registry) and DOC-CAP (Capability Status). Run: python3 tools/gen_registry.py"""
+
+# (id, title, problem, options, decision, rationale, product_impact, db_api_impact, status, deps, acceptance)
+D = [
+("DEC-001", "هسته ایمنی از فاز ۱", "ایمنی باید مستقل از AI و UI باشد.", "A) ایمنی داخل موتور تمرین؛ B) پکیج مستقل", "پکیج مستقل `safety_core` و تنها مرجع تأیید حرکت", "جلوگیری از دورزدن توسط LLM یا منطق برنامه‌ساز", "هیچ برنامه‌ای بدون `SafetyDecision` ساخته نمی‌شود", "فیلد `safety_decision_id` در نسخه برنامه", "Implemented", "ADR-0002", "ST-001..017؛ `test_architecture`؛ e2e s4/s5"),
+("DEC-002", "بزرگسال‌محور", "کودکان/بارداری/پرخطر خارج از توان تأیید.", "A) پوشش همه؛ B) فقط بزرگسال + ارجاع", "فقط ≥۱۸؛ بارداری/پرخطر → ارجاع", "کاهش ریسک بالینی/حقوقی", "مسدودسازی سن و پرچم‌های خارج از دامنه", "`out_of_scope_flags`", "Implemented", "—", "`test_age_boundary`؛ `test_pregnancy_blocks`"),
+("DEC-003", "تقویم شمسی/میلادی", "نمایش دو تقویم.", "A) ذخیره محلی؛ B) UTC + نمایش بر اساس زبان", "ذخیره UTC/ISO؛ نمایش در UI", "یکپارچگی داده", "—", "ستون‌های زمان UTC", "Designed", "frontend", "Not Run (Frontend)"),
+("DEC-004", "بدون ثبت آفلاین داده سلامت", "ریسک نشت داده روی دستگاه.", "A) آفلاین کامل؛ B) غیرفعال", "غیرفعال؛ فقط لاگ تمرین غیرحساس با Flag (ADR-0004)", "حریم خصوصی", "نیاز به آنلاین برای ثبت درد", "Flag `offline_workout_log`", "Designed", "ADR-0004", "Not Run"),
+("DEC-005", "ایمنی رایگان", "ایمنی نباید پشت پرداخت باشد.", "A) پلن‌بندی همه چیز؛ B) `safety_critical` استثنا", "قابلیت `safety_critical` هرگز Gate نمی‌شود", "اخلاق محصول و ایمنی", "پلن Free کامل برای ایمنی", "جدول `features.safety_critical`", "Implemented", "ADR-0003", "`test_safety_always_allowed...`؛ `test_admin_cannot_remove_safety_feature`"),
+("DEC-006", "بازار‌بی‌طرف", "ایران یا بین‌المللی هنوز نامشخص.", "A) ایران؛ B) بین‌المللی؛ C) هر دو", "معماری بی‌طرف با Port/Adapter", "تعویض‌پذیری", "پرداخت/AI قابل تعویض", "Portها", "Implemented (ports)", "OPEN-001", "`test_subscription_flow`"),
+("DEC-007", "سرویس‌های خارجی فقط Interface", "Provider/غذا/پرداخت نهایی نشده.", "A) انتخاب فوری؛ B) Interface", "Interface + پیاده‌سازی Stub/Disabled", "کاهش قفل‌شدن", "گفتگوی AI در حالت تولید → fallback", "`LLMProvider`, `PaymentProvider`", "Implemented", "OPEN-001/002", "`test_provider_down...`؛ `test_privacy_status_ai_chat_admin_create`"),
+("DEC-008", "بدون محتوای بازتوانی تأییدنشده", "حرکت درمانی تصمیم بالینی است.", "A) تولید توسط AI؛ B) فقط با متخصص", "هیچ پروتکل/حرکت درمانی بدون تأیید متخصص", "جلوگیری از آسیب", "درد فعال → ارجاع، نه برنامه", "`expert_review`, `publication_status`", "Implemented (gate)", "OPEN-003/008", "e2e s4؛ `test_path_b_default_conservative`"),
+("DEC-009", "حذف بلندمدت قابلیت ممنوع", "پایداری محصول.", "—", "هیچ قابلیت اصلی بدون ADR حذف نمی‌شود", "ثبات", "—", "—", "Accepted", "—", "فرایند ADR"),
+("DEC-123", "pgvector مشروط", "RAG هنوز نیاز نیست.", "A) pgvector؛ B) سرویس جدا", "pgvector مشروط به معیار ارزیابی (ADR-0005)", "ساده‌سازی MVP", "RAG Deferred", "`kb_chunks`", "Deferred", "ADR-0005", "—"),
+("DEC-124", "طراحی مسیر B", "درد جدید/نامشخص.", "A) برنامه محتاط؛ B) بدون برنامه + ارجاع", "پیش‌فرض B (بدون برنامه) تا EXP-011", "ایمنی", "کاربر با درد جدید برنامه نمی‌گیرد", "حالت‌های B0..B6", "Implemented", "EXP-011", "`test_path_b_*`؛ e2e s4"),
+("DEC-126", "پلن Free", "مدل تجاری.", "—", "Free با ایمنی کامل؛ سهمیه قابل پیکربندی", "—", "—", "`plan_quotas`", "Implemented", "OPEN-005", "`test_gating_and_quota`"),
+("DEC-133", "بانک حرکات: ساختار واقعی، محتوا نمونه", "داده معتبر بازبینی‌شده در دسترس نیست.", "A) تولید داده «قطعی»؛ B) ساختار کامل + مجموعه نمونه برچسب‌دار + Import", "B: `ExerciseRecord` کامل (۲۰ فیلد)، مجموعه ۲۵ حرکت `experimental/pending`، Importer، گارد Production", "صداقت داده؛ جلوگیری از انتشار ادعای بدون منبع", "برنامه فقط با محتوای نمونه در Dev؛ در Production برنامه ساخته نمی‌شود", "`exercise_catalog.schema`", "Implemented", "OPEN-003/007", "`test_starter_set_valid...`؛ `test_production_startup_guard`؛ `test_production_bridge_blocks...`"),
+("DEC-134", "منابع داده حرکات", "کدام منبع قابل استفاده است؟", "free-exercise-db؛ wger؛ تولید اختصاصی", "هیچ‌کدام وارد بانک منتشرشده نمی‌شوند؛ Importer برای free-exercise-db آماده؛ wger مسدود تا بررسی حقوقی", "مجوز بالادست تأییدنشده؛ CC BY-SA شرط Share-Alike دارد", "نیاز به تولید محتوای اختصاصی/مجاز", "`sources` registry", "Blocked (Legal)", "OPEN-004/007", "`test_sources_registry...`؛ `test_importer_never_publishes...`"),
+("DEC-135", "مجوز انتشار حرکت", "چه چیزی انتشار را مجاز می‌کند؟", "—", "انتشار فقط با: منبع+مجوز تجاری تأییدشده، برچسب ایمنی بازبینی‌شده، تأیید تخصصی، تاریخ بازبینی، غیرنمونه + مراحل نقش‌محور", "ردیابی‌پذیری", "ادمین نمی‌تواند منتشر کند", "`publication_blockers`", "Implemented", "—", "`test_publication_blockers...`؛ `test_wrong_role_cannot_advance`"),
+("DEC-136", "احتیاط ناحیه خوداظهاری", "حد بار مجاز در ناحیه‌ای که کاربر مشکل گزارش کرده.", "none / low / moderate", "پیش‌فرض `none` (محافظه‌کار)؛ مقدار دیگر فقط از پیکربندی بازبینی‌شده (EXP-002)؛ e2e از `low` به‌عنوان جایگزین Dev استفاده می‌کند", "قاعده بالینی است نه فنی", "با پیش‌فرض، برنامه‌ها برای کاربران با سابقه کم‌حرکت‌اند", "`RuleSet.caution_max_loading`", "Pending Expert", "EXP-002", "e2e s3"),
+("DEC-137", "حرکات حمایتی", "کمک به ناحیه بدون درد فعال.", "A) تولید توسط AI؛ B) برچسب `supports_regions` بازبینی‌شده", "B؛ موتور ترجیح می‌دهد ولی پس از فیلتر ایمنی؛ بدون محتوای تأییدشده غیرفعال", "ایمنی", "درخواست کاربر برای حرکات ریکاوری فقط ساختار دارد", "`supports_regions`", "Pending Expert", "OPEN-008", "`test_supportive_*`؛ e2e s3"),
+("DEC-138", "توضیح تصمیم ایمنی", "کاربر/ادمین باید دلیل رد/محدودیت را ببیند.", "—", "`explain()` با متن FA/EN برای همه کدهای `SAF-R*` + تست پوشش همه کدها", "شفافیت", "GET /safety/explain", "—", "Implemented", "—", "`test_every_emitted_reason_code_has_text`"),
+("DEC-139", "تجهیزات و سطح در Safety Core", "فیلتر تجهیزات/سطح باید قابل توضیح باشد.", "پیش‌فیلتر در موتور؛ داخل Safety Core", "داخل Safety Core (SAF-R019/R020)", "ثبت دلیل رد", "—", "`SafetyRequest.equipment/user_level`", "Implemented", "—", "`test_equipment_and_level_reasons_explained`"),
+("DEC-140", "کمبود محتوا ≠ برنامه ناقص", "روز با ۱ حرکت گمراه‌کننده است.", "A) برنامه ناقص؛ B) NEEDS_CONTENT", "B؛ حداقل ۳ حرکت در روز؛ تکرار بیش از سقف فقط با برچسب `repeat-relaxed`", "صداقت", "پاسخ ۴۲۲ با `reasons`/`omissions`", "—", "Implemented", "—", "`test_repeat_cap_and_volume`؛ e2e s1"),
+("DEC-141", "پیشرفت مبتنی بر تاریخچه", "فرمول ثابت کافی نیست.", "—", "`progression.decide` با سیگنال‌های عملکرد، پایبندی، درد، خستگی، رکود؛ خروجی `reasons`+`evidence`", "قابل ردیابی", "GET /workouts/progression/{code}", "—", "Implemented", "EXP-013", "`test_progression.py` (۱۶ تست)"),
+("DEC-142", "ریکاوری خوداظهاری", "داده ریکاوری عینی نیست.", "—", "`assess_recovery` با `uncertainty` هرگز `low`", "صداقت", "red → یک ست کمتر", "—", "Implemented", "EXP-013", "`test_recovery_*`"),
+("DEC-143", "تغذیه: فقط تخمین با عدم قطعیت", "اهداف عددی نیازمند متخصص است.", "A) اهداف کاهش/افزایش وزن؛ B) فقط نگهداری + بازه", "B: Mifflin–St Jeor × PAL با بازه ±؛ هدف عددی غیرفعال تا EXP-006؛ ED/بیماری/بارداری → ارجاع", "ایمنی", "POST /nutrition/estimate", "—", "Implemented", "EXP-006", "`test_nutrition.py` (۱۲ تست)"),
+("DEC-144", "لایه تصمیم AI", "AI نباید چت‌بات عمومی باشد.", "—", "Safety → Rule Engine → Retrieval → Generation → Validation → Safety Validation؛ trace در پاسخ", "کاهش خطر و هزینه", "پاسخ قطعی بدون LLM", "—", "Implemented", "OPEN-002", "`test_decision_layer.py` (۸ تست)"),
+("DEC-145", "آداپتور توسعه WSGI", "Django نصب نیست.", "A) صبر؛ B) آداپتور توسعه", "B؛ فقط Dev؛ آداپتور تولیدی Django (ADR-0007)", "امکان اجرا و تست", "—", "—", "Implemented (dev only)", "ADR-0007", "`test_every_openapi_endpoint_is_implemented`"),
+("OPEN-001", "بازار اولیه", "—", "ایران/بین‌المللی/هر دو", "باز؛ معماری بی‌طرف", "—", "پرداخت/حقوقی", "—", "Open", "—", "—"),
+("OPEN-002", "ارسال داده سلامت به LLM", "—", "هرگز/Redacted/آزاد", "باز؛ پیش‌فرض هرگز", "—", "Provider AI", "`AI_EXTERNAL_HEALTH_DATA=false`", "Open", "EXP-012", "`test_external_health_flag_rejected`؛ `test_env`"),
+("OPEN-003", "دسترسی به متخصصان", "—", "قرارداد/عضو تیم/بدون محتوا", "باز", "—", "هر محتوای بالینی", "—", "Open", "—", "—"),
+("OPEN-004", "مشاور حقوقی", "—", "قبل/بعد Beta", "باز", "—", "Beta عمومی", "—", "Open", "—", "—"),
+("OPEN-005", "قیمت/سهمیه", "—", "—", "باز؛ قابل پیکربندی", "—", "Checkout غیرفعال", "`plan_quotas`", "Open", "OPEN-001", "—"),
+("OPEN-006", "بودجه/تیم", "—", "—", "باز", "—", "زمان‌بندی", "—", "Open", "—", "—"),
+("OPEN-007", "مجوز محتوا", "—", "—", "باز", "—", "بانک حرکات/غذا", "—", "Open", "—", "—"),
+("OPEN-008", "محتوای حمایتی/ریکاوری", "—", "—", "باز", "—", "حرکات حمایتی", "`supports_regions`", "Open", "OPEN-003", "—"),
+]
+
+CAP_COLS = ["Designed", "Implemented", "Tested", "Data Populated", "Validated", "Production Ready", "Pending Expert Review"]
+Y, N, P = "✔", "✖", "◐"
+# (module, [7 values], note)
+C = [
+("Safety Core (موتور + قواعد ساختاری)", [Y, Y, Y, P, N, N, Y], "قواعد بالینی R1xx..R5xx `Draft`؛ پارامتر احتیاط `Pending Expert`"),
+("Safety Core: توضیح تصمیم", [Y, Y, Y, Y, N, N, N], "متن‌ها بازبینی زبانی/بالینی نشده"),
+("Exercise Schema + Import Pipeline", [Y, Y, Y, Y, N, N, N], "Importer برای free-exercise-db؛ بدون مجوز تأییدشده"),
+("Exercise Database (محتوا)", [Y, Y, Y, P, N, N, Y], "۲۵ حرکت `experimental`، نمونه، بدون منبع علمی"),
+("Workout Engine", [Y, Y, Y, N, N, N, Y], "پارامترها `Unverified` (EXP-013)"),
+("Progression & Recovery", [Y, Y, Y, N, N, N, Y], "آستانه‌ها پیش‌فرض مهندسی"),
+("Nutrition Engine", [Y, Y, Y, N, N, N, Y], "ضرایب/بازه‌ها `Unverified` (EXP-006)؛ بانک غذا ندارد"),
+("AI Decision Layer", [Y, Y, Y, N, N, N, Y], "Provider واقعی ندارد؛ KB خالی/نمونه"),
+("API (آداپتور توسعه)", [Y, Y, Y, N, P, N, N], "۵۶/۵۶ مسیر موجود؛ تطابق کامل schema تأیید نشده"),
+("API/ORM Django", [Y, P, N, N, N, N, N], "نوشته‌شده، `Not Run`"),
+("Frontend Next.js", [Y, P, N, N, N, N, N], "اسکلت، `Not Run`؛ UI آزمایشی ساده اجراشده"),
+("Identity/Consent/Privacy", [Y, Y, Y, N, N, N, P], "متن‌های حقوقی `Pending Legal`"),
+("Subscriptions/Entitlements", [Y, Y, Y, N, N, N, N], "پرداخت غیرفعال"),
+("E2E سناریوهای واقعی", [Y, Y, Y, N, P, N, N], "۸ سناریو روی محتوای نمونه؛ سناریوی کاربر واقعی انجام نشده"),
+]

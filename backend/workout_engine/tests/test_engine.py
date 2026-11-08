@@ -112,9 +112,12 @@ def test_structure_selection(inp, base, gate):
 
 
 def test_repeat_cap_and_volume(inp, base, gate):
-    r = generate_plan(dataclasses.replace(inp, days_per_week=6), base, gate)
+    r = generate_plan(dataclasses.replace(inp, days_per_week=6, level="advanced", session_minutes=120), base, gate)
+    assert r.status == "OK"
     from collections import Counter
-    assert max(Counter(r.codes).values()) <= EngineConfig().max_repeat_per_week
+    over = [c for c, n in Counter(r.codes).items() if n > EngineConfig().max_repeat_per_week]
+    relaxed = [e.code for d in r.days for e in d.exercises if "repeat-relaxed" in e.reason]
+    assert all(c in relaxed for c in over)          # exceeding the cap is only allowed when explicitly flagged as a content gap
 
 
 def test_gate_failure_on_validate_is_failsafe(inp, base, gate, monkeypatch):

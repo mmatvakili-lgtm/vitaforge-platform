@@ -4,3 +4,4 @@ from .policy import build_context, classify_intent, redact_text
 from .ports import LLMProvider, ModelRequest, ModelResponse, ProviderUnavailable
 from .providers import StubProvider
 from .validator import validate_output
+from .decision_layer import (Chunk, DecisionLayer, DecisionResponse, EmptyKnowledgeBase, ExerciseKnowledgeBase)

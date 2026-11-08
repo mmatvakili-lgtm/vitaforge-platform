@@ -6,7 +6,7 @@ import dataclasses
 from safety_core import SafetyCore
 from workout_engine import EngineConfig, EngineInput, generate_plan
 
-from .errors import Forbidden, NotFound, PreconditionRequired, SafetyBlocked, ValidationFailed
+from .errors import NeedsContent, Forbidden, NotFound, PreconditionRequired, SafetyBlocked, ValidationFailed
 
 
 class WorkoutService:
@@ -29,6 +29,8 @@ class WorkoutService:
         res = generate_plan(inp, base, self.gate)
         if res.status in ("BLOCKED", "ERROR_FAILSAFE"):
             raise SafetyBlocked(res.status, res.reasons, res.safety_decision_id)
+        if res.status == "NEEDS_CONTENT":
+            raise NeedsContent(res.reasons, [f"{o.day}:{o.slot}:{o.reason}" for o in res.omissions])
         if res.status != "OK":
             raise ValidationFailed(res.status + ":" + ",".join(res.reasons))
         versions = self.s.plans.setdefault(uid, [])
