@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib
 import secrets
 
-from .errors import AuthFailed, Forbidden, NotFound, ValidationFailed
+from .errors import AuthFailed, Forbidden, Gone, NotFound, ValidationFailed
 from .identity import hash_password
 
 RESET_TTL = 30 * 60
@@ -30,11 +30,15 @@ class MoreService:
 
     def confirm_reset(self, token, new_password):
         key = hashlib.sha256((token or "").encode()).hexdigest()
-        r = self.s.resets.pop(key, None)                  # single use
-        if not r or r["exp"] < self.clock():
+        r = self.s.resets.get(key)
+        if not r:
             raise AuthFailed()
+        if r["exp"] < self.clock():
+            self.s.resets.pop(key, None)
+            raise Gone("reset_token_expired")
         if len(new_password or "") < 10 or new_password.lower() == new_password or not any(c.isdigit() for c in new_password):
-            raise ValidationFailed("password")
+            raise ValidationFailed("password")                # a weak password does not burn the token
+        self.s.resets.pop(key, None)                          # single use
         u = self.s.users[r["user"]]
         u["pw"], u["fails"], u["locked_until"] = hash_password(new_password), 0, 0
         for sess in self.s.sessions.values():             # revoke all sessions
@@ -44,13 +48,19 @@ class MoreService:
     # ---- profile / onboarding / consents
     def get_profile(self, uid):
         u = self.s.users[uid]
-        return {"email": u["email"], "locale": u["locale"], "plan": u["plan"], "role": u["role"]}
+        return {"email": u["email"], "locale": u["locale"], "plan": u["plan"], "role": u["role"], "prefs": dict(u.get("prefs", {}))}
 
-    def patch_profile(self, uid, locale=None):
+    PREFS = ("display_name", "sex", "country", "timezone", "calendar", "unit_system", "digit_style")
+
+    def patch_profile(self, uid, locale=None, prefs=None):
         if locale is not None:
             if locale not in ("fa", "en"):
                 raise ValidationFailed("locale")
             self.s.users[uid]["locale"] = locale
+        for k, v in (prefs or {}).items():
+            if k not in self.PREFS:
+                raise ValidationFailed("pref:" + k)
+            self.s.users[uid].setdefault("prefs", {})[k] = v
         return self.get_profile(uid)
 
     def onboarding_state(self, uid):

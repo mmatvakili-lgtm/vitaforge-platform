@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: AI Fitness & Health Ecosystem API
   version: 0.1.0
@@ -1460,6 +1460,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '429':
           description: محدودیت نرخ
           content:
@@ -2267,6 +2273,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExerciseList'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: احراز هویت لازم
           content:
@@ -2610,6 +2622,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionList2'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: احراز هویت لازم
           content:
@@ -2703,6 +2721,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionSummary'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: احراز هویت لازم
           content:
@@ -2927,6 +2951,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AiChatResponse'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: احراز هویت لازم
           content:
@@ -3158,6 +3188,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RuleSet'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: احراز هویت لازم
           content:

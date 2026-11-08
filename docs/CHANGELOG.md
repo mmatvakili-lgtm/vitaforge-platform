@@ -2,6 +2,11 @@
 
 # CHANGELOG
 
+## 2026-11-09
+- اعتبارسنجی واقعی قرارداد OpenAPI روی `devserver` برای ۵۶ عملیات (`backend/contract`، ۹۸ تست)؛ `CONTRACT_REPORT.md`؛ spec به 3.1.0 و افزودن 400 (DEC-146/147).
+- بانک حرکات: `license_status`، `limitations`، `review_notes`، واژگان کنترل‌شده، مانع انتشار؛ ۵ حرکت کششی وزن بدن (Experimental/Pending Review) (DEC-149).
+- DEC-146..149، OPEN-009..012.
+
 ## 2026-11-08
 - `MVP_GAP_ANALYSIS.md`: ارزیابی واقعی فاصله تا MVP (سطح ماژول‌ها، Mock/Stub، شکاف داده، مجوز منابع، معیار تکمیل). بدون تغییر کد.
 

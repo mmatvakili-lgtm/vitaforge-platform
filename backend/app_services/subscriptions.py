@@ -5,7 +5,7 @@ from typing import Protocol
 
 from entitlements import Feature, PlanCatalog, check_access
 
-from .errors import Forbidden, NotFound, PreconditionRequired, ValidationFailed
+from .errors import FeatureUnavailable, Forbidden, NotFound, ValidationFailed
 
 FEATURES = {"safety_screening": Feature("safety_screening", True), "restrictions": Feature("restrictions", True),
             "plan_generation": Feature("plan_generation"), "workout_logging": Feature("workout_logging"),
@@ -24,7 +24,7 @@ class DisabledPaymentProvider:
     code = "disabled"
 
     def create_checkout(self, user_id, plan):
-        raise PreconditionRequired("payments_not_configured")
+        raise FeatureUnavailable("payments_not_configured")
 
 
 class SubscriptionService:

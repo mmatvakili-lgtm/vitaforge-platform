@@ -1,0 +1,333 @@
+[
+ {
+  "id": "prone_y_raise",
+  "name_en": "Prone Y Raise",
+  "name_fa": "بالا بردن Y دمرو",
+  "aliases": [],
+  "description": "کشش بازوها به شکل Y در حالت دمرو روی زمین، بدون وسیله.",
+  "primary_muscles": [
+   "lower trapezius",
+   "posterior deltoid"
+  ],
+  "secondary_muscles": [
+   "middle trapezius",
+   "erector spinae"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "تا حد راحتی؛ دست‌ها بالاتر از زمین",
+  "instructions": [
+   "دمرو روی زمین بخواب و پیشانی را روی زمین یا حوله بگذار",
+   "دست‌ها را به شکل Y جلوی سر بگذار، شست‌ها رو به سقف",
+   "شانه‌ها را از گوش‌ها دور کن و دست‌ها را کمی از زمین بلند کن",
+   "کوتاه نگه دار و آهسته پایین بیاور"
+  ],
+  "common_mistakes": [
+   "بالا بردن شانه‌ها به سمت گوش",
+   "قوس انداختن کمر به جای حرکت شانه",
+   "پرتاب دست‌ها"
+  ],
+  "alternatives": [
+   "prone_t_raise"
+  ],
+  "regressions": [
+   "prone_w_raise"
+  ],
+  "region_loads": {},
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "missing",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "دسته‌بندی الگوی حرکت (pull_horizontal) فرضِ بازبینی‌نشده است",
+   "برآورد بار نواحی انجام نشده است؛ safety_tags_status=missing (EXP-013)",
+   "موارد منع و احتیاط توسط متخصص تعیین نشده است",
+   "منبع علمی ثبت نشده است"
+  ],
+  "limitations": [
+   "در صورت درد کمر یا شانه متوقف شود (نه توصیه پزشکی؛ بازبینی نشده)"
+  ],
+  "cautions": []
+ },
+ {
+  "id": "prone_t_raise",
+  "name_en": "Prone T Raise",
+  "name_fa": "بالا بردن T دمرو",
+  "aliases": [],
+  "description": "کشش دست‌ها به طرفین در حالت دمرو روی زمین.",
+  "primary_muscles": [
+   "middle trapezius",
+   "posterior deltoid"
+  ],
+  "secondary_muscles": [
+   "rhomboids",
+   "lower trapezius"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "تا حد راحتی؛ دست‌ها بالاتر از زمین",
+  "instructions": [
+   "دمرو بخواب و دست‌ها را به شکل T باز کن",
+   "کتف‌ها را به هم نزدیک کن",
+   "دست‌ها را کمی از زمین بلند کن",
+   "آهسته پایین بیاور"
+  ],
+  "common_mistakes": [
+   "چرخاندن تنه",
+   "شانه‌ها بالا رفته"
+  ],
+  "alternatives": [
+   "prone_y_raise",
+   "reverse_snow_angel"
+  ],
+  "regressions": [
+   "prone_w_raise"
+  ],
+  "region_loads": {},
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "missing",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "دسته‌بندی الگوی حرکت (pull_horizontal) فرضِ بازبینی‌نشده است",
+   "برآورد بار نواحی انجام نشده است؛ safety_tags_status=missing (EXP-013)",
+   "موارد منع و احتیاط توسط متخصص تعیین نشده است",
+   "منبع علمی ثبت نشده است"
+  ],
+  "limitations": [
+   "بازبینی نشده"
+  ],
+  "cautions": []
+ },
+ {
+  "id": "prone_w_raise",
+  "name_en": "Prone W Raise",
+  "name_fa": "بالا بردن W دمرو",
+  "aliases": [],
+  "description": "جمع کردن کتف‌ها در حالت دمرو با آرنج‌های خم.",
+  "primary_muscles": [
+   "rhomboids",
+   "middle trapezius"
+  ],
+  "secondary_muscles": [
+   "posterior deltoid",
+   "lower trapezius"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "تا حد راحتی",
+  "instructions": [
+   "دمرو بخواب و آرنج‌ها را به شکل W خم کن",
+   "آرنج‌ها را به سمت پایین و عقب بکش و کتف‌ها را جمع کن",
+   "کوتاه نگه دار",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "بالا آوردن بیش از حد سر",
+   "قوس زدن کمر"
+  ],
+  "alternatives": [
+   "prone_t_raise"
+  ],
+  "regressions": [],
+  "region_loads": {},
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "missing",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "دسته‌بندی الگوی حرکت (pull_horizontal) فرضِ بازبینی‌نشده است",
+   "برآورد بار نواحی انجام نشده است؛ safety_tags_status=missing (EXP-013)",
+   "موارد منع و احتیاط توسط متخصص تعیین نشده است",
+   "منبع علمی ثبت نشده است"
+  ],
+  "limitations": [
+   "بازبینی نشده"
+  ],
+  "cautions": []
+ },
+ {
+  "id": "reverse_snow_angel",
+  "name_en": "Reverse Snow Angel",
+  "name_fa": "فرشته برفی معکوس",
+  "aliases": [],
+  "description": "حرکت دست‌ها از کنار بدن تا بالای سر در حالت دمرو، بدون وسیله.",
+  "primary_muscles": [
+   "lower trapezius",
+   "middle trapezius",
+   "posterior deltoid"
+  ],
+  "secondary_muscles": [
+   "rhomboids",
+   "erector spinae"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "مسیر کامل در حد راحتی",
+  "instructions": [
+   "دمرو بخواب، دست‌ها کنار بدن و کف دست‌ها پایین",
+   "دست‌ها را کمی بالا ببر و در قوس بزرگ تا بالای سر ببر",
+   "همان مسیر را برگرد",
+   "حرکت را آهسته و کنترل‌شده انجام بده"
+  ],
+  "common_mistakes": [
+   "قوس زدن کمر",
+   "تند کردن حرکت",
+   "بالا رفتن شانه‌ها"
+  ],
+  "alternatives": [
+   "prone_t_raise"
+  ],
+  "regressions": [
+   "prone_y_raise"
+  ],
+  "region_loads": {},
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "missing",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "دسته‌بندی الگوی حرکت (pull_horizontal) فرضِ بازبینی‌نشده است",
+   "برآورد بار نواحی انجام نشده است؛ safety_tags_status=missing (EXP-013)",
+   "موارد منع و احتیاط توسط متخصص تعیین نشده است",
+   "منبع علمی ثبت نشده است"
+  ],
+  "limitations": [
+   "بازبینی نشده"
+  ],
+  "cautions": []
+ },
+ {
+  "id": "prone_superman_hold",
+  "name_en": "Prone Superman Hold",
+  "name_fa": "نگه‌داشتن سوپرمن دمرو",
+  "aliases": [],
+  "description": "نگه‌داشتن ایزومتریک دست‌ها و پاها بالاتر از زمین در حالت دمرو.",
+  "primary_muscles": [
+   "erector spinae",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "lower trapezius",
+   "hamstrings"
+  ],
+  "movement_pattern": "core",
+  "exercise_type": "stability",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "isometric",
+  "range_of_motion": "نگه‌داشتن ایستا در حد راحتی",
+  "instructions": [
+   "دمرو بخواب و دست‌ها را جلو دراز کن",
+   "به‌آرامی دست‌ها و پاها را کمی بالا بیاور",
+   "گردن را خنثی نگه دار",
+   "کوتاه نگه دار و آهسته پایین بیا"
+  ],
+  "common_mistakes": [
+   "بالا آوردن بیش از حد (فشار روی کمر)",
+   "بالا کشیدن گردن"
+  ],
+  "alternatives": [
+   "prone_y_raise"
+  ],
+  "regressions": [],
+  "region_loads": {},
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "missing",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "دسته‌بندی الگوی حرکت (pull_horizontal) فرضِ بازبینی‌نشده است",
+   "برآورد بار نواحی انجام نشده است؛ safety_tags_status=missing (EXP-013)",
+   "موارد منع و احتیاط توسط متخصص تعیین نشده است",
+   "منبع علمی ثبت نشده است",
+   "ممکن است برای کاربران با مشکل کمر نامناسب باشد؛ هیچ caution کدشده‌ای تعریف نشده و تا بازبینی، Safety Core با بار ناشناخته = high آن را مسدود می‌کند"
+  ],
+  "limitations": [
+   "فشار روی ناحیه کمر ممکن است؛ برآورد بار انجام نشده — برای کاربران با مشکل کمر در Safety Core بلوکه می‌ماند تا بازبینی شود"
+  ],
+  "cautions": []
+ }
+]

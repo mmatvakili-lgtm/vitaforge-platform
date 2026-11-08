@@ -15,6 +15,7 @@ store.relations = relations(_rows)
 rs = RuleSet(version=0, status="dev-demo", screening_questions=SCREENING, allow_unreviewed_content=True)
 app = App(store, rs, dev_mode=True)
 app.layer.kb.records = _rows
+app.records = {r.id: r for r in _rows}
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8000"))
     print(f"DEV server on :{port} (demo content, NOT for real users)")

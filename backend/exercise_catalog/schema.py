@@ -14,6 +14,12 @@ EXERCISE_TYPES = ("strength", "mobility", "stability", "cardio", "plyometric", "
 CONTRACTIONS = ("concentric_eccentric", "isometric", "concentric", "eccentric", "unspecified")
 PATTERNS = ("squat", "hinge", "push_horizontal", "push_vertical", "pull_horizontal", "pull_vertical", "lunge", "core", "carry", "rotation", "other")
 EVIDENCE = ("none", "expert_opinion", "guideline", "systematic_review")
+LICENSE_STATUSES = ("project_authored", "third_party_verified", "third_party_unverified", "restricted", "unknown")
+# Controlled vocabularies (standardisation). Checked as PUBLICATION blockers, not structural errors, so raw imports can still be stored.
+MUSCLES = ("abdominals", "anterior deltoid", "posterior deltoid", "biceps", "calves", "chest", "core", "deltoids", "erector spinae", "forearms",
+           "glutes", "hamstrings", "hip flexors", "lats", "lower back", "lower trapezius", "middle trapezius", "obliques", "quadriceps",
+           "rhomboids", "shoulders", "trapezius", "triceps")
+EQUIPMENT = ("dumbbell", "barbell", "bench", "box", "band", "machine", "kettlebell", "pull_up_bar", "cable")   # bodyweight == empty tuple
 
 
 @dataclass(frozen=True)
@@ -55,6 +61,9 @@ class ExerciseRecord:
     role: str = "accessory"             # main | accessory (planning attribute)
     push_pull: Optional[str] = None
     supports_regions: Tuple[str, ...] = ()   # 'supportive' tag; only meaningful once reviewed (OPEN-008)
+    limitations: Tuple[str, ...] = ()       # human-readable limits of THIS record/movement (display only; NOT a safety decision — Safety Core uses cautions/contraindications codes)
+    license_status: str = "unknown"         # provenance of the TEXT of this record (see sources for per-source detail)
+    review_notes: Tuple[str, ...] = ()      # open points a reviewer must resolve; any open note blocks publication
 
 
 def validate_record(r: ExerciseRecord) -> List[str]:
@@ -73,12 +82,21 @@ def validate_record(r: ExerciseRecord) -> List[str]:
     if r.safety_tags_status not in ("missing", "unreviewed_estimate", "reviewed"): p.append("safety_tags_status")
     if r.safety_tags_status != "missing" and set(r.region_loads) != set(REGIONS): p.append("region_loads must cover all regions")
     if r.evidence_level != "none" and not r.sources: p.append("evidence_level without sources")
+    if r.license_status not in LICENSE_STATUSES: p.append("license_status")
+    if any(not (isinstance(x, tuple) and len(x) == 2 and isinstance(x[0], str)) for x in r.cautions + r.contraindications): p.append("cautions/contraindications must be (code, region) pairs")
+    if r.license_status == "third_party_verified" and (not r.sources or any(s.license_ok_for_commercial is not True for s in r.sources)):
+        p.append("license_status third_party_verified without confirmed source licenses")
+    if r.safety_tags_status == "missing" and r.region_loads: p.append("region_loads present but safety_tags_status is 'missing' (label estimates 'unreviewed_estimate')")
+    if r.safety_tags_status == "reviewed" and r.expert_review != "approved": p.append("safety tags marked reviewed without approved expert review")
+    if "bodyweight" in r.equipment and len(r.equipment) > 1: p.append("bodyweight cannot be combined with other equipment")
+    if r.publication_status == "published":
+        gate = _gate_blockers(r)
+        if gate: p.append("published but blocked: " + "; ".join(gate))
     return p
 
 
-def publication_blockers(r: ExerciseRecord) -> List[str]:
-    """Everything that currently prevents publishing. Empty list == publishable (still needs the human sign-off workflow)."""
-    b = validate_record(r)
+def _gate_blockers(r: ExerciseRecord) -> List[str]:
+    b: List[str] = []
     if r.is_sample: b.append("sample content")
     if r.expert_review != "approved": b.append("expert review not approved")
     if r.safety_tags_status != "reviewed": b.append("safety tags not reviewed")
@@ -87,4 +105,13 @@ def publication_blockers(r: ExerciseRecord) -> List[str]:
     if not r.instructions: b.append("no instructions")
     if r.last_reviewed is None: b.append("no review date")
     if not r.primary_muscles: b.append("no primary muscles")
+    if r.license_status not in ("project_authored", "third_party_verified"): b.append("license status not confirmed")
+    if r.review_notes: b.append("open review notes")
+    if any(m not in MUSCLES for m in r.primary_muscles + r.secondary_muscles): b.append("muscle names outside controlled vocabulary")
+    if any(e not in EQUIPMENT and e != "bodyweight" for e in r.equipment): b.append("equipment outside controlled vocabulary")
     return b
+
+
+def publication_blockers(r: ExerciseRecord) -> List[str]:
+    """Everything that currently prevents publishing. Empty list == publishable (still needs the human sign-off workflow)."""
+    return validate_record(r) + _gate_blockers(r)

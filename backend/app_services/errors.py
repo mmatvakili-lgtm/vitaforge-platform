@@ -15,12 +15,18 @@ class NotFound(AppError): code, http = "not_found", 404
 class Forbidden(AppError): code, http = "forbidden", 403
 class PaymentRequired(AppError): code, http = "quota_or_plan_required", 402
 class PreconditionRequired(AppError): code, http = "precondition_required", 428
+class BadRequest(AppError): code, http = "bad_request", 400
+class Gone(AppError): code, http = "gone", 410
+class ConsentRequired(AppError): code, http = "consent_required", 403
+class FeatureUnavailable(AppError): code, http = "feature_unavailable", 501
+
+
 class SafetyBlocked(AppError):
     code, http = "safety_blocked", 409
 
-    def __init__(self, status: str, reasons=(), decision_id=None):
+    def __init__(self, status: str, reasons=(), decision_id=None, decision=None):
         super().__init__(status)
-        self.status, self.reasons, self.decision_id = status, tuple(reasons), decision_id
+        self.status, self.reasons, self.decision_id, self.decision = status, tuple(reasons), decision_id, decision
 
 
 class NeedsContent(AppError):

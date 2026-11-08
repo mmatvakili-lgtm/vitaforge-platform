@@ -37,19 +37,29 @@ pre{direction:ltr;text-align:left;overflow:auto;background:transparent;border:1p
 <section aria-live="polite"><h2>نتیجه</h2><div id="out">—</div><pre id="raw"></pre></section>
 </main>
 <script>
-let token="";const $=id=>document.getElementById(id);
-async function api(m,p,b){const r=await fetch("/api/v1"+p,{method:m,headers:{"Content-Type":"application/json",...(token?{Authorization:"Bearer "+token}:{})},body:m==="GET"?undefined:JSON.stringify(b||{})});return{st:r.status,j:await r.json()}}
-$("reg").onclick=async()=>{const b={email:$("email").value,password:$("pw").value};await api("POST","/auth/register",b);
-const r=await api("POST","/auth/login",b);if(r.st===200){token=r.j.token;$("out").textContent="وارد شدید."}else $("out").textContent="ورود ناموفق ("+r.st+")"};
-$("gen").onclick=async()=>{if(!token){$("out").textContent="ابتدا وارد شوید.";return}
-await api("PUT","/onboarding/steps/basics",{age:+$("age").value});
-await api("PUT","/onboarding/steps/goal",{goal:$("goal").value,level:"beginner"});
-await api("PUT","/onboarding/steps/schedule",{days_per_week:+$("days").value,session_minutes:+$("mins").value});
-await api("PUT","/onboarding/steps/equipment",{equipment:[]});
-if($("consent").checked)await api("POST","/consents",{type:"health_data_processing"});
-const a={};document.querySelectorAll(".rf").forEach(c=>a[c.dataset.q]=c.checked);await api("POST","/health/screening",a);
-const c=await api("POST","/onboarding/complete",{});if(c.st!==200){$("out").textContent="برای ادامه رضایت لازم است.";return}
+// Cookie session (HttpOnly sessionid) + CSRF double-submit header, as DOC-07 requires. No token is ever readable by script.
+let loggedIn=false;const $=id=>document.getElementById(id);
+const csrf=()=>(document.cookie.split("; ").find(c=>c.startsWith("csrftoken="))||"").slice(10);
+async function api(m,p,b){const h={"Content-Type":"application/json"};if(m!=="GET")h["X-CSRFToken"]=csrf();
+const r=await fetch("/api/v1"+p,{method:m,headers:h,credentials:"same-origin",body:m==="GET"?undefined:JSON.stringify(b||{})});
+let j=null;try{j=await r.json()}catch(e){}return{st:r.status,j}}
+function show(nodes){const o=$("out");o.replaceChildren(...nodes)}
+function el(t,txt){const e=document.createElement(t);e.textContent=txt;return e}
+$("reg").onclick=async()=>{const dob=new Date();dob.setFullYear(dob.getFullYear()-30);
+await api("POST","/auth/register",{email:$("email").value,password:$("pw").value,date_of_birth:dob.toISOString().slice(0,10),language:"fa"});
+const r=await api("POST","/auth/login",{identifier:$("email").value,password:$("pw").value});
+loggedIn=r.st===200;show([el("p",loggedIn?"وارد شدید.":"ورود ناموفق ("+r.st+")")])};
+$("gen").onclick=async()=>{if(!loggedIn){show([el("p","ابتدا وارد شوید.")]);return}
+const steps=[{answers:{age:+$("age").value}},{answers:{goal:$("goal").value,level:"beginner"}},{answers:{days_per_week:+$("days").value,session_minutes:+$("mins").value}},{answers:{equipment:[]}}];
+for(let i=0;i<steps.length;i++){const r=await api("PUT","/onboarding/steps/"+(i+1),steps[i]);if(r.st!==200){show([el("p","خطا در مرحله "+(i+1)+" ("+r.st+")")]);return}}
+if($("consent").checked){const d=await api("GET","/consents/documents");const doc=(d.j||[]).find(x=>x.type==="health_data");if(doc)await api("POST","/consents",{document_id:doc.id,granted:true})}
+const a={};document.querySelectorAll(".rf").forEach(c=>a[c.dataset.q]=c.checked);
+await api("POST","/health/screening",{screening_version:1,answers:a});
+const c=await api("POST","/onboarding/complete",{});if(c.st!==200){show([el("p","برای ادامه رضایت لازم است.")]);return}
 const r=await api("POST","/workouts/generate",{});$("raw").textContent=JSON.stringify(r.j,null,1);
-if(r.st!==200){$("out").textContent="برنامه ساخته نشد: ارزیابی ایمنی ("+(r.j.status||r.j.error)+"). لطفاً با متخصص مشورت کنید.";return}
-$("out").innerHTML=r.j.result.days.map(d=>"<h3>"+d.name+"</h3><ul>"+d.exercises.map(e=>"<li>"+e.code+" — "+e.sets+"×"+e.reps_min+"–"+e.reps_max+"</li>").join("")+"</ul>").join("")};
+if(r.st===422){show([el("p","حرکت بازبینی‌شده کافی برای تجهیزات و محدودیت‌های شما وجود ندارد.")]);return}
+if(r.st!==200){show([el("p","خطا ("+r.st+")")]);return}
+if(!r.j.plan){show([el("p","برنامه ساخته نشد: ارزیابی ایمنی ("+r.j.decision.status+"). لطفاً با متخصص مشورت کنید.")]);return}
+const out=[];for(const d of r.j.plan.days){out.push(el("h3",d.title));const ul=document.createElement("ul");
+for(const e of d.exercises){const s=e.sets[0]||{};ul.append(el("li",e.name+" — "+e.sets.length+"×"+s.reps_min+"–"+s.reps_max))}out.push(ul)}show(out)};
 </script></body></html>

@@ -165,7 +165,7 @@ def test_session_isolation_and_validation(e):
     with pytest.raises(ValidationFailed):
         e.w.log_set(a, sid, "x", 5, 10, rpe=11)
     e.w.finish(a, sid)
-    with pytest.raises(Forbidden):
+    with pytest.raises(Conflict):
         e.w.log_set(a, sid, "x", 5, 10)
     with pytest.raises(NotFound):
         e.w.start_session(a, "no-such-day")

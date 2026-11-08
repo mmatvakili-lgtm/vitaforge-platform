@@ -11,6 +11,7 @@ from .errors import AuthFailed, Conflict, Locked, NotFound, ValidationFailed
 
 MAX_FAILS = 5
 LOCK_SECONDS = 15 * 60
+SESSION_TTL = 14 * 24 * 3600                 # sessions expire; no eternal tokens
 EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
@@ -37,7 +38,7 @@ class IdentityService:
     def __init__(self, store, clock):
         self.s, self.clock = store, clock          # clock() -> int seconds (UTC)
 
-    def register(self, email: str, password: str, locale: str = "fa") -> str:
+    def register(self, email: str, password: str, locale: str = "fa", dob=None) -> str:
         email = (email or "").strip().lower()
         if not EMAIL.match(email):
             raise ValidationFailed("email")
@@ -49,7 +50,7 @@ class IdentityService:
             raise Conflict("email")                   # NOTE: API layer must answer generically to avoid enumeration
         uid = self.s.new_id("usr")
         self.s.users[uid] = {"id": uid, "email": email, "pw": hash_password(password), "locale": locale,
-                             "verified": False, "fails": 0, "locked_until": 0, "role": "user", "plan": "free"}
+                             "verified": False, "dob": dob, "fails": 0, "locked_until": 0, "role": "user", "plan": "free"}
         self.s.by_email[email] = uid
         return uid
 
@@ -74,14 +75,24 @@ class IdentityService:
         u["fails"] = 0
         token = secrets.token_urlsafe(32)
         sid = self.s.new_id("ses")
-        self.s.sessions[_token_hash(token)] = {"id": sid, "user": u["id"], "device": device, "created": now, "revoked": False}
+        self.s.sessions[_token_hash(token)] = {"id": sid, "user": u["id"], "device": device, "created": now, "exp": now + SESSION_TTL,
+                                               "revoked": False}
         return token
+
+    @staticmethod
+    def _th(token: str) -> str:
+        return _token_hash(token or "")
 
     def authenticate(self, token: str) -> str:
         s = self.s.sessions.get(_token_hash(token or ""))
-        if not s or s["revoked"]:
+        if not s or s["revoked"] or self.clock() >= s.get("exp", 0):
             raise AuthFailed()
+        s["seen"] = self.clock()
         return s["user"]
+
+    def session_of(self, token: str) -> dict:
+        self.authenticate(token)
+        return self.s.sessions[_token_hash(token)]
 
     def logout(self, token: str):
         s = self.s.sessions.get(_token_hash(token or ""))
@@ -89,8 +100,9 @@ class IdentityService:
             s["revoked"] = True
 
     def list_sessions(self, uid: str):
-        return [{"id": s["id"], "device": s["device"], "created": s["created"]} for s in self.s.sessions.values()
-                if s["user"] == uid and not s["revoked"]]
+        now = self.clock()
+        return [{"id": s["id"], "device": s["device"], "created": s["created"], "seen": s.get("seen", s["created"]), "token_hash": h} for h, s in self.s.sessions.items()
+                if s["user"] == uid and not s["revoked"] and now < s.get("exp", 0)]
 
     def revoke_session(self, uid: str, session_id: str):
         for s in self.s.sessions.values():

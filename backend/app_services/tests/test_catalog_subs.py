@@ -1,6 +1,6 @@
 import pytest
 from app_services.catalog import CatalogService
-from app_services.errors import Forbidden, NotFound, PreconditionRequired, ValidationFailed
+from app_services.errors import FeatureUnavailable, Forbidden, NotFound, ValidationFailed
 from app_services.store import InMemoryStore
 from app_services.subscriptions import DisabledPaymentProvider, SubscriptionService
 from devserver.demo_catalog import demo_catalog
@@ -75,7 +75,7 @@ def subs():
 def test_subscription_flow():
     s, sv = subs()
     assert sv.plans() == ["free", "pro"] and sv.me("u") == {"plan": "free", "active": True}
-    with pytest.raises(PreconditionRequired):
+    with pytest.raises(FeatureUnavailable):
         sv.checkout("u", "pro")                          # payments not configured -> never faked
     with pytest.raises(ValidationFailed):
         sv.checkout("u", "free")

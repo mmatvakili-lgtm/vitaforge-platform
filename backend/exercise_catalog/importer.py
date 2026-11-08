@@ -48,7 +48,8 @@ def import_free_exercise_db(rows: Iterable[Mapping], existing_ids=()) -> ImportR
                 difficulty=LEVEL_MAP.get(str(row.get("level", "")).lower(), "beginner"),
                 instructions=tuple(row.get("instructions") or ()), publication_status="pending_review",
                 sources=(SourceRef("free_exercise_db", str(row.get("id", "")), None),),
-                safety_tags_status="missing", expert_review="pending", is_sample=False, movement_pattern="other")
+                safety_tags_status="missing", expert_review="pending", is_sample=False, movement_pattern="other",
+                license_status="third_party_unverified")
             issues = validate_record(rec)
             if issues:
                 rep.rejected.append({"id": rid, "issues": issues}); continue

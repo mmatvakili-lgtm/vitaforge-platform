@@ -67,7 +67,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "box_squat",
@@ -135,7 +140,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "goblet_squat",
@@ -205,7 +215,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "barbell_back_squat",
@@ -278,7 +293,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "dumbbell_romanian_deadlift",
@@ -350,7 +370,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "glute_bridge",
@@ -418,7 +443,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "push_up",
@@ -490,7 +520,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "incline_push_up",
@@ -559,7 +594,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "dumbbell_bench_press",
@@ -630,7 +670,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "dumbbell_overhead_press",
@@ -699,7 +744,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "pike_push_up",
@@ -764,7 +814,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "dumbbell_row",
@@ -834,7 +889,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "band_row",
@@ -902,7 +962,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "lat_pulldown",
@@ -969,7 +1034,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "band_pulldown",
@@ -1036,7 +1106,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "reverse_lunge",
@@ -1104,7 +1179,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "split_squat",
@@ -1170,7 +1250,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "step_up",
@@ -1239,7 +1324,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "plank",
@@ -1307,7 +1397,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "dead_bug",
@@ -1377,7 +1472,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "bird_dog",
@@ -1446,7 +1546,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "side_plank",
@@ -1513,7 +1618,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "farmer_carry",
@@ -1581,7 +1691,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "standing_calf_raise",
@@ -1642,7 +1757,12 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  },
  {
   "id": "dumbbell_biceps_curl",
@@ -1707,6 +1827,11 @@
   ],
   "last_reviewed": null,
   "contraindications": [],
-  "cautions": []
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "برآورد بار نواحی و مقادیر تجویز بازبینی نشده است (EXP-013)"
+  ],
+  "limitations": []
  }
 ]

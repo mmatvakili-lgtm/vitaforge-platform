@@ -15,7 +15,7 @@ GUIDANCE_PAIN = {
 class ExtrasService:
     def __init__(self, store, health, workouts, today):
         self.s, self.h, self.w, self.today = store, health, workouts, today
-        for k in ("measurements", "pain_logs", "erasure_audit"):
+        for k in ("measurements", "pain_logs", "metrics", "erasure_audit"):
             self.s.__dict__.setdefault(k, {} if k != "erasure_audit" else [])
 
     def add_measurement(self, uid, weight_kg=None, height_cm=None):
@@ -26,6 +26,35 @@ class ExtrasService:
         if height_cm is not None and not 80 <= height_cm <= 250:
             raise ValidationFailed("height")
         self.s.measurements.setdefault(uid, []).append({"day": self.today(), "weight_kg": weight_kg, "height_cm": height_cm})
+
+    # data-entry sanity bounds (NOT clinical thresholds): (unit, min, max)
+    METRICS = {"height": ("cm", 80, 250), "weight": ("kg", 20, 400), "waist": ("cm", 20, 300), "abdomen": ("cm", 20, 300),
+               "chest": ("cm", 20, 300), "arm": ("cm", 5, 100), "forearm": ("cm", 5, 100), "thigh": ("cm", 10, 200),
+               "calf": ("cm", 10, 100), "body_fat_pct": ("%", 1, 80), "lean_mass": ("kg", 5, 300)}
+
+    def add_metric(self, uid, metric, value, unit, source, method=None, ts=None):
+        spec = self.METRICS.get(metric)
+        if not spec or unit != spec[0] or isinstance(value, bool) or not isinstance(value, (int, float)) or not spec[1] <= value <= spec[2]:
+            raise ValidationFailed("measurement")
+        if metric == "weight":
+            self.add_measurement(uid, weight_kg=value)
+        elif metric == "height":
+            self.add_measurement(uid, height_cm=value)
+        rows = self.s.metrics.setdefault(uid, [])
+        row = {"n": len(rows), "metric": metric, "value": value, "unit": unit, "source": source, "method": method, "day": self.today(), "ts": ts}
+        rows.append(row)
+        return row
+
+    def overview(self, uid):
+        latest = {}
+        for r in self.s.metrics.get(uid, []):
+            latest[r["metric"]] = r["value"]
+        out = {"latest": latest}
+        if "weight" in latest and "height" in latest:
+            out["bmi"] = {"value": round(latest["weight"] / (latest["height"] / 100) ** 2, 1), "label": "screening_index"}
+        if "waist" in latest and "height" in latest:
+            out["whtr"] = {"value": round(latest["waist"] / latest["height"], 2), "label": "screening_index"}
+        return out
 
     def body_overview(self, uid):
         rows = self.s.measurements.get(uid, [])
@@ -64,7 +93,7 @@ class ExtrasService:
             raise NotFound()
         return {"account": {k: v for k, v in u.items() if k not in ("pw",)}, "profile": self.s.profiles.get(uid),
                 "health": self.health_profile(uid), "consents": [c for c in self.s.consents if c["user"] == uid],
-                "measurements": self.s.measurements.get(uid, []), "pain_logs": self.s.pain_logs.get(uid, []),
+                "measurements": self.s.measurements.get(uid, []), "metrics": self.s.metrics.get(uid, []), "pain_logs": self.s.pain_logs.get(uid, []),
                 "plans": [{"version": v["version"], "cause": v["cause"], "codes": list(v["result"].codes)} for v in self.s.plans.get(uid, [])],
                 "workout_sessions": [w for w in self.s.workout_sessions.values() if w["user"] == uid]}
 
@@ -73,7 +102,7 @@ class ExtrasService:
         if not u:
             raise NotFound()
         self.s.by_email.pop(u["email"], None)
-        for k in ("profiles", "health", "plans", "measurements", "pain_logs"):
+        for k in ("profiles", "health", "plans", "measurements", "pain_logs", "metrics"):
             getattr(self.s, k).pop(uid, None)
         self.s.sessions = {h: x for h, x in self.s.sessions.items() if x["user"] != uid}
         self.s.workout_sessions = {k: v for k, v in self.s.workout_sessions.items() if v["user"] != uid}

@@ -15,11 +15,11 @@ class HealthProfileService:
         self.s, self.today, self.questions = store, clock_days, tuple(screening_questions)
 
     # ---- consent (append-only)
-    def give_consent(self, uid, doc_type, version):
-        self.s.consents.append({"user": uid, "type": doc_type, "version": version, "granted": True, "day": self.today()})
+    def give_consent(self, uid, doc_type, version, at=None):
+        self.s.consents.append({"user": uid, "type": doc_type, "version": version, "granted": True, "day": self.today(), "at": at})
 
-    def withdraw_consent(self, uid, doc_type):
-        self.s.consents.append({"user": uid, "type": doc_type, "version": None, "granted": False, "day": self.today()})
+    def withdraw_consent(self, uid, doc_type, at=None):
+        self.s.consents.append({"user": uid, "type": doc_type, "version": None, "granted": False, "day": self.today(), "at": at})
 
     def has_consent(self, uid, doc_type) -> bool:
         last = [c for c in self.s.consents if c["user"] == uid and c["type"] == doc_type]
