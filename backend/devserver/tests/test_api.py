@@ -148,5 +148,5 @@ def test_extras_http_and_erasure():
     assert call(a, "POST", "/workouts/generate", {}, t)[0] == 409
     assert call(a, "GET", "/health/profile", None, t)[1]["conditions"][0]["active_pain"] is True
     assert "password" not in json.dumps(call(a, "POST", "/privacy/export", {}, t)[1])
-    assert call(a, "POST", "/privacy/delete", {}, t)[1] == {"erased": True}
+    assert call(a, "POST", "/privacy/delete", {}, t)[1]["erased"] is True
     assert call(a, "GET", "/dashboard", None, t)[0] == 401

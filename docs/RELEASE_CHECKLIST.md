@@ -11,7 +11,8 @@
 
 | مورد | وضعیت | شواهد |
 |---|---|---|
-| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۱۹۷ تست سبز |
+| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۲۰۲ تست سبز |
+| تطابق API توسعه با OpenAPI (هر ۵۶ endpoint) | `Passed` | تست `test_every_openapi_endpoint_is_implemented`؛ فقط وجود مسیر، نه تطابق کامل schema |
 | API توسعه (WSGI) + UI آزمایشی | `Passed` (فقط توسعه) | تست HTTP + اجرای واقعی `python3 -m devserver` |
 | آداپتور Django/DRF + مهاجرت‌ها | `Not Run` | کد نوشته شده؛ Django نصب نیست |
 | Next.js | `Not Run` | کد نوشته شده؛ `npm install` ممکن نیست |

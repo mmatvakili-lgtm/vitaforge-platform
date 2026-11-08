@@ -13,6 +13,7 @@ class Locked(AppError): code, http = "account_locked", 423
 class Conflict(AppError): code, http = "conflict", 409
 class NotFound(AppError): code, http = "not_found", 404
 class Forbidden(AppError): code, http = "forbidden", 403
+class PaymentRequired(AppError): code, http = "quota_or_plan_required", 402
 class PreconditionRequired(AppError): code, http = "precondition_required", 428
 class SafetyBlocked(AppError):
     code, http = "safety_blocked", 409
