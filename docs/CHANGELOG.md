@@ -2,6 +2,9 @@
 
 # CHANGELOG
 
+## 2026-11-08
+- `MVP_GAP_ANALYSIS.md`: ارزیابی واقعی فاصله تا MVP (سطح ماژول‌ها، Mock/Stub، شکاف داده، مجوز منابع، معیار تکمیل). بدون تغییر کد.
+
 ## 2026-11-07
 - Batch 1: 00-INDEX، 01-PRD v0.2، 09-Safety v0.2، 20-Decisions v0.2، OPEN_DECISIONS، ADR-0001..0006.
 - Batch 2: 02-USER-STORIES، 03-SOFTWARE-ARCHITECTURE، 04-ADR-REGISTER (+ADR-0007)، 05-DATABASE-ERD (۶۷ موجودیت، Mermaid تأییدشده با mmdc)، 06-DATA-DICTIONARY (تولید از منبع واحد).

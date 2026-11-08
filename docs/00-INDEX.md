@@ -66,6 +66,6 @@ FR-<MOD>-nnn، NFR-، SAF-، ST-، US-، AC-، TST-، ADR-nnnn، DEC-، ASM-، R
 - بسته‌شده: CON-001، 002، 004، 008 (کامل)، CON-005 (طراحی؛ محتوا Pending)، CON-006/007 (ERD/API تولید شد).
 - **بررسی‌نشده:** اعتبارسنجی رسمی OpenAPI با validator خارجی (ابزار نصب نیست)؛ بازبینی انسانی/بالینی/حقوقی؛ هیچ منبع خارجی ثبت نشده.
 
-- سند‌های تکمیلی: `DECISION_REGISTRY.md`، `CAPABILITY_STATUS.md`، `RELEASE_CHECKLIST.md`، `LANGUAGE_POLICY.md`، `04-domain/10A-DATA-ACQUISITION.md`، `04-domain/12A-NUTRITION-API-ADDENDUM.md`.
+- سند‌های تکمیلی: `DECISION_REGISTRY.md`، `CAPABILITY_STATUS.md`، `RELEASE_CHECKLIST.md`، `MVP_GAP_ANALYSIS.md`، `LANGUAGE_POLICY.md`، `04-domain/10A-DATA-ACQUISITION.md`، `04-domain/12A-NUTRITION-API-ADDENDUM.md`.
 
 </div>
