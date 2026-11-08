@@ -15,7 +15,7 @@ def catalog(extra=()):
     out = []
     for p, role, m, loads in PATTERNS:
         for suffix in ("a", "b"):
-            out.append(CatalogExercise(make_ex(f"{p}_{suffix}", loads, pattern=p), role, m))
+            out.append(CatalogExercise(make_ex(f"{p}_{suffix}", loads, pattern=p), role, m, "push" if p.startswith("push") else "pull" if p.startswith("pull") else None))
     return tuple(out) + tuple(extra)
 
 
@@ -184,3 +184,27 @@ def test_supportive_never_overrides_safety(base, gate):
     b = dataclasses.replace(base, restrictions=(Restriction(exercise_code="core_b"),))
     inp = EngineInput("u", "general_fitness", "beginner", 3, 90, (), _cat_with_support(), supportive_regions=("lower_back",), supportive_enabled=True)
     assert "core_b" not in generate_plan(inp, b, gate).codes
+
+
+def test_main_lifts_first_and_balance_reported(inp, base, gate):
+    r = generate_plan(inp, base, gate)
+    for d in r.days:
+        roles = [next(c for c in inp.catalog if c.code == e.code).role for e in d.exercises]
+        assert roles == sorted(roles, key=lambda x: x != "main")
+    assert r.balance["push_sets"] > 0 and r.balance["pull_sets"] > 0 and r.balance["weekly_sets_per_muscle"]
+
+
+def test_recovery_red_reduces_sets_and_recent_codes_rotate(inp, base, gate):
+    normal = generate_plan(inp, base, gate)
+    red = generate_plan(dataclasses.replace(inp, recovery_state="red"), base, gate)
+    assert max(e.sets for d in red.days for e in d.exercises) < max(e.sets for d in normal.days for e in d.exercises)
+    assert "recovery:red->sets-1" in red.reasons
+    one_day = tuple(e.code for e in normal.days[0].exercises)
+    rot = generate_plan(dataclasses.replace(inp, recent_codes=one_day, days_per_week=1), base, gate)
+    assert not set(rot.codes) & set(one_day)          # first day's exercises avoided when alternatives exist
+
+
+def test_equipment_rejection_is_explained_by_safety(inp, base, gate):
+    ex = CatalogExercise(dataclasses.replace(make_ex("bb", {"knee": "high"}, pattern="squat"), equipment=("barbell",)), "main", "quads")
+    r = generate_plan(dataclasses.replace(inp, catalog=catalog((ex,))), base, gate)
+    assert "bb" not in r.codes

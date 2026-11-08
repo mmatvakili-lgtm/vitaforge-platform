@@ -52,6 +52,8 @@ class EngineInput:
     catalog: Tuple[CatalogExercise, ...]
     preferred_structure: Optional[str] = None
     liked_codes: Tuple[str, ...] = ()
+    recent_codes: Tuple[str, ...] = ()          # exercises used in recent plans -> variety
+    recovery_state: Optional[str] = None        # green | amber | red (from progression.assess_recovery)
     supportive_regions: Tuple[str, ...] = ()   # regions with a recorded history and NO active pain (Path A)
     supportive_enabled: bool = False           # True only when reviewed supportive content is published
     config: EngineConfig = field(default_factory=EngineConfig)
@@ -95,6 +97,7 @@ class PlanResult:
     rule_set_version: Optional[int] = None
     config_version: Optional[int] = None
     flags: Tuple[str, ...] = ()
+    balance: Mapping[str, Any] = field(default_factory=dict)   # weekly sets per muscle, push/pull sets
     label: str = "experimental"    # shown in UI until EXP-013 closes
 
     @property

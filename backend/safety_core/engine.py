@@ -45,6 +45,9 @@ R_EXPIRED_RESTRICTION = "SAF-R014"
 R_NO_VALID_ITEMS = "SAF-R015"
 R_PATH_C = "SAF-R016"
 R_BAD_RULE = "SAF-R018"
+R_EQUIPMENT = "SAF-R019"
+R_LEVEL = "SAF-R020"
+_LEVEL_RANK = {"beginner": 0, "intermediate": 1, "advanced": 2}
 
 TERMINAL_STATUSES = {
     s.value for s in (DecisionStatus.STOP_AND_REFER, DecisionStatus.BLOCK_OUT_OF_SCOPE,
@@ -214,6 +217,8 @@ def _evaluate(request: SafetyRequest, rule_set: RuleSet) -> SafetyDecision:
     _validate(request, rule_set)
 
     # ---- stage 1: age / consent / missing data
+    if request.user_level is not None and request.user_level not in _LEVEL_RANK:
+        raise InvalidInput("bad level")
     if request.age_years is not None and (not isinstance(request.age_years, int) or request.age_years < 0):
         raise InvalidInput("bad age")
     if request.age_years is not None and request.age_years < rule_set.adult_age:
@@ -318,6 +323,10 @@ def _evaluate(request: SafetyRequest, rule_set: RuleSet) -> SafetyDecision:
         loads = {rl.region: rl.loading for rl in cand.region_loads}
         if cand.review_status != "published" or not cand.safety_tags_complete or set(loads) != set(REGIONS):
             item_reasons.append(R_TAGS)
+        if request.equipment is not None and not set(cand.equipment) <= (set(request.equipment) | {"bodyweight"}):
+            item_reasons.append(R_EQUIPMENT)
+        if request.user_level is not None and _LEVEL_RANK.get(cand.difficulty, 0) > _LEVEL_RANK.get(request.user_level, 0):
+            item_reasons.append(R_LEVEL)
         for rs in request.restrictions:
             if rs.exercise_code is not None and rs.exercise_code == cand.code:
                 item_reasons.append(R_RESTRICTION)

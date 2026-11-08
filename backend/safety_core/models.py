@@ -105,6 +105,8 @@ class SafetyRequest:
     today_ordinal: int = 0
     context: Mapping[str, Any] = field(default_factory=dict)
     context_type: str = "plan_generation"
+    equipment: Optional[Tuple[str, ...]] = None      # None = not constrained; else the user's available equipment
+    user_level: Optional[str] = None                 # beginner|intermediate|advanced; None = not constrained
 
 
 @dataclass(frozen=True)

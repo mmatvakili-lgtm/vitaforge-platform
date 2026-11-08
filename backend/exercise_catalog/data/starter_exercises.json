@@ -1,0 +1,1712 @@
+[
+ {
+  "id": "bodyweight_squat",
+  "name_en": "Bodyweight Squat",
+  "name_fa": "اسکات با وزن بدن",
+  "aliases": [],
+  "description": "حرکت پایه پا با وزن بدن.",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "core"
+  ],
+  "movement_pattern": "squat",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "تا حد راحتی",
+  "instructions": [
+   "پاها به عرض شانه",
+   "باسن را عقب و پایین ببر تا حدی که راحت هستی",
+   "با فشار از کف پا بلند شو"
+  ],
+  "common_mistakes": [
+   "جمع شدن زانوها به داخل",
+   "بلند شدن پاشنه از زمین"
+  ],
+  "alternatives": [
+   "goblet_squat",
+   "box_squat"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "box_squat",
+  "name_en": "Box Squat",
+  "name_fa": "اسکات روی جعبه",
+  "aliases": [],
+  "description": "اسکات با نشستن کنترل‌شده روی جعبه برای کنترل عمق.",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "movement_pattern": "squat",
+  "exercise_type": "strength",
+  "equipment": [
+   "box"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "پشت یک جعبه یا صندلی محکم بایست",
+   "کنترل‌شده بنشین و دوباره بلند شو"
+  ],
+  "common_mistakes": [
+   "افتادن روی صندلی"
+  ],
+  "alternatives": [
+   "bodyweight_squat"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "goblet_squat",
+  "name_en": "Goblet Squat",
+  "name_fa": "اسکات گابلت",
+  "aliases": [],
+  "description": "اسکات با دمبل جلوی سینه.",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "core"
+  ],
+  "movement_pattern": "squat",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دمبل را جلوی سینه نگه دار",
+   "اسکات کن و ستون فقرات را خنثی نگه دار"
+  ],
+  "common_mistakes": [
+   "جلو افتادن سینه"
+  ],
+  "alternatives": [
+   "bodyweight_squat"
+  ],
+  "regressions": [
+   "bodyweight_squat"
+  ],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "barbell_back_squat",
+  "name_en": "Barbell Back Squat",
+  "name_fa": "اسکات هالتر پشت",
+  "aliases": [],
+  "description": "اسکات با هالتر روی پشت.",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "core",
+   "lower back"
+  ],
+  "movement_pattern": "squat",
+  "exercise_type": "strength",
+  "equipment": [
+   "barbell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "هالتر را روی عضلات بالای کتف بگذار",
+   "کنترل‌شده پایین برو و بلند شو"
+  ],
+  "common_mistakes": [
+   "گرد شدن کمر",
+   "جمع شدن زانوها"
+  ],
+  "alternatives": [
+   "goblet_squat"
+  ],
+  "regressions": [
+   "goblet_squat"
+  ],
+  "region_loads": {
+   "lower_back": "high",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "none",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "high",
+   "groin": "none",
+   "knee": "high",
+   "ankle": "moderate",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "dumbbell_romanian_deadlift",
+  "name_en": "Dumbbell Romanian Deadlift",
+  "name_fa": "ددلیفت رومانیایی با دمبل",
+  "aliases": [],
+  "description": "حرکت لولایی لگن با دمبل.",
+  "primary_muscles": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "lower back"
+  ],
+  "movement_pattern": "hinge",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دمبل‌ها نزدیک پا",
+   "لگن را عقب ببر با زانوی کمی خم",
+   "کمر خنثی"
+  ],
+  "common_mistakes": [
+   "گرد شدن کمر",
+   "دور شدن وزنه از بدن"
+  ],
+  "alternatives": [
+   "glute_bridge"
+  ],
+  "regressions": [
+   "glute_bridge"
+  ],
+  "region_loads": {
+   "lower_back": "high",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "high",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "glute_bridge",
+  "name_en": "Glute Bridge",
+  "name_fa": "پل باسن",
+  "aliases": [],
+  "description": "بالا آوردن لگن در حالت خوابیده.",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "core"
+  ],
+  "movement_pattern": "hinge",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "به پشت بخواب و زانوها خم",
+   "لگن را بالا ببر و کنترل‌شده پایین بیا"
+  ],
+  "common_mistakes": [
+   "قوس زیاد کمر"
+  ],
+  "alternatives": [
+   "dumbbell_romanian_deadlift"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [
+   "lower_back"
+  ],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "push_up",
+  "name_en": "Push-Up",
+  "name_fa": "شنا سوئدی",
+  "aliases": [],
+  "description": "فشار افقی با وزن بدن.",
+  "primary_muscles": [
+   "chest",
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "anterior deltoid",
+   "core"
+  ],
+  "movement_pattern": "push_horizontal",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دست‌ها کمی پهن‌تر از شانه",
+   "بدن در یک خط",
+   "سینه را پایین ببر و برگرد"
+  ],
+  "common_mistakes": [
+   "افتادن کمر",
+   "باز شدن بیش از حد آرنج‌ها"
+  ],
+  "alternatives": [
+   "incline_push_up",
+   "dumbbell_bench_press"
+  ],
+  "regressions": [
+   "incline_push_up"
+  ],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "moderate",
+   "wrist": "moderate",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "incline_push_up",
+  "name_en": "Incline Push-Up",
+  "name_fa": "شنا سوئدی شیب‌دار",
+  "aliases": [],
+  "description": "شنا با دست‌های روی سطح بالاتر؛ ساده‌تر از شنا معمولی.",
+  "primary_muscles": [
+   "chest",
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "anterior deltoid"
+  ],
+  "movement_pattern": "push_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "bench"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دست‌ها روی میز/نیمکت محکم",
+   "بدن مستقیم",
+   "پایین بیا و برگرد"
+  ],
+  "common_mistakes": [
+   "افتادن کمر"
+  ],
+  "alternatives": [
+   "push_up"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "dumbbell_bench_press",
+  "name_en": "Dumbbell Bench Press",
+  "name_fa": "پرس سینه دمبل",
+  "aliases": [],
+  "description": "پرس سینه روی نیمکت با دمبل.",
+  "primary_muscles": [
+   "chest",
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "anterior deltoid"
+  ],
+  "movement_pattern": "push_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell",
+   "bench"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی نیمکت دراز بکش",
+   "دمبل‌ها را بالا فشار بده و کنترل‌شده پایین بیاور"
+  ],
+  "common_mistakes": [
+   "پایین بردن بیش از حد دمبل"
+  ],
+  "alternatives": [
+   "push_up"
+  ],
+  "regressions": [
+   "push_up"
+  ],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "moderate",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "dumbbell_overhead_press",
+  "name_en": "Dumbbell Overhead Press",
+  "name_fa": "پرس سرشانه دمبل",
+  "aliases": [],
+  "description": "پرس عمودی با دمبل.",
+  "primary_muscles": [
+   "deltoids"
+  ],
+  "secondary_muscles": [
+   "triceps",
+   "core"
+  ],
+  "movement_pattern": "push_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دمبل‌ها کنار شانه",
+   "بالای سر فشار بده",
+   "شکم منقبض"
+  ],
+  "common_mistakes": [
+   "قوس زیاد کمر"
+  ],
+  "alternatives": [
+   "pike_push_up"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "none",
+   "neck": "low",
+   "mid_back": "none",
+   "shoulder": "high",
+   "elbow": "moderate",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "pike_push_up",
+  "name_en": "Pike Push-Up",
+  "name_fa": "شنا پایک",
+  "aliases": [],
+  "description": "شنا با لگن بالا برای فشار عمودی با وزن بدن.",
+  "primary_muscles": [
+   "deltoids"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "movement_pattern": "push_vertical",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "لگن را بالا ببر",
+   "سر را به سمت زمین پایین بیاور و فشار بده"
+  ],
+  "common_mistakes": [
+   "افتادن وزن روی گردن"
+  ],
+  "alternatives": [
+   "dumbbell_overhead_press"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "low",
+   "mid_back": "none",
+   "shoulder": "high",
+   "elbow": "moderate",
+   "wrist": "moderate",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "dumbbell_row",
+  "name_en": "One-Arm Dumbbell Row",
+  "name_fa": "زیر بغل تک‌دست دمبل",
+  "aliases": [],
+  "description": "کشش افقی با دمبل.",
+  "primary_muscles": [
+   "lats",
+   "rhomboids"
+  ],
+  "secondary_muscles": [
+   "biceps"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell",
+   "bench"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "یک دست و زانو روی نیمکت",
+   "دمبل را به سمت کمر بکش",
+   "کنترل‌شده پایین بیاور"
+  ],
+  "common_mistakes": [
+   "چرخش تنه"
+  ],
+  "alternatives": [
+   "band_row"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "band_row",
+  "name_en": "Resistance Band Row",
+  "name_fa": "زیر بغل با کش",
+  "aliases": [],
+  "description": "کشش افقی با کش مقاومتی.",
+  "primary_muscles": [
+   "lats",
+   "rhomboids"
+  ],
+  "secondary_muscles": [
+   "biceps"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "band"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "کش را به نقطه ثابت ببند",
+   "آرنج‌ها را عقب بکش و شانه‌ها را جمع کن"
+  ],
+  "common_mistakes": [
+   "بالا رفتن شانه‌ها"
+  ],
+  "alternatives": [
+   "dumbbell_row"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "lat_pulldown",
+  "name_en": "Lat Pulldown",
+  "name_fa": "لت‌پول‌داون",
+  "aliases": [],
+  "description": "کشش عمودی روی دستگاه.",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps"
+  ],
+  "movement_pattern": "pull_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "machine"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "نشسته میله را به سمت بالای سینه بکش",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "تاب دادن بدن"
+  ],
+  "alternatives": [
+   "band_pulldown"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "band_pulldown",
+  "name_en": "Resistance Band Pulldown",
+  "name_fa": "کشش عمودی با کش",
+  "aliases": [],
+  "description": "کشش عمودی با کش از بالا.",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps"
+  ],
+  "movement_pattern": "pull_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "band"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "کش را از بالا ثابت کن",
+   "به سمت سینه بکش"
+  ],
+  "common_mistakes": [
+   "بالا رفتن شانه‌ها"
+  ],
+  "alternatives": [
+   "lat_pulldown"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "reverse_lunge",
+  "name_en": "Reverse Lunge",
+  "name_fa": "لانج عقب",
+  "aliases": [],
+  "description": "قدم به عقب و پایین رفتن.",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "movement_pattern": "lunge",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "یک قدم بلند به عقب",
+   "زانوی عقبی را پایین ببر",
+   "با پای جلو برگرد"
+  ],
+  "common_mistakes": [
+   "جمع شدن زانوی جلو"
+  ],
+  "alternatives": [
+   "split_squat",
+   "step_up"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "split_squat",
+  "name_en": "Split Squat",
+  "name_fa": "اسکات تک‌پا ایستا",
+  "aliases": [],
+  "description": "اسکات با وضعیت قدم‌به‌جلو ثابت.",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "movement_pattern": "lunge",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "یک پا جلو و یکی عقب",
+   "مستقیم پایین برو و بالا بیا"
+  ],
+  "common_mistakes": [
+   "خم شدن تنه به جلو"
+  ],
+  "alternatives": [
+   "reverse_lunge"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "step_up",
+  "name_en": "Step-Up",
+  "name_fa": "استپ‌آپ",
+  "aliases": [],
+  "description": "بالا رفتن روی جعبه با یک پا.",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "calves"
+  ],
+  "movement_pattern": "lunge",
+  "exercise_type": "strength",
+  "equipment": [
+   "box"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "پا را کامل روی جعبه",
+   "با همان پا بالا برو",
+   "کنترل‌شده پایین بیا"
+  ],
+  "common_mistakes": [
+   "هل دادن با پای پایین"
+  ],
+  "alternatives": [
+   "split_squat"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "plank",
+  "name_en": "Plank",
+  "name_fa": "پلانک",
+  "aliases": [],
+  "description": "نگه داشتن تنه در یک خط.",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "glutes"
+  ],
+  "movement_pattern": "core",
+  "exercise_type": "stability",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "isometric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی ساعد و پنجه",
+   "بدن مستقیم",
+   "نفس‌گیری عادی"
+  ],
+  "common_mistakes": [
+   "افتادن کمر",
+   "بالا آمدن لگن"
+  ],
+  "alternatives": [
+   "dead_bug"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "dead_bug",
+  "name_en": "Dead Bug",
+  "name_fa": "دد باگ",
+  "aliases": [],
+  "description": "حرکت کنترل‌شده دست و پا در حالت خوابیده برای ثبات مرکزی.",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "hip flexors"
+  ],
+  "movement_pattern": "core",
+  "exercise_type": "stability",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "به پشت بخواب و دست و پا بالا",
+   "یک دست و پای مخالف را آرام دور کن",
+   "کمر را روی زمین نگه دار"
+  ],
+  "common_mistakes": [
+   "بلند شدن کمر از زمین",
+   "حرکت سریع"
+  ],
+  "alternatives": [
+   "bird_dog",
+   "plank"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [
+   "lower_back"
+  ],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "bird_dog",
+  "name_en": "Bird Dog",
+  "name_fa": "برد داگ",
+  "aliases": [],
+  "description": "ثبات تنه روی دست و زانو.",
+  "primary_muscles": [
+   "erector spinae",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "abdominals"
+  ],
+  "movement_pattern": "core",
+  "exercise_type": "stability",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "چهار دست‌وپا",
+   "دست و پای مخالف را هم‌زمان دراز کن",
+   "تنه بی‌حرکت"
+  ],
+  "common_mistakes": [
+   "چرخش لگن"
+  ],
+  "alternatives": [
+   "dead_bug"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [
+   "lower_back"
+  ],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "side_plank",
+  "name_en": "Side Plank",
+  "name_fa": "پلانک پهلو",
+  "aliases": [],
+  "description": "نگه داشتن بدن به پهلو.",
+  "primary_muscles": [
+   "obliques"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "shoulders"
+  ],
+  "movement_pattern": "core",
+  "exercise_type": "stability",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "isometric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی ساعد",
+   "لگن را بالا نگه دار",
+   "بدن در یک خط"
+  ],
+  "common_mistakes": [
+   "افتادن لگن"
+  ],
+  "alternatives": [
+   "plank"
+  ],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "farmer_carry",
+  "name_en": "Farmer's Carry",
+  "name_fa": "حمل کشاورز",
+  "aliases": [],
+  "description": "راه رفتن با وزنه در دو دست.",
+  "primary_muscles": [
+   "forearms",
+   "trapezius"
+  ],
+  "secondary_muscles": [
+   "core",
+   "glutes"
+  ],
+  "movement_pattern": "carry",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دمبل‌ها در دو دست",
+   "قامت راست",
+   "گام‌های کنترل‌شده"
+  ],
+  "common_mistakes": [
+   "خم شدن به یک سمت"
+  ],
+  "alternatives": [],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "moderate",
+   "hand": "moderate",
+   "hip": "low",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "standing_calf_raise",
+  "name_en": "Standing Calf Raise",
+  "name_fa": "ساق پا ایستاده",
+  "aliases": [],
+  "description": "بلند شدن روی پنجه پا.",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی لبه یا زمین صاف",
+   "پاشنه را بالا ببر و کنترل‌شده پایین بیا"
+  ],
+  "common_mistakes": [
+   "پرتاب کردن حرکت"
+  ],
+  "alternatives": [],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "moderate",
+   "foot": "low",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ },
+ {
+  "id": "dumbbell_biceps_curl",
+  "name_en": "Dumbbell Biceps Curl",
+  "name_fa": "جلو بازو دمبل",
+  "aliases": [],
+  "description": "خم کردن آرنج با دمبل.",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "آرنج‌ها کنار بدن",
+   "دمبل را بالا بیاور و کنترل‌شده پایین ببر"
+  ],
+  "common_mistakes": [
+   "تاب دادن تنه"
+  ],
+  "alternatives": [],
+  "regressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "project-authored general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": []
+ }
+]

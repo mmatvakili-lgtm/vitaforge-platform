@@ -78,12 +78,8 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
         return _fail("NEEDS_INFO", ["WO-NEEDS-INFO:" + ",".join(missing)], cfg=cfg)
 
     # S1 safety pre-pass over equipment / level filtered candidates
-    eq = set(inp.equipment) | {"bodyweight"}
-    pool = [c for c in inp.catalog
-            if (not c.candidate.equipment or set(c.candidate.equipment) <= eq)
-            and LEVEL_RANK.get(c.candidate.difficulty, 0) <= LEVEL_RANK[inp.level]]
-    pool.sort(key=lambda c: c.code)
-    req = dataclasses.replace(base, candidates=tuple(c.candidate for c in pool))
+    pool = sorted(inp.catalog, key=lambda c: c.code)
+    req = dataclasses.replace(base, candidates=tuple(c.candidate for c in pool), equipment=tuple(inp.equipment), user_level=inp.level)
     decision = gate.evaluate(req)
     if not decision.status.permits_content:
         return _fail("BLOCKED", ("SAFETY:" + decision.status.value,) + decision.reasons, decision, cfg, decision.flags)
@@ -99,6 +95,10 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
     reasons = [f"structure:{structure}"] + ([] if inp.preferred_structure in (None, structure) else ["preferred-structure-incompatible"])
 
     sets, rmin, rmax, rpe, rest = PRESCRIPTION[(inp.goal, _group(inp.level))]
+    if inp.recovery_state == "red":
+        sets = max(1, sets - 1); reasons.append("recovery:red->sets-1")
+    elif inp.recovery_state == "amber":
+        reasons.append("recovery:amber")
     used_week: Dict[str, int] = {}
     omissions: List[Omission] = []
     days: List[PlannedDay] = []
@@ -120,6 +120,7 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
                     s += 1.5                       # prefer reviewed supportive exercises; Safety Core already filtered the pool
                 s -= 1 if c.code in caution else 0
                 s -= used_week.get(c.code, 0)
+                s -= 0.5 if c.code in inp.recent_codes else 0     # variety vs recent plans
                 return (-s, c.code)                 # stable tie-break by code => deterministic
             best = sorted(cands, key=score)[0]
             if best.role != role or best.code in caution:
@@ -149,6 +150,8 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
         # WO-C06 every session needs a main exercise
         if not any(by_code[e.code].role == "main" for e in chosen) or minutes(chosen) > inp.session_minutes:
             return _fail("NEEDS_CONTENT", reasons + [f"WO-C06:{name}"], decision, cfg, decision.flags)
+        order = {s_[0]: i for i, s_ in enumerate(slots)}
+        chosen.sort(key=lambda e: (by_code[e.code].role != "main", order[e.slot]))        # main lifts first, then accessories, slot order
         days.append(PlannedDay(name, tuple(chosen), minutes(chosen)))
 
     # S7 safety post-pass (defence in depth)
@@ -157,10 +160,21 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
     if not ok:
         return _fail("ERROR_FAILSAFE", ["SAF-R009"] + list(violations), decision, cfg, decision.flags)
 
+    pp = {"push": 0, "pull": 0}
+    for d in days:
+        for e in d.exercises:
+            k = by_code[e.code].push_pull
+            if k in pp:
+                pp[k] += e.sets
+    flags = list(decision.flags)
+    lo, hi = cfg.push_pull_ratio
+    if pp["pull"] and pp["push"] and not lo <= pp["push"] / pp["pull"] <= hi or (bool(pp["push"]) != bool(pp["pull"])):
+        flags.append("BALANCE_PUSH_PULL")                                                # reported, never silently "fixed" (WO-C03)
+    balance = {"weekly_sets_per_muscle": dict(sorted(muscle_sets.items())), "push_sets": pp["push"], "pull_sets": pp["pull"]}
     confidence = "low" if omissions else ("medium" if alt_used else "high")
     return PlanResult(status="OK", days=tuple(days), structure=structure, confidence=confidence,
                       omissions=tuple(omissions), reasons=tuple(reasons), safety_decision_id=decision.decision_id,
-                      rule_set_version=decision.rule_set_version, config_version=cfg.version, flags=decision.flags)
+                      rule_set_version=decision.rule_set_version, config_version=cfg.version, flags=tuple(flags), balance=balance)
 
 
 # ---------------------------------------------------------------- progression (DOC-11 §8)
