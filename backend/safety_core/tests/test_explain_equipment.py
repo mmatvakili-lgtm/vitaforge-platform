@@ -28,7 +28,7 @@ def test_bad_level_failsafe(req, rules):
 
 def test_every_emitted_reason_code_has_text():
     import re, pathlib
-    src = pathlib.Path(E.__file__).read_text()
+    src = pathlib.Path(E.__file__).read_text(encoding="utf-8")
     codes = set(re.findall(r'"(SAF-R\d{3})"', src))
     assert codes <= set(TEXT), codes - set(TEXT)
 

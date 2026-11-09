@@ -103,7 +103,7 @@ o+=f"""
 open(D+'01-product/19-TRACEABILITY-MATRIX.md','w',encoding='utf-8').write(o)
 print(tot,"FR",len(stories),"US","uncovered:",unc)
 # API coverage check
-api=json.load(open('tools/api_index.json'))
+api=json.load(open('tools/api_index.json',encoding='utf-8'))
 ui=open(D+'05-design/14-PAGE-BY-PAGE-UI.md',encoding='utf-8').read()
 mm=[a[0] for a in api if a[0] not in ui and a[0].replace('API-','').split('-')[0] not in ('SYS',)]
 import re as _r
