@@ -11,9 +11,15 @@ from .models import IdSequence, KVRecord
 
 
 class DjangoBackend:
-    def __init__(self, using: str = "default"):
+    def __init__(self, using: str = "default", namespace: str = ""):
+        """`namespace` prefixes every collection name: production uses "" ; tests give each store its own namespace so several stores
+        (e.g. a Harness plus a second Harness inside happy_path) can share one test database without seeing each other's data."""
         self.using = using
+        self.ns = f"{namespace}:" if namespace else ""
         self._atomic = None
+
+    def _c(self, coll: str) -> str:
+        return self.ns + coll
 
     # --- transaction control (the store calls these once per request)
     def begin(self):
@@ -35,25 +41,25 @@ class DjangoBackend:
         return KVRecord.objects.using(self.using)
 
     def load(self, coll: str, key: str) -> Optional[str]:
-        qs = self._qs().filter(coll=coll, k=key)
+        qs = self._qs().filter(coll=self._c(coll), k=key)
         if self._atomic is not None and connections[self.using].features.has_select_for_update:
             qs = qs.select_for_update()                       # row lock: serialises concurrent read-modify-write of the same record (no lost updates)
         return qs.values_list("data", flat=True).first()
 
     def scan(self, coll: str) -> Iterable[Tuple[str, str]]:
-        return list(self._qs().filter(coll=coll).order_by("id").values_list("k", "data"))
+        return list(self._qs().filter(coll=self._c(coll)).order_by("id").values_list("k", "data"))
 
     def save(self, coll: str, key: str, data: str, owner: Optional[str]):
-        self._qs().update_or_create(coll=coll, k=key, defaults={"data": data, "owner": owner})
+        self._qs().update_or_create(coll=self._c(coll), k=key, defaults={"data": data, "owner": owner})
 
     def delete(self, coll: str, key: str):
-        self._qs().filter(coll=coll, k=key).delete()
+        self._qs().filter(coll=self._c(coll), k=key).delete()
 
     def delete_owner(self, coll: str, owner: str):
-        self._qs().filter(coll=coll, owner=owner).delete()
+        self._qs().filter(coll=self._c(coll), owner=owner).delete()
 
     def next_seq(self, name: str) -> int:
-        row, _ = IdSequence.objects.using(self.using).select_for_update().get_or_create(name=name)
+        row, _ = IdSequence.objects.using(self.using).select_for_update().get_or_create(name=self.ns + name)
         row.n += 1
         row.save(update_fields=["n"])
         return row.n

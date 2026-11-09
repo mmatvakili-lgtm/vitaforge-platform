@@ -23,14 +23,16 @@ def _setup():
     django.setup()
     from django.core.management import call_command
     call_command("migrate", verbosity=0, interactive=False)
+    from .models import IdSequence, KVRecord
+    KVRecord.objects.all().delete()                      # once per test session: the test database only
+    IdSequence.objects.all().delete()
     _ready = True
 
 
 def fresh_django_store():
+    """A store in its own namespace of the test database (isolated like a new InMemoryStore, even when several coexist)."""
     _setup()
+    import uuid
     from persistence import PersistentStore
     from .kv_backend import DjangoBackend
-    from .models import IdSequence, KVRecord
-    KVRecord.objects.all().delete()
-    IdSequence.objects.all().delete()
-    return PersistentStore(DjangoBackend())
+    return PersistentStore(DjangoBackend(namespace=uuid.uuid4().hex[:12]))

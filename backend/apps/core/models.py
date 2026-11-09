@@ -7,7 +7,7 @@ from django.db import models
 
 
 class KVRecord(models.Model):
-    coll = models.CharField(max_length=40)
+    coll = models.CharField(max_length=64)
     k = models.CharField(max_length=300)
     owner = models.CharField(max_length=60, null=True, blank=True)
     data = models.TextField()
@@ -18,5 +18,5 @@ class KVRecord(models.Model):
 
 
 class IdSequence(models.Model):
-    name = models.CharField(max_length=40, unique=True)
+    name = models.CharField(max_length=64, unique=True)
     n = models.BigIntegerField(default=0)

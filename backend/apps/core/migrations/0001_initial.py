@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
             name="KVRecord",
             fields=[
                 ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("coll", models.CharField(max_length=40)),
+                ("coll", models.CharField(max_length=64)),
                 ("k", models.CharField(max_length=300)),
                 ("owner", models.CharField(blank=True, max_length=60, null=True)),
                 ("data", models.TextField()),
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             name="IdSequence",
             fields=[
                 ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("name", models.CharField(max_length=40, unique=True)),
+                ("name", models.CharField(max_length=64, unique=True)),
                 ("n", models.BigIntegerField(default=0)),
             ],
         ),
