@@ -21,7 +21,8 @@ def _api_app():
 
 
 def application(environ, start_response):
-    p = environ.get("PATH_INFO", "")
-    if (p.startswith("/api/v1/") and not p.startswith("/api/v1/health/")) or (p == "/" and os.environ.get("VITAFORGE_DEV_CONTENT", "").lower() in ("1", "true", "yes")):
+    from .routing import goes_to_api
+    dev = os.environ.get("VITAFORGE_DEV_CONTENT", "").lower() in ("1", "true", "yes")
+    if goes_to_api(environ.get("PATH_INFO", ""), dev):
         return _api_app()(environ, start_response)
     return _django(environ, start_response)
