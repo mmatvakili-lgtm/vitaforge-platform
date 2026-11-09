@@ -30,9 +30,9 @@ class Exchange:
 
 
 class Harness:
-    def __init__(self, dev: bool = True, allow: bool = True, auto_verify: Optional[bool] = None, rule_kwargs: Optional[dict] = None):
+    def __init__(self, dev: bool = True, allow: bool = True, auto_verify: Optional[bool] = None, rule_kwargs: Optional[dict] = None, store=None):
         self.c = contract()
-        s = InMemoryStore()
+        s = store if store is not None else InMemoryStore()
         s.catalog = demo_catalog()
         s.relations = {c: [("demo_lunge_b" if "lunge" not in c else "demo_squat_b", "alternative")] for c in s.catalog}   # DEMO only
         rs = RuleSet(version=0, status="t", screening_questions=SCREENING, allow_unreviewed_content=allow, **(rule_kwargs or {}))

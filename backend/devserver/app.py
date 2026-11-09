@@ -6,6 +6,7 @@ NOT the production adapter (production = Django/DRF, ADR-0001/0007) and uses in-
 """
 from __future__ import annotations
 
+import contextlib
 import dataclasses
 import hmac
 import json
@@ -772,7 +773,9 @@ class App:
                                       ("X-Content-Type-Options", "nosniff"), ("Content-Security-Policy", "default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'")])
             return [html]
         try:
-            return self._dispatch(environ, start_response, method, path)
+            tx = getattr(self.store, "transaction", None)
+            with (tx() if tx else contextlib.nullcontext()):        # persistent stores: one atomic unit per request; unexpected error => rollback
+                return self._dispatch(environ, start_response, method, path)
         except Exception:  # noqa: BLE001  never leak internals; the message is generic by design
             return self._err(start_response, 500, "internal_error")
 

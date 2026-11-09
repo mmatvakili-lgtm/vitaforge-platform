@@ -26,7 +26,7 @@ class CatalogService:
         if code in self.s.exercise_meta:
             raise ValidationFailed("duplicate")
         self.s.exercise_meta[code] = {"code": code, "status": "draft", "version": 1, "signoffs": [], "sample": bool(meta.get("sample")),
-                                      "factory": candidate_factory, "tags_complete": bool(meta.get("tags_complete", False)),
+                                      "exercise": candidate_factory(), "tags_complete": bool(meta.get("tags_complete", False)),
                                       "record": meta.get("record")}
         return code
 
@@ -68,7 +68,7 @@ class CatalogService:
         """Only published exercises enter the engine catalog; others are removed at once."""
         m = self.s.exercise_meta[code]
         if m["status"] == "published":
-            self.s.catalog[code] = m["factory"]()
+            self.s.catalog[code] = m["exercise"]
         else:
             self.s.catalog.pop(code, None)
 

@@ -62,7 +62,7 @@ def test_export_and_erasure(e):
     assert "pw" not in json.dumps(dump, default=str) and dump["plans"][0]["version"] == 1
     e.x.erase(u)
     assert u not in e.s.users and u not in e.s.plans and not [c for c in e.s.consents if c["user"] == u]
-    assert e.s.erasure_audit and u not in json.dumps(e.s.erasure_audit)
+    assert e.s.erasure_audit and u not in json.dumps(list(e.s.erasure_audit))
     with pytest.raises(NotFound):
         e.x.export(u)
     with pytest.raises(AuthFailed):
