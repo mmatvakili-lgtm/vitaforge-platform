@@ -28,6 +28,8 @@ D = [
 ("DEC-143", "تغذیه: فقط تخمین با عدم قطعیت", "اهداف عددی نیازمند متخصص است.", "A) اهداف کاهش/افزایش وزن؛ B) فقط نگهداری + بازه", "B: Mifflin–St Jeor × PAL با بازه ±؛ هدف عددی غیرفعال تا EXP-006؛ ED/بیماری/بارداری → ارجاع", "ایمنی", "POST /nutrition/estimate", "—", "Implemented", "EXP-006", "`test_nutrition.py` (۱۲ تست)"),
 ("DEC-144", "لایه تصمیم AI", "AI نباید چت‌بات عمومی باشد.", "—", "Safety → Rule Engine → Retrieval → Generation → Validation → Safety Validation؛ trace در پاسخ", "کاهش خطر و هزینه", "پاسخ قطعی بدون LLM", "—", "Implemented", "OPEN-002", "`test_decision_layer.py` (۸ تست)"),
 ("DEC-145", "آداپتور توسعه WSGI", "Django نصب نیست.", "A) صبر؛ B) آداپتور توسعه", "B؛ فقط Dev؛ آداپتور تولیدی Django (ADR-0007)", "امکان اجرا و تست", "—", "—", "Implemented (dev only)", "ADR-0007", "`test_every_openapi_endpoint_is_implemented`"),
+("DEC-150", "اعتبارسنجی Django اجرا نشد", "محیط ابری شبکه ندارد؛ Django/psycopg نصب نمی‌شود؛ لایه Django فقط health/مدل است و ۵۶ عملیات ندارد.", "A) ادعای تطابق؛ B) گزارش صریح Not Run + Runbook", "B؛ `tools/django_preflight.py` و دستورات اجرا در `DJANGO_RUNTIME_VALIDATION.md`", "عدم ادعای ساختگی", "—", "—", "Accepted", "OPEN-013", "اجرای Harness روی Django توسط مالک/CI"),
+("DEC-151", "درگاه انتشار حرکت مستقل از نقش‌ها", "زنجیره نقش + `tags_complete` خودـاظهاری برای انتشار کافی بود.", "A) فقط نقش‌ها؛ B) + `publication_blockers(record)`", "B؛ سرویس بدون `record` منتشر نمی‌کند؛ Bridge ادعای published را تنزل می‌دهد؛ Loader رد می‌کند؛ `CheckConstraint` در مدل Django؛ `dev_experimental` در `VITAFORGE_ENV=production` ممنوع", "اعتماد/ایمنی", "—", "`Exercise`", "Implemented", "OPEN-012", "`test_publication_security`"),
 ("DEC-146", "نسخه OpenAPI = 3.1.0", "مشخصات 3.0.3 اعلام شده بود ولی از ساختارهای 3.1 (`const`، آرایه نوع) استفاده می‌کرد.", "A) حذف ساختارهای 3.1؛ B) اصلاح نسخه اعلامی", "B؛ معنای اسکیما تغییری نکرد", "صحت قرارداد", "—", "`07-OPENAPI-SPECIFICATION.yaml`", "Implemented", "—", "`test_contract_spec`"),
 ("DEC-147", "افزودن پاسخ 400 به چند عملیات", "ورودی نامعتبر در AUTH-005/LOG-003/LOG-004/AI-001/ADM-005/EX-001 پاسخ اعلام‌شده نداشت.", "A) 422 بدون اعلام؛ B) اعلام 400", "B؛ اسکیمای بدنه تغییر نکرد", "قرارداد باید رفتار واقعی را بپوشاند", "—", "OpenAPI", "Implemented", "—", "`test_contract_requests`"),
 ("DEC-148", "اعتبارسنجی قرارداد فقط روی Dev Adapter", "Django اجرا نشده است (ADR-0007).", "—", "گزارش صریح: قرارداد روی `devserver` اعتبارسنجی شده نه Django؛ هر دو باید همین Harness را بگذرانند", "عدم ادعای بیش‌ازحد", "—", "—", "Accepted", "—", "`CONTRACT_REPORT.md`"),
@@ -44,6 +46,7 @@ D = [
 ("OPEN-010", "پیگیری ایمنی پس از توقف به‌علت درد", "`safety_followup` نیازمند ناحیه درد است و ارسال نمی‌شود.", "—", "باز؛ پیشنهاد: ثبت ناحیه در لاگ", "—", "ایمنی", "LOG-005", "Open", "OPEN-003", "—"),
 ("OPEN-011", "ناهماهنگی‌های spec و پیاده‌سازی", "ADM-003 نقش‌ها، ADM-007 در برابر grant کاربر، ADM-005 فیلد تأیید، نوع `privacy` در enum رضایت، PROG-002 با 402/429/503، مراحل ONB 5–14، ثبت‌نام با تلفن.", "—", "باز؛ بدون تغییر spec صرفاً برای سبز شدن تست", "—", "قرارداد", "OpenAPI", "Open", "—", "`CONTRACT_REPORT.md`"),
 ("OPEN-012", "بازبینی متخصص حرکات کششی وزن بدن", "دسته‌بندی الگو، بار نواحی، موارد منع/احتیاط.", "—", "باز؛ مالک پزشک نیست", "—", "انتشار حرکات", "`review_notes`", "Open", "OPEN-003", "—"),
+("OPEN-013", "اجرای Django/PostgreSQL", "نیاز به محیط دارای شبکه: نصب Django، پیاده‌سازی ۵۶ عملیات روی سرویس‌ها، migrations، لایه ذخیره‌سازی (Store فعلی حافظه‌ای است).", "—", "باز", "—", "اعتبارسنجی واقعی", "Django", "Open", "—", "—"),
 ]
 
 CAP_COLS = ["Designed", "Implemented", "Tested", "Data Populated", "Validated", "Production Ready", "Pending Expert Review"]
@@ -53,13 +56,14 @@ C = [
 ("Safety Core (موتور + قواعد ساختاری)", [Y, Y, Y, P, N, N, Y], "قواعد بالینی R1xx..R5xx `Draft`؛ پارامتر احتیاط `Pending Expert`"),
 ("Safety Core: توضیح تصمیم", [Y, Y, Y, Y, N, N, N], "متن‌ها بازبینی زبانی/بالینی نشده"),
 ("Exercise Schema + Import Pipeline", [Y, Y, Y, Y, N, N, N], "Importer برای free-exercise-db؛ بدون مجوز تأییدشده"),
-("Exercise Database (محتوا)", [Y, Y, Y, P, N, N, Y], "۲۵ حرکت `experimental`، نمونه، بدون منبع علمی"),
+("Exercise Database (محتوا)", [Y, Y, Y, P, N, N, Y], "۳۰ حرکت `experimental`، نمونه، بدون منبع علمی؛ ۵ حرکت کششی با `safety_tags_status=missing`"),
 ("Workout Engine", [Y, Y, Y, N, N, N, Y], "پارامترها `Unverified` (EXP-013)"),
 ("Progression & Recovery", [Y, Y, Y, N, N, N, Y], "آستانه‌ها پیش‌فرض مهندسی"),
 ("Nutrition Engine", [Y, Y, Y, N, N, N, Y], "ضرایب/بازه‌ها `Unverified` (EXP-006)؛ بانک غذا ندارد"),
 ("AI Decision Layer", [Y, Y, Y, N, N, N, Y], "Provider واقعی ندارد؛ KB خالی/نمونه"),
-("API (آداپتور توسعه)", [Y, Y, Y, N, P, N, N], "۵۶/۵۶ مسیر موجود؛ تطابق کامل schema تأیید نشده"),
-("API/ORM Django", [Y, P, N, N, N, N, N], "نوشته‌شده، `Not Run`"),
+("API (آداپتور توسعه)", [Y, Y, Y, N, Y, N, N], "۵۶/۵۶ مسیر با Contract Harness اعتبارسنجی‌شده (فقط devserver)؛ شکاف‌ها در OPEN-011"),
+("API/ORM Django", [Y, P, N, N, N, N, N], "فقط health + مدل‌ها/Bearer؛ ۵۶ عملیات پیاده‌سازی نشده؛ `Not Run` (Django نصب‌پذیر نبود؛ DEC-150)")
+,("Publication Gate حرکات", [Y, Y, Y, N, N, N, Y], "سرویس + Bridge + Loader + CheckConstraint (Not Run)؛ بدون Published"),
 ("Frontend Next.js", [Y, P, N, N, N, N, N], "اسکلت، `Not Run`؛ UI آزمایشی ساده اجراشده"),
 ("Identity/Consent/Privacy", [Y, Y, Y, N, N, N, P], "متن‌های حقوقی `Pending Legal`"),
 ("Subscriptions/Entitlements", [Y, Y, Y, N, N, N, N], "پرداخت غیرفعال"),

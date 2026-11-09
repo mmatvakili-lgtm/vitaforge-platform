@@ -2,6 +2,11 @@
 
 # CHANGELOG
 
+## 2026-11-09 (ب)
+- `Django Runtime Validation`: **Not Run** (بدون شبکه؛ لایه Django ۵۶ عملیات ندارد) — `DJANGO_RUNTIME_VALIDATION.md`، `tools/django_preflight.py`.
+- امنیت انتشار حرکات: بستن مسیرهای دور زدن (سرویس، Bridge، Loader، CheckConstraint)؛ `EXERCISE_CATALOG_SECURITY.md`؛ `API_GAPS.md`.
+- DEC-150/151، OPEN-013.
+
 ## 2026-11-09
 - اعتبارسنجی واقعی قرارداد OpenAPI روی `devserver` برای ۵۶ عملیات (`backend/contract`، ۹۸ تست)؛ `CONTRACT_REPORT.md`؛ spec به 3.1.0 و افزودن 400 (DEC-146/147).
 - بانک حرکات: `license_status`، `limitations`، `review_notes`، واژگان کنترل‌شده، مانع انتشار؛ ۵ حرکت کششی وزن بدن (Experimental/Pending Review) (DEC-149).

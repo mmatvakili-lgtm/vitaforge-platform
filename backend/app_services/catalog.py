@@ -5,6 +5,8 @@ Publication needs a recorded reviewer sign-off by the right role; the system nev
 """
 from __future__ import annotations
 
+from exercise_catalog.schema import publication_blockers
+
 from .errors import Forbidden, NotFound, ValidationFailed
 
 FLOW = ["draft", "scientific_review", "safety_review", "published"]
@@ -24,7 +26,8 @@ class CatalogService:
         if code in self.s.exercise_meta:
             raise ValidationFailed("duplicate")
         self.s.exercise_meta[code] = {"code": code, "status": "draft", "version": 1, "signoffs": [], "sample": bool(meta.get("sample")),
-                                      "factory": candidate_factory, "tags_complete": bool(meta.get("tags_complete", False))}
+                                      "factory": candidate_factory, "tags_complete": bool(meta.get("tags_complete", False)),
+                                      "record": meta.get("record")}
         return code
 
     def transition(self, actor_role, actor_id, code, target, tags_complete=False):
@@ -49,6 +52,13 @@ class CatalogService:
                 raise ValidationFailed("safety_tags_incomplete")
             if m["sample"]:
                 raise ValidationFailed("sample_content_cannot_be_published")
+            # Independent of lifecycle roles/sign-offs: the ExerciseRecord itself must carry approved review, reviewed tags, sources and
+            # confirmed license. A role chain alone (or a self-declared `tags_complete`) is never enough.
+            rec = m.get("record")
+            if rec is None:
+                raise ValidationFailed("no_exercise_record")
+            if publication_blockers(rec):
+                raise ValidationFailed("record_not_publishable")
         m["status"] = target
         m["signoffs"].append({"role": actor_role, "actor": actor_id, "to": target})
         self._sync(code)

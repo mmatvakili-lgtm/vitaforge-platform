@@ -1,19 +1,29 @@
 """ExerciseRecord -> Safety Core candidate / Workout Engine catalog entry. Production never lifts review gates."""
 from __future__ import annotations
 
+import os
+
 from safety_core.models import REGIONS, ExerciseCandidate, RegionLoad
 from workout_engine.models import CatalogExercise
 
 from .schema import ExerciseRecord, publication_blockers
 
 
+class ProductionCatalogError(Exception):
+    pass
+
+
 def to_candidate(r: ExerciseRecord, dev_experimental: bool = False) -> ExerciseCandidate:
     """In production only `published` + reviewed tags pass (Safety Core SAF-R005 does the rest).
     `dev_experimental=True` marks sample content as usable for LOCAL demos only."""
+    if dev_experimental and os.environ.get("VITAFORGE_ENV", "").lower() == "production":
+        raise ProductionCatalogError("dev_experimental is forbidden when VITAFORGE_ENV=production")
     loads = tuple(RegionLoad(g, r.region_loads.get(g, "high")) for g in REGIONS)      # unknown region => assume highest loading
-    ok_tags = r.safety_tags_status == "reviewed" or (dev_experimental and r.safety_tags_status == "unreviewed_estimate")
-    published = r.publication_status == "published" or (dev_experimental and r.publication_status in ("experimental", "draft"))
-    return ExerciseCandidate(code=r.id, review_status="published" if published else r.publication_status,
+    ok_tags = (r.safety_tags_status == "reviewed" and r.expert_review == "approved") or (dev_experimental and r.safety_tags_status == "unreviewed_estimate")
+    # a record that merely CLAIMS 'published' is not trusted: it must also have no publication blockers
+    published = (r.publication_status == "published" and not publication_blockers(r)) or (dev_experimental and r.publication_status in ("experimental", "draft"))
+    status = "published" if published else ("pending_review" if r.publication_status == "published" else r.publication_status)   # a blocked claim is downgraded
+    return ExerciseCandidate(code=r.id, review_status=status,
                              safety_tags_complete=ok_tags, movement_pattern=r.movement_pattern, region_loads=loads,
                              contraindications=r.contraindications, cautions=r.cautions, difficulty=r.difficulty, equipment=r.equipment)
 
@@ -34,10 +44,6 @@ def relations(records) -> dict:
 
 def publishable(records):
     return [r for r in records if not publication_blockers(r)]
-
-
-class ProductionCatalogError(Exception):
-    pass
 
 
 def assert_production_catalog(records) -> None:

@@ -5,7 +5,7 @@ import json
 import pathlib
 from datetime import date
 
-from .schema import ExerciseRecord, SourceRef
+from .schema import ExerciseRecord, SourceRef, validate_record
 
 DATA = pathlib.Path(__file__).parent / "data" / "starter_exercises.json"
 
@@ -25,6 +25,9 @@ def _rec(d: dict) -> ExerciseRecord:
 
 def load_batches(files):
     rows = [_rec(x) for f in files for x in json.loads(pathlib.Path(f).read_text(encoding="utf-8"))]
+    bad = {r.id: validate_record(r) for r in rows if validate_record(r)}
+    if bad:
+        raise ValueError(f"invalid exercise records: {bad}")            # includes 'published but blocked'
     ids = [r.id for r in rows]
     dup = sorted({i for i in ids if ids.count(i) > 1})
     if dup:

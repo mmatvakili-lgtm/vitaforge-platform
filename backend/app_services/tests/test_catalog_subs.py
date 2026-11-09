@@ -6,6 +6,15 @@ from app_services.subscriptions import DisabledPaymentProvider, SubscriptionServ
 from devserver.demo_catalog import demo_catalog
 
 
+def _approved_fixture():
+    import dataclasses
+    from datetime import date
+    from exercise_catalog import SourceRef, load_starter
+    base = next(r for r in load_starter() if r.id == "bodyweight_squat")
+    return dataclasses.replace(base, is_sample=False, expert_review="approved", safety_tags_status="reviewed", last_reviewed=date(2026, 1, 1),
+                               evidence_level="guideline", sources=(SourceRef("x", "ref", True),), review_notes=())
+
+
 def cat():
     s = InMemoryStore()
     return s, CatalogService(s)
@@ -14,7 +23,7 @@ def cat():
 def test_full_lifecycle_and_roles():
     s, c = cat()
     ex = demo_catalog()["demo_squat_a"]
-    c.create_draft("content_admin", "x1", lambda: ex)
+    c.create_draft("content_admin", "x1", lambda: ex, record=_approved_fixture())     # TEST FIXTURE only: stands in for a future real sign-off
     with pytest.raises(NotFound):
         c.get_public("x1")
     c.transition("content_admin", "u1", "x1", "scientific_review")

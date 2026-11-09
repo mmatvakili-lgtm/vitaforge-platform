@@ -16,13 +16,14 @@
 | Safety Core (موتور + قواعد ساختاری) | ✔ | ✔ | ✔ | ◐ | ✖ | ✖ | ✔ | قواعد بالینی R1xx..R5xx `Draft`؛ پارامتر احتیاط `Pending Expert` |
 | Safety Core: توضیح تصمیم | ✔ | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | متن‌ها بازبینی زبانی/بالینی نشده |
 | Exercise Schema + Import Pipeline | ✔ | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | Importer برای free-exercise-db؛ بدون مجوز تأییدشده |
-| Exercise Database (محتوا) | ✔ | ✔ | ✔ | ◐ | ✖ | ✖ | ✔ | ۲۵ حرکت `experimental`، نمونه، بدون منبع علمی |
+| Exercise Database (محتوا) | ✔ | ✔ | ✔ | ◐ | ✖ | ✖ | ✔ | ۳۰ حرکت `experimental`، نمونه، بدون منبع علمی؛ ۵ حرکت کششی با `safety_tags_status=missing` |
 | Workout Engine | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | پارامترها `Unverified` (EXP-013) |
 | Progression & Recovery | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | آستانه‌ها پیش‌فرض مهندسی |
 | Nutrition Engine | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | ضرایب/بازه‌ها `Unverified` (EXP-006)؛ بانک غذا ندارد |
 | `AI Decision Layer` | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | Provider واقعی ندارد؛ KB خالی/نمونه |
-| API (آداپتور توسعه) | ✔ | ✔ | ✔ | ✖ | ◐ | ✖ | ✖ | ۵۶/۵۶ مسیر موجود؛ تطابق کامل schema تأیید نشده |
-| API/ORM Django | ✔ | ◐ | ✖ | ✖ | ✖ | ✖ | ✖ | نوشته‌شده، `Not Run` |
+| API (آداپتور توسعه) | ✔ | ✔ | ✔ | ✖ | ✔ | ✖ | ✖ | ۵۶/۵۶ مسیر با Contract Harness اعتبارسنجی‌شده (فقط devserver)؛ شکاف‌ها در OPEN-011 |
+| API/ORM Django | ✔ | ◐ | ✖ | ✖ | ✖ | ✖ | ✖ | فقط health + مدل‌ها/Bearer؛ ۵۶ عملیات پیاده‌سازی نشده؛ `Not Run` (Django نصب‌پذیر نبود؛ DEC-150) |
+| Publication Gate حرکات | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | سرویس + Bridge + Loader + CheckConstraint (Not Run)؛ بدون Published |
 | Frontend Next.js | ✔ | ◐ | ✖ | ✖ | ✖ | ✖ | ✖ | اسکلت، `Not Run`؛ UI آزمایشی ساده اجراشده |
 | Identity/Consent/Privacy | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ◐ | متن‌های حقوقی `Pending Legal` |
 | Subscriptions/Entitlements | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✖ | پرداخت غیرفعال |

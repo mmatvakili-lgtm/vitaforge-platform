@@ -44,6 +44,15 @@ class Exercise(models.Model):
     is_sample = models.BooleanField(default=False)
     payload = models.JSONField(default=dict)
 
+    class Meta:
+        constraints = [
+            # DB-level backstop (WRITTEN, NOT RUN): ORM `.update()`, bulk_update, raw SQL and admin all hit this, so none can mark
+            # sample or incompletely-tagged content as published. Full gate (approved review, sources, licence) lives in
+            # exercise_catalog.publication_blockers and must be enforced by the service layer too.
+            models.CheckConstraint(check=~models.Q(status="published") | (models.Q(safety_tags_complete=True) & models.Q(is_sample=False)),
+                                   name="exercise_published_requires_tags_and_non_sample"),
+        ]
+
 
 class PlanVersion(models.Model):                  # immutable by convention + DB trigger (planned)
     user = models.ForeignKey(User, on_delete=models.PROTECT)

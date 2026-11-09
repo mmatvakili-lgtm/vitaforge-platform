@@ -293,3 +293,18 @@ def test_error_bodies_never_echo_submitted_secrets_or_internals():
     assert r.status == 400 and secret not in str(r.body) and r.body["details"]["fields"][0] == {"path": "identifier", "rule": "type"}
     r = h.call("POST", "/auth/register", {"email": "e@ex.com", "password": secret, "date_of_birth": "nope"})
     assert secret not in str(r.body) and "Traceback" not in str(r.body)
+
+
+def test_fully_tagged_admin_exercise_with_complete_role_chain_still_cannot_be_published(world):
+    """Admin API path: complete self-declared region loads + every role in the chain => still refused (sample content, no approved record)."""
+    from safety_core.models import REGIONS
+    h, tk = world
+    cr = h.call("POST", "/admin/exercises", {"stable_code": "tagged_evil", "movement_pattern": "core", "difficulty": "beginner",
+                                              "region_loads": {r: "none" for r in REGIONS}}, token=tk["content_admin"]).body
+    assert cr["safety_tags_complete"] is True                        # self-declared; NOT a review
+    h.call("POST", f"/admin/exercises/{cr['id']}/transition", {"to_status": "scientific_review"}, token=tk["content_admin"])
+    ex_rev = h.login("exrev2@ex.com", role="exercise_reviewer")
+    h.call("POST", f"/admin/exercises/{cr['id']}/transition", {"to_status": "safety_review"}, token=ex_rev)
+    r = h.call("POST", f"/admin/exercises/{cr['id']}/transition", {"to_status": "published"}, token=tk["reviewer"])
+    assert r.status == 409 and r.problems == []
+    assert "tagged_evil" not in h.store.catalog

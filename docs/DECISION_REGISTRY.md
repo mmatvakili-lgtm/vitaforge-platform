@@ -41,6 +41,8 @@
 | DEC-143 | تغذیه: فقط تخمین با عدم قطعیت | B: Mifflin–St Jeor × PAL با بازه ±؛ هدف عددی غیرفعال تا EXP-006؛ ED/بیماری/بارداری → ارجاع | `Implemented` | EXP-006 | `test_nutrition.py` (۱۲ تست) |
 | DEC-144 | لایه تصمیم AI | Safety → Rule Engine → Retrieval → Generation → Validation → Safety Validation؛ trace در پاسخ | `Implemented` | OPEN-002 | `test_decision_layer.py` (۸ تست) |
 | DEC-145 | آداپتور توسعه WSGI | B؛ فقط Dev؛ آداپتور تولیدی Django (ADR-0007) | `Implemented (dev only)` | ADR-0007 | `test_every_openapi_endpoint_is_implemented` |
+| DEC-150 | اعتبارسنجی Django اجرا نشد | B؛ `tools/django_preflight.py` و دستورات اجرا در `DJANGO_RUNTIME_VALIDATION.md` | `Accepted` | OPEN-013 | اجرای Harness روی Django توسط مالک/CI |
+| DEC-151 | درگاه انتشار حرکت مستقل از نقش‌ها | B؛ سرویس بدون `record` منتشر نمی‌کند؛ Bridge ادعای published را تنزل می‌دهد؛ Loader رد می‌کند؛ `CheckConstraint` در مدل Django؛ `dev_experimental` در `VITAFORGE_ENV=production` ممنوع | `Implemented` | OPEN-012 | `test_publication_security` |
 | DEC-146 | نسخه OpenAPI = 3.1.0 | B؛ معنای اسکیما تغییری نکرد | `Implemented` | — | `test_contract_spec` |
 | DEC-147 | افزودن پاسخ 400 به چند عملیات | B؛ اسکیمای بدنه تغییر نکرد | `Implemented` | — | `test_contract_requests` |
 | DEC-148 | اعتبارسنجی قرارداد فقط روی Dev Adapter | گزارش صریح: قرارداد روی `devserver` اعتبارسنجی شده نه Django؛ هر دو باید همین Harness را بگذرانند | `Accepted` | — | `CONTRACT_REPORT.md` |
@@ -57,6 +59,7 @@
 | OPEN-010 | پیگیری ایمنی پس از توقف به‌علت درد | باز؛ پیشنهاد: ثبت ناحیه در لاگ | `Open` | OPEN-003 | — |
 | OPEN-011 | ناهماهنگی‌های spec و پیاده‌سازی | باز؛ بدون تغییر spec صرفاً برای سبز شدن تست | `Open` | — | `CONTRACT_REPORT.md` |
 | OPEN-012 | بازبینی متخصص حرکات کششی وزن بدن | باز؛ مالک پزشک نیست | `Open` | OPEN-003 | — |
+| OPEN-013 | اجرای Django/PostgreSQL | باز | `Open` | — | — |
 
 ## ۲. جزئیات
 
@@ -335,6 +338,28 @@
 - **وابستگی‌ها:** ADR-0007
 - **تست پذیرش:** `test_every_openapi_endpoint_is_implemented`
 
+### DEC-150 — اعتبارسنجی Django اجرا نشد
+- **شرح مسئله:** محیط ابری شبکه ندارد؛ Django/psycopg نصب نمی‌شود؛ لایه Django فقط health/مدل است و ۵۶ عملیات ندارد.
+- **گزینه‌های بررسی‌شده:** A) ادعای تطابق؛ B) گزارش صریح Not Run + Runbook
+- **تصمیم نهایی:** B؛ `tools/django_preflight.py` و دستورات اجرا در `DJANGO_RUNTIME_VALIDATION.md`
+- **دلیل انتخاب:** عدم ادعای ساختگی
+- **تأثیر روی محصول:** —
+- **تأثیر روی دیتابیس و API:** —
+- **وضعیت:** `Accepted`
+- **وابستگی‌ها:** OPEN-013
+- **تست پذیرش:** اجرای Harness روی Django توسط مالک/CI
+
+### DEC-151 — درگاه انتشار حرکت مستقل از نقش‌ها
+- **شرح مسئله:** زنجیره نقش + `tags_complete` خودـاظهاری برای انتشار کافی بود.
+- **گزینه‌های بررسی‌شده:** A) فقط نقش‌ها؛ B) + `publication_blockers(record)`
+- **تصمیم نهایی:** B؛ سرویس بدون `record` منتشر نمی‌کند؛ Bridge ادعای published را تنزل می‌دهد؛ Loader رد می‌کند؛ `CheckConstraint` در مدل Django؛ `dev_experimental` در `VITAFORGE_ENV=production` ممنوع
+- **دلیل انتخاب:** اعتماد/ایمنی
+- **تأثیر روی محصول:** —
+- **تأثیر روی دیتابیس و API:** `Exercise`
+- **وضعیت:** `Implemented`
+- **وابستگی‌ها:** OPEN-012
+- **تست پذیرش:** `test_publication_security`
+
 ### DEC-146 — نسخه OpenAPI = 3.1.0
 - **شرح مسئله:** مشخصات 3.0.3 اعلام شده بود ولی از ساختارهای 3.1 (`const`، آرایه نوع) استفاده می‌کرد.
 - **گزینه‌های بررسی‌شده:** A) حذف ساختارهای 3.1؛ B) اصلاح نسخه اعلامی
@@ -509,6 +534,17 @@
 - **تأثیر روی دیتابیس و API:** `review_notes`
 - **وضعیت:** `Open`
 - **وابستگی‌ها:** OPEN-003
+- **تست پذیرش:** —
+
+### OPEN-013 — اجرای Django/PostgreSQL
+- **شرح مسئله:** نیاز به محیط دارای شبکه: نصب Django، پیاده‌سازی ۵۶ عملیات روی سرویس‌ها، migrations، لایه ذخیره‌سازی (Store فعلی حافظه‌ای است).
+- **گزینه‌های بررسی‌شده:** —
+- **تصمیم نهایی:** باز
+- **دلیل انتخاب:** —
+- **تأثیر روی محصول:** اعتبارسنجی واقعی
+- **تأثیر روی دیتابیس و API:** Django
+- **وضعیت:** `Open`
+- **وابستگی‌ها:** —
 - **تست پذیرش:** —
 
 </div>
