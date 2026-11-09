@@ -41,6 +41,7 @@
 | DEC-143 | تغذیه: فقط تخمین با عدم قطعیت | B: Mifflin–St Jeor × PAL با بازه ±؛ هدف عددی غیرفعال تا EXP-006؛ ED/بیماری/بارداری → ارجاع | `Implemented` | EXP-006 | `test_nutrition.py` (۱۲ تست) |
 | DEC-144 | لایه تصمیم AI | Safety → Rule Engine → Retrieval → Generation → Validation → Safety Validation؛ trace در پاسخ | `Implemented` | OPEN-002 | `test_decision_layer.py` (۸ تست) |
 | DEC-145 | آداپتور توسعه WSGI | B؛ فقط Dev؛ آداپتور تولیدی Django (ADR-0007) | `Implemented (dev only)` | ADR-0007 | `test_every_openapi_endpoint_is_implemented` |
+| DEC-154 | Unit-of-Work Store به‌جای ORM نرمال‌شده (مرحله اول) | B؛ ۱۱ تست conformance + ۵ تست HTTP روی SQLite؛ Django backend نوشته شد (Not Run) | `Accepted` | OPEN-013 | `persistence/tests`، `devserver/tests/test_persistence.py` |
 | DEC-152 | احراز هویت وب: cookie HttpOnly + CSRF | C؛ Bearer از قرارداد وب حذف (ADR-0009) | `Accepted` | OPEN-013 | تست CSRF/لغو/انقضا روی Django |
 | DEC-153 | Repository Port به‌جای Store حافظه‌ای | C مرحله‌ای (ADR-0013) | `Accepted` | OPEN-013 | conformance روی InMemory و PostgreSQL |
 | DEC-150 | اعتبارسنجی Django اجرا نشد | B؛ `tools/django_preflight.py` و دستورات اجرا در `DJANGO_RUNTIME_VALIDATION.md` | `Accepted` | OPEN-013 | اجرای Harness روی Django توسط مالک/CI |
@@ -339,6 +340,17 @@
 - **وضعیت:** `Implemented (dev only)`
 - **وابستگی‌ها:** ADR-0007
 - **تست پذیرش:** `test_every_openapi_endpoint_is_implemented`
+
+### DEC-154 — Unit-of-Work Store به‌جای ORM نرمال‌شده (مرحله اول)
+- **شرح مسئله:** سرویس‌ها dict را درجا تغییر می‌دهند؛ Repository کامل پرریسک بود.
+- **گزینه‌های بررسی‌شده:** A) پورت Repository؛ B) UoW روی KV با تراکنش
+- **تصمیم نهایی:** B؛ ۱۱ تست conformance + ۵ تست HTTP روی SQLite؛ Django backend نوشته شد (Not Run)
+- **دلیل انتخاب:** تحویل سریع با حفظ ۴۰۵ تست
+- **تأثیر روی محصول:** جدول‌های رابطه‌ای بعداً
+- **تأثیر روی دیتابیس و API:** `KVRecord`
+- **وضعیت:** `Accepted`
+- **وابستگی‌ها:** OPEN-013
+- **تست پذیرش:** `persistence/tests`، `devserver/tests/test_persistence.py`
 
 ### DEC-152 — احراز هویت وب: cookie HttpOnly + CSRF
 - **شرح مسئله:** Django فقط Bearer دارد؛ spec/devserver cookie+CSRF.

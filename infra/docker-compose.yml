@@ -1,12 +1,19 @@
-# WRITTEN, NOT RUN
+# WRITTEN, NOT RUN (DATABASE_URL in .env must use host "db"/"redis" when the api service runs inside compose)
 services:
   db:
     image: postgres:16
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
     environment: { POSTGRES_USER: vitaforge, POSTGRES_PASSWORD: vitaforge, POSTGRES_DB: vitaforge }
   redis:
     image: redis:7
+    ports: ["6379:6379"]
   api:
     build: { context: ../backend }
     env_file: ../.env
     depends_on: [db, redis]
+    command: sh -c "python manage.py migrate && gunicorn config.wsgi:application -b 0.0.0.0:8000"
     ports: ["8000:8000"]
+
+volumes:
+  pgdata: {}

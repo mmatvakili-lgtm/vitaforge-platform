@@ -1,4 +1,3 @@
-# WRITTEN, NOT RUN
 from django.http import JsonResponse
 from django.urls import path
 

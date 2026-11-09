@@ -1,11 +1,11 @@
-Django>=5.0,<6
-djangorestframework>=3.15
-dj-database-url>=2.1
-psycopg[binary]>=3.1
-celery>=5.4
-redis>=5.0
-pytest>=8
-gunicorn>=22
+# Compatible RANGES (not yet installed/verified by the assistant; no network there). Freeze exact versions on your machine:
+#   pip freeze > requirements.lock   (commit the lock file once `python manage.py check` and the tests pass on your machine)
+Django>=6.0,<6.1
+dj-database-url>=2.3
+psycopg[binary]>=3.2.10
 PyYAML>=6
 jsonschema>=4.18
 referencing>=0.30
+redis>=5.0          # reserved: rate-limit/Celery broker not implemented yet
+pytest>=8
+gunicorn>=22 ; sys_platform != "win32"

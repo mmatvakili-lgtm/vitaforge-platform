@@ -25,7 +25,11 @@ class _InMemoryStore:
 
 
 InMemoryStore = _InMemoryStore
-if __import__("os").environ.get("VITAFORGE_TEST_STORE") == "sqlite":          # regression mode: run the whole suite on PersistentStore(SQLite)
+if __import__("os").environ.get("VITAFORGE_TEST_STORE") == "django":          # regression mode on the Django ORM (PostgreSQL/SQLite); see apps/core/testing.py
+    def InMemoryStore():                                                        # noqa: N802
+        from apps.core.testing import fresh_django_store
+        return fresh_django_store()
+elif __import__("os").environ.get("VITAFORGE_TEST_STORE") == "sqlite":          # regression mode: run the whole suite on PersistentStore(SQLite)
     def InMemoryStore():                                                        # noqa: N802  (factory with the old class name)
         from persistence import PersistentStore, SqliteBackend
         return PersistentStore(SqliteBackend(":memory:"))

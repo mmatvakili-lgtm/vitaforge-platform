@@ -1,65 +1,22 @@
-# WRITTEN, NOT RUN: migrations must be generated with `manage.py makemigrations` once Django is available.
-import uuid
+"""Persistence tables for the unit-of-work store (ADR-0013 amended). NEEDS LOCAL VERIFICATION: written without a Django runtime.
 
-from django.contrib.auth.models import AbstractBaseUser
+`KVRecord` holds every domain collection (users, sessions, profiles, plans, ...) as one row per key with an indexed `owner`
+(user id) column: per-user reads/erase are query-level, and every write happens inside one request-wide transaction.
+Relational normalisation of individual collections (typed columns, FKs) is a later, per-collection migration."""
 from django.db import models
 
 
-class User(AbstractBaseUser):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(unique=True)
-    role = models.CharField(max_length=32, default="user")
-    plan = models.CharField(max_length=16, default="free")
-    locale = models.CharField(max_length=2, default="fa")
-    email_verified = models.BooleanField(default=False)
-    failed_logins = models.PositiveSmallIntegerField(default=0)
-    locked_until = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    USERNAME_FIELD = "email"
-
-
-class ApiSession(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    token_hash = models.CharField(max_length=64, unique=True)
-    device = models.CharField(max_length=120, blank=True)
-    revoked = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class Consent(models.Model):                      # append-only: never updated or deleted by the app
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    doc_type = models.CharField(max_length=40)
-    version = models.CharField(max_length=20, null=True)
-    granted = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class Exercise(models.Model):
-    code = models.CharField(max_length=60, unique=True)
-    status = models.CharField(max_length=24, default="draft")
-    version = models.PositiveIntegerField(default=1)
-    movement_pattern = models.CharField(max_length=40)
-    safety_tags_complete = models.BooleanField(default=False)
-    is_sample = models.BooleanField(default=False)
-    payload = models.JSONField(default=dict)
+class KVRecord(models.Model):
+    coll = models.CharField(max_length=40)
+    k = models.CharField(max_length=300)
+    owner = models.CharField(max_length=60, null=True, blank=True)
+    data = models.TextField()
 
     class Meta:
-        constraints = [
-            # DB-level backstop (WRITTEN, NOT RUN): ORM `.update()`, bulk_update, raw SQL and admin all hit this, so none can mark
-            # sample or incompletely-tagged content as published. Full gate (approved review, sources, licence) lives in
-            # exercise_catalog.publication_blockers and must be enforced by the service layer too.
-            models.CheckConstraint(check=~models.Q(status="published") | (models.Q(safety_tags_complete=True) & models.Q(is_sample=False)),
-                                   name="exercise_published_requires_tags_and_non_sample"),
-        ]
+        constraints = [models.UniqueConstraint(fields=["coll", "k"], name="kv_unique_coll_key")]
+        indexes = [models.Index(fields=["coll", "owner"], name="kv_coll_owner_idx")]
 
 
-class PlanVersion(models.Model):                  # immutable by convention + DB trigger (planned)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    version = models.PositiveIntegerField()
-    cause = models.CharField(max_length=40)
-    result = models.JSONField()
-    safety_decision_id = models.CharField(max_length=40)
-    created_at = models.DateTimeField(auto_now_add=True)
-    class Meta:
-        unique_together = ("user", "version")
+class IdSequence(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    n = models.BigIntegerField(default=0)

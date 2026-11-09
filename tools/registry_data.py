@@ -28,6 +28,7 @@ D = [
 ("DEC-143", "تغذیه: فقط تخمین با عدم قطعیت", "اهداف عددی نیازمند متخصص است.", "A) اهداف کاهش/افزایش وزن؛ B) فقط نگهداری + بازه", "B: Mifflin–St Jeor × PAL با بازه ±؛ هدف عددی غیرفعال تا EXP-006؛ ED/بیماری/بارداری → ارجاع", "ایمنی", "POST /nutrition/estimate", "—", "Implemented", "EXP-006", "`test_nutrition.py` (۱۲ تست)"),
 ("DEC-144", "لایه تصمیم AI", "AI نباید چت‌بات عمومی باشد.", "—", "Safety → Rule Engine → Retrieval → Generation → Validation → Safety Validation؛ trace در پاسخ", "کاهش خطر و هزینه", "پاسخ قطعی بدون LLM", "—", "Implemented", "OPEN-002", "`test_decision_layer.py` (۸ تست)"),
 ("DEC-145", "آداپتور توسعه WSGI", "Django نصب نیست.", "A) صبر؛ B) آداپتور توسعه", "B؛ فقط Dev؛ آداپتور تولیدی Django (ADR-0007)", "امکان اجرا و تست", "—", "—", "Implemented (dev only)", "ADR-0007", "`test_every_openapi_endpoint_is_implemented`"),
+("DEC-154", "Unit-of-Work Store به‌جای ORM نرمال‌شده (مرحله اول)", "سرویس‌ها dict را درجا تغییر می‌دهند؛ Repository کامل پرریسک بود.", "A) پورت Repository؛ B) UoW روی KV با تراکنش", "B؛ ۱۱ تست conformance + ۵ تست HTTP روی SQLite؛ Django backend نوشته شد (Not Run)", "تحویل سریع با حفظ ۴۰۵ تست", "جدول‌های رابطه‌ای بعداً", "`KVRecord`", "Accepted", "OPEN-013", "`persistence/tests`، `devserver/tests/test_persistence.py`"),
 ("DEC-152", "احراز هویت وب: cookie HttpOnly + CSRF", "Django فقط Bearer دارد؛ spec/devserver cookie+CSRF.", "A) Bearer در JS؛ B) django sessions؛ C) cookie با توکن `IdentityService`", "C؛ Bearer از قرارداد وب حذف (ADR-0009)", "امنیت XSS؛ یک مالک نشست", "Harness نیاز به transport cookie", "`ApiSession`", "Accepted", "OPEN-013", "تست CSRF/لغو/انقضا روی Django"),
 ("DEC-153", "Repository Port به‌جای Store حافظه‌ای", "ORM با تغییر درجای dict ناسازگار است.", "A) dict روی ORM؛ B) بازنویسی؛ C) پورت + دو پیاده‌سازی + conformance", "C مرحله‌ای (ADR-0013)", "ایمنی داده؛ حفظ ۴۰۵ تست", "—", "همه جداول", "Accepted", "OPEN-013", "conformance روی InMemory و PostgreSQL"),
 ("DEC-150", "اعتبارسنجی Django اجرا نشد", "محیط ابری شبکه ندارد؛ Django/psycopg نصب نمی‌شود؛ لایه Django فقط health/مدل است و ۵۶ عملیات ندارد.", "A) ادعای تطابق؛ B) گزارش صریح Not Run + Runbook", "B؛ `tools/django_preflight.py` و دستورات اجرا در `DJANGO_RUNTIME_VALIDATION.md`", "عدم ادعای ساختگی", "—", "—", "Accepted", "OPEN-013", "اجرای Harness روی Django توسط مالک/CI"),
@@ -64,7 +65,8 @@ C = [
 ("Nutrition Engine", [Y, Y, Y, N, N, N, Y], "ضرایب/بازه‌ها `Unverified` (EXP-006)؛ بانک غذا ندارد"),
 ("AI Decision Layer", [Y, Y, Y, N, N, N, Y], "Provider واقعی ندارد؛ KB خالی/نمونه"),
 ("API (آداپتور توسعه)", [Y, Y, Y, N, Y, N, N], "۵۶/۵۶ مسیر با Contract Harness اعتبارسنجی‌شده (فقط devserver)؛ شکاف‌ها در OPEN-011"),
-("API/ORM Django", [Y, P, N, N, N, N, N], "فقط health + مدل‌ها/Bearer؛ ۵۶ عملیات پیاده‌سازی نشده؛ `Not Run` (Django نصب‌پذیر نبود؛ DEC-150)")
+("API/ORM Django", [Y, Y, N, N, N, N, N], "wsgi + KV backend + migration + ۵۶ عملیات از طریق App مشترک؛ `Not Run` (Django نصب‌پذیر نبود؛ DEC-150)")
+,("لایه پایداری (SQLite)", [Y, Y, Y, Y, N, N, Y], "ماندگاری پس از restart، rollback، ایزولاسیون، حذف حساب روی فایل SQLite")
 ,("Publication Gate حرکات", [Y, Y, Y, N, N, N, Y], "سرویس + Bridge + Loader + CheckConstraint (Not Run)؛ بدون Published"),
 ("Frontend Next.js", [Y, P, N, N, N, N, N], "اسکلت، `Not Run`؛ UI آزمایشی ساده اجراشده"),
 ("Identity/Consent/Privacy", [Y, Y, Y, N, N, N, P], "متن‌های حقوقی `Pending Legal`"),

@@ -22,7 +22,8 @@
 | Nutrition Engine | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | ضرایب/بازه‌ها `Unverified` (EXP-006)؛ بانک غذا ندارد |
 | `AI Decision Layer` | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | Provider واقعی ندارد؛ KB خالی/نمونه |
 | API (آداپتور توسعه) | ✔ | ✔ | ✔ | ✖ | ✔ | ✖ | ✖ | ۵۶/۵۶ مسیر با Contract Harness اعتبارسنجی‌شده (فقط devserver)؛ شکاف‌ها در OPEN-011 |
-| API/ORM Django | ✔ | ◐ | ✖ | ✖ | ✖ | ✖ | ✖ | فقط health + مدل‌ها/Bearer؛ ۵۶ عملیات پیاده‌سازی نشده؛ `Not Run` (Django نصب‌پذیر نبود؛ DEC-150) |
+| API/ORM Django | ✔ | ✔ | ✖ | ✖ | ✖ | ✖ | ✖ | wsgi + KV backend + migration + ۵۶ عملیات از طریق App مشترک؛ `Not Run` (Django نصب‌پذیر نبود؛ DEC-150) |
+| لایه پایداری (SQLite) | ✔ | ✔ | ✔ | ✔ | ✖ | ✖ | ✔ | ماندگاری پس از restart، rollback، ایزولاسیون، حذف حساب روی فایل SQLite |
 | Publication Gate حرکات | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ✔ | سرویس + Bridge + Loader + CheckConstraint (Not Run)؛ بدون Published |
 | Frontend Next.js | ✔ | ◐ | ✖ | ✖ | ✖ | ✖ | ✖ | اسکلت، `Not Run`؛ UI آزمایشی ساده اجراشده |
 | Identity/Consent/Privacy | ✔ | ✔ | ✔ | ✖ | ✖ | ✖ | ◐ | متن‌های حقوقی `Pending Legal` |

@@ -28,6 +28,13 @@
 5. تراکنش: هر عملیات API داخل `transaction.atomic()`؛ شکست = rollback کامل، از جمله `audit`.
 6. جداسازی کاربر در سطح Query: هر متد Repository داده‌ی کاربر `user_id` را اجباری می‌گیرد؛ دسترسی بدون آن وجود ندارد.
 
+## اصلاحیه ۲۰۲۶-۱۱-۰۹ (DEC-154): گزینه D — Unit-of-Work Store
+
+- پورت Repository برای ~۲۰ collection و ده‌ها نقطه تغییر درجا در این مرحله پرریسک بود. به‌جای آن `persistence.PersistentStore` با **همان API دیکشنری/لیست** ساخته شد: identity map، تشخیص تغییر با مقایسه سریال‌سازی، و تراکنش یک‌واحدی برای هر درخواست (خطای غیرمنتظره = rollback کامل).
+- ذخیره‌سازی: جدول `KVRecord(coll, k, owner, data)` با ستون `owner` ایندکس‌شده (جداسازی/حذف کاربر در سطح Query) و `IdSequence`. نوع‌ها با codec و allow-list (dataclass/enum دامنه) بازیابی می‌شوند؛ مقدار غیرقابل‌ذخیره (مثلاً lambda) فوراً خطا می‌دهد.
+- نرمال‌سازی رابطه‌ای (ستون‌های تایپ‌دار/FK) به‌ازای هر collection مهاجرت بعدی است؛ مدل‌های رابطه‌ای قدیمی و Bearer حذف شدند چون هیچ سرویسی از آن‌ها استفاده نمی‌کرد.
+- Backendها: SQLite (تست‌شده در cloud) و Django ORM (Not Run). مجموعه conformance یکسان برای هر دو.
+
 ## پیامد
 
 مراحل ۳–۴ و تست‌های Postgres نیاز به محیط دارای Django/psycopg دارند (OPEN-013).
