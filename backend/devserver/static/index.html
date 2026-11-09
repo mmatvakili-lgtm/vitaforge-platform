@@ -52,11 +52,16 @@ loggedIn=r.st===200;show([el("p",loggedIn?"وارد شدید.":"ورود نام�
 $("gen").onclick=async()=>{if(!loggedIn){show([el("p","ابتدا وارد شوید.")]);return}
 const steps=[{answers:{age:+$("age").value}},{answers:{goal:$("goal").value,level:"beginner"}},{answers:{days_per_week:+$("days").value,session_minutes:+$("mins").value}},{answers:{equipment:[]}}];
 for(let i=0;i<steps.length;i++){const r=await api("PUT","/onboarding/steps/"+(i+1),steps[i]);if(r.st!==200){show([el("p","خطا در مرحله "+(i+1)+" ("+r.st+")")]);return}}
-if($("consent").checked){const d=await api("GET","/consents/documents");const doc=(d.j||[]).find(x=>x.type==="health_data");if(doc)await api("POST","/consents",{document_id:doc.id,granted:true})}
+const trace=[];
+if($("consent").checked){const d=await api("GET","/consents/documents");const doc=(d.j||[]).find(x=>x.type==="health_data");
+if(!doc){show([el("p","سند رضایت پیدا نشد ("+d.st+")")]);return}
+const cr=await api("POST","/consents",{document_id:doc.id,granted:true});trace.push("consent:"+cr.st);
+if(cr.st!==201&&cr.st!==200){show([el("p","ثبت رضایت ناموفق ("+cr.st+")")]);return}}
 const a={};document.querySelectorAll(".rf").forEach(c=>a[c.dataset.q]=c.checked);
-await api("POST","/health/screening",{screening_version:1,answers:a});
+const sr=await api("POST","/health/screening",{screening_version:1,answers:a});trace.push("screening:"+sr.st);
+if(sr.st!==200){$("raw").textContent=JSON.stringify(sr.j,null,1);show([el("p","ثبت غربالگری ناموفق ("+sr.st+")")]);return}
 const c=await api("POST","/onboarding/complete",{});if(c.st!==200){show([el("p","برای ادامه رضایت لازم است.")]);return}
-const r=await api("POST","/workouts/generate",{});$("raw").textContent=JSON.stringify(r.j,null,1);
+const r=await api("POST","/workouts/generate",{});$("raw").textContent=trace.join(" ")+" screening_sent="+JSON.stringify(a)+"\n"+JSON.stringify(r.j,null,1);
 if(r.st===422){show([el("p","حرکت بازبینی‌شده کافی برای تجهیزات و محدودیت‌های شما وجود ندارد.")]);return}
 if(r.st!==200){show([el("p","خطا ("+r.st+")")]);return}
 if(!r.j.plan){show([el("p","برنامه ساخته نشد: ارزیابی ایمنی ("+r.j.decision.status+"). لطفاً با متخصص مشورت کنید.")]);return}
