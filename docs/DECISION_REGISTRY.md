@@ -41,6 +41,8 @@
 | DEC-143 | تغذیه: فقط تخمین با عدم قطعیت | B: Mifflin–St Jeor × PAL با بازه ±؛ هدف عددی غیرفعال تا EXP-006؛ ED/بیماری/بارداری → ارجاع | `Implemented` | EXP-006 | `test_nutrition.py` (۱۲ تست) |
 | DEC-144 | لایه تصمیم AI | Safety → Rule Engine → Retrieval → Generation → Validation → Safety Validation؛ trace در پاسخ | `Implemented` | OPEN-002 | `test_decision_layer.py` (۸ تست) |
 | DEC-145 | آداپتور توسعه WSGI | B؛ فقط Dev؛ آداپتور تولیدی Django (ADR-0007) | `Implemented (dev only)` | ADR-0007 | `test_every_openapi_endpoint_is_implemented` |
+| DEC-152 | احراز هویت وب: cookie HttpOnly + CSRF | C؛ Bearer از قرارداد وب حذف (ADR-0009) | `Accepted` | OPEN-013 | تست CSRF/لغو/انقضا روی Django |
+| DEC-153 | Repository Port به‌جای Store حافظه‌ای | C مرحله‌ای (ADR-0013) | `Accepted` | OPEN-013 | conformance روی InMemory و PostgreSQL |
 | DEC-150 | اعتبارسنجی Django اجرا نشد | B؛ `tools/django_preflight.py` و دستورات اجرا در `DJANGO_RUNTIME_VALIDATION.md` | `Accepted` | OPEN-013 | اجرای Harness روی Django توسط مالک/CI |
 | DEC-151 | درگاه انتشار حرکت مستقل از نقش‌ها | B؛ سرویس بدون `record` منتشر نمی‌کند؛ Bridge ادعای published را تنزل می‌دهد؛ Loader رد می‌کند؛ `CheckConstraint` در مدل Django؛ `dev_experimental` در `VITAFORGE_ENV=production` ممنوع | `Implemented` | OPEN-012 | `test_publication_security` |
 | DEC-146 | نسخه OpenAPI = 3.1.0 | B؛ معنای اسکیما تغییری نکرد | `Implemented` | — | `test_contract_spec` |
@@ -337,6 +339,28 @@
 - **وضعیت:** `Implemented (dev only)`
 - **وابستگی‌ها:** ADR-0007
 - **تست پذیرش:** `test_every_openapi_endpoint_is_implemented`
+
+### DEC-152 — احراز هویت وب: cookie HttpOnly + CSRF
+- **شرح مسئله:** Django فقط Bearer دارد؛ spec/devserver cookie+CSRF.
+- **گزینه‌های بررسی‌شده:** A) Bearer در JS؛ B) django sessions؛ C) cookie با توکن `IdentityService`
+- **تصمیم نهایی:** C؛ Bearer از قرارداد وب حذف (ADR-0009)
+- **دلیل انتخاب:** امنیت XSS؛ یک مالک نشست
+- **تأثیر روی محصول:** Harness نیاز به transport cookie
+- **تأثیر روی دیتابیس و API:** `ApiSession`
+- **وضعیت:** `Accepted`
+- **وابستگی‌ها:** OPEN-013
+- **تست پذیرش:** تست CSRF/لغو/انقضا روی Django
+
+### DEC-153 — Repository Port به‌جای Store حافظه‌ای
+- **شرح مسئله:** ORM با تغییر درجای dict ناسازگار است.
+- **گزینه‌های بررسی‌شده:** A) dict روی ORM؛ B) بازنویسی؛ C) پورت + دو پیاده‌سازی + conformance
+- **تصمیم نهایی:** C مرحله‌ای (ADR-0013)
+- **دلیل انتخاب:** ایمنی داده؛ حفظ ۴۰۵ تست
+- **تأثیر روی محصول:** —
+- **تأثیر روی دیتابیس و API:** همه جداول
+- **وضعیت:** `Accepted`
+- **وابستگی‌ها:** OPEN-013
+- **تست پذیرش:** conformance روی InMemory و PostgreSQL
 
 ### DEC-150 — اعتبارسنجی Django اجرا نشد
 - **شرح مسئله:** محیط ابری شبکه ندارد؛ Django/psycopg نصب نمی‌شود؛ لایه Django فقط health/مدل است و ۵۶ عملیات ندارد.
