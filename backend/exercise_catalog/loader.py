@@ -5,7 +5,7 @@ import json
 import pathlib
 from datetime import date
 
-from .schema import ExerciseRecord, SourceRef, validate_record
+from .schema import ExerciseRecord, MediaRef, SourceRef, validate_record
 
 DATA = pathlib.Path(__file__).parent / "data" / "starter_exercises.json"
 
@@ -15,6 +15,9 @@ def _rec(d: dict) -> ExerciseRecord:
     d["sources"] = tuple(SourceRef(**s) for s in d.get("sources", []))
     for k in ("aliases", "primary_muscles", "secondary_muscles", "equipment", "instructions", "common_mistakes", "alternatives",
               "regressions", "supports_regions", "review_notes", "limitations"):
+        d[k] = tuple(d.get(k, ()))
+    d["media"] = tuple(MediaRef(**m) for m in d.get("media", ()))
+    for k in ("progressions", "environments", "safety_cautions"):
         d[k] = tuple(d.get(k, ()))
     d["contraindications"] = tuple(tuple(x) for x in d.get("contraindications", ()))
     d["cautions"] = tuple(tuple(x) for x in d.get("cautions", ()))

@@ -13,6 +13,8 @@ from .sources import SOURCES
 LEVEL_MAP = {"beginner": "beginner", "intermediate": "intermediate", "expert": "advanced", "advanced": "advanced"}
 CATEGORY_MAP = {"strength": "strength", "stretching": "stretching", "cardio": "cardio", "plyometrics": "plyometric",
                 "powerlifting": "strength", "olympic weightlifting": "strength", "strongman": "strength"}
+MUSCLE_MAP = {"traps": "trapezius"}
+FORCE_NOTE = {"push": "push_pull=push (source 'force')", "pull": "push_pull=pull (source 'force')"}
 EQUIP_MAP = {"body only": "bodyweight", "barbell": "barbell", "dumbbell": "dumbbell", "machine": "machine", "cable": "cable",
              "kettlebells": "kettlebell", "bands": "band", "e-z curl bar": "barbell", "medicine ball": "other", "exercise ball": "other",
              "foam roll": "other", "other": "other"}
@@ -29,7 +31,7 @@ class ImportReport:
     duplicates: List[str] = field(default_factory=list)
 
 
-def import_free_exercise_db(rows: Iterable[Mapping], existing_ids=()) -> ImportReport:
+def import_free_exercise_db(rows: Iterable[Mapping], existing_ids=(), source_ref: str = "") -> ImportReport:
     """Maps the yuhonas/free-exercise-db JSON schema. Source license is unverified => imported rows are draft + pending."""
     rep, seen = ImportReport(), set(existing_ids)
     for row in rows:
@@ -42,14 +44,21 @@ def import_free_exercise_db(rows: Iterable[Mapping], existing_ids=()) -> ImportR
             equip = row.get("equipment")
             rec = ExerciseRecord(
                 id=rid, name_en=str(row["name"]).strip(),
-                primary_muscles=tuple(row.get("primaryMuscles") or ()), secondary_muscles=tuple(row.get("secondaryMuscles") or ()),
+                primary_muscles=tuple(MUSCLE_MAP.get(m, m) for m in (row.get("primaryMuscles") or ())),
+                secondary_muscles=tuple(MUSCLE_MAP.get(m, m) for m in (row.get("secondaryMuscles") or ())),
                 exercise_type=CATEGORY_MAP.get(str(row.get("category", "")).lower(), "strength"),
                 equipment=(EQUIP_MAP.get(str(equip).lower(), "other"),) if equip else (),
                 difficulty=LEVEL_MAP.get(str(row.get("level", "")).lower(), "beginner"),
                 instructions=tuple(row.get("instructions") or ()), publication_status="pending_review",
-                sources=(SourceRef("free_exercise_db", str(row.get("id", "")), None),),
+                sources=(SourceRef("free_exercise_db", (source_ref + "#" if source_ref else "") + str(row.get("id", "")), None),),
                 safety_tags_status="missing", expert_review="pending", is_sample=False, movement_pattern="other",
-                license_status="third_party_unverified")
+                license_status="third_party_unverified", source_quality="community",
+                evidence_limitations="Community dataset; no citations, no clinical review; upstream provenance unverified.",
+                review_notes=("source licence/provenance unverified (declared Unlicense; no LICENSE file; upstream wrkout/exercises.json origin unknown)",
+                              "movement_pattern not classified", "region safety tags missing", "no Persian name",
+                              "source instructions contain informal tips; review before use"),
+                role="main" if str(row.get("mechanic")) == "compound" else "accessory",
+                push_pull=row.get("force") if row.get("force") in ("push", "pull") else None)
             issues = validate_record(rec)
             if issues:
                 rep.rejected.append({"id": rid, "issues": issues}); continue

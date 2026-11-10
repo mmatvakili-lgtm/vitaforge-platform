@@ -30,7 +30,7 @@ def to_candidate(r: ExerciseRecord, dev_experimental: bool = False) -> ExerciseC
 
 def to_catalog_entry(r: ExerciseRecord, dev_experimental: bool = False) -> CatalogExercise:
     return CatalogExercise(to_candidate(r, dev_experimental), r.role, (r.primary_muscles or ("other",))[0], r.push_pull,
-                           supports_regions=r.supports_regions)
+                           supports_regions=r.supports_regions, environments=r.environments)
 
 
 def relations(records) -> dict:

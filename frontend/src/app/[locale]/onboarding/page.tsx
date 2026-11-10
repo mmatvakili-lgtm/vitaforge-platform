@@ -5,7 +5,7 @@ import type { ApiError } from "../../../lib/api/client.ts";
 import type { ConsentDocumentList, SafetyDecision } from "../../../lib/api/generated.ts";
 import { normalizeDigits } from "../../../lib/i18n.ts";
 import {
-  allScreeningAnswered, EQUIPMENT, GOALS, LEVELS, parseIntField, resumeStage, SCREENING_QUESTIONS, SCREENING_VERSION, STEP_NUMBER,
+  allScreeningAnswered, ENVIRONMENTS, EQUIPMENT, GOALS, LEVELS, PRIORITY_MUSCLES, parseIntField, resumeStage, SCREENING_QUESTIONS, SCREENING_VERSION, STEP_NUMBER,
   validateBasics, validateEquipment, validateGoal, validateSchedule, type FieldErrors, type StepName, type WizardStage,
 } from "../../../lib/onboarding.ts";
 import { permitsPlan } from "../../../lib/plan-view.ts";
@@ -33,6 +33,8 @@ function Wizard() {
   const [days, setDays] = useState("3");
   const [minutes, setMinutes] = useState("60");
   const [equipment, setEquipment] = useState<string[]>([]);
+  const [priority, setPriority] = useState<string[]>([]);
+  const [environment, setEnvironment] = useState("");
   const [docs, setDocs] = useState<ConsentDocumentList>([]);
   const [agree, setAgree] = useState(false);
   const [answers, setAnswers] = useState<Record<string, boolean | undefined>>({});
@@ -53,6 +55,8 @@ function Wizard() {
       if (typeof a.goal?.level === "string") setLevel(a.goal.level);
       if (a.schedule?.days_per_week !== undefined) setDays(String(a.schedule.days_per_week));
       if (a.schedule?.session_minutes !== undefined) setMinutes(String(a.schedule.session_minutes));
+      if (Array.isArray(a.goal?.priority_muscles)) setPriority(a.goal.priority_muscles as string[]);
+      if (typeof a.equipment?.environment === "string") setEnvironment(a.equipment.environment);
       if (Array.isArray(a.equipment?.equipment)) setEquipment(a.equipment.equipment as string[]);
       const probe = o.data.summary_ready ? await api.call("API-HEALTH-001") : null;
       if (!live) return;
@@ -128,13 +132,19 @@ function Wizard() {
       )}
 
       {stage === "goal" && (
-        <form noValidate onSubmit={(e) => { e.preventDefault(); saveStep("goal", { goal, level }, validateGoal({ goal, level }), "schedule"); }}>
+        <form noValidate onSubmit={(e) => { e.preventDefault(); const g = { goal, level, ...(priority.length ? { priority_muscles: priority } : {}) }; saveStep("goal", g, validateGoal(g), "schedule"); }}>
           <Field id="goal" label={t("onb.goal")} error={fe("goal")}>
             <select id="goal" value={goal} onChange={(e) => setGoal(e.target.value)}><option value="" />{GOALS.map((g) => <option key={g} value={g}>{t(`goal.${g}`)}</option>)}</select>
           </Field>
           <Field id="level" label={t("onb.level")} error={fe("level")}>
             <select id="level" value={level} onChange={(e) => setLevel(e.target.value)}><option value="" />{LEVELS.map((g) => <option key={g} value={g}>{t(`level.${g}`)}</option>)}</select>
           </Field>
+          <fieldset><legend>{t("onb.priority")}</legend><p className="hint">{t("onb.priority.hint")}</p>
+            <div className="checks">{PRIORITY_MUSCLES.map((m) => (
+              <label key={m} className="check"><input type="checkbox" checked={priority.includes(m)} disabled={!priority.includes(m) && priority.length >= 3}
+                onChange={(e) => setPriority(e.target.checked ? [...priority, m] : priority.filter((x) => x !== m))} />{t(`muscle.${m}`)}</label>
+            ))}</div>
+          </fieldset>
           <div className="row"><button type="button" className="btn-secondary" onClick={() => setStage("basics")}>{t("common.back")}</button><Button type="submit" busy={busy}>{t("common.next")}</Button></div>
         </form>
       )}
@@ -152,7 +162,10 @@ function Wizard() {
       )}
 
       {stage === "equipment" && (
-        <form noValidate onSubmit={(e) => { e.preventDefault(); saveStep("equipment", { equipment }, validateEquipment({ equipment }), "consent"); }}>
+        <form noValidate onSubmit={(e) => { e.preventDefault(); const eq = { equipment, ...(environment ? { environment } : {}) }; saveStep("equipment", eq, validateEquipment(eq), "consent"); }}>
+          <Field id="environment" label={t("onb.environment")}>
+            <select id="environment" value={environment} onChange={(e) => setEnvironment(e.target.value)}><option value="">{t("env.unset")}</option>{ENVIRONMENTS.map((v) => <option key={v} value={v}>{t(`env.${v}`)}</option>)}</select>
+          </Field>
           <fieldset><legend>{t("onb.equipment")}</legend><p className="hint">{t("onb.equipment.hint")}</p>
             <div className="checks">{EQUIPMENT.map((q) => (
               <label key={q} className="check"><input type="checkbox" checked={equipment.includes(q)} onChange={(e) => setEquipment(e.target.checked ? [...equipment, q] : equipment.filter((x) => x !== q))} />{t(`equip.${q}`)}</label>

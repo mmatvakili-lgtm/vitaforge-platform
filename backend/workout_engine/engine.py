@@ -122,6 +122,7 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
                 s = (2 if c.role == role else 0) + (1 if c.code in inp.liked_codes else 0)
                 if inp.supportive_enabled and set(c.supports_regions) & set(inp.supportive_regions):
                     s += 1.5                       # prefer reviewed supportive exercises; Safety Core already filtered the pool
+                s += 0.75 if c.primary_muscle in inp.priority_muscles else 0     # user focus: preference only
                 s -= 1 if c.code in caution else 0
                 s -= used_week.get(c.code, 0)
                 s -= 0.5 if c.code in inp.recent_codes else 0     # variety vs recent plans
@@ -138,7 +139,8 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
             day_codes.add(best.code)
             chosen.append(PlannedExercise(best.code, sets if role == "main" else max(2, sets - 1), rmin, rmax, rpe, rest, slot,
                                           "slot-match" + ("+repeat-relaxed" if relaxed else "") + ("+caution" if best.code in caution else "")
-                                          + ("+supportive" if inp.supportive_enabled and set(best.supports_regions) & set(inp.supportive_regions) else "")))
+                                          + ("+supportive" if inp.supportive_enabled and set(best.supports_regions) & set(inp.supportive_regions) else "")
+                                          + ("+priority" if best.primary_muscle in inp.priority_muscles else "")))
         # WO-C01 time budget: drop accessories from the end
         def minutes(ex_list):
             t = cfg.warmup_minutes * 60

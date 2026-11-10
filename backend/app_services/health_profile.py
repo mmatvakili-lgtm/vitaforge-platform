@@ -7,6 +7,7 @@ from workout_engine.models import GOALS, LEVELS
 
 from .errors import Forbidden, PreconditionRequired, ValidationFailed
 
+PRIORITY_MUSCLES = ("chest", "lats", "shoulders", "biceps", "triceps", "quadriceps", "hamstrings", "glutes", "abdominals", "calves", "lower back")
 CONSENT_HEALTH = "health_data_processing"
 
 
@@ -35,6 +36,9 @@ class HealthProfileService:
         elif step == "goal":
             if data.get("goal") not in GOALS or data.get("level") not in LEVELS:
                 raise ValidationFailed("goal/level")
+            pm = data.get("priority_muscles", [])
+            if not isinstance(pm, list) or len(pm) > 3 or any(m not in PRIORITY_MUSCLES for m in pm):
+                raise ValidationFailed("priority_muscles")
         elif step == "schedule":
             if not isinstance(data.get("days_per_week"), int) or not 1 <= data["days_per_week"] <= 6 \
                     or not isinstance(data.get("session_minutes"), int) or not 20 <= data["session_minutes"] <= 180:
@@ -42,6 +46,8 @@ class HealthProfileService:
         elif step == "equipment":
             if not isinstance(data.get("equipment"), list):
                 raise ValidationFailed("equipment")
+            if data.get("environment") not in (None, "home", "gym", "outdoor"):
+                raise ValidationFailed("environment")
         else:
             raise ValidationFailed("step")
         p["steps"][step] = dict(data)

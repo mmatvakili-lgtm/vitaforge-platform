@@ -21,12 +21,13 @@ class WorkoutService:
         st = p["steps"]
         inp = EngineInput(uid, st["goal"]["goal"], st["goal"]["level"], st["schedule"]["days_per_week"],
                           st["schedule"]["session_minutes"], tuple(st["equipment"]["equipment"]),
-                          tuple(self.s.catalog.values()),
+                          tuple(c for c in self.s.catalog.values()
+                                if not st["equipment"].get("environment") or not c.environments or st["equipment"]["environment"] in c.environments),
                           st["schedule"].get("preferred_structure") if preferred_structure == "__profile__" else preferred_structure, config=self.cfg)
         base = self.h.safety_request(uid)
         rs = self.gate.rule_set
         supportive = tuple(sorted({c.region for c in base.conditions if not c.active_pain and c.status != "no_known_limitation"}))
-        inp = dataclasses.replace(inp, supportive_regions=supportive,
+        inp = dataclasses.replace(inp, priority_muscles=tuple(st["goal"].get("priority_muscles", ())), supportive_regions=supportive,
                                   supportive_enabled=bool(rs.clinical_content_published or rs.allow_unreviewed_content))
         res = generate_plan(inp, base, self.gate)
         # the same pre-pass request the engine used (S1), so the returned decision is the one that gated the plan

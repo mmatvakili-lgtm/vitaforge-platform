@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { errorMessage, formatNumber, hasSafetyReason, messageKeys, normalizeDigits, safetyReason, t, dirOf } from "./i18n.ts";
-import { SCREENING_QUESTIONS, GOALS, LEVELS, EQUIPMENT } from "./onboarding.ts";
+import { SCREENING_QUESTIONS, GOALS, LEVELS, EQUIPMENT, PRIORITY_MUSCLES, ENVIRONMENTS } from "./onboarding.ts";
 import { OPERATIONS } from "./api/generated.ts";
 
 test("fa and en catalogs have identical keys and no empty values", () => {
@@ -10,7 +10,7 @@ test("fa and en catalogs have identical keys and no empty values", () => {
 });
 
 test("every enum used by the UI has a label in both languages", () => {
-  const keys = [...GOALS.map((g) => `goal.${g}`), ...LEVELS.map((g) => `level.${g}`), ...EQUIPMENT.map((g) => `equip.${g}`), ...SCREENING_QUESTIONS.map((q) => `screening.q.${q}`)];
+  const keys = [...GOALS.map((g) => `goal.${g}`), ...LEVELS.map((g) => `level.${g}`), ...EQUIPMENT.map((g) => `equip.${g}`), ...SCREENING_QUESTIONS.map((q) => `screening.q.${q}`), ...PRIORITY_MUSCLES.map((m) => `muscle.${m}`), ...ENVIRONMENTS.map((m) => `env.${m}`)];
   for (const l of ["fa", "en"] as const) for (const k of keys) assert.notEqual(t(l, k), k, `${l}:${k}`);
 });
 

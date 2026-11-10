@@ -36,4 +36,7 @@ def test_frontend_onboarding_constants_match_backend():
     assert _tuple(src, "GOALS") == tuple(GOALS)
     assert _tuple(src, "LEVELS") == tuple(LEVELS)
     assert _tuple(src, "EQUIPMENT") == tuple(EQUIPMENT)
+    from app_services.health_profile import PRIORITY_MUSCLES
+    assert _tuple(src, "PRIORITY_MUSCLES") == tuple(PRIORITY_MUSCLES)
+    assert _tuple(src, "ENVIRONMENTS") == ("home", "gym", "outdoor")
     assert f"SCREENING_VERSION = {SCREENING_VERSION};" in src

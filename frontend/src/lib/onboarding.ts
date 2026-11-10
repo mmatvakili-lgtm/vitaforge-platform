@@ -3,6 +3,8 @@ export const GOALS = ["strength", "muscle_gain", "general_fitness", "fat_loss"] 
 export const LEVELS = ["beginner", "intermediate", "advanced"] as const;
 export const EQUIPMENT = ["dumbbell", "barbell", "bench", "box", "band", "machine", "kettlebell", "pull_up_bar", "cable"] as const;
 /** Screening v1 has no endpoint listing its questions (API_GAPS), so the ids are fixed here and covered by a test against the Safety Core catalog. */
+export const PRIORITY_MUSCLES = ["chest", "lats", "shoulders", "biceps", "triceps", "quadriceps", "hamstrings", "glutes", "abdominals", "calves", "lower back"] as const;
+export const ENVIRONMENTS = ["home", "gym", "outdoor"] as const;
 export const SCREENING_VERSION = 1;
 export const SCREENING_QUESTIONS = ["chest_pain", "fainting", "severe_unexplained_pain", "neurological_symptoms"] as const;
 
@@ -19,8 +21,10 @@ const int = (v: unknown): v is number => typeof v === "number" && Number.isInteg
 export function validateBasics(a: { age?: unknown }): FieldErrors {
   return int(a.age) && a.age > 0 && a.age < 120 ? {} : { age: "age" };
 }
-export function validateGoal(a: { goal?: unknown; level?: unknown }): FieldErrors {
+export function validateGoal(a: { goal?: unknown; level?: unknown; priority_muscles?: unknown }): FieldErrors {
   const e: FieldErrors = {};
+  const pm = a.priority_muscles;
+  if (pm !== undefined && (!Array.isArray(pm) || pm.length > 3 || pm.some((m) => !(PRIORITY_MUSCLES as readonly string[]).includes(m)))) e.priority_muscles = "priority";
   if (!GOALS.includes(a.goal as Goal)) e.goal = "goal";
   if (!LEVELS.includes(a.level as Level)) e.level = "level";
   return e;
@@ -31,7 +35,8 @@ export function validateSchedule(a: { days_per_week?: unknown; session_minutes?:
   if (!int(a.session_minutes) || a.session_minutes < 20 || a.session_minutes > 180) e.session_minutes = "minutes";
   return e;
 }
-export function validateEquipment(a: { equipment?: unknown }): FieldErrors {
+export function validateEquipment(a: { equipment?: unknown; environment?: unknown }): FieldErrors {
+  if (a.environment !== undefined && !(ENVIRONMENTS as readonly string[]).includes(a.environment as string)) return { environment: "environment" };
   return Array.isArray(a.equipment) && a.equipment.every((x) => EQUIPMENT.includes(x)) ? {} : { equipment: "equipment" };
 }
 

@@ -34,3 +34,11 @@ test("screening needs every question answered", () => {
   assert.equal(allScreeningAnswered({ chest_pain: false }), false);
   assert.equal(allScreeningAnswered(Object.fromEntries(SCREENING_QUESTIONS.map((q) => [q, false]))), true);
 });
+
+test("priority muscles and environment are optional but validated", () => {
+  assert.deepEqual(validateGoal({ goal: "strength", level: "beginner", priority_muscles: ["chest", "lats"] }), {});
+  assert.ok(validateGoal({ goal: "strength", level: "beginner", priority_muscles: ["chest", "lats", "glutes", "calves"] }).priority_muscles);
+  assert.ok(validateGoal({ goal: "strength", level: "beginner", priority_muscles: ["x"] }).priority_muscles);
+  assert.deepEqual(validateEquipment({ equipment: [], environment: "home" }), {});
+  assert.ok(validateEquipment({ equipment: [], environment: "moon" }).environment);
+});

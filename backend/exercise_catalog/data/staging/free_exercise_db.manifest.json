@@ -1,0 +1,13 @@
+{
+ "source": "yuhonas/free-exercise-db",
+ "url": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json",
+ "retrieved": "2026-11-10",
+ "sha256": "5bb747e3fc658f095a60dcbf6d53c96627acdcc6ffb6fffde86f7e26995d40bf",
+ "upstream_commit": "not pinned (GitHub API unavailable in the build sandbox); content pinned by sha256",
+ "input_rows": 876,
+ "accepted": 876,
+ "rejected": [],
+ "duplicates": [],
+ "licence_findings": "Declared Unlicense/public domain by maintainers; no LICENSE file located; image licences not stated; upstream origin unverified -> UNVERIFIED",
+ "status": "staging only: pending_review, never loaded into the catalogue, images not referenced"
+}

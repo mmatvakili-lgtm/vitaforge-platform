@@ -16,7 +16,9 @@ PATTERNS = ("squat", "hinge", "push_horizontal", "push_vertical", "pull_horizont
 EVIDENCE = ("none", "expert_opinion", "guideline", "systematic_review")
 LICENSE_STATUSES = ("project_authored", "third_party_verified", "third_party_unverified", "restricted", "unknown")
 # Controlled vocabularies (standardisation). Checked as PUBLICATION blockers, not structural errors, so raw imports can still be stored.
-MUSCLES = ("abdominals", "anterior deltoid", "posterior deltoid", "biceps", "calves", "chest", "core", "deltoids", "erector spinae", "forearms",
+ENVIRONMENTS = ("home", "gym", "outdoor")
+MEDIA_KINDS = ("image", "video")
+MUSCLES = ("abductors", "adductors", "middle back", "neck", "abdominals", "anterior deltoid", "posterior deltoid", "biceps", "calves", "chest", "core", "deltoids", "erector spinae", "forearms",
            "glutes", "hamstrings", "hip flexors", "lats", "lower back", "lower trapezius", "middle trapezius", "obliques", "quadriceps",
            "rhomboids", "shoulders", "trapezius", "triceps")
 EQUIPMENT = ("dumbbell", "barbell", "bench", "box", "band", "machine", "kettlebell", "pull_up_bar", "cable")   # bodyweight == empty tuple
@@ -27,6 +29,17 @@ class SourceRef:
     source_id: str                      # key in sources registry
     reference: str = ""                 # citation / URL / file id
     license_ok_for_commercial: Optional[bool] = None   # None = unverified
+
+
+@dataclass(frozen=True)
+class MediaRef:
+    """Reference to an image/video. Never served unless its own licence is confirmed (see served_media); the file itself is not stored here."""
+    kind: str                           # image | video
+    url: str
+    license: str = "unknown"            # SPDX-like id or 'unknown'
+    license_verified: bool = False
+    attribution: str = ""
+    source_id: str = ""
 
 
 @dataclass(frozen=True)
@@ -64,6 +77,15 @@ class ExerciseRecord:
     limitations: Tuple[str, ...] = ()       # human-readable limits of THIS record/movement (display only; NOT a safety decision — Safety Core uses cautions/contraindications codes)
     license_status: str = "unknown"         # provenance of the TEXT of this record (see sources for per-source detail)
     review_notes: Tuple[str, ...] = ()      # open points a reviewer must resolve; any open note blocks publication
+    starting_position: str = ""             # setup text; empty == not provided (never inferred)
+    breathing: str = ""
+    progressions: Tuple[str, ...] = ()      # ids of harder variations (regressions = easier)
+    environments: Tuple[str, ...] = ()      # home | gym | outdoor (empty == unknown)
+    media: Tuple[MediaRef, ...] = ()
+    safety_cautions: Tuple[str, ...] = ()   # display text; the Safety Core uses the coded cautions/contraindications only
+    source_published: Optional[str] = None  # publication/retrieval date of the primary source (ISO date string)
+    source_quality: str = "unverified"      # unverified | community | peer_reviewed | guideline
+    evidence_limitations: str = ""
 
 
 def validate_record(r: ExerciseRecord) -> List[str]:
@@ -83,6 +105,9 @@ def validate_record(r: ExerciseRecord) -> List[str]:
     if r.safety_tags_status != "missing" and set(r.region_loads) != set(REGIONS): p.append("region_loads must cover all regions")
     if r.evidence_level != "none" and not r.sources: p.append("evidence_level without sources")
     if r.license_status not in LICENSE_STATUSES: p.append("license_status")
+    if any(e not in ENVIRONMENTS for e in r.environments): p.append("environments")
+    if any(m.kind not in MEDIA_KINDS or not m.url for m in r.media): p.append("media")
+    if any(m.license_verified and m.license in ("", "unknown") for m in r.media): p.append("media license_verified without a licence")
     if any(not (isinstance(x, tuple) and len(x) == 2 and isinstance(x[0], str)) for x in r.cautions + r.contraindications): p.append("cautions/contraindications must be (code, region) pairs")
     if r.license_status == "third_party_verified" and (not r.sources or any(s.license_ok_for_commercial is not True for s in r.sources)):
         p.append("license_status third_party_verified without confirmed source licenses")
@@ -115,3 +140,8 @@ def _gate_blockers(r: ExerciseRecord) -> List[str]:
 def publication_blockers(r: ExerciseRecord) -> List[str]:
     """Everything that currently prevents publishing. Empty list == publishable (still needs the human sign-off workflow)."""
     return validate_record(r) + _gate_blockers(r)
+
+
+def served_media(r: ExerciseRecord) -> Tuple[MediaRef, ...]:
+    """Only media whose own licence is verified may be shown to users."""
+    return tuple(m for m in r.media if m.license_verified)

@@ -21,6 +21,7 @@ class CatalogExercise:
     push_pull: Optional[str] = None  # push | pull | None
     default_exec_seconds: int = 40
     supports_regions: Tuple[str, ...] = ()   # reviewed 'supportive' tag; only used when supportive content is published
+    environments: Tuple[str, ...] = ()       # home|gym|outdoor; empty == unknown (kept, never assumed)
 
     @property
     def code(self) -> str:
@@ -56,6 +57,7 @@ class EngineInput:
     recent_codes: Tuple[str, ...] = ()          # exercises used in recent plans -> variety
     recovery_state: Optional[str] = None        # green | amber | red (from progression.assess_recovery)
     supportive_regions: Tuple[str, ...] = ()   # regions with a recorded history and NO active pain (Path A)
+    priority_muscles: Tuple[str, ...] = ()      # user-chosen focus; only a tie-breaking preference, never overrides Safety Core or volume caps
     supportive_enabled: bool = False           # True only when reviewed supportive content is published
     config: EngineConfig = field(default_factory=EngineConfig)
 
