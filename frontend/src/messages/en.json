@@ -165,5 +165,9 @@
  "home.cta2": "Continue to your plan",
  "error.phone_registration_not_supported": "Sign-up with a phone number is not supported yet.",
  "error.under_18": "This app is for ages 18 and over.",
- "error.email_required": "An email address is required."
+ "error.email_required": "An email address is required.",
+ "decision.RESTRICT.title": "No valid exercise remains",
+ "decision.RESTRICT.body": "Given your safety information and equipment, no approved exercise remains to build a plan. No plan was built; consult a professional if needed.",
+ "plan.experimental.title": "Experimental content — not reviewed",
+ "plan.experimental.body": "The exercises in this plan come from development sample data: the texts have not been expert-reviewed and carry no medical or scientific approval. For development display only; do not use for real training."
 }

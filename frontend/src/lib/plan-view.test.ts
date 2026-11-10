@@ -7,13 +7,13 @@ const plan = { plan_id: "p", version_no: 1, safety_decision_id: "d", days: [] };
 const d = (status: SafetyDecision["status"], extra: Partial<SafetyDecision> = {}): SafetyDecision => ({ decision_id: "d", status, ...extra });
 
 test("plan is shown only for permitting statuses with a plan object", () => {
-  for (const s of ["ALLOW", "ALLOW_WITH_MODIFICATION", "RESTRICT"] as const) assert.equal(decidePlanView(d(s), plan).kind, "plan");
+  for (const s of ["ALLOW", "ALLOW_WITH_MODIFICATION"] as const) assert.equal(decidePlanView(d(s), plan).kind, "plan");
   assert.equal(decidePlanView(d("ALLOW"), plan).kind === "plan" && (decidePlanView(d("ALLOW"), plan) as { modified: boolean }).modified, false);
-  assert.equal((decidePlanView(d("RESTRICT"), plan) as { modified: boolean }).modified, true);
+  assert.equal((decidePlanView(d("ALLOW_WITH_MODIFICATION"), plan) as { modified: boolean }).modified, true);
 });
 
 test("a plan object is NEVER shown for a non-permitting status", () => {
-  for (const s of ["NEEDS_INFO", "STOP_AND_REFER", "BLOCK_OUT_OF_SCOPE", "BLOCK_CONSENT", "ERROR_FAILSAFE"] as const) {
+  for (const s of ["RESTRICT", "NEEDS_INFO", "STOP_AND_REFER", "BLOCK_OUT_OF_SCOPE", "BLOCK_CONSENT", "ERROR_FAILSAFE"] as const) {
     assert.notEqual(decidePlanView(d(s), plan).kind, "plan", s);
     assert.equal(permitsPlan(s), false);
   }

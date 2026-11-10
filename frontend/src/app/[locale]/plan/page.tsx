@@ -18,6 +18,7 @@ function PlanBody({ plan, modified }: { plan: WorkoutPlan; modified: boolean }) 
         {plan.structure && <> · {t("plan.structure")}: {t(`plan.structure.${plan.structure}`) === `plan.structure.${plan.structure}` ? plan.structure : t(`plan.structure.${plan.structure}`)}</>}
         {plan.confidence && <> · {t("plan.confidence")}: {t(`plan.confidence.${plan.confidence}`)}</>}
       </p>
+      {plan.rationale?.content_status !== "published" && <Alert kind="warning"><strong>{t("plan.experimental.title")}</strong><p>{t("plan.experimental.body")}</p></Alert>}
       {modified && <Alert kind="warning">{t("plan.modified")}</Alert>}
       {(plan.days ?? []).map((d, i) => (
         <section key={d.day_id ?? i} className="day">

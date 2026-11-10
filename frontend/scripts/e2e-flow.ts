@@ -41,7 +41,7 @@ console.log("    screening decision:", dec.status);
 ok("complete onboarding", await api.call("API-ONB-003"));
 const gen = ok("generate plan", await api.call("API-WO-001", { body: {} }));
 const view = decidePlanView(gen.decision, gen.plan);
-console.log("    plan view:", view.kind, gen.decision.status);
+console.log("    plan view:", view.kind, gen.decision.status, "content_status:", (gen.plan as { rationale?: { content_status?: string } })?.rationale?.content_status);
 const cur = await api.call("API-WO-002");
 console.log("    current plan:", cur.ok ? "present" : `HTTP ${cur.status}`);
 

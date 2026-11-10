@@ -11,7 +11,8 @@ export type PlanView =
   | { kind: "blocked"; status: SafetyDecision["status"]; decision: SafetyDecision }
   | { kind: "empty" };
 
-const PERMITS = new Set<SafetyDecision["status"]>(["ALLOW", "ALLOW_WITH_MODIFICATION", "RESTRICT"]);
+// Mirrors safety_core DecisionStatus.permits_content. RESTRICT means "no valid exercise remains" (SAF-R015): it permits NO content.
+const PERMITS = new Set<SafetyDecision["status"]>(["ALLOW", "ALLOW_WITH_MODIFICATION"]);
 
 export function permitsPlan(s: SafetyDecision["status"]): boolean {
   return PERMITS.has(s);

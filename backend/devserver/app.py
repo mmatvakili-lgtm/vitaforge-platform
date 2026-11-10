@@ -93,6 +93,7 @@ class App:
         self.sec = lambda: int(time.time())
         self.id = IdentityService(store, self.sec)
         self.h = HealthProfileService(store, day, SCREENING)
+        self.rule_set = rule_set
         self.w = WorkoutService(store, self.h, SafetyCore(rule_set), day, clock_s=self.sec)
         self.cat = CatalogService(store)
         self.sub = SubscriptionService(store, DisabledPaymentProvider())
@@ -198,8 +199,12 @@ class App:
                                      for n in range(e.sets)]})
             days.append({"day_id": pub("day", f"{uid}:{ver}:{i}"), "day_index": i, "title": d.name, "est_minutes": d.estimated_minutes, "exercises": exs})
         st = self.store.profiles.get(uid, {"steps": {}})["steps"]
+        used = [self.records.get(e.code) for d in res.days for e in d.exercises]
+        # Fail-closed labelling: "published" only when the rule set does not accept unreviewed content AND every exercise record is published.
+        published = (not getattr(self.rule_set, "allow_unreviewed_content", False)) and bool(used) \
+            and all(r is not None and r.publication_status == "published" for r in used)
         out = {"plan_id": pub("plan", uid), "version_no": ver, "structure": res.structure or "unknown",
-               "rationale": {"reasons": list(res.reasons), "flags": list(res.flags), "label": res.label,
+               "rationale": {"content_status": "published" if published else "experimental_unreviewed", "reasons": list(res.reasons), "flags": list(res.flags), "label": res.label,
                              "omissions": [f"{o.day}:{o.slot}:{o.reason}" for o in res.omissions], "balance": _plain(res.balance)},
                "safety_decision_id": pub("decision", res.safety_decision_id), "days": days}
         if "goal" in st:
