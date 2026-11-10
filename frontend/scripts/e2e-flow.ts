@@ -2,6 +2,7 @@
 // Usage: node --experimental-strip-types scripts/e2e-flow.ts http://127.0.0.1:8000/api/v1
 import { createClient } from "../src/lib/api/client.ts";
 import { decidePlanView } from "../src/lib/plan-view.ts";
+import { buildProfileRequest, mealView } from "../src/lib/nutrition.ts";
 import { SCREENING_QUESTIONS, SCREENING_VERSION } from "../src/lib/onboarding.ts";
 
 const base = process.argv[2] ?? "http://127.0.0.1:8000/api/v1";
@@ -44,6 +45,20 @@ const view = decidePlanView(gen.decision, gen.plan);
 console.log("    plan view:", view.kind, gen.decision.status, "content_status:", (gen.plan as { rationale?: { content_status?: string } })?.rationale?.content_status);
 const cur = await api.call("API-WO-002");
 console.log("    current plan:", cur.ok ? "present" : `HTTP ${cur.status}`);
+
+// nutrition: estimate, then a meal plan that must be NEEDS_CONTENT because no verified food/recipe content exists
+const sc = { eating_disorder_risk: false, medical_diet_needed: false, pregnant_or_lactating: false };
+const est = ok("nutrition profile", await api.call("API-NUT-001", { body: buildProfileRequest({ height_cm: 175, weight_kg: 70, activity: "moderate", screening: sc }) }));
+console.log("    estimate:", est.status, est.tdee);
+ok("nutrition estimate GET", await api.call("API-NUT-002"));
+const mp = ok("meal plan", await api.call("API-NUT-003", { body: { days: 7 } }));
+const mv = mealView(mp);
+console.log("    meal view:", mv.kind, mp.status);
+if (mv.kind === "plan") throw new Error("meal plan shown without verified content");
+const est2 = ok("nutrition profile (REFER)", await api.call("API-NUT-001", { body: buildProfileRequest({ height_cm: 175, weight_kg: 70, activity: "moderate", screening: { ...sc, medical_diet_needed: true } }) }));
+const mp2 = ok("meal plan after REFER", await api.call("API-NUT-003", { body: {} }));
+console.log("    after refer:", est2.status, mealView(mp2).kind);
+if (mealView(mp2).kind === "plan") throw new Error("meal plan shown for a referred user");
 
 // negative path: a positive red flag must never yield a plan
 const email2 = `e2e2${Date.now()}@example.com`;

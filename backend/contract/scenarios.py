@@ -57,6 +57,11 @@ def happy_path(h: Harness) -> Dict[str, str]:
     h.store.subs[h.store.by_email["user@ex.com"]] = {"plan": "pro", "active": True}                  # as a verified payment webhook would
     c("POST", "/ai/chat", {"purpose": "general", "message": "چرا این برنامه؟"}, token=t)
     c("POST", "/subscriptions/cancel", token=t)
+    # nutrition (profile -> estimate -> meal plan; no food content exists, so the plan must be NEEDS_CONTENT)
+    c("PUT", "/nutrition/profile", {"sex": "male", "height_cm": 175, "weight_kg": 70, "activity": "moderate", "goal": "maintain",
+                                    "screening": {"eating_disorder_risk": False, "medical_diet_needed": False, "pregnant_or_lactating": False}}, token=t)
+    c("GET", "/nutrition/estimate", token=t)
+    c("POST", "/nutrition/meal-plan", {"days": 7}, token=t)
     # admin
     c("GET", "/admin/exercises", token=cad)
     cr = c("POST", "/admin/exercises", {"stable_code": "new_ex", "movement_pattern": "core", "difficulty": "beginner", "muscles": ["abs"]}, token=cad).body

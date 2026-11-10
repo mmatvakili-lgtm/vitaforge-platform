@@ -116,14 +116,14 @@ def test_s5_red_flag_blocks_training_ai_and_nutrition():
     r = generate(h, t)
     assert r.body["plan"] is None and r.body["decision"]["status"] == "STOP_AND_REFER"
     assert h.call("POST", "/ai/chat", {"purpose": "general", "message": "why this plan"}, token=t).body["mode"] == "rule_based_fallback"
-    n = h.call("POST", "/nutrition/estimate", {"sex": "male", "height_cm": 180, "weight_kg": 80, "activity": "moderate",
+    n = h.call("PUT", "/nutrition/profile", {"sex": "male", "height_cm": 180, "weight_kg": 80, "activity": "moderate",
                                                "screening": {"eating_disorder_risk": False, "medical_diet_needed": False, "pregnant_or_lactating": False}}, token=t).body
     assert n["status"] == "BLOCKED" and n["tdee"] is None
 
 
 def test_s6_eating_disorder_signal_refers_nutrition_but_training_continues():
     h = build(); t = signup(h, "s6@ex.com")
-    n = h.call("POST", "/nutrition/estimate", {"sex": "female", "height_cm": 165, "weight_kg": 60, "activity": "light",
+    n = h.call("PUT", "/nutrition/profile", {"sex": "female", "height_cm": 165, "weight_kg": 60, "activity": "light",
                                                "screening": {"eating_disorder_risk": True, "medical_diet_needed": False, "pregnant_or_lactating": False}}, token=t).body
     assert n["status"] == "REFER" and n["macros"] is None
     assert generate(h, t).body["plan"] is not None

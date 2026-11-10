@@ -1,0 +1,163 @@
+id,name,source_equipment,category,class,target,rule,reason
+Bodyweight_Mid_Row,Bodyweight Mid Row,other,strength,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Chain_Handle_Extension,Chain Handle Extension,other,powerlifting,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Chain_Press,Chain Press,other,powerlifting,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Depth_Jump_Leap,Depth Jump Leap,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Donkey_Calf_Raises,Donkey Calf Raises,other,strength,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Drop_Push,Drop Push,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Incline_Push-Up_Depth_Jump,Incline Push-Up Depth Jump,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Linear_Depth_Jump,Linear Depth Jump,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Otis-Up,Otis-Up,other,strength,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Platform_Hamstring_Slides,Platform Hamstring Slides,other,strength,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Quick_Leap,Quick Leap,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Side_Hop-Sprint,Side Hop-Sprint,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Single-Leg_Hop_Progression,Single-Leg Hop Progression,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Single-Leg_Lateral_Hop,Single-Leg Lateral Hop,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Single-Leg_Stride_Jump,Single-Leg Stride Jump,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Single_Leg_Push-off,Single Leg Push-off,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Stride_Jump_Crossover,Stride Jump Crossover,other,plyometrics,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Weighted_Squat,Weighted Squat,other,strength,ambiguous,,R-NO-RULE,source value 'other' and no rule matches; needs a human
+Weighted_Sit-Ups_-_With_Bands,Weighted Sit-Ups - With Bands,other,strength,ambiguous,band+external_load,R-WEIGHTED-BAND,band plus an unspecified external load
+Bench_Sprint,Bench Sprint,other,plyometrics,ambiguous,bench,R-BENCH,sprint over a bench; unclear whether a bench is required
+Dips_-_Chest_Version,Dips - Chest Version,other,strength,ambiguous,dip_station_or_bench,R-DIPSTATION,dip on parallel bars (new category) or on a bench (existing 'bench'); the source value does not say
+Knee_Hip_Raise_On_Parallel_Bars,Knee/Hip Raise On Parallel Bars,other,strength,ambiguous,dip_station_or_bench,R-DIPSTATION,dip on parallel bars (new category) or on a bench (existing 'bench'); the source value does not say
+Parallel_Bar_Dip,Parallel Bar Dip,other,strength,ambiguous,dip_station_or_bench,R-DIPSTATION,dip on parallel bars (new category) or on a bench (existing 'bench'); the source value does not say
+Weighted_Bench_Dip,Weighted Bench Dip,other,strength,ambiguous,dip_station_or_bench,R-DIPSTATION,dip on parallel bars (new category) or on a bench (existing 'bench'); the source value does not say
+Adductor,Adductor,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Brachialis-SMR,Brachialis-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Calves-SMR,Calves-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Hamstring-SMR,Hamstring-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Iliotibial_Tract-SMR,Iliotibial Tract-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Latissimus_Dorsi-SMR,Latissimus Dorsi-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Lower_Back-SMR,Lower Back-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Peroneals-SMR,Peroneals-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Piriformis-SMR,Piriformis-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Quadriceps-SMR,Quadriceps-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Rhomboids-SMR,Rhomboids-SMR,foam roll,stretching,ambiguous,foam_roller,R-SRC-FOAM,"implement is clear, but self-myofascial release is mobility content outside the current exercise scope"
+Band_Assisted_Pull-Up,Band Assisted Pull-Up,other,strength,ambiguous,pull_up_bar+band,R-BAND-PULL,needs two existing items; the model stores one item per requirement set only after review
+Weighted_Pull_Ups,Weighted Pull Ups,other,strength,ambiguous,pull_up_bar+external_load,R-WEIGHTED-PULL,needs a pull-up bar AND an unspecified external load
+Seated_Band_Hamstring_Curl,Seated Band Hamstring Curl,other,strength,equivalent,band,R-BAND,resistance band named in the exercise
+Box_Jump_Multiple_Response,Box Jump (Multiple Response),other,plyometrics,equivalent,box,R-BOX,box/platform named in the exercise
+Box_Skip,Box Skip,other,plyometrics,equivalent,box,R-BOX,box/platform named in the exercise
+Front_Box_Jump,Front Box Jump,other,plyometrics,equivalent,box,R-BOX,box/platform named in the exercise
+Lateral_Box_Jump,Lateral Box Jump,other,plyometrics,equivalent,box,R-BOX,box/platform named in the exercise
+Side_to_Side_Box_Shuffle,Side to Side Box Shuffle,other,plyometrics,equivalent,box,R-BOX,box/platform named in the exercise
+Single-Leg_High_Box_Squat,Single-Leg High Box Squat,other,strength,equivalent,box,R-BOX,box/platform named in the exercise
+Gironda_Sternum_Chins,Gironda Sternum Chins,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+Kipping_Muscle_Up,Kipping Muscle Up,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+London_Bridges,London Bridges,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+Mixed_Grip_Chin,Mixed Grip Chin,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+Muscle_Up,Muscle Up,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+One_Arm_Chin-Up,One Arm Chin-Up,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+Rocky_Pull-Ups_Pulldowns,Rocky Pull-Ups/Pulldowns,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+Side_To_Side_Chins,Side To Side Chins,other,strength,equivalent,pull_up_bar,R-PULLUP,hang/pull on a bar
+Ab_Roller,Ab Roller,other,strength,new_category,ab_wheel,R-ABWHEEL,ab wheel
+Front_Cone_Hops_or_hurdle_hops,Front Cone Hops (or hurdle hops),other,plyometrics,new_category,agility_props,R-PLYO-PROPS,cones/hurdles
+Hurdle_Hops,Hurdle Hops,other,plyometrics,new_category,agility_props,R-PLYO-PROPS,cones/hurdles
+Lateral_Cone_Hops,Lateral Cone Hops,other,plyometrics,new_category,agility_props,R-PLYO-PROPS,cones/hurdles
+Single-Cone_Sprint_Drill,Single-Cone Sprint Drill,other,plyometrics,new_category,agility_props,R-PLYO-PROPS,cones/hurdles
+Balance_Board,Balance Board,other,strength,new_category,balance_board,R-BALANCE,balance board
+Battling_Ropes,Battling Ropes,other,strength,new_category,battle_rope,R-BATTLE-ROPE,battle rope
+Rope_Climb,Rope Climb,other,strength,new_category,climbing_rope,R-ROPE-CLIMB,climbing rope
+Ring_Dips,Ring Dips,other,strength,new_category,gymnastic_rings,R-RINGS,rings
+Heavy_Bag_Thrust,Heavy Bag Thrust,other,plyometrics,new_category,heavy_bag,R-BAG,heavy bag
+Hyperextensions_Back_Extensions,Hyperextensions (Back Extensions),other,strength,new_category,hyperextension_bench,R-HYPER,back-extension bench
+Rope_Jumping,Rope Jumping,other,cardio,new_category,jump_rope,R-JUMP-ROPE,jump rope
+Backward_Medicine_Ball_Throw,Backward Medicine Ball Throw,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Catch_and_Overhead_Throw,Catch and Overhead Throw,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Chest_Push_from_3_point_stance,Chest Push from 3 point stance,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Chest_Push_multiple_response,Chest Push (multiple response),medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Chest_Push_single_response,Chest Push (single response),medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Chest_Push_with_Run_Release,Chest Push with Run Release,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Medicine_Ball_Chest_Pass,Medicine Ball Chest Pass,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Medicine_Ball_Full_Twist,Medicine Ball Full Twist,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Medicine_Ball_Scoop_Throw,Medicine Ball Scoop Throw,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+One-Arm_Medicine_Ball_Slam,One-Arm Medicine Ball Slam,medicine ball,strength,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Overhead_Slam,Overhead Slam,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Return_Push_from_Stance,Return Push from Stance,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Standing_Two-Arm_Overhead_Throw,Standing Two-Arm Overhead Throw,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Supine_Chest_Throw,Supine Chest Throw,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Supine_One-Arm_Overhead_Throw,Supine One-Arm Overhead Throw,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Supine_Two-Arm_Overhead_Throw,Supine Two-Arm Overhead Throw,medicine ball,plyometrics,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Weighted_Crunches,Weighted Crunches,medicine ball,strength,new_category,medicine_ball,R-SRC-MEDBALL,distinct implement not in the vocabulary
+Seated_Head_Harness_Neck_Resistance,Seated Head Harness Neck Resistance,other,strength,new_category,neck_harness,R-NECK-HARNESS,neck harness
+Prowler_Sprint,Prowler Sprint,other,cardio,new_category,sled,R-SLED,sled/prowler
+Sled_Drag_-_Harness,Sled Drag - Harness,other,strongman,new_category,sled,R-SLED,sled/prowler
+Sled_Overhead_Backward_Walk,Sled Overhead Backward Walk,other,strength,new_category,sled,R-SLED,sled/prowler
+Sled_Overhead_Triceps_Extension,Sled Overhead Triceps Extension,other,strength,new_category,sled,R-SLED,sled/prowler
+Sled_Push,Sled Push,other,strongman,new_category,sled,R-SLED,sled/prowler
+Sled_Reverse_Flye,Sled Reverse Flye,other,strength,new_category,sled,R-SLED,sled/prowler
+Sled_Row,Sled Row,other,strength,new_category,sled,R-SLED,sled/prowler
+Sledgehammer_Swings,Sledgehammer Swings,other,plyometrics,new_category,sledgehammer_and_tire,R-HAMMER,sledgehammer
+Ball_Leg_Curl,Ball Leg Curl,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Chest_Stretch_on_Stability_Ball,Chest Stretch on Stability Ball,exercise ball,stretching,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Downward_Facing_Balance,Downward Facing Balance,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Exercise_Ball_Crunch,Exercise Ball Crunch,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Exercise_Ball_Pull-In,Exercise Ball Pull-In,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Hug_A_Ball,Hug A Ball,exercise ball,stretching,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Physioball_Hip_Bridge,Physioball Hip Bridge,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Push-Ups_With_Feet_On_An_Exercise_Ball,Push-Ups With Feet On An Exercise Ball,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Pyramid,Pyramid,exercise ball,stretching,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Torso_Rotation,Torso Rotation,exercise ball,stretching,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Weighted_Ball_Hyperextension,Weighted Ball Hyperextension,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Weighted_Ball_Side_Bend,Weighted Ball Side Bend,exercise ball,strength,new_category,stability_ball,R-SRC-BALL,distinct implement not in the vocabulary
+Atlas_Stone_Trainer,Atlas Stone Trainer,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Atlas_Stones,Atlas Stones,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Axle_Deadlift,Axle Deadlift,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Backward_Drag,Backward Drag,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Bear_Crawl_Sled_Drags,Bear Crawl Sled Drags,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Car_Deadlift,Car Deadlift,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Circus_Bell,Circus Bell,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Conans_Wheel,Conan's Wheel,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Crucifix,Crucifix,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Farmers_Walk,Farmer's Walk,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Forward_Drag_with_Press,Forward Drag with Press,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Keg_Load,Keg Load,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Log_Lift,Log Lift,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Power_Stairs,Power Stairs,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Rickshaw_Carry,Rickshaw Carry,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Rickshaw_Deadlift,Rickshaw Deadlift,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Sandbag_Load,Sandbag Load,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Tire_Flip,Tire Flip,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Yoke_Walk,Yoke Walk,other,strongman,new_category,strongman_implement,R-STRONGMAN,specialised strongman implement; also out of scope for a general-population plan
+Inverted_Row_with_Straps,Inverted Row with Straps,other,strength,new_category,suspension_trainer,R-SUSPENSION,suspension straps
+Suspended_Fallout,Suspended Fallout,other,strength,new_category,suspension_trainer,R-SUSPENSION,suspension straps
+Suspended_Push-Up,Suspended Push-Up,other,strength,new_category,suspension_trainer,R-SUSPENSION,suspension straps
+Suspended_Reverse_Crunch,Suspended Reverse Crunch,other,strength,new_category,suspension_trainer,R-SUSPENSION,suspension straps
+Suspended_Row,Suspended Row,other,strength,new_category,suspension_trainer,R-SUSPENSION,suspension straps
+Suspended_Split_Squat,Suspended Split Squat,other,strength,new_category,suspension_trainer,R-SUSPENSION,suspension straps
+Trap_Bar_Deadlift,Trap Bar Deadlift,other,strength,new_category,trap_bar,R-TRAPBAR,trap/hex bar
+Front_Plate_Raise,Front Plate Raise,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Lying_Face_Down_Plate_Neck_Resistance,Lying Face Down Plate Neck Resistance,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Lying_Face_Up_Plate_Neck_Resistance,Lying Face Up Plate Neck Resistance,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Plate_Pinch,Plate Pinch,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Plate_Twist,Plate Twist,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Reverse_Plate_Curls,Reverse Plate Curls,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Standing_Olympic_Plate_Hand_Squeeze,Standing Olympic Plate Hand Squeeze,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Svend_Press,Svend Press,other,strength,new_category,weight_plate,R-PLATE,weight plate as the load
+Wrist_Roller,Wrist Roller,other,strength,new_category,wrist_roller,R-WRIST,wrist roller
+Anterior_Tibialis-SMR,Anterior Tibialis-SMR,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Behind_Head_Chest_Stretch,Behind Head Chest Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Bicycling,Bicycling,other,cardio,unusable,,R-CARDIO-ACTIVITY,cardio activity needing a bicycle/skates; not equipment-based strength content
+Chair_Leg_Extended_Stretch,Chair Leg Extended Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Chair_Upper_Body_Stretch,Chair Upper Body Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Chest_And_Front_Of_Shoulder_Stretch,Chest And Front Of Shoulder Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Foot-SMR,Foot-SMR,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+IT_Band_and_Glute_Stretch,IT Band and Glute Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Intermediate_Groin_Stretch,Intermediate Groin Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Intermediate_Hip_Flexor_and_Quad_Stretch,Intermediate Hip Flexor and Quad Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Lying_Bent_Leg_Groin,Lying Bent Leg Groin,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Lying_Hamstring,Lying Hamstring,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Neck-SMR,Neck-SMR,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+On-Your-Back_Quad_Stretch,On-Your-Back Quad Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+One_Handed_Hang,One Handed Hang,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Overhead_Lat,Overhead Lat,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Peroneals_Stretch,Peroneals Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Posterior_Tibialis_Stretch,Posterior Tibialis Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Quad_Stretch,Quad Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Round_The_World_Shoulder_Stretch,Round The World Shoulder Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Seated_Hamstring_and_Calf_Stretch,Seated Hamstring and Calf Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Skating,Skating,other,cardio,unusable,,R-CARDIO-ACTIVITY,cardio activity needing a bicycle/skates; not equipment-based strength content
+Standing_Biceps_Stretch,Standing Biceps Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Standing_Elevated_Quad_Stretch,Standing Elevated Quad Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)
+Standing_Hamstring_and_Calf_Stretch,Standing Hamstring and Calf Stretch,other,stretching,unusable,,R-STRETCH-OTHER,stretch with source value 'other': no usable equipment information (and mobility is outside current exercise scope)

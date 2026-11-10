@@ -10,8 +10,11 @@ Persian (RTL) + English (LTR), responsive. Built directly on the OpenAPI contrac
 - `src/app/[locale]/*` — home, login, register, verify, onboarding (basics → goal → schedule → equipment → consent → screening → finish), plan.
 - `next.config.mjs` rewrites `/api/v1/*` to `BACKEND_URL` (default `http://127.0.0.1:8000`) so cookies stay same-origin.
 
+- `src/app/[locale]/nutrition` — weekly nutrition (estimate → preferences → week tabs, meals, shopping list, budget). `src/lib/nutrition.ts` decides what may be shown: days only for status OK; NEEDS_CONTENT/REFER/BLOCKED always show an explanation.
+- `src/app/[locale]/exercises/[id]` — exercise detail.
+
 ## Not built (no contract support)
-Password-reset UI, sessions list, profile edit, workout logging, progress, subscription, admin screens; phone sign-up; onboarding steps 5–14; a screening-question list endpoint (ids are fixed in `onboarding.ts`, checked against the backend by a test).
+Food/recipe browsing and food exclusions by id (needs `/foods`, `/recipes`, still deferred), nutrition meal logging UI, password-reset UI, sessions list, profile edit, workout logging, progress, subscription, admin screens; phone sign-up; onboarding steps 5–14; a screening-question list endpoint (ids are fixed in `onboarding.ts`, checked against the backend by a test).
 
 ## Run (Windows PowerShell)
 ```

@@ -1273,6 +1273,348 @@ components:
           type: string
           format: date-time
       additionalProperties: false
+    NutritionProfileRequest:
+      type: object
+      properties:
+        sex:
+          enum:
+          - male
+          - female
+        height_cm:
+          type: number
+          minimum: 100
+          maximum: 250
+        weight_kg:
+          type: number
+          minimum: 25
+          maximum: 400
+        activity:
+          enum:
+          - sedentary
+          - light
+          - moderate
+          - active
+          - very_active
+        goal:
+          enum:
+          - maintain
+          - lose
+          - gain
+        screening:
+          type: object
+          properties:
+            eating_disorder_risk:
+              type: boolean
+            medical_diet_needed:
+              type: boolean
+            pregnant_or_lactating:
+              type: boolean
+          additionalProperties: false
+          required:
+          - eating_disorder_risk
+          - medical_diet_needed
+          - pregnant_or_lactating
+      additionalProperties: false
+      required:
+      - height_cm
+      - weight_kg
+      - activity
+      - screening
+      description: سن از Onboarding گرفته می‌شود. goal جز maintain تا بازبینی متخصص فقط برچسب می‌خورد (NUT-R03) و هدف عددی ساخته نمی‌شود.
+    NutritionEstimate:
+      type: object
+      properties:
+        status:
+          enum:
+          - OK
+          - NEEDS_INFO
+          - BLOCKED
+          - REFER
+        reasons:
+          type: array
+          items:
+            type: string
+        questions:
+          type: array
+          items:
+            type: string
+        bmr:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+          minItems: 3
+          maxItems: 3
+        tdee:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+          minItems: 3
+          maxItems: 3
+        macros:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: array
+            items:
+              type: number
+            minItems: 2
+            maxItems: 2
+        water_ml:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+        goal_adjustment:
+          type: string
+        uncertainty:
+          enum:
+          - low
+          - medium
+          - high
+        labels:
+          type: array
+          items:
+            type: string
+        safety_decision_id:
+          type:
+          - string
+          - 'null'
+        method:
+          type: string
+      additionalProperties: false
+      required:
+      - status
+      - labels
+      description: برآورد است نه نسخه درمانی؛ برچسب‌ها و عدم‌قطعیت همیشه برگردانده می‌شوند.
+    MealPlanRequest:
+      type: object
+      properties:
+        days:
+          type: integer
+          minimum: 1
+          maximum: 7
+        allergens:
+          type: array
+          items:
+            enum:
+            - milk
+            - egg
+            - fish
+            - shellfish
+            - tree_nut
+            - peanut
+            - wheat
+            - soy
+            - sesame
+          maxItems: 9
+        excluded_food_ids:
+          type: array
+          items:
+            type: string
+            maxLength: 64
+          maxItems: 200
+        diet_required:
+          type: array
+          items:
+            enum:
+            - vegetarian
+            - vegan
+            - halal
+            - gluten_free
+            - lactose_free
+          maxItems: 5
+        max_cook_minutes:
+          type: integer
+          minimum: 5
+          maximum: 240
+        weekly_budget:
+          type: number
+          exclusiveMinimum: 0
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+        region:
+          type: string
+          minLength: 2
+          maxLength: 16
+        pantry:
+          type: array
+          items:
+            type: string
+            maxLength: 64
+          maxItems: 200
+      additionalProperties: false
+      description: بودجه بدون currency و region معتبر نیست (NEEDS_INFO).
+    MealPlanIngredient:
+      type: object
+      properties:
+        food_id:
+          type: string
+        name_en:
+          type: string
+        name_fa:
+          type:
+          - string
+          - 'null'
+        grams:
+          type: number
+        allergens:
+          type: array
+          items:
+            type: string
+        allergens_known:
+          type: boolean
+      additionalProperties: false
+    MealPlanMeal:
+      type: object
+      properties:
+        slot:
+          enum:
+          - breakfast
+          - lunch
+          - dinner
+          - snack
+        recipe_id:
+          type: string
+        name_en:
+          type: string
+        name_fa:
+          type:
+          - string
+          - 'null'
+        portion:
+          type: number
+        kcal:
+          type: number
+        nutrients:
+          type: object
+          additionalProperties:
+            type: number
+        missing_nutrients:
+          type: array
+          items:
+            type: string
+        cook_minutes:
+          type: integer
+        cost:
+          type:
+          - number
+          - 'null'
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealPlanIngredient'
+        steps:
+          type: array
+          items:
+            type: string
+        allergens:
+          type: array
+          items:
+            type: string
+        allergens_known:
+          type: boolean
+      additionalProperties: false
+    MealPlanDay:
+      type: object
+      properties:
+        index:
+          type: integer
+        date:
+          type: string
+          format: date
+        meals:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealPlanMeal'
+        kcal:
+          type: number
+        protein_g:
+          type: number
+        missing_nutrients:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    ShoppingItem:
+      type: object
+      properties:
+        food_id:
+          type: string
+        name_en:
+          type: string
+        grams:
+          type: number
+        cost:
+          type:
+          - number
+          - 'null'
+        in_pantry:
+          type: boolean
+      additionalProperties: false
+    MealPlanResponse:
+      type: object
+      properties:
+        status:
+          enum:
+          - OK
+          - NEEDS_CONTENT
+          - NEEDS_INFO
+          - BLOCKED
+          - REFER
+        reasons:
+          type: array
+          items:
+            type: string
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealPlanDay'
+        shopping:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShoppingItem'
+        total_cost:
+          type:
+          - number
+          - 'null'
+        unpriced_food_ids:
+          type: array
+          items:
+            type: string
+        budget_met:
+          type:
+          - boolean
+          - 'null'
+        labels:
+          type: array
+          items:
+            type: string
+        target_kcal:
+          type:
+          - number
+          - 'null'
+        safety_decision_id:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+      required:
+      - status
+      - reasons
+      - days
+      - shopping
+      - labels
+      description: days فقط وقتی status=OK پر است؛ NEEDS_CONTENT یعنی محتوای غذایی/دستور پخت بازبینی‌شده وجود ندارد و هیچ برنامه‌ای ساخته نمی‌شود.
+        مقادیر قیمت فقط از قیمت‌های تازه می‌آیند.
     PlanFeaturesRequest:
       type: object
       properties:
@@ -3372,6 +3714,138 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PlanFeaturesRequest'
+  /nutrition/profile:
+    put:
+      operationId: api_nut_001
+      tags:
+      - nutrition
+      summary: ثبت پروفایل تغذیه و دریافت برآورد انرژی (نیازمند رضایت سلامت؛ پشت Safety Core)
+      x-id: API-NUT-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionEstimate'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NutritionProfileRequest'
+  /nutrition/estimate:
+    get:
+      operationId: api_nut_002
+      tags:
+      - nutrition
+      summary: برآورد فعلی انرژی/درشت‌مغذی‌ها (نیازمند رضایت سلامت)
+      x-id: API-NUT-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionEstimate'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /nutrition/meal-plan:
+    post:
+      operationId: api_nut_003
+      tags:
+      - nutrition
+      summary: برنامه غذایی هفتگی؛ بدون داده بازبینی‌شده NEEDS_CONTENT (نیازمند رضایت سلامت)
+      x-id: API-NUT-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlanResponse'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlanRequest'
   /health/live:
     get:
       operationId: api_sys_001
@@ -3415,7 +3889,9 @@ x-global-rules:
 - 'خطا: Error{code,message,request_id}؛ بدون افشای جزئیات داخلی'
 - 'پاسخ‌های سلامت: Cache-Control: no-store'
 x-deferred:
-- /nutrition/*
+- /nutrition/meals
+- /nutrition/water
+- /nutrition/summary
 - /foods
 - /recipes
 - /supplements

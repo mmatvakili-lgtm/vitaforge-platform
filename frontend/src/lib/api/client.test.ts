@@ -10,8 +10,8 @@ function fake(status: number, body: unknown, seen: { url?: string; init?: Reques
   }) as unknown as typeof fetch;
 }
 
-test("contract has all 56 operations", () => {
-  assert.equal(Object.keys(OPERATIONS).length, 56);
+test("contract has all 59 operations", () => {
+  assert.equal(Object.keys(OPERATIONS).length, 59);
 });
 
 test("buildUrl fills path params, encodes and skips empty query", () => {

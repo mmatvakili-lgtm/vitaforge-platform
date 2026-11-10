@@ -6,7 +6,7 @@ excludes a recipe; prices are used only when fresh; nothing is invented: if the 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 from typing import Dict, List, Mapping, Optional, Sequence, Tuple
 
 from .engine import NutritionResult
@@ -36,6 +36,16 @@ class MealPlanRequest:
 
 
 @dataclass(frozen=True)
+class PlannedIngredient:
+    food_id: str
+    name_en: str
+    name_fa: Optional[str]
+    grams: float                                       # for the planned portion
+    allergens: Tuple[str, ...]
+    allergens_known: bool
+
+
+@dataclass(frozen=True)
 class PlannedMeal:
     slot: str
     recipe_id: str
@@ -45,11 +55,19 @@ class PlannedMeal:
     nutrients: Mapping[str, float]
     cook_minutes: int
     cost: Optional[float]                              # None == at least one ingredient has no fresh price
+    name_fa: Optional[str] = None
+    ingredients: Tuple[PlannedIngredient, ...] = ()
+    steps: Tuple[str, ...] = ()
+    allergens: Tuple[str, ...] = ()                    # union over ingredients (visibility)
+    allergens_known: bool = False
+    missing_nutrients: Tuple[str, ...] = ()            # nutrients absent for >=1 ingredient: totals are then lower bounds, never zero-filled
+
 
 
 @dataclass(frozen=True)
 class MealDay:
     index: int
+    date: str
     meals: Tuple[PlannedMeal, ...]
     kcal: float
     protein_g: float
@@ -219,14 +237,17 @@ def plan_week(req: MealPlanRequest, nutrition: NutritionResult, foods: Mapping[s
         for slot, r, portion, _dev, cost in dd:
             n, m = info[r.id]
             scaled = {k: v * portion for k, v in n.items()}
+            al, known = recipe_allergens(r, foods)
+            ings = tuple(PlannedIngredient(fid, foods[fid].name_en, foods[fid].name_fa, round(g * portion / r.servings), tuple(sorted(foods[fid].allergens)),
+                                           foods[fid].allergens_known) for fid, g in r.ingredients)
             meals.append(PlannedMeal(slot, r.id, r.name_en, portion, round(scaled.get("kcal", 0.0)), {k: round(v, 1) for k, v in scaled.items()},
-                                     r.cook_minutes, None if cost is None else round(cost, 2)))
+                                     r.cook_minutes, None if cost is None else round(cost, 2), r.name_fa, ings, r.steps, tuple(sorted(al)), known, tuple(m)))
             tot_k += scaled.get("kcal", 0.0); tot_p += scaled.get("protein_g", 0.0); miss |= set(m)
             for fid, g in r.ingredients:
                 grams[fid] = grams.get(fid, 0.0) + g * portion / r.servings
                 if req.weekly_budget is not None and fid not in pantry and prices.fresh(fid, req.region, req.currency, req.today) is None:
                     unpriced.add(fid)
-        days.append(MealDay(di, tuple(meals), round(tot_k), round(tot_p, 1), tuple(sorted(miss))))
+        days.append(MealDay(di, (req.today + timedelta(days=di)).isoformat(), tuple(meals), round(tot_k), round(tot_p, 1), tuple(sorted(miss))))
 
     shopping = []
     for fid in sorted(grams):

@@ -35,6 +35,8 @@ class FdcReport:
     accepted: List[FoodRecord] = field(default_factory=list)
     rejected: List[Dict] = field(default_factory=list)
     nutrient_mismatches: int = 0
+    duplicates: List[Dict] = field(default_factory=list)        # same fdcId twice, or identical description under different ids (kept, flagged)
+    energy_warnings: List[str] = field(default_factory=list)    # kcal far from 4P+4C+9F; kept but noted
 
 
 def _slug(s: str) -> str:
@@ -53,11 +55,13 @@ def rows_from_json(data) -> list:
 def import_fdc(data, retrieved: str, dataset: str = "usda_fdc") -> FdcReport:
     rep = FdcReport()
     seen = set()
+    by_desc: Dict[str, str] = {}
     for row in rows_from_json(data):
         try:
             fdc_id = str(row["fdcId"])
             name = str(row["description"]).strip()
             per: Dict[str, float] = {}
+            refs: Dict[str, Dict[str, str]] = {}
             for fn in row.get("foodNutrients", ()):
                 nut = fn.get("nutrient") or {}
                 num, amt = str(nut.get("number", "")), fn.get("amount")
@@ -67,6 +71,7 @@ def import_fdc(data, retrieved: str, dataset: str = "usda_fdc") -> FdcReport:
                     if num in nums and key not in per:
                         if str(nut.get("unitName", "")).upper() == unit and frag in str(nut.get("name", "")).lower():
                             per[key] = float(amt)
+                            refs[key] = {"id": num, "unit": str(nut.get("unitName", "")).upper(), "name": str(nut.get("name", ""))}
                         else:
                             rep.nutrient_mismatches += 1
             servings = {}
@@ -77,15 +82,24 @@ def import_fdc(data, retrieved: str, dataset: str = "usda_fdc") -> FdcReport:
                     servings[label] = float(gw)
             fid = f"fdc_{fdc_id}"
             if fid in seen:
-                continue
+                rep.duplicates.append({"kind": "same_id", "id": fid}); continue
             rec = FoodRecord(
                 id=fid, name_en=name, category=((row.get("foodCategory") or {}).get("description") if isinstance(row.get("foodCategory"), Mapping) else str(row.get("foodCategory") or "")),
-                per_100g=per, serving_g=servings, allergens_known=False,
+                per_100g=per, serving_g=servings, nutrient_refs=refs, basis="per_100g", allergens_known=False,
                 source=FoodSource(dataset, fdc_id, "CC0-1.0 (declared by FDC; not re-verified)", False, str(row.get("publicationDate") or "") or None, retrieved),
                 status="pending_review", notes=("allergen status unknown", "no diet tags asserted", "no Persian name"))
             issues = validate_food(rec)
             if issues:
                 rep.rejected.append({"id": fid, "issues": issues}); continue
+            norm = re.sub(r"\s+", " ", name.lower())
+            if norm in by_desc:
+                rep.duplicates.append({"kind": "same_description", "id": fid, "other": by_desc[norm]})
+            by_desc.setdefault(norm, fid)
+            k = per.get("kcal")
+            if k and k > 20 and all(x in per for x in ("protein_g", "fat_g", "carbs_g")):
+                est = 4 * per["protein_g"] + 4 * per["carbs_g"] + 9 * per["fat_g"]
+                if est and not 0.7 <= k / est <= 1.3:
+                    rep.energy_warnings.append(fid)
             seen.add(fid); rep.accepted.append(rec)
         except (KeyError, TypeError, ValueError) as e:
             rep.rejected.append({"id": str(row.get("fdcId", "?")) if isinstance(row, Mapping) else "?", "issues": [repr(e)]})

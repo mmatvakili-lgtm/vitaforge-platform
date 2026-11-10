@@ -132,10 +132,9 @@ class App:
             self.routes.append((op.method, rx, fn, op.secured, op))
         R = lambda m, p, fn: self.routes.append((m, re.compile("^/api/v1" + p + "$"), fn, True, None))
         # not in OpenAPI (nutrition is x-deferred; the rest are dev/engine extras)
-        R("POST", "/nutrition/estimate", self._nut_estimate); R("POST", "/nutrition/meals", self._nut_meal)
+        R("POST", "/nutrition/meals", self._nut_meal)
         R("DELETE", "/nutrition/meals/(?P<mid>[^/]+)", lambda c: self.nlog.delete_meal(c["uid"], c["mid"]) or {})
         R("POST", "/nutrition/water", lambda c: self.nlog.add_water(c["uid"], c["body"].get("ml")) or {})
-        R("POST", "/nutrition/meal-plan", self._nut_meal_plan)
         R("GET", "/nutrition/summary", lambda c: self.nlog.day_summary(c["uid"], estimate=self._nut_result(c["uid"])))
         R("GET", "/safety/explain", self._explain)
         R("GET", "/workouts/progression/(?P<code>[^/]+)", self._progression)
@@ -750,31 +749,67 @@ class App:
         p = self._nut_profile(uid)
         return estimate(p, self.w.gate, self.h.safety_request(uid, ()), self.ncfg) if p else None
 
-    def _nut_estimate(self, c):
-        b = c["body"]
-        if not isinstance(b.get("screening", {}), dict):
-            raise ValidationFailed("screening")
-        self.store.__dict__.setdefault("nutrition_profiles", {})[c["uid"]] = {k: b.get(k) for k in ("sex", "height_cm", "weight_kg", "activity", "goal", "screening")}
-        return _plain(self._nut_result(c["uid"]))
+    _NUT_PROFILE_KEYS = {"sex", "height_cm", "weight_kg", "activity", "goal", "screening"}
+    _MEAL_REQ_KEYS = {"days", "allergens", "excluded_food_ids", "diet_required", "max_cook_minutes", "weekly_budget", "currency", "region", "pantry"}
 
-    def _nut_meal_plan(self, c):
+    @staticmethod
+    def _strict(body, allowed, what):
+        if not isinstance(body, dict) or set(body) - allowed:
+            raise ValidationFailed(what)                                   # unknown keys are rejected, never stored (mass-assignment protection)
+
+    def _nut_out(self, n):
+        d = _plain(n)
+        d["safety_decision_id"] = pub("decision", n.safety_decision_id) if n.safety_decision_id else None
+        return d
+
+    def op_api_nut_001(self, c):
+        self._need_consent(c["uid"])
+        b = c["body"]
+        self._strict(b, self._NUT_PROFILE_KEYS, "nutrition_profile")
+        sc = b.get("screening")
+        if not isinstance(sc, dict) or set(sc) != {"eating_disorder_risk", "medical_diet_needed", "pregnant_or_lactating"} or not all(isinstance(v, bool) for v in sc.values()):
+            raise ValidationFailed("screening")
+        for k, lo, hi in (("height_cm", 100, 250), ("weight_kg", 25, 400)):
+            v = b.get(k)
+            if isinstance(v, bool) or not isinstance(v, (int, float)) or not lo <= v <= hi:
+                raise ValidationFailed(k)
+        if b.get("activity") not in ("sedentary", "light", "moderate", "active", "very_active") or b.get("goal", "maintain") not in ("maintain", "lose", "gain") \
+                or b.get("sex") not in (None, "male", "female"):
+            raise ValidationFailed("activity/goal/sex")
+        self.store.__dict__.setdefault("nutrition_profiles", {})[c["uid"]] = {k: b.get(k) for k in self._NUT_PROFILE_KEYS}
+        return self._nut_out(self._nut_result(c["uid"]))
+
+    def op_api_nut_002(self, c):
+        self._need_consent(c["uid"])
+        n = self._nut_result(c["uid"])
+        if n is None:
+            raise NotFound("nutrition_profile")
+        return self._nut_out(n)
+
+    def op_api_nut_003(self, c):
         """Weekly meal plan from the food/recipe/price data actually in the store. With no reviewed data the honest answer is NEEDS_CONTENT."""
         from datetime import date as _d
         from nutrition_engine import MealPlanRequest, plan_week, PriceBook
-        b = c["body"]
+        self._need_consent(c["uid"])
+        b = c["body"] or {}
+        self._strict(b, self._MEAL_REQ_KEYS, "meal_plan_request")
         n = self._nut_result(c["uid"])
         if n is None:
-            raise PreconditionRequired("nutrition_profile")
-        foods = self.store.__dict__.get("foods", {})
-        recipes = list(self.store.__dict__.get("recipes", []))
+            raise NotFound("nutrition_profile")
+        foods = self.store.__dict__.setdefault("foods", {})
+        recipes = list(self.store.__dict__.setdefault("recipes", {}).values())
+        book = PriceBook(self.store.__dict__.setdefault("price_quotes", {}).values())
         try:
             req = MealPlanRequest(today=_d.today(), days=int(b.get("days", 7)), allergens=tuple(b.get("allergens", ())),
                                   excluded_food_ids=tuple(b.get("excluded_food_ids", ())), diet_required=tuple(b.get("diet_required", ())),
                                   max_cook_minutes=b.get("max_cook_minutes"), weekly_budget=b.get("weekly_budget"), currency=b.get("currency"),
-                                  region=b.get("region"), pantry=tuple(b.get("pantry", ())), allow_unreviewed=bool(self.dev and self.rule_set.allow_unreviewed_content))
+                                  region=b.get("region"), pantry=tuple(b.get("pantry", ())), allow_unreviewed=bool(self.rule_set.allow_unreviewed_content))
         except (TypeError, ValueError):
             raise ValidationFailed("meal_plan_request")
-        return _plain(plan_week(req, n, foods, recipes, self.store.__dict__.get("price_book") or PriceBook()))
+        res = plan_week(req, n, foods, recipes, book)
+        d = _plain(res)
+        d["safety_decision_id"] = pub("decision", res.safety_decision_id) if res.safety_decision_id else None
+        return d
 
     def _nut_meal(self, c):
         b = c["body"]

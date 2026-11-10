@@ -154,10 +154,10 @@ def test_nutrition_explain_progression_routes():
     h = Harness(); t = h.login("n@ex.com"); h.onboard(t); h.call("POST", "/onboarding/complete", token=t)
     n = {"sex": "male", "height_cm": 180, "weight_kg": 80, "activity": "moderate", "goal": "lose",
          "screening": {"eating_disorder_risk": False, "medical_diet_needed": False, "pregnant_or_lactating": False}}
-    body = h.call("POST", "/nutrition/estimate", n, token=t).body
+    body = h.call("PUT", "/nutrition/profile", n, token=t).body
     assert body["status"] == "OK" and body["goal_adjustment"] == "disabled_pending_expert_review" and "not_medical_advice" in body["labels"]
     n2 = {**n, "screening": {**n["screening"], "eating_disorder_risk": True}}
-    assert h.call("POST", "/nutrition/estimate", n2, token=t).body["status"] == "REFER"
+    assert h.call("PUT", "/nutrition/profile", n2, token=t).body["status"] == "REFER"
     assert h.call("POST", "/nutrition/meals", {"name": "Oats", "kcal": 350, "protein_g": 12}, token=t).status == 200
     h.call("POST", "/nutrition/water", {"ml": 500}, token=t)
     sm = h.call("GET", "/nutrition/summary", token=t).body

@@ -30,6 +30,8 @@ class FoodRecord:
     serving_g: Mapping[str, float] = field(default_factory=dict)         # household measure -> grams
     allergens: Tuple[str, ...] = ()
     diet_tags: Tuple[str, ...] = ()
+    basis: str = "per_100g"              # all values in per_100g are per 100 g edible portion as consumed in the source's own reference state
+    nutrient_refs: Mapping[str, Mapping[str, str]] = field(default_factory=dict)   # key -> {id, unit, name} exactly as in the source
     allergens_known: bool = False        # False => allergen status UNKNOWN; such foods are excluded when the user has any allergy
     source: Optional[FoodSource] = None
     status: str = "pending_review"
@@ -47,6 +49,10 @@ def validate_food(f: FoodRecord) -> list:
     if any(a not in ALLERGENS for a in f.allergens): p.append("allergen vocabulary")
     if any(t not in DIET_TAGS for t in f.diet_tags): p.append("diet tag vocabulary")
     if any(g <= 0 for g in f.serving_g.values()): p.append("serving grams")
+    if any(v > 100 for k, v in f.per_100g.items() if k.endswith("_g") and isinstance(v, (int, float))): p.append("grams per 100 g above 100")
+    if sum(f.per_100g.get(k, 0) for k in ("protein_g", "fat_g", "carbs_g")) > 105: p.append("macros exceed 100 g per 100 g")
+    if f.basis != "per_100g": p.append("basis")
+    if f.per_100g and set(f.per_100g) - set(f.nutrient_refs) and f.source and f.source.dataset.startswith("usda"): p.append("nutrient without source identifier")
     if f.status == "reviewed" and (f.source is None or not f.source.license_verified or f.is_test_fixture): p.append("reviewed requires verified source licence and a non-fixture")
     return p
 

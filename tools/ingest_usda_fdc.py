@@ -28,7 +28,7 @@ def main(argv):
     OUT.write_text(json.dumps([dataclasses.asdict(r) for r in rep.accepted], ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
     OUT.with_suffix(".manifest.json").write_text(json.dumps({
         "source": "USDA FoodData Central", "input_file": Path(argv[1]).name, "sha256": hashlib.sha256(raw).hexdigest(), "retrieved": date.today().isoformat(),
-        "accepted": len(rep.accepted), "rejected": rep.rejected[:50], "rejected_count": len(rep.rejected), "nutrient_mismatches": rep.nutrient_mismatches,
+        "accepted": len(rep.accepted), "rejected": rep.rejected[:50], "rejected_count": len(rep.rejected), "nutrient_mismatches": rep.nutrient_mismatches, "duplicates": rep.duplicates[:50], "duplicate_count": len(rep.duplicates), "energy_warnings": rep.energy_warnings[:50], "energy_warning_count": len(rep.energy_warnings),
         "licence": "declared public domain / CC0 by FDC; NOT verified by the pipeline (license_verified=false on every record)", "status": "staging only"},
         ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(f"accepted={len(rep.accepted)} rejected={len(rep.rejected)} mismatches={rep.nutrient_mismatches}")

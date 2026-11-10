@@ -38,3 +38,15 @@ ul, ol { padding-inline-start: 1.25rem; }
 progress { inline-size: 100%; block-size: .5rem; }
 @media (min-width: 640px) { .container { padding: 1.5rem; } h1 { font-size: 1.6rem; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tabs { display: flex; gap: .4rem; overflow-x: auto; padding-block: .5rem; scroll-snap-type: x proximity; }
+.tab { flex: 0 0 auto; flex-direction: column; justify-content: center; min-inline-size: 4.5rem; background: transparent; color: var(--accent); scroll-snap-align: start; }
+.tab.active { background: var(--accent); color: var(--accent-fg); }
+.tab small { font-weight: 400; }
+.meal { border: 1px solid var(--line); border-radius: .6rem; padding: .6rem .8rem; margin-block: .6rem; }
+.meal h3 { margin-block: 0 .2rem; }
+.macros { font-size: .95rem; margin-block: .2rem; }
+.allergens { font-size: .9rem; margin-block: .2rem; }
+.shopping li { padding-block: .25rem; border-block-end: 1px dashed var(--line); }
+.notes { margin-block: .5rem; }

@@ -67,6 +67,14 @@ export type PublishRuleSetRequest = { "confirm_sources_attached": true; "notes"?
 export type AdminUserList = Array<{ "id"?: string; "status"?: string; "roles"?: Array<string> }>;
 export type HealthGrantRequest = { "grantee_id": string; "subject_user_id": string; "reason": string; "duration_minutes": number };
 export type HealthGrant = { "id"?: string; "expires_at"?: string };
+export type NutritionProfileRequest = { "sex"?: "male" | "female"; "height_cm": number; "weight_kg": number; "activity": "sedentary" | "light" | "moderate" | "active" | "very_active"; "goal"?: "maintain" | "lose" | "gain"; "screening": { "eating_disorder_risk": boolean; "medical_diet_needed": boolean; "pregnant_or_lactating": boolean } };
+export type NutritionEstimate = { "status": "OK" | "NEEDS_INFO" | "BLOCKED" | "REFER"; "reasons"?: Array<string>; "questions"?: Array<string>; "bmr"?: (Array<number>) | null; "tdee"?: (Array<number>) | null; "macros"?: (Record<string, unknown>) | null; "water_ml"?: (Array<number>) | null; "goal_adjustment"?: string; "uncertainty"?: "low" | "medium" | "high"; "labels": Array<string>; "safety_decision_id"?: (string) | null; "method"?: string };
+export type MealPlanRequest = { "days"?: number; "allergens"?: Array<"milk" | "egg" | "fish" | "shellfish" | "tree_nut" | "peanut" | "wheat" | "soy" | "sesame">; "excluded_food_ids"?: Array<string>; "diet_required"?: Array<"vegetarian" | "vegan" | "halal" | "gluten_free" | "lactose_free">; "max_cook_minutes"?: number; "weekly_budget"?: number; "currency"?: string; "region"?: string; "pantry"?: Array<string> };
+export type MealPlanIngredient = { "food_id"?: string; "name_en"?: string; "name_fa"?: (string) | null; "grams"?: number; "allergens"?: Array<string>; "allergens_known"?: boolean };
+export type MealPlanMeal = { "slot"?: "breakfast" | "lunch" | "dinner" | "snack"; "recipe_id"?: string; "name_en"?: string; "name_fa"?: (string) | null; "portion"?: number; "kcal"?: number; "nutrients"?: Record<string, unknown>; "missing_nutrients"?: Array<string>; "cook_minutes"?: number; "cost"?: (number) | null; "ingredients"?: Array<MealPlanIngredient>; "steps"?: Array<string>; "allergens"?: Array<string>; "allergens_known"?: boolean };
+export type MealPlanDay = { "index"?: number; "date"?: string; "meals"?: Array<MealPlanMeal>; "kcal"?: number; "protein_g"?: number; "missing_nutrients"?: Array<string> };
+export type ShoppingItem = { "food_id"?: string; "name_en"?: string; "grams"?: number; "cost"?: (number) | null; "in_pantry"?: boolean };
+export type MealPlanResponse = { "status": "OK" | "NEEDS_CONTENT" | "NEEDS_INFO" | "BLOCKED" | "REFER"; "reasons": Array<string>; "days": Array<MealPlanDay>; "shopping": Array<ShoppingItem>; "total_cost"?: (number) | null; "unpriced_food_ids"?: Array<string>; "budget_met"?: (boolean) | null; "labels": Array<string>; "target_kcal"?: (number) | null; "safety_decision_id"?: (string) | null };
 export type PlanFeaturesRequest = { "features": Array<{ "code": string; "enabled": boolean }> };
 
 export interface OpTypes {
@@ -124,6 +132,9 @@ export interface OpTypes {
   "API-ADM-006": { body: undefined; res: AdminUserList; path: Record<string, never>; query: Record<string, never> };
   "API-ADM-007": { body: HealthGrantRequest; res: HealthGrant; path: Record<string, never>; query: Record<string, never> };
   "API-ADM-008": { body: PlanFeaturesRequest; res: PlanCatalog; path: { plan_id: string }; query: Record<string, never> };
+  "API-NUT-001": { body: NutritionProfileRequest; res: NutritionEstimate; path: Record<string, never>; query: Record<string, never> };
+  "API-NUT-002": { body: undefined; res: NutritionEstimate; path: Record<string, never>; query: Record<string, never> };
+  "API-NUT-003": { body: MealPlanRequest; res: MealPlanResponse; path: Record<string, never>; query: Record<string, never> };
   "API-SYS-001": { body: undefined; res: Message; path: Record<string, never>; query: Record<string, never> };
   "API-SYS-002": { body: undefined; res: Message; path: Record<string, never>; query: Record<string, never> };
 }
@@ -700,6 +711,42 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
   "API-ADM-008": {
     "method": "PUT",
     "path": "/admin/plans/{plan_id}/features",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      403,
+      404,
+      422
+    ]
+  },
+  "API-NUT-001": {
+    "method": "PUT",
+    "path": "/nutrition/profile",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      403,
+      422
+    ]
+  },
+  "API-NUT-002": {
+    "method": "GET",
+    "path": "/nutrition/estimate",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      403,
+      404
+    ]
+  },
+  "API-NUT-003": {
+    "method": "POST",
+    "path": "/nutrition/meal-plan",
     "secured": true,
     "success": 200,
     "errors": [

@@ -23,6 +23,7 @@ export function Header() {
       <nav aria-label="main">
         <Link href={`/${locale}/onboarding`}>{t("nav.onboarding")}</Link>
         <Link href={`/${locale}/plan`}>{t("nav.plan")}</Link>
+        <Link href={`/${locale}/nutrition`}>{t("nav.nutrition")}</Link>
         <Link href={`/${locale}/login`}>{t("nav.login")}</Link>
         <button type="button" className="linklike" onClick={logout}>{t("nav.logout")}</button>
         <a href={switched} hrefLang={other} lang={other} onClick={() => { document.cookie = `vf_locale=${other}; Path=/; Max-Age=31536000; SameSite=Lax`; }}>{t("nav.language")}</a>

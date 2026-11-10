@@ -169,7 +169,38 @@ def test_endpoint_without_reviewed_data_is_needs_content_not_invented():
     h = Harness()
     t = h.login("nut@ex.com")
     h.onboard(t)
-    h.call("POST", "/nutrition/estimate", {"sex": "male", "height_cm": 175, "weight_kg": 70, "activity": "moderate", "goal": "maintain",
+    h.call("PUT", "/nutrition/profile", {"sex": "male", "height_cm": 175, "weight_kg": 70, "activity": "moderate", "goal": "maintain",
                                            "screening": {"eating_disorder_risk": False, "medical_diet_needed": False, "pregnant_or_lactating": False}}, token=t, check=False)
     r = h.call("POST", "/nutrition/meal-plan", {"days": 7}, token=t, check=False)
     assert r.status == 200 and r.body["status"] == "NEEDS_CONTENT" and r.body["days"] == []
+
+
+def test_fdc_preserves_identifiers_units_basis_and_flags_duplicates():
+    import copy
+    d = copy.deepcopy(FDC)
+    d["FoundationFoods"].append(copy.deepcopy(d["FoundationFoods"][0]))                       # same id twice
+    other = copy.deepcopy(d["FoundationFoods"][0]); other["fdcId"] = 2                       # same description, different id
+    d["FoundationFoods"].append(other)
+    rep = import_fdc(d, "2026-11-10")
+    assert [x["kind"] for x in rep.duplicates] == ["same_id", "same_description"]
+    f = rep.accepted[0]
+    assert f.basis == "per_100g" and f.source.record_id == "1" and f.id == "fdc_1"
+    assert f.nutrient_refs["protein_g"] == {"id": "203", "unit": "G", "name": "Protein"}
+    assert f.nutrient_refs["kcal"]["unit"] == "KCAL"
+    assert set(f.nutrient_refs) == set(f.per_100g)
+    assert rep.accepted[1].id == "fdc_2"                                                      # duplicates by description are kept but flagged, never merged silently
+
+
+def test_fdc_rejects_physically_impossible_values_and_flags_energy_mismatch():
+    import copy
+    d = copy.deepcopy(FDC)
+    d["FoundationFoods"][0]["foodNutrients"][0]["amount"] = 140                               # 140 g protein per 100 g
+    assert import_fdc(d, "x").rejected
+    d2 = copy.deepcopy(FDC)
+    d2["FoundationFoods"][0]["foodNutrients"][1]["amount"] = 900                              # kcal far from macros
+    rep = import_fdc(d2, "x")
+    assert rep.energy_warnings == ["fdc_1"]
+
+
+def test_prices_are_not_part_of_food_records():
+    assert not any("price" in k for k in FoodRecord.__dataclass_fields__)
