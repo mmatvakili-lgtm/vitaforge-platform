@@ -1,0 +1,40 @@
+:root { --bg:#f7f8fa; --fg:#15171a; --muted:#5b6470; --card:#fff; --line:#d9dde3; --accent:#0b6bcb; --accent-fg:#fff; --err:#b42318; --warn:#8a5a00; --ok:#18794e; --info:#0b5cad; color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0f1114; --fg:#eceef1; --muted:#9aa4b2; --card:#181b20; --line:#2b3038; --accent:#5aa7ff; --accent-fg:#06121f; --err:#ff8a7a; --warn:#f0c36d; --ok:#6fd3a0; --info:#8bc1ff; } }
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: system-ui, "Vazirmatn", "Segoe UI", Tahoma, sans-serif; line-height: 1.7; }
+html[lang="fa"] body { line-height: 1.9; }
+.container { max-inline-size: 42rem; margin-inline: auto; padding: 1rem; }
+.site-header { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; justify-content: space-between; padding: .75rem 1rem; border-block-end: 1px solid var(--line); background: var(--card); }
+.site-header nav { display: flex; flex-wrap: wrap; gap: .25rem 1rem; align-items: center; }
+.site-header a, .linklike { min-block-size: 44px; display: inline-flex; align-items: center; color: var(--accent); text-decoration: none; background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.brand { font-weight: 700; color: var(--fg) !important; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: .75rem; padding: 1rem; margin-block: 1rem; }
+h1 { font-size: 1.4rem; margin-block: 0 .75rem; } h2 { font-size: 1.15rem; } h3 { font-size: 1rem; }
+.field { margin-block: .9rem; }
+label { display: block; font-weight: 600; margin-block-end: .25rem; }
+input:not([type=checkbox]):not([type=radio]), select { inline-size: 100%; min-block-size: 44px; padding: .5rem .75rem; font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--line); border-radius: .5rem; }
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+button, .btn { min-block-size: 44px; padding: .5rem 1.1rem; font: inherit; font-weight: 600; border-radius: .5rem; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-fg); cursor: pointer; display: inline-flex; align-items: center; text-decoration: none; }
+button.btn-secondary, .btn-secondary { background: transparent; color: var(--accent); }
+button:disabled { opacity: .6; cursor: not-allowed; }
+.row { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem; }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: .25rem .75rem; }
+.check { display: flex; align-items: center; gap: .6rem; min-block-size: 44px; font-weight: 400; }
+.check input { inline-size: 1.25rem; block-size: 1.25rem; }
+fieldset { border: 1px solid var(--line); border-radius: .5rem; margin-block: .75rem; padding: .5rem .75rem; }
+.hint, .muted { color: var(--muted); font-size: .9rem; margin-block: .25rem; }
+.field-error { color: var(--err); font-size: .9rem; margin-block: .25rem; }
+.alert { border-inline-start: 4px solid; border-radius: .5rem; padding: .5rem .9rem; margin-block: .75rem; background: color-mix(in srgb, currentColor 8%, transparent); }
+.alert p, .alert h2 { margin-block: .25rem; }
+.alert-error { color: var(--err); } .alert-warning { color: var(--warn); } .alert-success { color: var(--ok); } .alert-info { color: var(--info); }
+.alert > * { color: var(--fg); }
+.notice { color: var(--muted); font-size: .85rem; }
+.doc { margin: .75rem 0; padding: .75rem 1rem; border-inline-start: 4px solid var(--line); background: var(--bg); max-block-size: 14rem; overflow: auto; }
+.tag { font-size: .75rem; padding: .1rem .5rem; border: 1px solid var(--line); border-radius: 1rem; color: var(--muted); }
+.plain { list-style: none; padding-inline-start: 0; }
+ul, ol { padding-inline-start: 1.25rem; }
+.day { border-block-start: 1px solid var(--line); padding-block-start: .5rem; }
+progress { inline-size: 100%; block-size: .5rem; }
+@media (min-width: 640px) { .container { padding: 1.5rem; } h1 { font-size: 1.6rem; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
