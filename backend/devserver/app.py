@@ -135,6 +135,7 @@ class App:
         R("POST", "/nutrition/estimate", self._nut_estimate); R("POST", "/nutrition/meals", self._nut_meal)
         R("DELETE", "/nutrition/meals/(?P<mid>[^/]+)", lambda c: self.nlog.delete_meal(c["uid"], c["mid"]) or {})
         R("POST", "/nutrition/water", lambda c: self.nlog.add_water(c["uid"], c["body"].get("ml")) or {})
+        R("POST", "/nutrition/meal-plan", self._nut_meal_plan)
         R("GET", "/nutrition/summary", lambda c: self.nlog.day_summary(c["uid"], estimate=self._nut_result(c["uid"])))
         R("GET", "/safety/explain", self._explain)
         R("GET", "/workouts/progression/(?P<code>[^/]+)", self._progression)
@@ -748,6 +749,25 @@ class App:
             raise ValidationFailed("screening")
         self.store.__dict__.setdefault("nutrition_profiles", {})[c["uid"]] = {k: b.get(k) for k in ("sex", "height_cm", "weight_kg", "activity", "goal", "screening")}
         return _plain(self._nut_result(c["uid"]))
+
+    def _nut_meal_plan(self, c):
+        """Weekly meal plan from the food/recipe/price data actually in the store. With no reviewed data the honest answer is NEEDS_CONTENT."""
+        from datetime import date as _d
+        from nutrition_engine import MealPlanRequest, plan_week, PriceBook
+        b = c["body"]
+        n = self._nut_result(c["uid"])
+        if n is None:
+            raise PreconditionRequired("nutrition_profile")
+        foods = self.store.__dict__.get("foods", {})
+        recipes = list(self.store.__dict__.get("recipes", []))
+        try:
+            req = MealPlanRequest(today=_d.today(), days=int(b.get("days", 7)), allergens=tuple(b.get("allergens", ())),
+                                  excluded_food_ids=tuple(b.get("excluded_food_ids", ())), diet_required=tuple(b.get("diet_required", ())),
+                                  max_cook_minutes=b.get("max_cook_minutes"), weekly_budget=b.get("weekly_budget"), currency=b.get("currency"),
+                                  region=b.get("region"), pantry=tuple(b.get("pantry", ())), allow_unreviewed=bool(self.dev and self.rule_set.allow_unreviewed_content))
+        except (TypeError, ValueError):
+            raise ValidationFailed("meal_plan_request")
+        return _plain(plan_week(req, n, foods, recipes, self.store.__dict__.get("price_book") or PriceBook()))
 
     def _nut_meal(self, c):
         b = c["body"]
