@@ -188,5 +188,19 @@
  "muscle.glutes": "سرینی",
  "muscle.abdominals": "شکم",
  "muscle.calves": "ساق پا",
- "muscle.lower back": "کمر"
+ "muscle.lower back": "کمر",
+ "ex.title": "جزئیات حرکت",
+ "ex.steps": "مراحل اجرا",
+ "ex.breathing": "تنفس",
+ "ex.mistakes": "اشتباهات رایج",
+ "ex.safety": "نکات ایمنی",
+ "ex.compat": "سازگاری با اطلاعات شما",
+ "ex.compat.allowed": "مجاز",
+ "ex.compat.caution": "با احتیاط",
+ "ex.compat.blocked": "مسدود",
+ "ex.compat.unknown": "نامشخص",
+ "ex.review": "وضعیت بازبینی",
+ "ex.unreviewed": "این توضیح بازبینی تخصصی نشده و فقط نمایشی است.",
+ "ex.back": "بازگشت به برنامه",
+ "ex.view": "جزئیات"
 }

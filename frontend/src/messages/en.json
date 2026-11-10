@@ -188,5 +188,19 @@
  "muscle.glutes": "Glutes",
  "muscle.abdominals": "Abdominals",
  "muscle.calves": "Calves",
- "muscle.lower back": "Lower back"
+ "muscle.lower back": "Lower back",
+ "ex.title": "Exercise details",
+ "ex.steps": "How to perform",
+ "ex.breathing": "Breathing",
+ "ex.mistakes": "Common mistakes",
+ "ex.safety": "Safety notes",
+ "ex.compat": "Fit with your information",
+ "ex.compat.allowed": "Allowed",
+ "ex.compat.caution": "Use caution",
+ "ex.compat.blocked": "Blocked",
+ "ex.compat.unknown": "Unknown",
+ "ex.review": "Review status",
+ "ex.unreviewed": "This description has not been expert-reviewed and is for display only.",
+ "ex.back": "Back to plan",
+ "ex.view": "Details"
 }

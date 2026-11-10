@@ -18,3 +18,12 @@ def test_restrict_never_returns_a_plan():
     from safety_core.models import DecisionStatus
     assert DecisionStatus.RESTRICT.permits_content is False
     assert DecisionStatus.ALLOW.permits_content and DecisionStatus.ALLOW_WITH_MODIFICATION.permits_content
+
+
+def test_exercise_detail_exposes_review_status_and_no_unlicensed_media():
+    h = Harness()
+    t = h.login("det@ex.com")
+    h.onboard(t)
+    eid = h.call("GET", "/exercises?page=1&page_size=1", token=t).body["results"][0]["id"]
+    d = h.call("GET", f"/exercises/{eid}", token=t).body
+    assert d["review_status"] != "published" and d["media"] == []

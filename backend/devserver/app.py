@@ -499,9 +499,16 @@ class App:
                 {"status": "blocked" if not item.allowed else ("caution" if item.caution else "allowed"), "reasons": list(item.reasons)})
         out = {"id": s["id"], "code": code, "name": s.get("name", code), "name_en": s.get("name_en", code), "compatibility": comp,
                "steps": list(r.instructions) if r else [], "common_mistakes": list(r.common_mistakes) if r else [],
-               "review_status": r.publication_status if r else "published", "media": []}
+               "review_status": r.publication_status if r else "unreviewed", "media": []}
         if r and r.description:
             out["description"] = r.description
+        if r and r.breathing:
+            out["breathing"] = r.breathing
+        if r and (r.limitations or r.safety_cautions):
+            out["safety_notes"] = " ".join(r.safety_cautions + r.limitations)
+        if r:
+            from exercise_catalog import served_media
+            out["media"] = [{"type": m.kind, "url": m.url} for m in served_media(r)]
         return out
 
     def op_api_ex_003(self, c):

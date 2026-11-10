@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
@@ -9,7 +10,7 @@ import { Alert, ApiErrorView, Button, ButtonLink, Card, Loading } from "../../..
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 
 function PlanBody({ plan, modified }: { plan: WorkoutPlan; modified: boolean }) {
-  const { t, n } = useT();
+  const { locale, t, n } = useT();
   return (
     <div>
       <p className="muted">
@@ -26,7 +27,7 @@ function PlanBody({ plan, modified }: { plan: WorkoutPlan; modified: boolean }) 
           <ol className="exercises">
             {(d.exercises ?? []).map((e, k) => (
               <li key={e.workout_exercise_id ?? k}>
-                <strong>{e.name}</strong> {e.role && <span className="tag">{t(`plan.role.${e.role}`)}</span>}
+                <strong>{e.exercise_id ? <Link href={`/${locale}/exercises/${e.exercise_id}`}>{e.name}</Link> : e.name}</strong> {e.role && <span className="tag">{t(`plan.role.${e.role}`)}</span>}
                 <ul className="plain sets">
                   {(e.sets ?? []).map((s, j) => (
                     <li key={s.set_no ?? j}>
