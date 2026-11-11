@@ -33,6 +33,7 @@ export default function LoginPage() {
         <Button type="submit" busy={busy}>{t("auth.login.submit")}</Button>
       </form>
       <p><Link href={`/${locale}/register`}>{t("auth.login.noAccount")}</Link></p>
+      <p><Link href={`/${locale}/forgot`}>{t("auth.login.forgot")}</Link></p>
       <p><Link href={`/${locale}/verify`}>{t("auth.login.haveCode")}</Link></p>
     </Card>
   );

@@ -47,6 +47,8 @@ function show(nodes){const o=$("out");o.replaceChildren(...nodes)}
 function el(t,txt){const e=document.createElement(t);e.textContent=txt;return e}
 $("reg").onclick=async()=>{const dob=new Date();dob.setFullYear(dob.getFullYear()-30);
 await api("POST","/auth/register",{email:$("email").value,password:$("pw").value,date_of_birth:dob.toISOString().slice(0,10),language:"fa"});
+const em=$("email").value;const cm=await api("GET","/dev/captured-mail?kind=verification&to="+encodeURIComponent(em));   /* dev capture adapter: nothing was e-mailed */
+if(cm.st===200)await api("POST","/auth/verify",{identifier:em,code:cm.j.secret});
 const r=await api("POST","/auth/login",{identifier:$("email").value,password:$("pw").value});
 loggedIn=r.st===200;show([el("p",loggedIn?"وارد شدید.":"ورود ناموفق ("+r.st+")")])};
 $("gen").onclick=async()=>{if(!loggedIn){show([el("p","ابتدا وارد شوید.")]);return}

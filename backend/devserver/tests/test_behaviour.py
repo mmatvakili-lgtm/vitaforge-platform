@@ -15,7 +15,7 @@ def test_password_reset_is_single_use_revokes_sessions_and_needs_a_strong_passwo
     h = Harness()
     old = h.login("u@ex.com")
     h.call("POST", "/auth/password-reset/request", {"identifier": "u@ex.com"})
-    tok = h.app.sent_resets[-1]
+    tok = h.captured("u@ex.com", "password_reset")["secret"]
     assert h.call("POST", "/auth/password-reset/confirm", {"token": tok, "new_password": "alllowercase1"}).status in (400, 422)   # weak (rule beyond minLength)
     assert h.call("POST", "/auth/password-reset/confirm", {"token": tok, "new_password": "N3wStrongPassword"}).status == 200
     assert h.call("POST", "/auth/password-reset/confirm", {"token": tok, "new_password": "N3wStrongPassword"}).status == 400      # single use

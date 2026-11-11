@@ -102,6 +102,12 @@ class ExtrasService:
         if not u:
             raise NotFound()
         self.s.by_email.pop(u["email"], None)
+        for k in ("verification",):
+            self.s.__dict__.setdefault(k, {}).pop(uid, None)
+        idx = self.s.__dict__.setdefault("reset_index", {})
+        self.s.__dict__.setdefault("resets", {}).pop(idx.pop(uid, None), None)
+        for k in [k for k, r in self.s.__dict__.setdefault("outbox", {}).items() if r.get("user") == uid]:
+            self.s.outbox.pop(k, None)
         for k in ("profiles", "health", "plans", "measurements", "pain_logs", "metrics"):
             getattr(self.s, k).pop(uid, None)
         self.s.sessions = {h: x for h, x in self.s.sessions.items() if x["user"] != uid}

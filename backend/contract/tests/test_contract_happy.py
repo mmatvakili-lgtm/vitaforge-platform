@@ -38,6 +38,7 @@ def test_success_bodies_are_not_trivially_empty():
 def test_login_sets_httponly_cookie_and_returns_no_token_in_body():
     h = Harness()
     h.register("c@ex.com")
+    h.verify_by_mail("c@ex.com")
     r = h.call("POST", "/auth/login", {"identifier": "c@ex.com", "password": "Str0ngPassw0rd"})
     cookies = r.headers["Set-Cookie"]
     assert "sessionid=" in cookies and "HttpOnly" in cookies and "SameSite=Lax" in cookies and "csrftoken=" in cookies

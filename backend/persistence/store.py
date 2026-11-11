@@ -37,7 +37,7 @@ def _owner_default(coll: str, key: Any, value: Any) -> Optional[str]:
 OWNER_KEYED = {"profiles", "health", "plans", "measurements", "pain_logs", "metrics", "symptoms", "cond_meta", "subs", "nutrition_profiles", "verification"}
 
 MAPS = ("catalog", "relations", "users", "by_email", "sessions", "profiles", "health", "plans", "workout_sessions", "exercise_meta", "rule_sets", "verification", "resets",
-        "subs", "privacy_requests", "pain_logs", "metrics", "measurements", "cond_meta", "symptoms", "nutrition_profiles", "foods", "recipes", "price_quotes")
+        "subs", "privacy_requests", "pain_logs", "metrics", "measurements", "cond_meta", "symptoms", "nutrition_profiles", "foods", "recipes", "price_quotes", "outbox", "reset_index", "mail_limits", "captured_mail")
 LISTS = ("consents", "audit", "erasure_audit", "grants")
 
 

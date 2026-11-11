@@ -14,7 +14,8 @@
 | فاز | محتوا | وضعیت | مسدودکننده |
 |---|---|---|---|
 | 0 | ممیزی واقعیت مخزن | انجام شد (`PROJECT_STATE.md`) | — |
-| 1 | قابلیت اطمینان: ایمیل واقعی (توکن تک‌مصرف، انقضا، ارسال مجدد، rate limit، قالب FA/EN)، مسیر PostgreSQL، backup/restore، export/delete | **بعدی** | ارسال واقعی نیازمند اعتبار SMTP |
+| 1a | ایمیل: توکن پایدار، outbox، SMTP/capture، resend، rate limit، قالب FA/EN | کد و تست انجام شد؛ ارسال واقعی منتظر SMTP | اعتبار SMTP |
+| 1b | مسیر PostgreSQL، backup/restore، export/delete | **بعدی** | — |
 | 2 | سیستم طراحی و UX | PLANNED | — |
 | 3 | پایگاه حرکات بازبینی‌شده + ابزار بازبینی ادمین | PLANNED | متخصص، لایسنس |
 | 4 | موتور تمرین + ثبت تمرین | PLANNED | فاز ۳ |
@@ -24,8 +25,8 @@
 | 8 | امنیت/کارایی | PLANNED | — |
 | 9 | انتشار | PLANNED | همه‌ی Blockedها |
 
-## milestone بعدی (ارزش بالاتر): زیرساخت ایمیل تأیید
+## milestone بعدی
 
-بدون آن هیچ کاربر واقعی نمی‌تواند ثبت‌نام را کامل کند. قابل ساخت بدون اعتبار: پورت `MailSender`، outbox پایدار در KV، آداپتور SMTP (تنظیم با env)، آداپتور capture برای تست، حذف وابستگی به `sent_codes`. ارسال واقعی تا فراهم شدن SMTP مسدود می‌ماند و چنین ادعا نمی‌شود.
+تأیید روی ماشین مالک (Django + SQLite/PostgreSQL، `mail_status --send-test`) سپس Phase 1b: PostgreSQL، backup/restore، export/delete.
 
 </div>

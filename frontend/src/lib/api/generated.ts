@@ -86,6 +86,7 @@ export interface OpTypes {
   "API-AUTH-006": { body: PasswordResetConfirm; res: Message; path: Record<string, never>; query: Record<string, never> };
   "API-AUTH-007": { body: undefined; res: SessionList; path: Record<string, never>; query: Record<string, never> };
   "API-AUTH-008": { body: undefined; res: Message; path: { session_id: string }; query: Record<string, never> };
+  "API-AUTH-009": { body: EmailOnlyRequest; res: Message; path: Record<string, never>; query: Record<string, never> };
   "API-PRO-001": { body: undefined; res: Profile; path: Record<string, never>; query: Record<string, never> };
   "API-PRO-002": { body: ProfileUpdate; res: Profile; path: Record<string, never>; query: Record<string, never> };
   "API-PRIV-001": { body: undefined; res: ConsentDocumentList; path: Record<string, never>; query: Record<string, never> };
@@ -223,6 +224,16 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
     "errors": [
       401,
       404
+    ]
+  },
+  "API-AUTH-009": {
+    "method": "POST",
+    "path": "/auth/verify/resend",
+    "secured": false,
+    "success": 202,
+    "errors": [
+      400,
+      429
     ]
   },
   "API-PRO-001": {

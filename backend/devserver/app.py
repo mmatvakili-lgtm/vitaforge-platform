@@ -46,7 +46,7 @@ MESSAGES = {"validation_failed": "Request is invalid.", "auth_failed": "Authenti
             "quota_or_plan_required": "Your plan does not include this feature.", "precondition_required": "A prerequisite step is missing.",
             "needs_content": "Not enough reviewed exercises for your equipment and restrictions.", "feature_unavailable": "This feature is not available yet.",
             "bad_request": "Bad request.", "gone": "This link or code has expired.", "consent_required": "Valid health-data consent is required.",
-            "internal_error": "Internal error.", "csrf_failed": "CSRF check failed.", "bad_json": "Body is not valid JSON.", "too_large": "Body too large."}
+            "internal_error": "Internal error.", "csrf_failed": "CSRF check failed.", "bad_json": "Body is not valid JSON.", "too_large": "Body too large.", "rate_limited": "Too many requests. Try again later."}
 
 
 def _plain(o):
@@ -85,9 +85,8 @@ class Reply:
 
 
 class App:
-    def __init__(self, store: InMemoryStore, rule_set: RuleSet, dev_mode: bool = False, auto_verify: Optional[bool] = None):
+    def __init__(self, store: InMemoryStore, rule_set: RuleSet, dev_mode: bool = False, mail=None):
         self.dev = dev_mode
-        self.auto_verify = dev_mode if auto_verify is None else auto_verify
         self.contract = contract()
         day = lambda: date.today().toordinal()
         self.sec = lambda: int(time.time())
@@ -113,8 +112,12 @@ class App:
         self.nlog = NutritionLog(store, day)
         self.ncfg = NutritionConfig(show_unverified_ranges=dev_mode)
         self.records: Dict[str, object] = {}                 # exercise_catalog records by code (names/instructions for display)
-        self.sent_resets: list = []                           # dev 'mail outbox'
-        self.sent_codes: Dict[str, str] = {}                  # dev 'mail outbox': verification codes by email
+        from mailer import DisabledSender, Outbox
+        from mailer.runtime import MailRuntime
+        from app_services.account_mail import AccountMail
+        self.mail = mail or MailRuntime(DisabledSender(), secrets.token_hex(32), "http://localhost:3000")   # no runtime given: nothing is delivered
+        self.outbox = Outbox(store, self.mail.sender, self.mail.secret, self.sec, self.mail.frontend_base_url)
+        self.acct = AccountMail(store, self.outbox, self.m, self.id, self.mail.secret, self.sec)
         store.__dict__.setdefault("verification", {})
         store.__dict__.setdefault("symptoms", {})
         store.__dict__.setdefault("cond_meta", {})
@@ -132,6 +135,8 @@ class App:
             self.routes.append((op.method, rx, fn, op.secured, op))
         R = lambda m, p, fn: self.routes.append((m, re.compile("^/api/v1" + p + "$"), fn, True, None))
         # not in OpenAPI (nutrition is x-deferred; the rest are dev/engine extras)
+        if self.dev and self.mail.sender.provider == "capture":     # explicit development configuration only (MAIL_PROVIDER=capture AND DJANGO_DEBUG=true)
+            self.routes.append(("GET", re.compile("^/api/v1/dev/captured-mail$"), self._dev_captured_mail, False, None))
         R("POST", "/nutrition/meals", self._nut_meal)
         R("DELETE", "/nutrition/meals/(?P<mid>[^/]+)", lambda c: self.nlog.delete_meal(c["uid"], c["mid"]) or {})
         R("POST", "/nutrition/water", lambda c: self.nlog.add_water(c["uid"], c["body"].get("ml")) or {})
@@ -247,30 +252,35 @@ class App:
             uid = self.id.register(b["email"], b["password"], b.get("language", "fa"), dob=dob.isoformat())
         except Conflict:
             return {"message": "registered"}                    # identical answer for an existing address: no account enumeration
-        code = f"{secrets.randbelow(10**6):06d}"
-        self.store.verification[uid] = {"hash": self._h(code), "exp": self.sec() + 30 * 60}
-        if self.dev:
-            self.sent_codes[b["email"].strip().lower()] = code  # a real mail adapter would send this; never returned to the caller
-        if self.auto_verify:
-            self.id.verify_email(uid)
+        self.acct._limit("verify", b["email"].strip().lower())   # the first message counts toward the resend cooldown
+        self.acct.issue_verification(uid)                       # persistent token + outbox row; registration NEVER verifies the account by itself
+        self._flush_mail()
         return {"message": "registered"}
 
-    @staticmethod
-    def _h(v: str) -> str:
-        import hashlib
-        return hashlib.sha256(v.encode()).hexdigest()
+    def _dev_captured_mail(self, c):
+        """DEV ONLY (never registered unless the capture adapter is explicitly configured in debug): latest captured message for ?to=&kind=. Nothing was delivered."""
+        q = lambda k: (c["query"].get(k) or [""])[0]
+        row = self.mail.sender.latest(q("to"), q("kind") or "verification")
+        if not row:
+            raise NotFound()
+        return {"delivered": False, "provider": "capture", "kind": row["kind"], "secret": row["secret"], "subject": row["subject"]}
+
+    def _flush_mail(self):
+        """Capture adapter only (no network): deliver in the same request so development needs no worker. Network adapters are drained by `manage.py process_outbox`."""
+        if self.mail.sender.inline:
+            for mid in self.acct.fresh:
+                self.outbox.process_inline(mid)
+        self.acct.fresh.clear()
 
     def op_api_auth_002(self, c):
         b = c["body"]
-        uid = self.store.by_email.get(b["identifier"].strip().lower())
-        rec = self.store.verification.get(uid) if uid else None
-        if not rec or not hmac.compare_digest(rec["hash"], self._h(b["code"])):
-            raise BadRequest("invalid_code")
-        if rec["exp"] < self.sec():
-            raise Gone("code_expired")
-        self.store.verification.pop(uid, None)
-        self.id.verify_email(uid)
+        self.acct.verify(b["identifier"], b["code"])
         return {"message": "verified"}
+
+    def op_api_auth_009(self, c):
+        self.acct.resend_verification(c["body"]["identifier"])
+        self._flush_mail()
+        return {"message": "accepted"}                          # identical for unknown, unverified and already verified addresses
 
     def op_api_auth_003(self, c):
         token = self.id.login(c["body"]["identifier"], c["body"]["password"], c["ua"])
@@ -288,9 +298,8 @@ class App:
         return Reply({"message": "logged_out"}, headers=[("Set-Cookie", "sessionid=; HttpOnly; Path=/; Max-Age=0"), ("Set-Cookie", "csrftoken=; Path=/; Max-Age=0")])
 
     def op_api_auth_005(self, c):
-        tok = self.m.request_reset(c["body"]["identifier"])
-        if tok and self.dev:
-            self.sent_resets.append(tok)
+        self.acct.request_reset(c["body"]["identifier"])
+        self._flush_mail()
         return {"message": "accepted"}                          # same answer whether or not the account exists
 
     def op_api_auth_006(self, c):

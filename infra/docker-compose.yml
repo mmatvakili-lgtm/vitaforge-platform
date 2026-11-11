@@ -14,6 +14,11 @@ services:
     depends_on: [db, redis]
     command: sh -c "python manage.py migrate && gunicorn config.wsgi:application -b 0.0.0.0:8000"
     ports: ["8000:8000"]
+  mail-worker:
+    build: { context: ../backend }
+    env_file: ../.env
+    depends_on: [db]
+    command: python manage.py process_outbox --loop --interval 15
 
 volumes:
   pgdata: {}

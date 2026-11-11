@@ -30,13 +30,14 @@ class Exchange:
 
 
 class Harness:
-    def __init__(self, dev: bool = True, allow: bool = True, auto_verify: Optional[bool] = None, rule_kwargs: Optional[dict] = None, store=None):
+    def __init__(self, dev: bool = True, allow: bool = True, mail=None, rule_kwargs: Optional[dict] = None, store=None):
         self.c = contract()
         s = store if store is not None else InMemoryStore()
         s.catalog = demo_catalog()
         s.relations = {c: [("demo_lunge_b" if "lunge" not in c else "demo_squat_b", "alternative")] for c in s.catalog}   # DEMO only
         rs = RuleSet(version=0, status="t", screening_questions=SCREENING, allow_unreviewed_content=allow, **(rule_kwargs or {}))
-        self.app = App(s, rs, dev, auto_verify)
+        from mailer.runtime import capture_runtime
+        self.app = App(s, rs, dev, mail or capture_runtime(s, "harness-secret-0123456789abcdef0123456789"))
         self.store = s
         self.log: List[Exchange] = []
         self._rx = [(op, re.compile("^/api/v1" + re.sub(r"\{\w+\}", r"[^/]+", op.path) + "$")) for op in self.c.ops]
@@ -81,12 +82,21 @@ class Harness:
             self.register(email, role=role)
         elif role:
             self.store.users[self.store.by_email[email]]["role"] = role
-        if not self.app.auto_verify:                                  # test shortcut for the (unbuilt) mail step
-            self.store.users[self.store.by_email[email]]["verified"] = True
+        if not self.store.users[self.store.by_email[email]]["verified"]:
+            self.verify_by_mail(email)                                # the real flow: captured message -> POST /auth/verify
         r = self.call("POST", "/auth/login", {"identifier": email, "password": PASSWORD})
         assert r.status == 200, (r.status, r.body)
         m = re.search(r"sessionid=([^;]+)", r.headers["Set-Cookie"])
         return m.group(1)
+
+    def captured(self, email: str, kind: str):
+        return self.app.mail.sender.latest(email, kind)
+
+    def verify_by_mail(self, email: str) -> None:
+        row = self.captured(email, "verification")
+        assert row, "no captured verification message"
+        r = self.call("POST", "/auth/verify", {"identifier": email, "code": row["secret"]})
+        assert r.status == 200, (r.status, r.body)
 
     def grant_consent(self, token: str) -> None:
         docs = self.call("GET", "/consents/documents", token=token).body

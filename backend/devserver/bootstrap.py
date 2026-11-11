@@ -7,7 +7,7 @@ from safety_core.models import RuleSet
 from .app import SCREENING, App
 
 
-def build_app(store, dev_content: bool = False, dev_mode: bool = False) -> App:
+def build_app(store, dev_content: bool = False, dev_mode: bool = False, mail=None) -> App:
     """`dev_content=True` loads the EXPERIMENTAL sample catalogue and lets the Safety Core accept unreviewed content (LOCAL DEMO ONLY).
     Default (False) is the production posture: no content is published, so plan generation is refused by the Safety Core (SAF-R013)."""
     rows = load_starter()
@@ -19,7 +19,7 @@ def build_app(store, dev_content: bool = False, dev_mode: bool = False) -> App:
                 store.catalog = {r.id: to_catalog_entry(r, dev_experimental=True) for r in rows}
                 store.relations = relations(rows)
     rs = RuleSet(version=0, status="dev-demo" if dev_content else "production", screening_questions=SCREENING, allow_unreviewed_content=dev_content)
-    app = App(store, rs, dev_mode=dev_mode)
+    app = App(store, rs, dev_mode=dev_mode, mail=mail)
     app.layer.kb.records = rows
     app.records = {r.id: r for r in rows}
     return app

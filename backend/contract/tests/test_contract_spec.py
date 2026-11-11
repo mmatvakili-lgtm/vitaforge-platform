@@ -15,7 +15,7 @@ def test_spec_uses_only_constructs_valid_for_its_declared_version():
 def test_every_operation_has_a_handler_and_route_and_matches_api_index():
     h = Harness()                                        # App.__init__ raises if any spec operation lacks a handler
     routed = {(m, rx.pattern) for m, rx, _f, _a, op in h.app.routes if op}
-    assert len(routed) == len(C.ops) == 59
+    assert len(routed) == len(C.ops) == 60
     idx = json.loads((Path(__file__).resolve().parents[3] / "tools" / "api_index.json").read_text(encoding="utf-8"))
     assert sorted(i[0] for i in idx) == sorted(o.id for o in C.ops)
 

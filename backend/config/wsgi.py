@@ -16,8 +16,12 @@ def _api_app():
     from devserver.bootstrap import build_app
     from persistence import PersistentStore
 
+    from mailer import build_sender
+    from mailer.runtime import MailRuntime
     cfg = settings.CFG
-    return build_app(PersistentStore(DjangoBackend()), dev_content=cfg["dev_content"], dev_mode=cfg["debug"])
+    store = PersistentStore(DjangoBackend())
+    mail = MailRuntime(build_sender(cfg["mail"], store.captured_mail), cfg["secret_key"], cfg["mail"]["frontend_base_url"])
+    return build_app(store, dev_content=cfg["dev_content"], dev_mode=cfg["debug"], mail=mail)
 
 
 def application(environ, start_response):

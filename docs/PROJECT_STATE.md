@@ -22,12 +22,12 @@
 
 | قابلیت | وضعیت | شواهد / محدودیت |
 |---|---|---|
-| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۴۷۲ سبز، حالت in-memory و sqlite) |
+| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۲۸ سبز + ۱ skip، حالت in-memory و sqlite) |
 | تطابق OpenAPI با مسیرها | `AUTOMATED_TESTED` | Contract Harness هر ۵۹ عملیات را اجرا و پاسخ را با spec می‌سنجد |
 | Frontend (مسیرها: home, login, register, verify, onboarding, plan, exercises/[id], nutrition) | `AUTOMATED_TESTED` | ۲۹ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
 | ثبت‌نام / ورود / خروج | `AUTOMATED_TESTED` | فقط در devserver و تست |
-| **تأیید ایمیل** | `PLANNED` (کد ناقص) | بخش ۴ |
-| بازیابی رمز | `PLANNED` (کد ناقص) | همان مشکل: توکن در حافظه |
+| تأیید ایمیل | `AUTOMATED_TESTED` | بخش ۴؛ ارسال واقعی SMTP تأیید نشده |
+| بازیابی رمز | `AUTOMATED_TESTED` | outbox پایدار؛ SMTP تأیید نشده |
 | پایگاه داده | `IMPLEMENTED` | بخش ۳ |
 | موتور تمرین | `AUTOMATED_TESTED` | محتوا فقط `experimental_unreviewed` |
 | کاتالوگ حرکات | محتوا بسته | ۳۰ حرکت اولیه، ۰ منتشرشده؛ ۸۷۶ رکورد staging همگی `pending_review` و لایسنس نامعتبر |
@@ -42,12 +42,30 @@
 - SQLite یا PostgreSQL فقط با `DATABASE_URL` تعیین می‌شود. `.env.example`، compose و CI روی PostgreSQL‌اند؛ مالک با SQLite کار می‌کند. ماندگاری بین ری‌استارت روی PostgreSQL در CI آزمون می‌شود (job `django-store`)؛ روی SQLite ویندوز توسط مالک تأیید نشده (`VITAFORGE_TEST_STORE=django`).
 - مهاجرت‌ها: CI `makemigrations --check` اجرا می‌کند.
 
-## ۴. ایمیل (کد ≠ تحویل واقعی SMTP)
+## ۴. ایمیل (میلستون ۱)
 
-- هیچ آداپتور ایمیل/SMTP وجود ندارد (جست‌وجوی EMAIL/SMTP در settings خالی است).
-- کد تأیید هش‌شده در `store.verification` ذخیره می‌شود (انقضای ۳۰ دقیقه)، اما متن کد فقط در `App.sent_codes` (حافظه) در حالت dev می‌ماند؛ توکن بازیابی در `sent_resets`.
-- زیر Django، `config/wsgi.py` با `dev_mode=cfg["debug"]` ساخته می‌شود: با `DEBUG=true` ثبت‌نام فوراً تأیید می‌شود (auto_verify)؛ با `DEBUG=false` کد هرگز به کاربر نمی‌رسد و تأیید ناممکن است.
-- نتیجه: «ایمیل نمی‌رسد» ریشه‌ی واقعی دارد (نبود ارسال)، نه خطای SMTP.
+وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED` (۵۲۸ تست backend، حالت in-memory و sqlite؛ فایل `mailer/tests/test_account_mail.py`). `SMTP_CONFIGURED`: خیر. `REAL_EMAIL_DELIVERY_VERIFIED`: خیر. `RUNTIME_VERIFIED`: فقط e2e با devserver و آداپتور capture؛ Django/PostgreSQL در این sandbox اجرا نشده.
+
+**معماری**
+- پورت `MailSender` (`backend/mailer/ports.py`) با دو آداپتور: `SmtpSender` (smtplib، STARTTLS/SSL، timeout) و `CaptureSender` (فقط توسعه؛ `delivered=False`، وضعیت outbox برابر `captured` و هرگز `sent`).
+- outbox پایدار روی همان KV store (کلکسیون `outbox`؛ بدون مهاجرت جدید). وضعیت‌ها: `pending → processing → sent | captured | retry_scheduled → failed | expired`. claim با قفل ردیف و lease ۳۰۰ ثانیه؛ backoff نمایی (۶۰، ۱۲۰، ۲۴۰… تا سقف ۳۶۰۰ ثانیه) حداکثر ۶ تلاش؛ پیام پس از انقضای توکن یا جایگزینی هرگز ارسال نمی‌شود؛ گیرنده و nonce در وضعیت نهایی پاک می‌شوند.
+- توکن‌ها: کد ۶ رقمی و توکن بازیابی ۲۵۶ بیتی از `nonce` تصادفی با HMAC کلید سرور مشتق می‌شوند؛ فقط hash (SHA-256) در DB و فقط nonce در outbox ذخیره می‌شود؛ مقدار خام هیچ‌جا ذخیره یا لاگ نمی‌شود (مگر در کلکسیون صریح `captured_mail` در حالت capture). مقایسه با `hmac.compare_digest`. تک‌مصرف، انقضای ۳۰ دقیقه، جایگزینی توکن قبلی با درخواست جدید، حداکثر ۵ حدس اشتباه برای کد. چرخش `DJANGO_SECRET_KEY` پیام‌های ارسال‌نشده را بی‌اثر می‌کند.
+- API: `POST /auth/verify/resend` (API-AUTH-009، ۶۰ عملیات)؛ rate limit با cooldown ۶۰ ثانیه و سقف ۵ در ساعت به ازای ایمیل، مستقل از وجود حساب (۴۲۹)؛ پاسخ ۲۰۲ برای ایمیل ناشناخته و شناخته یکسان است.
+- `DEBUG` دیگر تأیید را دور نمی‌زند؛ `auto_verify` حذف شد. ثبت‌نام همیشه حساب تأییدنشده می‌سازد.
+- Frontend: صفحه‌های `verify` (ارسال مجدد + شمارنده)، `forgot`، `reset`، پیوند فراموشی رمز در login؛ fa/en.
+
+**پیکربندی** (`.env.example`): `MAIL_PROVIDER` = `smtp` | `capture` | `disabled`. production فقط `smtp` را می‌پذیرد و بدون آن راه‌اندازی شکست می‌خورد («`SMTP is not configured`»). `capture` فقط با `DJANGO_DEBUG=true`. بدون `MAIL_PROVIDER` در debug حالت `disabled` است: چیزی ارسال نمی‌شود و ادعایی هم نمی‌شود.
+
+**گردش کار توسعه**
+1. `.env`: `DJANGO_DEBUG=true`، `MAIL_PROVIDER=capture`.
+2. ثبت‌نام؛ سپس `python manage.py show_captured_mail --to you@example.com` کد را نشان می‌دهد (در devserver مسیر فقط‌توسعه `GET /api/v1/dev/captured-mail` وجود دارد که فقط با capture+debug ثبت می‌شود).
+
+**راه‌اندازی SMTP (نیازمند اعتبار مالک)**
+1. مقادیر `SMTP_*` و `MAIL_FROM_*` را در `.env` بگذارید (`MAIL_PROVIDER=smtp`).
+2. `python manage.py mail_status --send-test you@example.com` یک پیام آزمایشی واقعی می‌فرستد؛ فقط پس از رسیدن آن به صندوق می‌توان `REAL_EMAIL_DELIVERY_VERIFIED` گفت.
+3. worker: `python manage.py process_outbox --loop` (در compose سرویس `mail-worker`). بدون worker پیام‌ها `pending` می‌مانند.
+
+**محدودیت‌های شناخته‌شده**: rate limit فقط بر اساس ایمیل (نه IP)؛ کلیدهای limiter برای ایمیل‌های ناشناخته پاک‌سازی دوره‌ای ندارند؛ تفاوت زمان پاسخ بین ایمیل شناخته/ناشناخته بررسی نشده؛ ثبت‌نام مجدد با ایمیل موجود پیام نمی‌فرستد؛ مسیر Django/PostgreSQL (قفل ردیف `select_for_update`) در این sandbox اجرا نشده و باید روی ماشین مالک تأیید شود؛ SQLite نویسنده‌ها را سریال می‌کند و PostgreSQL با قفل ردیف؛ رفتار claim در تست‌ها فقط روی in-memory و SQLite فایل‌محور سنجیده شده.
 
 ## ۵. طبقه‌بندی 404
 
@@ -72,11 +90,11 @@
 
 | # | شدت | ماژول/فایل | رفتار مشاهده‌شده | رفتار مورد انتظار | ریشه (تأییدشده) | راه‌حل | وابستگی | تست پذیرش |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Critical | `devserver/app.py` AUTH-001/005، `config/wsgi.py` | کد/توکن هرگز ارسال نمی‌شود | ایمیل واقعی با توکن تک‌مصرف | نبود mail adapter؛ `sent_codes` در حافظه | پورت `MailSender` + outbox پایدار + SMTP؛ ثبت‌نام/بازیابی از آن بگذرد | اعتبار SMTP برای ارسال واقعی | ثبت‌نام → outbox پایدار؛ تست با SMTP محلی؛ ری‌استارت نگه می‌دارد |
+| 1 | Critical → Mitigated | ایمیل | کد در کد برطرف شد (بخش ۴) | — | — | — | ارسال واقعی منتظر اعتبار SMTP؛ `mail_status --send-test` |
 | 2 | Critical | کاتالوگ حرکات | ۰ حرکت منتشرشده؛ برنامه‌ها `experimental_unreviewed` | فقط حرکات بازبینی‌شده | نبود بازبینی متخصص/لایسنس | ابزار بازبینی ادمین؛ ماندن Pending Review | متخصص | تست دروازه‌ی انتشار (موجود) + UI بازبینی |
 | 3 | High | `.env`/DB | مالک SQLite دارد؛ مسیر PostgreSQL فقط در CI | مسیر PostgreSQL مستند و تأییدشده | — | دستور اجرا و بررسی ری‌استارت | — | تست ماندگاری روی PG |
 | 4 | High | حریم خصوصی | export/delete، backup/restore ناموجود | موجود و تست‌شده | پیاده‌سازی نشده | Phase 1 | — | تست export/delete/restore |
-| 5 | High | rate limiting | بررسی نشد/ناموجود برای auth | محدودیت نرخ | — | افزودن همراه mail | — | تست ۴۲۹ |
+| 5 | Medium | rate limiting | فقط برای ایمیل (resend/reset)؛ login/register بدون محدودیت نرخ جدا | محدودیت نرخ برای همه‌ی auth | — | Phase 8 | — | تست ۴۲۹ |
 | 6 | Medium | `ai_gateway` | فقط Stub | provider واقعی پشت بازبینی حریم | OPEN-002/004 | Phase 6 | بازبینی حقوقی | — |
 | 7 | Medium | نگهداری FDC | واردکننده اجرا نشده | داده‌ی staging | مالک باید JSON دانلود کند | اجرای `tools/ingest_usda_fdc.py` | مالک | تست‌های FDC موجود |
 | 8 | Medium | تغذیه | meals/water/summary کنار گذاشته | لاگ وعده | `x-deferred` | Phase 5 | داده بازبینی‌شده | — |

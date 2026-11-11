@@ -37,7 +37,7 @@ export default function RegisterPage() {
     return (
       <Card title={t("auth.register.title")}>
         <Alert kind="success">{t("auth.register.done")}</Alert>
-        <div className="row"><ButtonLink href={`/${locale}/verify`}>{t("auth.verify.title")}</ButtonLink><ButtonLink href={`/${locale}/login`} secondary>{t("nav.login")}</ButtonLink></div>
+        <div className="row"><ButtonLink href={`/${locale}/verify?email=${encodeURIComponent(email.trim())}`}>{t("auth.verify.title")}</ButtonLink><ButtonLink href={`/${locale}/login`} secondary>{t("nav.login")}</ButtonLink></div>
       </Card>
     );
   }

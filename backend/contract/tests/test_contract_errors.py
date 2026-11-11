@@ -141,16 +141,16 @@ def test_incomplete_safety_tags_can_never_be_published(world):
 
 
 def test_gone_410_for_expired_codes_and_tokens():
-    h = Harness(auto_verify=False)
+    h = Harness()
     h.register("g@ex.com")
     uid = h.store.by_email["g@ex.com"]
     h.store.verification[uid]["exp"] = int(time.time()) - 1
-    r = h.call("POST", "/auth/verify", {"identifier": "g@ex.com", "code": h.app.sent_codes["g@ex.com"]})
+    r = h.call("POST", "/auth/verify", {"identifier": "g@ex.com", "code": h.captured("g@ex.com", "verification")["secret"]})
     assert r.status == 410 and r.problems == []
     h.call("POST", "/auth/password-reset/request", {"identifier": "g@ex.com"})
     for v in h.store.resets.values():
         v["exp"] = int(time.time()) - 1
-    r = h.call("POST", "/auth/password-reset/confirm", {"token": h.app.sent_resets[-1], "new_password": "An0therStrongPass"})
+    r = h.call("POST", "/auth/password-reset/confirm", {"token": h.captured("g@ex.com", "password_reset")["secret"], "new_password": "An0therStrongPass"})
     assert r.status == 410 and r.problems == []
     r = h.call("POST", "/auth/password-reset/confirm", {"token": "never-issued", "new_password": "An0therStrongPass"})
     assert r.status == 400 and r.problems == []
@@ -266,6 +266,7 @@ def test_payment_and_ai_quota_statuses(world):
 def test_cookie_auth_requires_csrf_but_bearer_does_not():
     h = Harness()
     h.register("cs@ex.com")
+    h.verify_by_mail("cs@ex.com")
     r = h.call("POST", "/auth/login", {"identifier": "cs@ex.com", "password": PASSWORD})
     sid = re.search(r"sessionid=([^;]+)", r.headers["Set-Cookie"]).group(1)
     csrf = re.search(r"csrftoken=([^;]+)", r.headers["Set-Cookie"]).group(1)

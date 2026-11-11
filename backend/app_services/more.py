@@ -20,12 +20,18 @@ class MoreService:
             self.s.__dict__.setdefault(k, {} if k == "resets" else [])
 
     # ---- password reset (token returned to the mail adapter; never to the API caller)
-    def request_reset(self, email):
+    def request_reset(self, email, token=None):
         uid = self.s.by_email.get((email or "").strip().lower())
         if not uid:
             return None                                   # API answers identically either way (no enumeration)
-        token = secrets.token_urlsafe(32)
-        self.s.resets[hashlib.sha256(token.encode()).hexdigest()] = {"user": uid, "exp": self.clock() + RESET_TTL}
+        token = token or secrets.token_urlsafe(32)
+        idx = self.s.__dict__.setdefault("reset_index", {})
+        old = idx.get(uid)
+        if old:
+            self.s.resets.pop(old, None)                  # a new request invalidates the previous token
+        h = hashlib.sha256(token.encode()).hexdigest()
+        self.s.resets[h] = {"user": uid, "exp": self.clock() + RESET_TTL}
+        idx[uid] = h
         return token
 
     def confirm_reset(self, token, new_password):
@@ -39,6 +45,7 @@ class MoreService:
         if len(new_password or "") < 10 or new_password.lower() == new_password or not any(c.isdigit() for c in new_password):
             raise ValidationFailed("password")                # a weak password does not burn the token
         self.s.resets.pop(key, None)                          # single use
+        self.s.__dict__.setdefault("reset_index", {}).pop(r["user"], None)
         u = self.s.users[r["user"]]
         u["pw"], u["fails"], u["locked_until"] = hash_password(new_password), 0, 0
         for sess in self.s.sessions.values():             # revoke all sessions

@@ -1910,6 +1910,39 @@ paths:
         schema:
           type: string
           format: uuid
+  /auth/verify/resend:
+    post:
+      operationId: api_auth_009
+      tags:
+      - auth
+      summary: ارسال مجدد کد تأیید
+      x-id: API-AUTH-009
+      security: []
+      responses:
+        '202':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailOnlyRequest'
   /profile:
     get:
       operationId: api_pro_001

@@ -28,6 +28,16 @@ function ok<T>(label: string, r: { ok: boolean; status: number; data?: T; error?
 const email = `e2e${Date.now()}@example.com`;
 const pw = "Abcdefghij1";
 ok("register", await api.call("API-AUTH-001", { body: { email, password: pw, date_of_birth: "1990-01-01", language: "fa" } }));
+async function verifyViaCapture(addr: string) {       // dev capture adapter only: the message was captured, NOT e-mailed
+  const r = await fetch(`${base}/dev/captured-mail?kind=verification&to=${encodeURIComponent(addr)}`);
+  if (!r.ok) throw new Error(`no captured verification message (HTTP ${r.status}); start the server with MAIL_PROVIDER=capture in debug`);
+  const { secret } = (await r.json()) as { secret: string };
+  ok("verify", await api.call("API-AUTH-002", { body: { identifier: addr, code: secret } }));
+}
+const unverified = await api.call("API-AUTH-003", { body: { identifier: email, password: pw } });
+if (unverified.ok) throw new Error("login succeeded before e-mail verification");
+console.log("ok  login refused before verification");
+await verifyViaCapture(email);
 const login = await api.call("API-AUTH-003", { body: { identifier: email, password: pw } });
 if (!login.ok) { console.log("login failed (account may need email verification):", login.status, login.error.code); process.exit(2); }
 console.log("ok  login ->", login.data.onboarding_status);
@@ -63,6 +73,7 @@ if (mealView(mp2).kind === "plan") throw new Error("meal plan shown for a referr
 // negative path: a positive red flag must never yield a plan
 const email2 = `e2e2${Date.now()}@example.com`;
 await api.call("API-AUTH-001", { body: { email: email2, password: pw, date_of_birth: "1990-01-01" } });
+await verifyViaCapture(email2);
 ok("login #2", await api.call("API-AUTH-003", { body: { identifier: email2, password: pw } }));
 for (const [s, a] of steps) ok(`#2 step ${s}`, await api.call("API-ONB-002", { path: { step: s }, body: { answers: a } }));
 const d2 = (await api.call("API-PRIV-001")) as { ok: true; data: Array<{ id?: string; type?: string }> };

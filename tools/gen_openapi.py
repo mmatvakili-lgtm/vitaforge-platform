@@ -10,6 +10,7 @@ EP=[
 ("API-AUTH-006","post","/auth/password-reset/confirm","auth","تأیید بازیابی رمز",PUB,"","PasswordResetConfirm","Message","200",["400","410"]),
 ("API-AUTH-007","get","/auth/sessions","auth","نشست‌های فعال",U,"",None,"SessionList","200",["401"]),
 ("API-AUTH-008","delete","/auth/sessions/{session_id}","auth","ابطال نشست",U,"",None,"Message","200",["401","404"]),
+("API-AUTH-009","post","/auth/verify/resend","auth","ارسال مجدد کد تأیید",PUB,"","EmailOnlyRequest","Message","202",["400","429"]),
 ("API-PRO-001","get","/profile","profile","دریافت پروفایل",U,"",None,"Profile","200",["401"]),
 ("API-PRO-002","patch","/profile","profile","به‌روزرسانی پروفایل/تنظیمات i18n",U,"","ProfileUpdate","Profile","200",["400","401","422"]),
 ("API-PRIV-001","get","/consents/documents","privacy","متن‌های رضایت فعال",U,"",None,"ConsentDocumentList","200",["401"]),

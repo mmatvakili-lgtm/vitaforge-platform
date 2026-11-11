@@ -40,6 +40,11 @@ def load_config(env: Mapping[str, str]) -> dict:
            "offline_workout_log": _bool(env.get("FEATURE_OFFLINE_WORKOUT_LOG")),
            "clinical_content_published": _bool(env.get("CLINICAL_CONTENT_PUBLISHED")),
            "dev_content": _bool(env.get("VITAFORGE_DEV_CONTENT"))}
+    from mailer.config import MailConfigError, load_mail_config
+    try:
+        cfg["mail"] = load_mail_config(env, cfg["debug"])
+    except MailConfigError as e:
+        raise ConfigError(str(e))
     if cfg["dev_content"] and not cfg["debug"]:
         raise ConfigError("VITAFORGE_DEV_CONTENT (experimental sample content) is only allowed with DJANGO_DEBUG=true")
     if cfg["ai_external_health_data"]:

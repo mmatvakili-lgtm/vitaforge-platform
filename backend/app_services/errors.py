@@ -16,6 +16,7 @@ class Forbidden(AppError): code, http = "forbidden", 403
 class PaymentRequired(AppError): code, http = "quota_or_plan_required", 402
 class PreconditionRequired(AppError): code, http = "precondition_required", 428
 class BadRequest(AppError): code, http = "bad_request", 400
+class TooManyRequests(AppError): code, http = "rate_limited", 429
 class Gone(AppError): code, http = "gone", 410
 class ConsentRequired(AppError): code, http = "consent_required", 403
 class FeatureUnavailable(AppError): code, http = "feature_unavailable", 501
