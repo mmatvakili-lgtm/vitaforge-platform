@@ -17,7 +17,7 @@ export default function Home() {
       <p>{t("app.tagline")}</p>
       {state === "loading" && <Loading />}
       {state === "out" && (<div className="row"><ButtonLink href={`/${locale}/register`}>{t("nav.register")}</ButtonLink><ButtonLink href={`/${locale}/login`} secondary>{t("nav.login")}</ButtonLink></div>)}
-      {state === "in" && (<div className="row"><ButtonLink href={`/${locale}/onboarding`}>{t("home.cta")}</ButtonLink><ButtonLink href={`/${locale}/plan`} secondary>{t("home.cta2")}</ButtonLink></div>)}
+      {state === "in" && (<div className="row"><ButtonLink href={`/${locale}/onboarding`}>{t("home.cta")}</ButtonLink><ButtonLink href={`/${locale}/plan`} secondary>{t("home.cta2")}</ButtonLink><ButtonLink href={`/${locale}/dashboard`} secondary>{t("nav.dashboard")}</ButtonLink></div>)}
       <p className="notice">{t("notice.experimental")}</p>
     </Card>
   );

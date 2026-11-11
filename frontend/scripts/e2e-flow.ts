@@ -3,6 +3,8 @@
 import { createClient } from "../src/lib/api/client.ts";
 import { decidePlanView } from "../src/lib/plan-view.ts";
 import { buildProfileRequest, mealView } from "../src/lib/nutrition.ts";
+import { buildSetLog, finishRequest, newUuid, plannedSets } from "../src/lib/workout-log.ts";
+import { libraryQuery, NO_FILTERS } from "../src/lib/exercises.ts";
 import { SCREENING_QUESTIONS, SCREENING_VERSION } from "../src/lib/onboarding.ts";
 
 const base = process.argv[2] ?? "http://127.0.0.1:8000/api/v1";
@@ -55,6 +57,34 @@ const view = decidePlanView(gen.decision, gen.plan);
 console.log("    plan view:", view.kind, gen.decision.status, "content_status:", (gen.plan as { rationale?: { content_status?: string } })?.rationale?.content_status);
 const cur = await api.call("API-WO-002");
 console.log("    current plan:", cur.ok ? "present" : `HTTP ${cur.status}`);
+
+// exercise library + workout logging through the real client
+const lib = ok("exercise library", await api.call("API-EX-001", { query: libraryQuery(NO_FILTERS, 1) }));
+console.log("    library:", lib.count, "exercises");
+if ((lib.results ?? []).length) {
+  const f = ok("library filter", await api.call("API-EX-001", { query: libraryQuery({ q: "", muscle: lib.results![0].muscles![0], equipment: "", difficulty: "" }, 1) }));
+  if (!(f.results ?? []).some((r) => r.id === lib.results![0].id)) throw new Error("muscle filter lost the exercise it was built from");
+}
+if (cur.ok && cur.data.days?.length) {
+  const day = cur.data.days[0];
+  const sets = plannedSets(day);
+  const sess = ok("start session", await api.call("API-LOG-001", { body: { day_id: day.day_id! } }));
+  const b = buildSetLog(sets[0], { reps: String(sets[0].repsMin ?? 8), load: "20", rpe: "7" }, newUuid());
+  if (!b.ok) throw new Error("set log did not validate");
+  const l1 = ok("log set", await api.call("API-LOG-002", { path: { session_id: sess.id! }, body: b.body }));
+  const l2 = ok("log set retry (idempotent)", await api.call("API-LOG-002", { path: { session_id: sess.id! }, body: b.body }));
+  if (l1.id !== l2.id) throw new Error("retry created a second log entry");
+  const mid = ok("history in progress", await api.call("API-LOG-004")).find((x) => x.id === sess.id);
+  if (mid?.status !== "in_progress" || mid.logged_sets?.length !== 1) throw new Error("session did not show the logged set");
+  const fin = ok("finish (pain)", await api.call("API-LOG-003", { path: { session_id: sess.id! }, body: finishRequest({ difficulty: "6", stoppedForPain: true }) }));
+  console.log("    finished: sets", fin.sets_done, "volume", fin.volume_kg);
+  const after = ok("history after", await api.call("API-LOG-004")).find((x) => x.id === sess.id);
+  if (after?.status !== "aborted" || after.aborted_reason !== "pain") throw new Error("pain stop not recorded");
+  const dup = await api.call("API-LOG-002", { path: { session_id: sess.id! }, body: { ...b.body, client_uuid: newUuid() } });
+  if (dup.ok) throw new Error("a set was accepted after the session finished");
+  const dash = ok("dashboard", await api.call("API-DASH-001"));
+  console.log("    dashboard plan:", JSON.stringify(dash.current_plan));
+}
 
 // nutrition: estimate, then a meal plan that must be NEEDS_CONTENT because no verified food/recipe content exists
 const sc = { eating_disorder_risk: false, medical_diet_needed: false, pregnant_or_lactating: false };

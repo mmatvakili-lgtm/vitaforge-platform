@@ -180,7 +180,8 @@ class App:
     def _summary(self, code):
         ce = self.store.catalog[code]
         r = self.records.get(code)
-        out = {"id": pub("ex", code), "code": code, "has_media": False,
+        out = {"id": pub("ex", code), "code": code, "has_media": False, "review_status": r.publication_status if r else "unreviewed",
+               "movement_pattern": ce.candidate.movement_pattern,
                "muscles": list(r.primary_muscles + r.secondary_muscles) if r else [ce.primary_muscle],
                "equipment": list(r.equipment) if r else [], "difficulty": r.difficulty if r else "unspecified"}
         if r:
@@ -565,8 +566,20 @@ class App:
         return self._plan(c["uid"], v)
 
     def _session(self, w):
-        return {"id": pub("wks", w["id"]), "status": ("aborted" if w.get("aborted_reason") else "completed") if w["finished"] else "in_progress",
-                "started_at": iso(w["start_ts"]) if w.get("start_ts") else iso(day=w["start"])}
+        done = [l for l in w["logs"] if not l.get("skipped")]
+        out = {"id": pub("wks", w["id"]), "status": ("aborted" if w.get("aborted_reason") else "completed") if w["finished"] else "in_progress",
+               "started_at": iso(w["start_ts"]) if w.get("start_ts") else iso(day=w["start"]), "day_title": w.get("day_name", ""),
+               "sets_done": len(done), "volume_kg": sum(l["reps"] * l["load_kg"] for l in done),
+               "logged_sets": [{"exercise_id": pub("ex", l["code"]), "set_no": l.get("set_no") or 0, "reps": l["reps"], "load_kg": l["load_kg"],
+                                "skipped": bool(l.get("skipped")), "personal_record": bool(l.get("pr"))} for l in w["logs"]]}
+        if w["finished"]:
+            if w.get("start_ts") is not None and w.get("end_ts") is not None:
+                out["duration_min"] = (w["end_ts"] - w["start_ts"]) // 60
+            if w.get("perceived_difficulty") is not None:
+                out["perceived_difficulty"] = w["perceived_difficulty"]
+            if w.get("aborted_reason"):
+                out["aborted_reason"] = w["aborted_reason"]
+        return out
 
     def op_api_log_001(self, c):
         if not self.store.plans.get(c["uid"]):

@@ -24,12 +24,12 @@
 |---|---|---|
 | Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۲۸ سبز + ۱ skip، حالت in-memory و sqlite) |
 | تطابق OpenAPI با مسیرها | `AUTOMATED_TESTED` | Contract Harness هر ۵۹ عملیات را اجرا و پاسخ را با spec می‌سنجد |
-| Frontend (مسیرها: home, login, register, verify, onboarding, plan, exercises/[id], nutrition) | `AUTOMATED_TESTED` | ۲۹ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
+| Frontend (مسیرها: home, dashboard, login, register, verify, forgot, reset, onboarding, plan, exercises, exercises/[id], workout, history, nutrition) | `AUTOMATED_TESTED` | ۲۹ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
 | ثبت‌نام / ورود / خروج | `AUTOMATED_TESTED` | فقط در devserver و تست |
 | تأیید ایمیل | `AUTOMATED_TESTED` | بخش ۴؛ ارسال واقعی SMTP تأیید نشده |
 | بازیابی رمز | `AUTOMATED_TESTED` | outbox پایدار؛ SMTP تأیید نشده |
 | پایگاه داده | `IMPLEMENTED` | بخش ۳ |
-| موتور تمرین | `AUTOMATED_TESTED` | محتوا فقط `experimental_unreviewed` |
+| موتور تمرین + کتابخانه‌ی حرکات (جست‌وجو/فیلتر/صفحه‌بندی) + جایگزینی + ثبت تمرین (ست idempotent، رکورد، توقف به‌خاطر درد) + تاریخچه + داشبورد | `AUTOMATED_TESTED` | e2e روی devserver اجرا شد؛ محتوا فقط `experimental_unreviewed`؛ progression خودکار هنوز نیست |
 | کاتالوگ حرکات | محتوا بسته | ۳۰ حرکت اولیه، ۰ منتشرشده؛ ۸۷۶ رکورد staging همگی `pending_review` و لایسنس نامعتبر |
 | موتور تغذیه | `AUTOMATED_TESTED` | بدون غذای بازبینی‌شده → `NEEDS_CONTENT`؛ واردکننده‌ی FDC اجرا نشده |
 | ارائه‌دهنده‌ی AI | `PLANNED` | فقط `StubProvider` |

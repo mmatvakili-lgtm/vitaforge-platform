@@ -25,7 +25,11 @@
 | 8 | امنیت/کارایی | PLANNED | — |
 | 9 | انتشار | PLANNED | همه‌ی Blockedها |
 
-## milestone بعدی
+## دسته‌ی بعدی (روش جدید: دسته‌های بزرگ)
+
+Batch B: تغذیه — مرور غذاها، دستور پخت، لاگ وعده/آب، لیست خرید، بودجه؛ پروفایل و progression تمرین. (قبل از آن: تأیید Django/SMTP روی ماشین مالک.)
+
+## milestone قبلی
 
 تأیید روی ماشین مالک (Django + SQLite/PostgreSQL، `mail_status --send-test`) سپس Phase 1b: PostgreSQL، backup/restore، export/delete.
 

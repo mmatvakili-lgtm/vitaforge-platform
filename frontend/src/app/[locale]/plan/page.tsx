@@ -9,8 +9,9 @@ import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Loading } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 
-function PlanBody({ plan, modified }: { plan: WorkoutPlan; modified: boolean }) {
+function PlanBody({ plan, modified, onSubstitute }: { plan: WorkoutPlan; modified: boolean; onSubstitute: (workoutExerciseId: string, reason: string) => Promise<void> }) {
   const { locale, t, n } = useT();
+  const [open, setOpen] = useState<string | null>(null);
   return (
     <div>
       <p className="muted">
@@ -24,6 +25,7 @@ function PlanBody({ plan, modified }: { plan: WorkoutPlan; modified: boolean }) 
       {(plan.days ?? []).map((d, i) => (
         <section key={d.day_id ?? i} className="day">
           <h2>{d.title ?? t("plan.day", { n: (d.day_index ?? i) + 1 })}{d.est_minutes !== undefined && <span className="muted"> · {t("plan.minutes", { n: d.est_minutes })}</span>}</h2>
+          {d.day_id && <ButtonLink href={`/${locale}/workout?day=${d.day_id}`}>{t("plan.start")}</ButtonLink>}
           <ol className="exercises">
             {(d.exercises ?? []).map((e, k) => (
               <li key={e.workout_exercise_id ?? k}>
@@ -39,6 +41,14 @@ function PlanBody({ plan, modified }: { plan: WorkoutPlan; modified: boolean }) 
                     </li>
                   ))}
                 </ul>
+                {e.workout_exercise_id && e.role !== "warmup" && e.role !== "cooldown" && (
+                  open === e.workout_exercise_id ? (
+                    <div className="row" role="group" aria-label={t("plan.substituteWhy")}>
+                      {(["pain", "equipment", "preference", "other"] as const).map((r) => <Button key={r} type="button" onClick={async () => { setOpen(null); await onSubstitute(e.workout_exercise_id!, r); }}>{t(`sub.${r}`)}</Button>)}
+                      <Button type="button" onClick={() => setOpen(null)}>{t("sub.cancel")}</Button>
+                    </div>
+                  ) : <Button type="button" onClick={() => setOpen(e.workout_exercise_id!)}>{t("plan.substitute")}</Button>
+                )}
               </li>
             ))}
           </ol>
@@ -56,6 +66,8 @@ export default function PlanPage() {
   const [view, setView] = useState<PlanView | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
   const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState(false);
+  const [noAlt, setNoAlt] = useState(false);
 
   const load = useCallback(async () => {
     const r = await api.call("API-WO-002");
@@ -74,13 +86,24 @@ export default function PlanPage() {
     setView(decidePlanView(r.data.decision, r.data.plan));
   }
 
+  async function substitute(workoutExerciseId: string, reason: string) {
+    if (view?.kind !== "plan" || !view.plan.plan_id) return;
+    setBusy(true); setError(null); setNotice(false); setNoAlt(false);
+    const r = await api.call("API-WO-004", { path: { plan_id: view.plan.plan_id }, body: { workout_exercise_id: workoutExerciseId, reason: reason as "pain" | "equipment" | "preference" | "other" } });
+    setBusy(false);
+    if (!r.ok) { if (r.status === 401) return router.replace(`/${locale}/login`); if (r.status === 409) return setNoAlt(true); return setError(r.error); }
+    setView({ kind: "plan", plan: r.data, modified: view.modified }); setNotice(true);
+  }
+
   return (
     <Card title={t("plan.title")}>
       <ApiErrorView error={error} />
       {error?.code === "precondition_required" && <ButtonLink href={`/${locale}/onboarding`} secondary>{t("nav.onboarding")}</ButtonLink>}
       {!view && <Loading />}
       {view?.kind === "empty" && <p>{t("plan.empty")}</p>}
-      {view?.kind === "plan" && <PlanBody plan={view.plan} modified={view.modified} />}
+      {view?.kind === "plan" && <PlanBody plan={view.plan} modified={view.modified} onSubstitute={substitute} />}
+      {noAlt && <Alert kind="warning">{t("error.no_valid_alternative")}</Alert>}
+      {notice && <Alert kind="success">{t("plan.substituted")}</Alert>}
       {view && view.kind !== "plan" && view.kind !== "empty" && <DecisionPanel decision={view.decision} />}
       {view && <Button type="button" busy={busy} onClick={generate}>{view.kind === "plan" ? t("plan.regenerate") : t("plan.generate")}</Button>}
     </Card>

@@ -45,7 +45,7 @@ export default function ExercisePage() {
           <p className="muted">{t("ex.review")}: <bdi dir="ltr">{ex.review_status}</bdi></p>
         </div>
       )}
-      <p><Link href={`/${locale}/plan`}>{t("ex.back")}</Link></p>
+      <p><Link href={`/${locale}/exercises`}>{t("lib.title")}</Link> · <Link href={`/${locale}/plan`}>{t("ex.back")}</Link></p>
     </Card>
   );
 }

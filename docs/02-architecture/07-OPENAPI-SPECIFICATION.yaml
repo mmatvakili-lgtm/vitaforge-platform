@@ -657,6 +657,10 @@ components:
             type: string
         has_media:
           type: boolean
+        review_status:
+          type: string
+        movement_pattern:
+          type: string
       additionalProperties: false
     ExerciseDetail:
       type: object
@@ -884,6 +888,37 @@ components:
         started_at:
           type: string
           format: date-time
+        day_title:
+          type: string
+        sets_done:
+          type: integer
+        volume_kg:
+          type: number
+        duration_min:
+          type: integer
+        perceived_difficulty:
+          type: integer
+        aborted_reason:
+          type: string
+        logged_sets:
+          type: array
+          items:
+            type: object
+            properties:
+              exercise_id:
+                type: string
+                format: uuid
+              set_no:
+                type: integer
+              reps:
+                type: integer
+              load_kg:
+                type: number
+              skipped:
+                type: boolean
+              personal_record:
+                type: boolean
+            additionalProperties: false
       additionalProperties: false
     SetLogRequest:
       type: object

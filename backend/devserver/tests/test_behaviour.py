@@ -172,3 +172,30 @@ def test_static_index_served_with_security_headers():
     env = {"REQUEST_METHOD": "GET", "PATH_INFO": "/", "CONTENT_LENGTH": "0", "wsgi.input": io.BytesIO(b"")}
     body = b"".join(h.app(env, lambda st, hd: out.update(st=st, h=dict(hd))))
     assert out["st"].startswith("200") and b'dir="rtl"' in body and "Content-Security-Policy" in out["h"]
+
+
+def test_session_history_carries_logged_sets_and_outcome_for_resuming_and_the_history_page():
+    h = Harness(); t = happy_path(h)["user"]
+    day = h.call("GET", "/workouts/current", token=t).body["days"][0]
+    ss = h.call("POST", "/workouts/sessions", {"day_id": day["day_id"]}, token=t).body
+    e = day["exercises"][1]["exercise_id"]
+    h.call("POST", f"/workouts/sessions/{ss['id']}/logs", {"client_uuid": "abcdefab-abcd-4abc-8abc-abcdefabcd01", "exercise_id": e, "set_no": 1, "reps": 8, "load_kg": 20}, token=t)
+    row = next(s for s in h.call("GET", "/workouts/sessions", token=t).body if s["id"] == ss["id"])
+    assert row["status"] == "in_progress" and row["sets_done"] == 1 and row["volume_kg"] == 160 and row["day_title"]
+    assert row["logged_sets"] == [{"exercise_id": e, "set_no": 1, "reps": 8, "load_kg": 20.0, "skipped": False, "personal_record": False}]
+    h.call("POST", f"/workouts/sessions/{ss['id']}/finish", {"aborted_reason": "pain", "perceived_difficulty": 7}, token=t)
+    row = next(s for s in h.call("GET", "/workouts/sessions", token=t).body if s["id"] == ss["id"])
+    assert row["status"] == "aborted" and row["aborted_reason"] == "pain" and row["perceived_difficulty"] == 7
+    assert h.call("POST", f"/workouts/sessions/{ss['id']}/logs", {"client_uuid": "abcdefab-abcd-4abc-8abc-abcdefabcd02", "exercise_id": e, "set_no": 2, "reps": 8}, token=t).status == 409
+    assert h.problems == []
+
+
+def test_exercise_list_labels_review_status_and_filters_by_pattern_and_equipment():
+    h = Harness(); t = happy_path(h)["user"]
+    rows = h.call("GET", "/exercises?page_size=100", token=t).body["results"]
+    assert rows and all(r["review_status"] for r in rows)
+    assert all(r["review_status"] != "published" for r in rows)                  # dev content is never presented as reviewed
+    pat = rows[0]["movement_pattern"]
+    only = h.call("GET", f"/exercises?pattern={pat}&page_size=100", token=t).body["results"]
+    assert only and all(r["movement_pattern"] == pat for r in only)
+    assert h.problems == []

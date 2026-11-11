@@ -22,7 +22,10 @@ export function Header() {
       <Link href={`/${locale}`} className="brand">{t("app.name")}</Link>
       <nav aria-label="main">
         <Link href={`/${locale}/onboarding`}>{t("nav.onboarding")}</Link>
+        <Link href={`/${locale}/dashboard`}>{t("nav.dashboard")}</Link>
         <Link href={`/${locale}/plan`}>{t("nav.plan")}</Link>
+        <Link href={`/${locale}/exercises`}>{t("nav.exercises")}</Link>
+        <Link href={`/${locale}/history`}>{t("nav.history")}</Link>
         <Link href={`/${locale}/nutrition`}>{t("nav.nutrition")}</Link>
         <Link href={`/${locale}/login`}>{t("nav.login")}</Link>
         <button type="button" className="linklike" onClick={logout}>{t("nav.logout")}</button>
