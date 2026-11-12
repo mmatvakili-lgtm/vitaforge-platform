@@ -15,6 +15,7 @@ export type ConsentDocumentList = Array<{ "id"?: string; "type"?: "terms" | "hea
 export type ConsentRequest = { "document_id": string; "granted": boolean };
 export type Consent = { "id"?: string; "type"?: string; "granted"?: boolean; "granted_at"?: string };
 export type DeleteRequest = { "password": string; "confirm": true };
+export type PrivacyExport = Record<string, unknown>;
 export type DataRequest = { "id"?: string; "type"?: "export" | "delete"; "status"?: "requested" | "processing" | "completed" | "failed" };
 export type Onboarding = { "status"?: string; "current_step"?: number; "answers"?: Record<string, unknown>; "summary_ready"?: boolean; "safety_screening_complete"?: boolean };
 export type OnboardingStepRequest = { "answers": Record<string, unknown> };
@@ -112,6 +113,7 @@ export interface OpTypes {
   "API-PRIV-003": { body: undefined; res: DataRequest; path: Record<string, never>; query: Record<string, never> };
   "API-PRIV-004": { body: DeleteRequest; res: DataRequest; path: Record<string, never>; query: Record<string, never> };
   "API-PRIV-005": { body: undefined; res: DataRequest; path: { request_id: string }; query: Record<string, never> };
+  "API-PRIV-006": { body: undefined; res: PrivacyExport; path: { request_id: string }; query: Record<string, never> };
   "API-ONB-001": { body: undefined; res: Onboarding; path: Record<string, never>; query: Record<string, never> };
   "API-ONB-002": { body: OnboardingStepRequest; res: Onboarding; path: { step: string }; query: Record<string, never> };
   "API-ONB-003": { body: undefined; res: Onboarding; path: Record<string, never>; query: Record<string, never> };
@@ -337,6 +339,17 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
     "errors": [
       401,
       404
+    ]
+  },
+  "API-PRIV-006": {
+    "method": "GET",
+    "path": "/privacy/export/{request_id}",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      404,
+      410
     ]
   },
   "API-ONB-001": {

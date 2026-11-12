@@ -11,8 +11,8 @@
 
 | مورد | وضعیت | شواهد |
 |---|---|---|
-| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۵۴۳ تست سبز (in-memory و sqlite)؛ روی ماشین مالک در حالت Django ← ۵۳۷ سبز و ۲ skip |
-| تطابق API توسعه با OpenAPI (هر ۷۵ endpoint) | `Passed` | تست `test_every_openapi_endpoint_is_implemented`؛ فقط وجود مسیر، نه تطابق کامل schema |
+| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۵۴۵ تست سبز (in-memory و sqlite)؛ روی ماشین مالک در حالت Django ← ۵۳۷ سبز و ۲ skip |
+| تطابق API توسعه با OpenAPI (هر ۷۶ endpoint) | `Passed` | تست `test_every_openapi_endpoint_is_implemented`؛ فقط وجود مسیر، نه تطابق کامل schema |
 | API توسعه (WSGI) + UI آزمایشی | `Passed` (فقط توسعه) | تست HTTP + اجرای واقعی `python3 -m devserver` |
 | داده حرکات بازبینی‌شده و دارای منبع علمی | `Blocked` | `OPEN-003/007`؛ فقط ۲۵ حرکت `experimental` |
 | آداپتور Django + مهاجرت‌ها | `Passed` (CI/مالک؛ در sandbox اجرا نشده) | job `django-store` روی PostgreSQL؛ تأیید ویندوز/SQLite معلق |

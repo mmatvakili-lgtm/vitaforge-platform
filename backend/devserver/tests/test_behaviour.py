@@ -97,7 +97,7 @@ def test_privacy_export_excludes_secrets_and_erasure_needs_password_and_removes_
     h = Harness(); t = h.login("e@ex.com"); h.onboard(t)
     h.call("POST", "/body/measurements", {"metric": "weight", "value": 70, "unit": "kg", "source": "measured"}, token=t)
     ex = h.call("POST", "/privacy/export", token=t)
-    assert ex.status == 202 and ex.body["status"] == "requested"                                    # no delivery endpoint in DOC-07 (OPEN-009)
+    assert ex.status == 202 and ex.body["status"] == "completed"
     stored = next(iter(h.store.privacy_requests.values()))["data"]
     flat = str(stored)
     assert "pw" not in flat and "scrypt" not in flat and stored["metrics"] and "e@ex.com" in flat

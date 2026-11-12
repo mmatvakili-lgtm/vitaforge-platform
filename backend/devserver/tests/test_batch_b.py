@@ -75,3 +75,28 @@ def test_erase_removes_nutrition_data(env):
     assert r.status in (200, 202), r.body
     for k in ("meals", "water", "user_prices", "shopping_state", "nutrition_profiles"):
         assert uid not in h.store.__dict__.get(k, {}), k
+
+
+def test_export_download_is_owner_only_includes_nutrition_expires_and_is_erased(env):
+    h, t = env
+    profile(h, t)
+    log(h, t, food_id="plain", grams=100)
+    rid = h.call("POST", "/privacy/export", token=t).body["id"]
+    d = h.call("GET", f"/privacy/export/{rid}", token=t)
+    assert d.status == 200 and d.body["nutrition"]["meals"] and "pw" not in str(d.body)
+    t2 = h.login("other@ex.com"); h.onboard(t2)
+    assert h.call("GET", f"/privacy/export/{rid}", token=t2).status == 404          # never another user's export
+    assert h.call("GET", f"/privacy/export/{rid}", token=t).status == 200
+    for r in h.store.privacy_requests.values():
+        r["expires_at"] = 0
+    assert h.call("GET", f"/privacy/export/{rid}", token=t).status == 410
+    assert all("data" not in r for r in h.store.privacy_requests.values())
+
+
+def test_erase_drops_stored_export_copies(env):
+    h, t = env
+    profile(h, t)
+    h.call("POST", "/privacy/export", token=t)
+    assert any("data" in r for r in h.store.privacy_requests.values())
+    assert h.call("POST", "/privacy/delete", {"password": PASSWORD, "confirm": True}, token=t).status in (200, 202)
+    assert not any("data" in r for r in h.store.privacy_requests.values() if r["kind"] == "export")

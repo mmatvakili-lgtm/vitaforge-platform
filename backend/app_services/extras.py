@@ -12,6 +12,17 @@ GUIDANCE_PAIN = {
 }
 
 
+def _jsonable(v):
+    """Plain JSON types only (dataclasses/tuples/sets become dicts/lists) so the export can be stored and downloaded."""
+    if dataclasses.is_dataclass(v) and not isinstance(v, type):
+        return _jsonable(dataclasses.asdict(v))
+    if isinstance(v, dict):
+        return {str(k): _jsonable(x) for k, x in v.items()}
+    if isinstance(v, (list, tuple, set, frozenset)):
+        return [_jsonable(x) for x in (sorted(v, key=str) if isinstance(v, (set, frozenset)) else v)]
+    return v if v is None or isinstance(v, (str, int, float, bool)) else str(v)
+
+
 class ExtrasService:
     def __init__(self, store, health, workouts, today):
         self.s, self.h, self.w, self.today = store, health, workouts, today
@@ -88,6 +99,9 @@ class ExtrasService:
 
     # ---- privacy (FR-PRIV): export everything, erase on request
     def export(self, uid):
+        return _jsonable(self._export_raw(uid))
+
+    def _export_raw(self, uid):
         u = self.s.users.get(uid)
         if not u:
             raise NotFound()
@@ -95,7 +109,8 @@ class ExtrasService:
                 "health": self.health_profile(uid), "consents": [c for c in self.s.consents if c["user"] == uid],
                 "measurements": self.s.measurements.get(uid, []), "metrics": self.s.metrics.get(uid, []), "pain_logs": self.s.pain_logs.get(uid, []),
                 "plans": [{"version": v["version"], "cause": v["cause"], "codes": list(v["result"].codes)} for v in self.s.plans.get(uid, [])],
-                "workout_sessions": [w for w in self.s.workout_sessions.values() if w["user"] == uid]}
+                "workout_sessions": [w for w in self.s.workout_sessions.values() if w["user"] == uid],
+                "nutrition": {k: self.s.__dict__.get(k, {}).get(uid) for k in ("nutrition_profiles", "meals", "water", "user_prices", "shopping_state")}}
 
     def erase(self, uid):
         u = self.s.users.pop(uid, None)
@@ -110,6 +125,9 @@ class ExtrasService:
             self.s.outbox.pop(k, None)
         for k in ("profiles", "health", "plans", "measurements", "pain_logs", "metrics", "symptoms", "cond_meta", "nutrition_profiles", "meals", "water", "user_prices", "shopping_state"):
             self.s.__dict__.setdefault(k, {}).pop(uid, None)
+        for r in self.s.__dict__.get("privacy_requests", {}).values():                 # stored export copies hold health data: erase them too
+            if r.get("user") == uid:
+                r.pop("data", None)
         self.s.sessions = {h: x for h, x in self.s.sessions.items() if x["user"] != uid}
         self.s.workout_sessions = {k: v for k, v in self.s.workout_sessions.items() if v["user"] != uid}
         self.s.consents = [c for c in self.s.consents if c["user"] != uid]

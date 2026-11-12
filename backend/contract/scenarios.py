@@ -116,6 +116,7 @@ def happy_path(h: Harness) -> Dict[str, str]:
     t4 = h.login("priv@ex.com")
     c("POST", "/privacy/export", token=t4)
     rid = c("POST", "/privacy/export", token=t4).body["id"]
+    c("GET", f"/privacy/export/{rid}", token=t4)
     c("GET", f"/privacy/requests/{rid}", token=t4)
     c("POST", "/privacy/delete", {"password": PASSWORD, "confirm": True}, token=t4)
     return {"user": t, "admin": adm, "reviewer": rev, "content_admin": cad}

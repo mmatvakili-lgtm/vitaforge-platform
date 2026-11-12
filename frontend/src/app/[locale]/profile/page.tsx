@@ -57,6 +57,14 @@ export default function ProfilePage() {
     setExp(r.data);
     if (r.data.id) { const s = await api.call("API-PRIV-005", { path: { request_id: r.data.id } }); if (s.ok) setExp(s.data); }
   }
+  async function download() {
+    if (!exp?.id) return;
+    const r = await api.call("API-PRIV-006", { path: { request_id: exp.id } });
+    if (!r.ok) return r.status === 410 ? setExp({ ...exp, status: "failed" }) : fail(r.error, r.status);
+    const url = URL.createObjectURL(new Blob([JSON.stringify(r.data, null, 2)], { type: "application/json" }));
+    const a = document.createElement("a"); a.href = url; a.download = "vitaforge-export.json"; a.click();
+    URL.revokeObjectURL(url);
+  }
   async function del(e: FormEvent) {
     e.preventDefault();
     if (!sure || !pw) return;
@@ -101,6 +109,8 @@ export default function ProfilePage() {
       <Card title={t("profile.data")}>
         <Button type="button" busy={busy} onClick={requestExport}>{t("profile.export")}</Button>
         {exp && <Alert kind="info">{t("profile.export.status", { status: t(`profile.status.${exp.status ?? "requested"}`) })}</Alert>}
+        {exp?.status === "completed" && <><p className="hint">{t("profile.export.hint")}</p><Button type="button" onClick={download}>{t("profile.export.download")}</Button></>}
+        {exp?.status === "failed" && <Alert kind="warning">{t("profile.export.expired")}</Alert>}
       </Card>
 
       <Card title={t("profile.delete.title")}>

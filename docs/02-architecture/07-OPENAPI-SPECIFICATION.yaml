@@ -262,6 +262,10 @@ components:
       required:
       - password
       - confirm
+    PrivacyExport:
+      type: object
+      additionalProperties: true
+      description: خروجی کامل داده‌های کاربر؛ بدون رمز و توکن؛ فقط برای مالک و ۲۴ ساعت.
     DataRequest:
       type: object
       properties:
@@ -2772,6 +2776,47 @@ paths:
                 $ref: '#/components/schemas/Error'
         '404':
           description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /privacy/export/{request_id}:
+    get:
+      operationId: api_priv_006
+      tags:
+      - privacy
+      summary: دانلود خروجی داده (۲۴ ساعت)
+      x-id: API-PRIV-006
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivacyExport'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '410':
+          description: منقضی
           content:
             application/json:
               schema:

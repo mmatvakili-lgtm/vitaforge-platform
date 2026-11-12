@@ -79,6 +79,9 @@ def iso(seconds: Optional[int] = None, day: Optional[int] = None) -> str:
     return date.fromordinal(day).strftime("%Y-%m-%dT00:00:00Z")
 
 
+EXPORT_TTL_S = 24 * 3600
+
+
 class Reply:
     def __init__(self, body, status: Optional[int] = None, headers: Optional[List[Tuple[str, str]]] = None):
         self.body, self.status, self.headers = body, status, headers or []
@@ -361,9 +364,18 @@ class App:
         return rid
 
     def op_api_priv_003(self, c):
-        # DOC-07 has no download endpoint for the export artifact (gap recorded as OPEN-009): the request is stored, status stays 'requested'
-        rid = self._privacy_req(c["uid"], "export", data=self.x.export(c["uid"]))
-        return {"id": pub("prq", rid), "type": "export", "status": "requested"}
+        # generated synchronously; downloadable for EXPORT_TTL_S via API-PRIV-006, then 410 and the stored copy is dropped (OPEN-009)
+        rid = self._privacy_req(c["uid"], "export", data=self.x.export(c["uid"]), expires_at=self.sec() + EXPORT_TTL_S)
+        self.store.privacy_requests[rid]["status"] = "completed"
+        return {"id": pub("prq", rid), "type": "export", "status": "completed"}
+
+    def op_api_priv_006(self, c):
+        rid = resolve("prq", c["request_id"], [k for k, v in self.store.privacy_requests.items() if v["user"] == c["uid"] and v["kind"] == "export"])
+        r = self.store.privacy_requests[rid]
+        if "data" not in r or self.sec() > r.get("expires_at", 0):
+            r.pop("data", None); r["status"] = "failed"
+            raise Gone("export_expired")
+        return r["data"]
 
     def op_api_priv_004(self, c):
         from app_services.identity import verify_password
