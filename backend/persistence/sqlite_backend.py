@@ -47,3 +47,22 @@ class SqliteBackend:
     def next_seq(self, name: str) -> int:
         self.db.execute("INSERT INTO seq (name,n) VALUES (?,1) ON CONFLICT(name) DO UPDATE SET n=n+1", (name,))
         return self.db.execute("SELECT n FROM seq WHERE name=?", (name,)).fetchone()[0]
+
+    # --- backup / restore support (see persistence/backup.py)
+    def dump_all(self):
+        return self.db.execute("SELECT coll, k, owner, data FROM kv ORDER BY rowid").fetchall()
+
+    def dump_seqs(self):
+        return dict(self.db.execute("SELECT name, n FROM seq").fetchall())
+
+    def is_empty(self) -> bool:
+        return self.db.execute("SELECT 1 FROM kv LIMIT 1").fetchone() is None
+
+    def wipe(self):
+        self.db.execute("DELETE FROM kv"); self.db.execute("DELETE FROM seq")
+
+    def restore_row(self, coll, key, owner, data):
+        self.save(coll, key, data, owner)
+
+    def restore_seq(self, name, n):
+        self.db.execute("INSERT INTO seq (name,n) VALUES (?,?) ON CONFLICT(name) DO UPDATE SET n=excluded.n", (name, n))

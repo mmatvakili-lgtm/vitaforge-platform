@@ -22,7 +22,7 @@
 
 | قابلیت | وضعیت | شواهد / محدودیت |
 |---|---|---|
-| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۴۵ سبز + ۱ skip، حالت in-memory و sqlite) |
+| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۴۹ سبز + ۱ skip، حالت in-memory و sqlite) |
 | تطابق OpenAPI با مسیرها | `AUTOMATED_TESTED` | Contract Harness هر ۷۶ عملیات را اجرا و پاسخ را با spec می‌سنجد |
 | Frontend (مسیرها: home, dashboard, login, register, verify, forgot, reset, onboarding, plan, exercises, exercises/[id], workout, history, nutrition, nutrition/log, nutrition/shopping, foods, profile) | `AUTOMATED_TESTED` | ۴۷ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
 | PWA (manifest، آیکون SVG، service worker فقط برای دارایی‌های استاتیک؛ `/api/` و غیر-GET هرگز کش نمی‌شود) | `AUTOMATED_TESTED` | ۲ تست؛ نصب‌پذیری روی مرورگر واقعی بررسی نشده؛ آیکون PNG برای برخی پلتفرم‌ها `PLANNED` |
@@ -36,7 +36,7 @@
 | پروفایل / رضایت‌ها / export / حذف حساب (UI) | `AUTOMATED_TESTED` | صفحه‌ی profile به API‌های موجود وصل است؛ export واقعی (JSON، فقط مالک، ۲۴ ساعت، ۴۱۰ پس از انقضا، شامل تغذیه؛ OPEN-009 بسته) |
 | ارائه‌دهنده‌ی AI | `PLANNED` | فقط `StubProvider` |
 | پرداخت/اشتراک | `PLANNED` | `PaymentProvider` غیرفعال |
-| پشتیبان‌گیری/بازیابی | `PLANNED` | هنوز پیاده‌سازی نشده |
+| پشتیبان‌گیری/بازیابی | `IMPLEMENTED` (روی SQLite تست خودکار؛ Django/PostgreSQL تأیید نشده) | `manage.py backup_db --out f.json` و `restore_db --in f.json [--replace --yes]`؛ فایل JSON با checksum، مجوز 0600، بدون بازنویسی؛ نشست‌ها در پشتیبان نیست؛ رمزنگاری فایل با مالک (فایل حاوی داده‌ی سلامت است)؛ بازیابی فقط روی دیتابیس خالی مگر `--replace --yes`؛ تست‌ها `persistence/tests/test_backup.py` |
 
 ## ۳. پایگاه داده و ماندگاری
 

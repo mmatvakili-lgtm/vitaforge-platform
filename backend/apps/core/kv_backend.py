@@ -63,3 +63,24 @@ class DjangoBackend:
         row.n += 1
         row.save(update_fields=["n"])
         return row.n
+
+    # --- backup / restore support (see persistence/backup.py). NEEDS LOCAL VERIFICATION against a real database.
+    def dump_all(self):
+        return list(self._qs().filter(coll__startswith=self.ns).order_by("id").values_list("coll", "k", "owner", "data")) if self.ns else \
+            list(self._qs().order_by("id").values_list("coll", "k", "owner", "data"))
+
+    def dump_seqs(self):
+        return dict(IdSequence.objects.using(self.using).values_list("name", "n"))
+
+    def is_empty(self) -> bool:
+        return not self._qs().exists()
+
+    def wipe(self):
+        self._qs().all().delete()
+        IdSequence.objects.using(self.using).all().delete()
+
+    def restore_row(self, coll, key, owner, data):
+        self._qs().update_or_create(coll=coll, k=key, defaults={"data": data, "owner": owner})
+
+    def restore_seq(self, name, n):
+        IdSequence.objects.using(self.using).update_or_create(name=name, defaults={"n": n})

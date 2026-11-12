@@ -11,7 +11,7 @@
 
 | مورد | وضعیت | شواهد |
 |---|---|---|
-| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۵۴۵ تست سبز (in-memory و sqlite)؛ روی ماشین مالک در حالت Django ← ۵۳۷ سبز و ۲ skip |
+| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۵۴۹ تست سبز (in-memory و sqlite)؛ روی ماشین مالک در حالت Django ← ۵۳۷ سبز و ۲ skip |
 | تطابق API توسعه با OpenAPI (هر ۷۶ endpoint) | `Passed` | تست `test_every_openapi_endpoint_is_implemented`؛ فقط وجود مسیر، نه تطابق کامل schema |
 | API توسعه (WSGI) + UI آزمایشی | `Passed` (فقط توسعه) | تست HTTP + اجرای واقعی `python3 -m devserver` |
 | داده حرکات بازبینی‌شده و دارای منبع علمی | `Blocked` | `OPEN-003/007`؛ فقط ۲۵ حرکت `experimental` |
@@ -23,6 +23,7 @@
 | Django + SQLite روی ماشین مالک | `Passed` (اجرای مالک) | `migrate` و pytest در حالت Django |
 | PostgreSQL واقعی | `Not Run` | `DATABASE_URL` به Postgres؛ سپس `migrate` و pytest |
 | `npm audit` | `Open` | ۲ آسیب‌پذیری گزارش شد (۱ high)؛ خروجی بررسی نشده |
+| پشتیبان‌گیری/بازیابی روی Postgres | `Not Run` | `backup_db` سپس `restore_db` روی دیتابیس خالی و مقایسه‌ی تعداد ردیف‌ها؛ رمزنگاری فایل پشتیبان با مالک |
 | Docker/CI | `Not Run` | فایل‌ها نوشته شده |
 | محتوای بالینی (حرکات، قواعد R1xx..R5xx، مسیر B فعال) | `Blocked` | `OPEN-003`، `EXP-001..013` |
 | بررسی حقوقی و ارسال داده سلامت به AI | `Blocked` | `OPEN-002`، `OPEN-004` |
