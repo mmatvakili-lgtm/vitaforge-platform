@@ -540,5 +540,8 @@
  "profile.delete.confirm": "می‌دانم که این کار دائمی است",
  "profile.delete.submit": "حذف حساب من",
  "dash.nutrition": "تغذیه‌ی امروز",
- "dash.meals": "وعده‌های ثبت‌شده: {n}"
+ "dash.meals": "وعده‌های ثبت‌شده: {n}",
+ "hist.trend": "حجم هفتگی",
+ "hist.trend.item": "{sessions} جلسه، {kg} کیلوگرم",
+ "hist.trend.hint": "۸ هفته‌ی اخیر، بر اساس جلسه‌های ثبت‌شده‌ی خودتان. هفته‌ی خالی یعنی چیزی ثبت نشده است."
 }

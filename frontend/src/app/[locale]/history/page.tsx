@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import type { WorkoutSession } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
+import { barPct, weeklyBuckets } from "../../../lib/trends.ts";
 import { ApiErrorView, Card, Loading } from "../../../components/ui.tsx";
 
 export default function HistoryPage() {
@@ -28,6 +29,23 @@ export default function HistoryPage() {
       <ApiErrorView error={error} />
       {!rows && <Loading />}
       {rows && rows.length === 0 && !error && <p>{t("hist.empty")}</p>}
+      {rows && rows.length > 0 && (() => {
+        const wk = weeklyBuckets(rows, new Date()); const max = Math.max(...wk.map((b) => b.volumeKg));
+        const fmt = new Intl.DateTimeFormat(locale === "fa" ? "fa-IR" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+        return (
+          <section aria-label={t("hist.trend")}>
+            <h2>{t("hist.trend")}</h2>
+            <ol className="bars">
+              {wk.map((b) => (
+                <li key={b.weekStart} title={t("hist.trend.item", { sessions: b.sessions, kg: Math.round(b.volumeKg) })}>
+                  <span className="bar" style={{ blockSize: `${barPct(b.volumeKg, max)}%` }} />
+                  <span className="muted bar-label"><time dateTime={b.weekStart}>{fmt.format(new Date(b.weekStart))}</time></span>
+                  <span className="sr-only">{t("hist.trend.item", { sessions: b.sessions, kg: Math.round(b.volumeKg) })}</span>
+                </li>))}
+            </ol>
+            <p className="muted">{t("hist.trend.hint")}</p>
+          </section>);
+      })()}
       <ul className="plain">
         {(rows ?? []).map((s) => (
           <li key={s.id} className="doc">

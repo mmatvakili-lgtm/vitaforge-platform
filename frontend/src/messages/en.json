@@ -540,5 +540,8 @@
  "profile.delete.confirm": "I understand this is permanent",
  "profile.delete.submit": "Delete my account",
  "dash.nutrition": "Nutrition today",
- "dash.meals": "Meals logged: {n}"
+ "dash.meals": "Meals logged: {n}",
+ "hist.trend": "Weekly volume",
+ "hist.trend.item": "{sessions} sessions, {kg} kg",
+ "hist.trend.hint": "Last 8 weeks, from your own logged sessions. Empty weeks mean nothing was logged."
 }
