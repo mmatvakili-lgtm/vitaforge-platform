@@ -56,3 +56,10 @@ progress { inline-size: 100%; block-size: .5rem; }
 .bar { inline-size: 100%; background: var(--accent); border-radius: .25rem .25rem 0 0; min-block-size: 0; }
 .bar-label { font-size: .7rem; white-space: nowrap; }
 .sr-only { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.badge { font-size: .75rem; padding: .1rem .5rem; border: 1px solid var(--line); border-radius: 1rem; white-space: nowrap; }
+.badge-ok { color: var(--ok); border-color: var(--ok); } .badge-warn { color: var(--warn); border-color: var(--warn); }
+.card-lite { padding: .6rem .75rem; margin-block: .5rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--bg); overflow-wrap: anywhere; }
+button[role=tab][aria-selected=false] { background: transparent; color: var(--accent); }
+.card, .container { min-inline-size: 0; } .card input, .card select { max-inline-size: 100%; }
+.row > .field { flex: 1 1 8rem; min-inline-size: 0; }
+@media (max-width: 420px) { .bars { gap: .2rem; } .bar-label { font-size: .6rem; } }
