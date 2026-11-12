@@ -156,15 +156,20 @@ def test_nutrition_explain_progression_routes():
          "screening": {"eating_disorder_risk": False, "medical_diet_needed": False, "pregnant_or_lactating": False}}
     body = h.call("PUT", "/nutrition/profile", n, token=t).body
     assert body["status"] == "OK" and body["goal_adjustment"] == "disabled_pending_expert_review" and "not_medical_advice" in body["labels"]
-    n2 = {**n, "screening": {**n["screening"], "eating_disorder_risk": True}}
-    assert h.call("PUT", "/nutrition/profile", n2, token=t).body["status"] == "REFER"
-    assert h.call("POST", "/nutrition/meals", {"name": "Oats", "kcal": 350, "protein_g": 12}, token=t).status == 200
+    assert h.call("POST", "/nutrition/meals", {"slot": "breakfast", "name": "Oats", "kcal": 350, "protein_g": 12}, token=t).status == 201
     h.call("POST", "/nutrition/water", {"ml": 500}, token=t)
     sm = h.call("GET", "/nutrition/summary", token=t).body
     assert sm["kcal"] == 350 and sm["water_ml"] == 500
+    n2 = {**n, "screening": {**n["screening"], "eating_disorder_risk": True}}
+    assert h.call("PUT", "/nutrition/profile", n2, token=t).body["status"] == "REFER"
+    for m, path, body in (("POST", "/nutrition/meals", {"slot": "lunch", "name": "Rice", "kcal": 300}), ("GET", "/nutrition/meals", None), ("GET", "/nutrition/summary", None)):
+        assert h.call(m, path, body, token=t).status == 409          # no calorie tracking for a REFER (eating-disorder risk) profile
     ex = h.call("GET", "/safety/explain", token=t).body
     assert ex["status"] in ("ALLOW", "ALLOW_WITH_MODIFICATION") and ex["items"] and all("why" in i for i in ex["items"])
-    assert h.call("GET", "/workouts/progression/demo_squat_a", token=t).body["action"] == "insufficient_data"
+    assert h.call("GET", "/workouts/progression", token=t).status == 404          # no plan yet
+    assert h.call("POST", "/workouts/generate", {}, token=t).status == 200
+    prog = h.call("GET", "/workouts/progression", token=t).body["items"]
+    assert prog and all(i["action"] == "insufficient_data" for i in prog)
 
 
 def test_static_index_served_with_security_headers():

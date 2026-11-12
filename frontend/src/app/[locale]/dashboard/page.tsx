@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
-import type { Dashboard, ProgressReport } from "../../../lib/api/generated.ts";
+import type { Dashboard, NutritionDaySummary, ProgressReport } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { ApiErrorView, ButtonLink, Card, Loading } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [d, setD] = useState<Dashboard | null>(null);
   const [week, setWeek] = useState<ProgressReport | null>(null);
+  const [nut, setNut] = useState<NutritionDaySummary | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
   useEffect(() => {
     let live = true;
@@ -21,6 +22,7 @@ export default function DashboardPage() {
       if (!a.ok) { if (a.status === 401) return router.replace(`/${locale}/login`); return setError(a.error); }
       setD(a.data); if (b.ok) setWeek(b.data);
     });
+    api.call("API-NUT-008").then((r) => { if (live && r.ok) setNut(r.data); });   // absent (no consent/profile/OK result) => the block is simply not shown
     return () => { live = false; };
   }, [api, router, locale]);
   const w = (d?.weekly_summary ?? {}) as { sessions?: number; sets?: number; volume_kg?: number };
@@ -42,6 +44,9 @@ export default function DashboardPage() {
           </ul>
           <h2>{t("dash.plan")}</h2>
           <p>{plan.version_no !== undefined ? t("dash.version", { n: n(plan.version_no) }) : t("dash.noPlan")}</p>
+          {nut && (<><h2>{t("dash.nutrition")}</h2>
+            <ul className="plain"><li>{t("nutrient.kcal")}: {n(Math.round(nut.kcal))}</li><li>{t("nut.log.water")}: {n(nut.water_ml)} ml</li><li>{t("dash.meals", { n: nut.meals })}</li></ul>
+            <p className="muted">{t("nut.label.estimate")}</p></>)}
           <h2>{t("dash.quick")}</h2>
           <div className="row">
             <ButtonLink href={`/${locale}/plan`}>{t("nav.plan")}</ButtonLink>

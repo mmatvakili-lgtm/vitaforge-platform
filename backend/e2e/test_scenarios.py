@@ -55,8 +55,9 @@ def test_s1_home_beginner_no_equipment_full_cycle():
             assert h.call("POST", f"/workouts/sessions/{sid}/logs", {"client_uuid": f"00000000-0000-4000-8000-{len(h.log):012d}", "exercise_id": ex["exercise_id"],
                                                                      "set_no": n, "reps": 12, "load_kg": 0, "rpe": 6.5}, token=t).status == 201
         assert h.call("POST", f"/workouts/sessions/{sid}/finish", {}, token=t).status == 200
-    prog = h.call("GET", f"/workouts/progression/{code}", token=t).body
-    assert prog["action"] in ("increase_reps", "increase_load", "hold", "suggest_deload") and prog["reasons"]
+    items = h.call("GET", "/workouts/progression", token=t).body["items"]
+    prog = next(i for i in items if i["exercise_id"] == ex["exercise_id"])
+    assert prog["action"] in ("increase_reps", "increase_load", "hold", "suggest_deload") and prog["reasons"] and prog["sessions_considered"] == 3
     assert h.call("GET", "/progress/weekly", token=t).body["completed_sessions"] == 3
     assert h.call("GET", "/dashboard", token=t).body["current_plan"]["label"] == "experimental"
     assert h.problems == []

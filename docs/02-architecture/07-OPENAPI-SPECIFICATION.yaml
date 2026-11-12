@@ -1335,6 +1335,32 @@ components:
           - maintain
           - lose
           - gain
+        allergens:
+          type: array
+          items:
+            enum:
+            - milk
+            - egg
+            - fish
+            - shellfish
+            - tree_nut
+            - peanut
+            - wheat
+            - soy
+            - sesame
+          maxItems: 9
+          uniqueItems: true
+        diet_required:
+          type: array
+          items:
+            enum:
+            - vegetarian
+            - vegan
+            - halal
+            - gluten_free
+            - lactose_free
+          maxItems: 5
+          uniqueItems: true
         screening:
           type: object
           properties:
@@ -1359,6 +1385,14 @@ components:
     NutritionEstimate:
       type: object
       properties:
+        allergens:
+          type: array
+          items:
+            type: string
+        diet_required:
+          type: array
+          items:
+            type: string
         status:
           enum:
           - OK
@@ -1670,6 +1704,557 @@ components:
       required:
       - features
       description: تلاش برای خاموش‌کردن feature با safety_critical=true → 422
+    FoodSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name_en:
+          type: string
+        name_fa:
+          type: string
+        category:
+          type: string
+        allergens: &id001
+          type: array
+          items:
+            type: string
+        allergens_known:
+          type: boolean
+        diet_tags: *id001
+        review_status:
+          enum:
+          - reviewed
+          - unreviewed
+        per_100g: &id002
+          type: object
+          properties:
+            kcal:
+              type: number
+            protein_g:
+              type: number
+            fat_g:
+              type: number
+            carbs_g:
+              type: number
+            fiber_g:
+              type: number
+            sugar_g:
+              type: number
+            sodium_mg:
+              type: number
+            calcium_mg:
+              type: number
+            iron_mg:
+              type: number
+            potassium_mg:
+              type: number
+            vitamin_c_mg:
+              type: number
+          additionalProperties: false
+      additionalProperties: false
+      required:
+      - id
+      - name_en
+      - allergens
+      - allergens_known
+      - review_status
+      - per_100g
+      description: نبود نام فارسی یعنی هنوز بازبینی ترجمه نشده؛ allergens_known=false یعنی وضعیت آلرژن نامعلوم است نه «بدون آلرژن».
+    FoodList:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoodSummary'
+      additionalProperties: false
+    FoodDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        name_en:
+          type: string
+        name_fa:
+          type: string
+        category:
+          type: string
+        allergens: *id001
+        allergens_known:
+          type: boolean
+        diet_tags: *id001
+        review_status:
+          enum:
+          - reviewed
+          - unreviewed
+        per_100g: *id002
+        serving_g:
+          type: object
+          additionalProperties:
+            type: number
+        basis:
+          type: string
+        notes: *id001
+        nutrient_refs:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        source:
+          type: object
+          properties:
+            dataset:
+              type: string
+            record_id:
+              type: string
+            license:
+              type: string
+            license_verified:
+              type: boolean
+          additionalProperties: false
+      additionalProperties: false
+      required:
+      - id
+      - name_en
+      - per_100g
+      - review_status
+    RecipeSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name_en:
+          type: string
+        name_fa:
+          type: string
+        slots: *id001
+        cook_minutes:
+          type: integer
+        servings:
+          type: integer
+        per_serving: *id002
+        missing_nutrients: *id001
+        allergens: *id001
+        allergens_known:
+          type: boolean
+        diet_tags: *id001
+        review_status:
+          enum:
+          - reviewed
+          - unreviewed
+      additionalProperties: false
+      required:
+      - id
+      - name_en
+      - per_serving
+      - review_status
+      - allergens
+      - allergens_known
+    RecipeList:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeSummary'
+      additionalProperties: false
+    RecipeDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        name_en:
+          type: string
+        name_fa:
+          type: string
+        slots: *id001
+        cook_minutes:
+          type: integer
+        servings:
+          type: integer
+        per_serving: *id002
+        missing_nutrients: *id001
+        allergens: *id001
+        allergens_known:
+          type: boolean
+        diet_tags: *id001
+        review_status:
+          enum:
+          - reviewed
+          - unreviewed
+        steps: *id001
+        ingredients:
+          type: array
+          items:
+            type: object
+            properties:
+              food_id:
+                type: string
+              name_en:
+                type: string
+              name_fa:
+                type: string
+              grams:
+                type: number
+              allergens: *id001
+              allergens_known:
+                type: boolean
+            additionalProperties: false
+      additionalProperties: false
+      required:
+      - id
+      - name_en
+      - per_serving
+      - review_status
+      - ingredients
+    MealLogRequest:
+      type: object
+      properties:
+        slot:
+          enum:
+          - breakfast
+          - lunch
+          - dinner
+          - snack
+        date:
+          type: string
+          format: date
+        food_id:
+          type: string
+          maxLength: 64
+        grams:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 3000
+        recipe_id:
+          type: string
+          maxLength: 64
+        servings:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 20
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        kcal:
+          type: number
+          minimum: 0
+          maximum: 5000
+        protein_g:
+          type: number
+          minimum: 0
+          maximum: 400
+        carbs_g:
+          type: number
+          minimum: 0
+          maximum: 1000
+        fat_g:
+          type: number
+          minimum: 0
+          maximum: 400
+      additionalProperties: false
+      required:
+      - slot
+      description: دقیقاً یکی از food_id+grams، recipe_id+servings یا name(+مقادیر کاربر).
+    MealEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        slot:
+          enum:
+          - breakfast
+          - lunch
+          - dinner
+          - snack
+        name:
+          type: string
+        name_fa:
+          type: string
+        source:
+          enum:
+          - user_entered
+          - catalog
+        kcal:
+          type: number
+        protein_g:
+          type: number
+        carbs_g:
+          type: number
+        fat_g:
+          type: number
+        amount:
+          type: number
+        food_id:
+          type: string
+        recipe_id:
+          type: string
+        missing_nutrients: *id001
+        allergens: *id001
+        allergens_known:
+          type: boolean
+        review_status:
+          type: string
+        allergen_alert:
+          oneOf:
+          - type: object
+            properties:
+              allergens: *id001
+              unknown:
+                type: boolean
+            additionalProperties: false
+          - type: 'null'
+      additionalProperties: false
+      required:
+      - id
+      - date
+      - slot
+      - name
+      - source
+      - missing_nutrients
+      - allergen_alert
+      description: allergen_alert وقتی پر است که آلرژن ثبت‌شده‌ی کاربر در غذا هست یا وضعیت آلرژن نامعلوم است؛ ثبت انجام می‌شود ولی هشدار باید
+        نشان داده شود.
+    MealLogDay:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        meals:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealEntry'
+      additionalProperties: false
+      required:
+      - date
+      - meals
+    WaterRequest:
+      type: object
+      properties:
+        ml:
+          type: number
+          minimum: 50
+          maximum: 3000
+        date:
+          type: string
+          format: date
+      additionalProperties: false
+      required:
+      - ml
+    WaterTotal:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        water_ml:
+          type: number
+      additionalProperties: false
+      required:
+      - date
+      - water_ml
+    NutritionDaySummary:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        meals:
+          type: integer
+        kcal:
+          type: number
+        protein_g:
+          type: number
+        carbs_g:
+          type: number
+        fat_g:
+          type: number
+        water_ml:
+          type: number
+        completeness:
+          type: object
+          additionalProperties:
+            type: string
+        note:
+          type: string
+        targets:
+          type: object
+          properties:
+            tdee:
+              type:
+              - array
+              - 'null'
+              items:
+                type: number
+            macros:
+              type:
+              - object
+              - 'null'
+              additionalProperties:
+                type: array
+                items:
+                  type: number
+            water_ml:
+              type:
+              - array
+              - 'null'
+              items:
+                type: number
+          additionalProperties: false
+        uncertainty:
+          type: string
+        labels: *id001
+      additionalProperties: false
+      required:
+      - date
+      - meals
+      - kcal
+      - water_ml
+      - targets
+      - labels
+      description: مقادیر وارد‌نشده تخمین زده نمی‌شوند (completeness).
+    UserPrice:
+      type: object
+      properties:
+        food_id:
+          type: string
+        price_per_kg:
+          type: number
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+        region:
+          type: string
+        observed_on:
+          type: string
+          format: date
+        source:
+          const: user_entered
+      additionalProperties: false
+      required:
+      - food_id
+      - price_per_kg
+      - currency
+      - region
+      - observed_on
+      - source
+    UserPriceList:
+      type: object
+      properties:
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPrice'
+      additionalProperties: false
+      required:
+      - prices
+    UserPriceRequest:
+      type: object
+      properties:
+        food_id:
+          type: string
+          maxLength: 64
+        price_per_kg:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 1000000000
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+        region:
+          type: string
+          minLength: 2
+          maxLength: 16
+      additionalProperties: false
+      required:
+      - food_id
+      - price_per_kg
+      - currency
+      - region
+      description: قیمت فقط از ورودی کاربر؛ مانند هر قیمت دیگر پس از ۴۵ روز کنار گذاشته می‌شود.
+    ShoppingState:
+      type: object
+      properties:
+        checked:
+          type: array
+          items:
+            type: string
+            maxLength: 64
+          maxItems: 300
+          uniqueItems: true
+      additionalProperties: false
+      required:
+      - checked
+    ProgressionItem:
+      type: object
+      properties:
+        exercise_id:
+          type: string
+          format: uuid
+        action:
+          enum:
+          - increase_load
+          - increase_reps
+          - hold
+          - reduce_load
+          - suggest_deload
+          - pause_pain
+          - locked
+          - insufficient_data
+        reasons: *id001
+        flags: *id001
+        confidence:
+          enum:
+          - high
+          - medium
+          - low
+        sessions_considered:
+          type: integer
+        last_load_kg:
+          type: number
+        last_reps:
+          type: integer
+        new_load_kg:
+          type: number
+        target_reps:
+          type: integer
+        factor:
+          type: number
+      additionalProperties: false
+      required:
+      - exercise_id
+      - action
+      - reasons
+      - confidence
+    ProgressionList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressionItem'
+        note:
+          type: string
+      additionalProperties: false
+      required:
+      - items
+      description: پیشنهادها فقط راهنما هستند؛ Safety Core تنها مرجع تأیید حرکت/برنامه است و درد یا پرچم قفل‌شده هر پیشنهاد افزایشی را متوقف می‌کند.
 paths:
   /auth/register:
     post:
@@ -3862,6 +4447,657 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /foods:
+    get:
+      operationId: api_food_001
+      tags:
+      - foods
+      summary: مرور غذاها (فقط داده‌ی بازبینی‌شده؛ آزمایشی با برچسب)
+      x-id: API-FOOD-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodList'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: q
+        in: query
+        schema:
+          type: string
+      - name: diet
+        in: query
+        schema:
+          enum:
+          - vegetarian
+          - vegan
+          - halal
+          - gluten_free
+          - lactose_free
+      - name: avoid_allergens
+        in: query
+        description: فهرست جداشده با ویرگول؛ غذاهای با آلرژن نامعلوم هم حذف می‌شوند
+        schema:
+          type: string
+      - name: category
+        in: query
+        schema:
+          type: string
+  /foods/{food_id}:
+    get:
+      operationId: api_food_002
+      tags:
+      - foods
+      summary: جزئیات غذا با منبع و مجوز
+      x-id: API-FOOD-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodDetail'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: food_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /recipes:
+    get:
+      operationId: api_rec_001
+      tags:
+      - foods
+      summary: مرور دستورهای پخت
+      x-id: API-REC-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeList'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: q
+        in: query
+        schema:
+          type: string
+      - name: diet
+        in: query
+        schema:
+          enum:
+          - vegetarian
+          - vegan
+          - halal
+          - gluten_free
+          - lactose_free
+      - name: avoid_allergens
+        in: query
+        description: فهرست جداشده با ویرگول؛ غذاهای با آلرژن نامعلوم هم حذف می‌شوند
+        schema:
+          type: string
+      - name: slot
+        in: query
+        schema:
+          enum:
+          - breakfast
+          - lunch
+          - dinner
+          - snack
+      - name: max_minutes
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+  /recipes/{recipe_id}:
+    get:
+      operationId: api_rec_002
+      tags:
+      - foods
+      summary: جزئیات دستور پخت با ارزش غذایی هر وعده
+      x-id: API-REC-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDetail'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: recipe_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /nutrition/meals:
+    post:
+      operationId: api_nut_004
+      tags:
+      - nutrition
+      summary: ثبت وعده (از غذا، دستور پخت یا ورودی کاربر؛ نیازمند رضایت سلامت و نتیجه‌ی تغذیه OK)
+      x-id: API-NUT-004
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealEntry'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealLogRequest'
+    get:
+      operationId: api_nut_005
+      tags:
+      - nutrition
+      summary: وعده‌های ثبت‌شده‌ی یک روز
+      x-id: API-NUT-005
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealLogDay'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: date
+        in: query
+        schema:
+          type: string
+          format: date
+  /nutrition/meals/{meal_id}:
+    delete:
+      operationId: api_nut_006
+      tags:
+      - nutrition
+      summary: حذف وعده‌ی ثبت‌شده
+      x-id: API-NUT-006
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: meal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /nutrition/water:
+    post:
+      operationId: api_nut_007
+      tags:
+      - nutrition
+      summary: ثبت آب مصرفی
+      x-id: API-NUT-007
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WaterTotal'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaterRequest'
+  /nutrition/summary:
+    get:
+      operationId: api_nut_008
+      tags:
+      - nutrition
+      summary: خلاصه‌ی روز در برابر برآورد (نیازمند نتیجه‌ی OK)
+      x-id: API-NUT-008
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionDaySummary'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: date
+        in: query
+        schema:
+          type: string
+          format: date
+  /nutrition/prices:
+    get:
+      operationId: api_nut_009
+      tags:
+      - nutrition
+      summary: قیمت‌های واردشده‌ی کاربر
+      x-id: API-NUT-009
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPriceList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: api_nut_010
+      tags:
+      - nutrition
+      summary: ثبت قیمت هر کیلو توسط کاربر (برای بودجه)
+      x-id: API-NUT-010
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPrice'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPriceRequest'
+  /nutrition/prices/{food_id}:
+    delete:
+      operationId: api_nut_011
+      tags:
+      - nutrition
+      summary: حذف قیمت واردشده
+      x-id: API-NUT-011
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: food_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /nutrition/shopping-state:
+    get:
+      operationId: api_nut_012
+      tags:
+      - nutrition
+      summary: وضعیت تیک‌خوردن لیست خرید
+      x-id: API-NUT-012
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingState'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: api_nut_013
+      tags:
+      - nutrition
+      summary: ذخیره‌ی وضعیت لیست خرید
+      x-id: API-NUT-013
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingState'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingState'
+  /workouts/progression:
+    get:
+      operationId: api_wo_005
+      tags:
+      - workouts
+      summary: پیشنهاد پیشرفت قابل‌توضیح برای حرکت‌های برنامه (فقط پیشنهاد)
+      x-id: API-WO-005
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressionList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /nutrition/meal-plan:
     post:
       operationId: api_nut_003
@@ -3957,11 +5193,6 @@ x-global-rules:
 - 'خطا: Error{code,message,request_id}؛ بدون افشای جزئیات داخلی'
 - 'پاسخ‌های سلامت: Cache-Control: no-store'
 x-deferred:
-- /nutrition/meals
-- /nutrition/water
-- /nutrition/summary
-- /foods
-- /recipes
 - /supplements
 - /recovery/checkins
 - /calendar

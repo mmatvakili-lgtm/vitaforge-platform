@@ -46,7 +46,7 @@ def example(contract, schema: dict, depth: int = 0) -> Any:
     if fmt == "date-time":
         return "2026-01-01T00:00:00Z"
     if "pattern" in s:
-        return "+989121234567"
+        return "USD" if s["pattern"] == "^[A-Z]{3}$" else "+989121234567"
     n = max(s.get("minLength", 1), 1)
     return "a" * n if n > 1 else "x"
 

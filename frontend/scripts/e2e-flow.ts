@@ -3,6 +3,7 @@
 import { createClient } from "../src/lib/api/client.ts";
 import { decidePlanView } from "../src/lib/plan-view.ts";
 import { buildProfileRequest, mealView } from "../src/lib/nutrition.ts";
+import { alertKind, buildMealRequest, toggleChecked, validatePrice } from "../src/lib/nutrition-log.ts";
 import { buildSetLog, finishRequest, newUuid, plannedSets } from "../src/lib/workout-log.ts";
 import { libraryQuery, NO_FILTERS } from "../src/lib/exercises.ts";
 import { SCREENING_QUESTIONS, SCREENING_VERSION } from "../src/lib/onboarding.ts";
@@ -95,6 +96,39 @@ const mp = ok("meal plan", await api.call("API-NUT-003", { body: { days: 7 } }))
 const mv = mealView(mp);
 console.log("    meal view:", mv.kind, mp.status);
 if (mv.kind === "plan") throw new Error("meal plan shown without verified content");
+// Batch B: progression, saved allergens, food browsing, meal/water log, prices, shopping state (real client against the real API)
+const prog = ok("progression", await api.call("API-WO-005"));
+console.log("    progression items:", prog.items.length, prog.items.slice(0, 1).map((i) => i.action).join(","));
+const estA = ok("nutrition profile with allergens", await api.call("API-NUT-001", { body: buildProfileRequest({ height_cm: 175, weight_kg: 70, activity: "moderate", screening: sc, allergens: ["milk"], diet_required: ["vegetarian"] }) }));
+if (!(estA.allergens ?? []).includes("milk")) throw new Error("saved allergen not returned");
+const foods = ok("foods browse", await api.call("API-FOOD-001", { query: { page_size: 50, avoid_allergens: "milk" } }));
+if ((foods.results ?? []).some((f) => f.allergens.includes("milk"))) throw new Error("allergen filter returned a milk item");
+console.log("    foods:", foods.count, "recipes:", ok("recipes browse", await api.call("API-REC-001", { query: {} })).count);
+const f0 = (foods.results ?? [])[0];
+if (f0) ok("food detail", await api.call("API-FOOD-002", { path: { food_id: f0.id } }));
+const req = f0 ? buildMealRequest("lunch", { kind: "food", id: f0.id, grams: "150" }) : buildMealRequest("lunch", { kind: "manual", name: "Manual test", kcal: "300", protein_g: "", carbs_g: "", fat_g: "" });
+const meal = ok("log meal", await api.call("API-NUT-004", { body: req! }));
+console.log("    meal source:", meal.source, "alert:", alertKind(meal));
+const bad0 = await api.call("API-NUT-004", { body: { slot: "lunch", food_id: "x", grams: 1, recipe_id: "y", servings: 1 } });
+if (bad0.ok) throw new Error("meal with two sources was accepted");
+ok("water", await api.call("API-NUT-007", { body: { ml: 250 } }));
+const day = ok("meals today", await api.call("API-NUT-005", { query: {} }));
+if (!day.meals.some((x) => x.id === meal.id)) throw new Error("logged meal missing from the day");
+const sum = ok("summary", await api.call("API-NUT-008", { query: {} }));
+if (sum.water_ml !== 250 || sum.meals < 1) throw new Error("summary does not reflect the log");
+const future = await api.call("API-NUT-005", { query: { date: "2999-01-01" } });
+if (future.ok) throw new Error("future date accepted");
+if (f0) {
+  const pr = validatePrice({ food_id: f0.id, price: "100", currency: "USD", region: "US" })!;
+  ok("price set", await api.call("API-NUT-010", { body: pr }));
+  if (!ok("prices", await api.call("API-NUT-009")).prices.some((p) => p.food_id === f0.id)) throw new Error("price not stored");
+  ok("price delete", await api.call("API-NUT-011", { path: { food_id: f0.id } }));
+}
+const st = ok("shopping state set", await api.call("API-NUT-013", { body: { checked: toggleChecked([], "item-1") } }));
+if (ok("shopping state get", await api.call("API-NUT-012")).checked.join() !== st.checked.join()) throw new Error("shopping state not persisted");
+ok("delete meal", await api.call("API-NUT-006", { path: { meal_id: meal.id } }));
+if (ok("meals after delete", await api.call("API-NUT-005", { query: {} })).meals.some((x) => x.id === meal.id)) throw new Error("meal not deleted");
+
 const est2 = ok("nutrition profile (REFER)", await api.call("API-NUT-001", { body: buildProfileRequest({ height_cm: 175, weight_kg: 70, activity: "moderate", screening: { ...sc, medical_diet_needed: true } }) }));
 const mp2 = ok("meal plan after REFER", await api.call("API-NUT-003", { body: {} }));
 console.log("    after refer:", est2.status, mealView(mp2).kind);

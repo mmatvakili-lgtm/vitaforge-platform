@@ -67,8 +67,8 @@ export type PublishRuleSetRequest = { "confirm_sources_attached": true; "notes"?
 export type AdminUserList = Array<{ "id"?: string; "status"?: string; "roles"?: Array<string> }>;
 export type HealthGrantRequest = { "grantee_id": string; "subject_user_id": string; "reason": string; "duration_minutes": number };
 export type HealthGrant = { "id"?: string; "expires_at"?: string };
-export type NutritionProfileRequest = { "sex"?: "male" | "female"; "height_cm": number; "weight_kg": number; "activity": "sedentary" | "light" | "moderate" | "active" | "very_active"; "goal"?: "maintain" | "lose" | "gain"; "screening": { "eating_disorder_risk": boolean; "medical_diet_needed": boolean; "pregnant_or_lactating": boolean } };
-export type NutritionEstimate = { "status": "OK" | "NEEDS_INFO" | "BLOCKED" | "REFER"; "reasons"?: Array<string>; "questions"?: Array<string>; "bmr"?: (Array<number>) | null; "tdee"?: (Array<number>) | null; "macros"?: (Record<string, unknown>) | null; "water_ml"?: (Array<number>) | null; "goal_adjustment"?: string; "uncertainty"?: "low" | "medium" | "high"; "labels": Array<string>; "safety_decision_id"?: (string) | null; "method"?: string };
+export type NutritionProfileRequest = { "sex"?: "male" | "female"; "height_cm": number; "weight_kg": number; "activity": "sedentary" | "light" | "moderate" | "active" | "very_active"; "goal"?: "maintain" | "lose" | "gain"; "allergens"?: Array<"milk" | "egg" | "fish" | "shellfish" | "tree_nut" | "peanut" | "wheat" | "soy" | "sesame">; "diet_required"?: Array<"vegetarian" | "vegan" | "halal" | "gluten_free" | "lactose_free">; "screening": { "eating_disorder_risk": boolean; "medical_diet_needed": boolean; "pregnant_or_lactating": boolean } };
+export type NutritionEstimate = { "allergens"?: Array<string>; "diet_required"?: Array<string>; "status": "OK" | "NEEDS_INFO" | "BLOCKED" | "REFER"; "reasons"?: Array<string>; "questions"?: Array<string>; "bmr"?: (Array<number>) | null; "tdee"?: (Array<number>) | null; "macros"?: (Record<string, unknown>) | null; "water_ml"?: (Array<number>) | null; "goal_adjustment"?: string; "uncertainty"?: "low" | "medium" | "high"; "labels": Array<string>; "safety_decision_id"?: (string) | null; "method"?: string };
 export type MealPlanRequest = { "days"?: number; "allergens"?: Array<"milk" | "egg" | "fish" | "shellfish" | "tree_nut" | "peanut" | "wheat" | "soy" | "sesame">; "excluded_food_ids"?: Array<string>; "diet_required"?: Array<"vegetarian" | "vegan" | "halal" | "gluten_free" | "lactose_free">; "max_cook_minutes"?: number; "weekly_budget"?: number; "currency"?: string; "region"?: string; "pantry"?: Array<string> };
 export type MealPlanIngredient = { "food_id"?: string; "name_en"?: string; "name_fa"?: (string) | null; "grams"?: number; "allergens"?: Array<string>; "allergens_known"?: boolean };
 export type MealPlanMeal = { "slot"?: "breakfast" | "lunch" | "dinner" | "snack"; "recipe_id"?: string; "name_en"?: string; "name_fa"?: (string) | null; "portion"?: number; "kcal"?: number; "nutrients"?: Record<string, unknown>; "missing_nutrients"?: Array<string>; "cook_minutes"?: number; "cost"?: (number) | null; "ingredients"?: Array<MealPlanIngredient>; "steps"?: Array<string>; "allergens"?: Array<string>; "allergens_known"?: boolean };
@@ -76,6 +76,24 @@ export type MealPlanDay = { "index"?: number; "date"?: string; "meals"?: Array<M
 export type ShoppingItem = { "food_id"?: string; "name_en"?: string; "grams"?: number; "cost"?: (number) | null; "in_pantry"?: boolean };
 export type MealPlanResponse = { "status": "OK" | "NEEDS_CONTENT" | "NEEDS_INFO" | "BLOCKED" | "REFER"; "reasons": Array<string>; "days": Array<MealPlanDay>; "shopping": Array<ShoppingItem>; "total_cost"?: (number) | null; "unpriced_food_ids"?: Array<string>; "budget_met"?: (boolean) | null; "labels": Array<string>; "target_kcal"?: (number) | null; "safety_decision_id"?: (string) | null };
 export type PlanFeaturesRequest = { "features": Array<{ "code": string; "enabled": boolean }> };
+export type FoodSummary = { "id": string; "name_en": string; "name_fa"?: string; "category"?: string; "allergens": Array<string>; "allergens_known": boolean; "diet_tags"?: Array<string>; "review_status": "reviewed" | "unreviewed"; "per_100g": { "kcal"?: number; "protein_g"?: number; "fat_g"?: number; "carbs_g"?: number; "fiber_g"?: number; "sugar_g"?: number; "sodium_mg"?: number; "calcium_mg"?: number; "iron_mg"?: number; "potassium_mg"?: number; "vitamin_c_mg"?: number } };
+export type FoodList = { "count"?: number; "next"?: string; "results"?: Array<FoodSummary> };
+export type FoodDetail = { "id": string; "name_en": string; "name_fa"?: string; "category"?: string; "allergens"?: Array<string>; "allergens_known"?: boolean; "diet_tags"?: Array<string>; "review_status": "reviewed" | "unreviewed"; "per_100g": { "kcal"?: number; "protein_g"?: number; "fat_g"?: number; "carbs_g"?: number; "fiber_g"?: number; "sugar_g"?: number; "sodium_mg"?: number; "calcium_mg"?: number; "iron_mg"?: number; "potassium_mg"?: number; "vitamin_c_mg"?: number }; "serving_g"?: Record<string, unknown>; "basis"?: string; "notes"?: Array<string>; "nutrient_refs"?: Record<string, unknown>; "source"?: { "dataset"?: string; "record_id"?: string; "license"?: string; "license_verified"?: boolean } };
+export type RecipeSummary = { "id": string; "name_en": string; "name_fa"?: string; "slots"?: Array<string>; "cook_minutes"?: number; "servings"?: number; "per_serving": { "kcal"?: number; "protein_g"?: number; "fat_g"?: number; "carbs_g"?: number; "fiber_g"?: number; "sugar_g"?: number; "sodium_mg"?: number; "calcium_mg"?: number; "iron_mg"?: number; "potassium_mg"?: number; "vitamin_c_mg"?: number }; "missing_nutrients"?: Array<string>; "allergens": Array<string>; "allergens_known": boolean; "diet_tags"?: Array<string>; "review_status": "reviewed" | "unreviewed" };
+export type RecipeList = { "count"?: number; "next"?: string; "results"?: Array<RecipeSummary> };
+export type RecipeDetail = { "id": string; "name_en": string; "name_fa"?: string; "slots"?: Array<string>; "cook_minutes"?: number; "servings"?: number; "per_serving": { "kcal"?: number; "protein_g"?: number; "fat_g"?: number; "carbs_g"?: number; "fiber_g"?: number; "sugar_g"?: number; "sodium_mg"?: number; "calcium_mg"?: number; "iron_mg"?: number; "potassium_mg"?: number; "vitamin_c_mg"?: number }; "missing_nutrients"?: Array<string>; "allergens"?: Array<string>; "allergens_known"?: boolean; "diet_tags"?: Array<string>; "review_status": "reviewed" | "unreviewed"; "steps"?: Array<string>; "ingredients": Array<{ "food_id"?: string; "name_en"?: string; "name_fa"?: string; "grams"?: number; "allergens"?: Array<string>; "allergens_known"?: boolean }> };
+export type MealLogRequest = { "slot": "breakfast" | "lunch" | "dinner" | "snack"; "date"?: string; "food_id"?: string; "grams"?: number; "recipe_id"?: string; "servings"?: number; "name"?: string; "kcal"?: number; "protein_g"?: number; "carbs_g"?: number; "fat_g"?: number };
+export type MealEntry = { "id": string; "date": string; "slot": "breakfast" | "lunch" | "dinner" | "snack"; "name": string; "name_fa"?: string; "source": "user_entered" | "catalog"; "kcal"?: number; "protein_g"?: number; "carbs_g"?: number; "fat_g"?: number; "amount"?: number; "food_id"?: string; "recipe_id"?: string; "missing_nutrients": Array<string>; "allergens"?: Array<string>; "allergens_known"?: boolean; "review_status"?: string; "allergen_alert": { "allergens"?: Array<string>; "unknown"?: boolean } | unknown };
+export type MealLogDay = { "date": string; "meals": Array<MealEntry> };
+export type WaterRequest = { "ml": number; "date"?: string };
+export type WaterTotal = { "date": string; "water_ml": number };
+export type NutritionDaySummary = { "date": string; "meals": number; "kcal": number; "protein_g"?: number; "carbs_g"?: number; "fat_g"?: number; "water_ml": number; "completeness"?: Record<string, unknown>; "note"?: string; "targets": { "tdee"?: (Array<number>) | null; "macros"?: (Record<string, unknown>) | null; "water_ml"?: (Array<number>) | null }; "uncertainty"?: string; "labels": Array<string> };
+export type UserPrice = { "food_id": string; "price_per_kg": number; "currency": string; "region": string; "observed_on": string; "source": "user_entered" };
+export type UserPriceList = { "prices": Array<UserPrice> };
+export type UserPriceRequest = { "food_id": string; "price_per_kg": number; "currency": string; "region": string };
+export type ShoppingState = { "checked": Array<string> };
+export type ProgressionItem = { "exercise_id": string; "action": "increase_load" | "increase_reps" | "hold" | "reduce_load" | "suggest_deload" | "pause_pain" | "locked" | "insufficient_data"; "reasons": Array<string>; "flags"?: Array<string>; "confidence": "high" | "medium" | "low"; "sessions_considered"?: number; "last_load_kg"?: number; "last_reps"?: number; "new_load_kg"?: number; "target_reps"?: number; "factor"?: number };
+export type ProgressionList = { "items": Array<ProgressionItem>; "note"?: string };
 
 export interface OpTypes {
   "API-AUTH-001": { body: RegisterRequest; res: Message; path: Record<string, never>; query: Record<string, never> };
@@ -135,6 +153,21 @@ export interface OpTypes {
   "API-ADM-008": { body: PlanFeaturesRequest; res: PlanCatalog; path: { plan_id: string }; query: Record<string, never> };
   "API-NUT-001": { body: NutritionProfileRequest; res: NutritionEstimate; path: Record<string, never>; query: Record<string, never> };
   "API-NUT-002": { body: undefined; res: NutritionEstimate; path: Record<string, never>; query: Record<string, never> };
+  "API-FOOD-001": { body: undefined; res: FoodList; path: Record<string, never>; query: { page?: number; page_size?: number; q?: string; diet?: "vegetarian" | "vegan" | "halal" | "gluten_free" | "lactose_free"; avoid_allergens?: string; category?: string } };
+  "API-FOOD-002": { body: undefined; res: FoodDetail; path: { food_id: string }; query: Record<string, never> };
+  "API-REC-001": { body: undefined; res: RecipeList; path: Record<string, never>; query: { page?: number; page_size?: number; q?: string; diet?: "vegetarian" | "vegan" | "halal" | "gluten_free" | "lactose_free"; avoid_allergens?: string; slot?: "breakfast" | "lunch" | "dinner" | "snack"; max_minutes?: number } };
+  "API-REC-002": { body: undefined; res: RecipeDetail; path: { recipe_id: string }; query: Record<string, never> };
+  "API-NUT-004": { body: MealLogRequest; res: MealEntry; path: Record<string, never>; query: Record<string, never> };
+  "API-NUT-005": { body: undefined; res: MealLogDay; path: Record<string, never>; query: { date?: string } };
+  "API-NUT-006": { body: undefined; res: Message; path: { meal_id: string }; query: Record<string, never> };
+  "API-NUT-007": { body: WaterRequest; res: WaterTotal; path: Record<string, never>; query: Record<string, never> };
+  "API-NUT-008": { body: undefined; res: NutritionDaySummary; path: Record<string, never>; query: { date?: string } };
+  "API-NUT-009": { body: undefined; res: UserPriceList; path: Record<string, never>; query: Record<string, never> };
+  "API-NUT-010": { body: UserPriceRequest; res: UserPrice; path: Record<string, never>; query: Record<string, never> };
+  "API-NUT-011": { body: undefined; res: Message; path: { food_id: string }; query: Record<string, never> };
+  "API-NUT-012": { body: undefined; res: ShoppingState; path: Record<string, never>; query: Record<string, never> };
+  "API-NUT-013": { body: ShoppingState; res: ShoppingState; path: Record<string, never>; query: Record<string, never> };
+  "API-WO-005": { body: undefined; res: ProgressionList; path: Record<string, never>; query: Record<string, never> };
   "API-NUT-003": { body: MealPlanRequest; res: MealPlanResponse; path: Record<string, never>; query: Record<string, never> };
   "API-SYS-001": { body: undefined; res: Message; path: Record<string, never>; query: Record<string, never> };
   "API-SYS-002": { body: undefined; res: Message; path: Record<string, never>; query: Record<string, never> };
@@ -753,6 +786,172 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
       401,
       403,
       404
+    ]
+  },
+  "API-FOOD-001": {
+    "method": "GET",
+    "path": "/foods",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401
+    ]
+  },
+  "API-FOOD-002": {
+    "method": "GET",
+    "path": "/foods/{food_id}",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      404
+    ]
+  },
+  "API-REC-001": {
+    "method": "GET",
+    "path": "/recipes",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401
+    ]
+  },
+  "API-REC-002": {
+    "method": "GET",
+    "path": "/recipes/{recipe_id}",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      404
+    ]
+  },
+  "API-NUT-004": {
+    "method": "POST",
+    "path": "/nutrition/meals",
+    "secured": true,
+    "success": 201,
+    "errors": [
+      400,
+      401,
+      403,
+      404,
+      409,
+      422
+    ]
+  },
+  "API-NUT-005": {
+    "method": "GET",
+    "path": "/nutrition/meals",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      403,
+      404,
+      409
+    ]
+  },
+  "API-NUT-006": {
+    "method": "DELETE",
+    "path": "/nutrition/meals/{meal_id}",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      403,
+      404,
+      409
+    ]
+  },
+  "API-NUT-007": {
+    "method": "POST",
+    "path": "/nutrition/water",
+    "secured": true,
+    "success": 201,
+    "errors": [
+      400,
+      401,
+      403,
+      422
+    ]
+  },
+  "API-NUT-008": {
+    "method": "GET",
+    "path": "/nutrition/summary",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      403,
+      404,
+      409
+    ]
+  },
+  "API-NUT-009": {
+    "method": "GET",
+    "path": "/nutrition/prices",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401
+    ]
+  },
+  "API-NUT-010": {
+    "method": "PUT",
+    "path": "/nutrition/prices",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      404,
+      422
+    ]
+  },
+  "API-NUT-011": {
+    "method": "DELETE",
+    "path": "/nutrition/prices/{food_id}",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      404
+    ]
+  },
+  "API-NUT-012": {
+    "method": "GET",
+    "path": "/nutrition/shopping-state",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401
+    ]
+  },
+  "API-NUT-013": {
+    "method": "PUT",
+    "path": "/nutrition/shopping-state",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      422
+    ]
+  },
+  "API-WO-005": {
+    "method": "GET",
+    "path": "/workouts/progression",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      404,
+      409
     ]
   },
   "API-NUT-003": {

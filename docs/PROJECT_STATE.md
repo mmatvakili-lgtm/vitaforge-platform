@@ -22,16 +22,17 @@
 
 | قابلیت | وضعیت | شواهد / محدودیت |
 |---|---|---|
-| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۲۸ سبز + ۱ skip، حالت in-memory و sqlite) |
-| تطابق OpenAPI با مسیرها | `AUTOMATED_TESTED` | Contract Harness هر ۵۹ عملیات را اجرا و پاسخ را با spec می‌سنجد |
-| Frontend (مسیرها: home, dashboard, login, register, verify, forgot, reset, onboarding, plan, exercises, exercises/[id], workout, history, nutrition) | `AUTOMATED_TESTED` | ۲۹ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
+| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۳۸ سبز + ۱ skip، حالت in-memory و sqlite) |
+| تطابق OpenAPI با مسیرها | `AUTOMATED_TESTED` | Contract Harness هر ۷۵ عملیات را اجرا و پاسخ را با spec می‌سنجد |
+| Frontend (مسیرها: home, dashboard, login, register, verify, forgot, reset, onboarding, plan, exercises, exercises/[id], workout, history, nutrition, nutrition/log, nutrition/shopping, foods, profile) | `AUTOMATED_TESTED` | ۴۱ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
 | ثبت‌نام / ورود / خروج | `AUTOMATED_TESTED` | فقط در devserver و تست |
 | تأیید ایمیل | `AUTOMATED_TESTED` | بخش ۴؛ ارسال واقعی SMTP تأیید نشده |
 | بازیابی رمز | `AUTOMATED_TESTED` | outbox پایدار؛ SMTP تأیید نشده |
 | پایگاه داده | `IMPLEMENTED` | بخش ۳ |
-| موتور تمرین + کتابخانه‌ی حرکات (جست‌وجو/فیلتر/صفحه‌بندی) + جایگزینی + ثبت تمرین (ست idempotent، رکورد، توقف به‌خاطر درد) + تاریخچه + داشبورد | `AUTOMATED_TESTED` | e2e روی devserver اجرا شد؛ محتوا فقط `experimental_unreviewed`؛ progression خودکار هنوز نیست |
+| موتور تمرین + کتابخانه‌ی حرکات (جست‌وجو/فیلتر/صفحه‌بندی) + جایگزینی + ثبت تمرین (ست idempotent، رکورد، توقف به‌خاطر درد) + تاریخچه + داشبورد | `AUTOMATED_TESTED` | e2e روی devserver اجرا شد؛ محتوا فقط `experimental_unreviewed`؛ پیشنهاد progression (فقط پیشنهاد، قابل‌توضیح) روی صفحه‌ی تمرین |
 | کاتالوگ حرکات | محتوا بسته | ۳۰ حرکت اولیه، ۰ منتشرشده؛ ۸۷۶ رکورد staging همگی `pending_review` و لایسنس نامعتبر |
-| موتور تغذیه | `AUTOMATED_TESTED` | بدون غذای بازبینی‌شده → `NEEDS_CONTENT`؛ واردکننده‌ی FDC اجرا نشده |
+| موتور تغذیه + مرور غذا/دستور پخت + لاگ وعده/آب + خلاصه‌ی روز + قیمت کاربر + لیست خرید پایدار + بودجه | `AUTOMATED_TESTED` | بدون غذای بازبینی‌شده → `NEEDS_CONTENT` و مرور خالی؛ آلرژن ذخیره‌شده فیلتر و هشدار می‌دهد و آلرژن نامعلوم ایمن فرض نمی‌شود؛ پروفایل REFER ثبت کالری را می‌بندد؛ داده‌ی وعده/آب/قیمت/لیست خرید پایدار و در erase پاک می‌شود؛ واردکننده‌ی FDC اجرا نشده؛ داده‌ی دستی کاربر با برچسب `user_entered` |
+| پروفایل / رضایت‌ها / export / حذف حساب (UI) | `AUTOMATED_TESTED` | صفحه‌ی profile به API‌های موجود وصل است؛ export فقط درخواست ثبت می‌کند (تولید فایل `PLANNED`) |
 | ارائه‌دهنده‌ی AI | `PLANNED` | فقط `StubProvider` |
 | پرداخت/اشتراک | `PLANNED` | `PaymentProvider` غیرفعال |
 | پشتیبان‌گیری/بازیابی، export/delete حریم خصوصی | `PLANNED` | بررسی نشد؛ گزارش پیاده‌سازی وجود ندارد |

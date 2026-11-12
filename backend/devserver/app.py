@@ -110,6 +110,8 @@ class App:
         from nutrition_engine import NutritionConfig, NutritionLog
         self.layer = DecisionLayer(self.ai, ExerciseKnowledgeBase([], allow_experimental=dev_mode), "fa")
         self.nlog = NutritionLog(store, day)
+        for _n in ("foods", "recipes", "price_quotes", "user_prices", "shopping_state"):
+            store.__dict__.setdefault(_n, {})
         self.ncfg = NutritionConfig(show_unverified_ranges=dev_mode)
         self.records: Dict[str, object] = {}                 # exercise_catalog records by code (names/instructions for display)
         from mailer import DisabledSender, Outbox
@@ -137,12 +139,7 @@ class App:
         # not in OpenAPI (nutrition is x-deferred; the rest are dev/engine extras)
         if self.dev and self.mail.sender.provider == "capture":     # explicit development configuration only (MAIL_PROVIDER=capture AND DJANGO_DEBUG=true)
             self.routes.append(("GET", re.compile("^/api/v1/dev/captured-mail$"), self._dev_captured_mail, False, None))
-        R("POST", "/nutrition/meals", self._nut_meal)
-        R("DELETE", "/nutrition/meals/(?P<mid>[^/]+)", lambda c: self.nlog.delete_meal(c["uid"], c["mid"]) or {})
-        R("POST", "/nutrition/water", lambda c: self.nlog.add_water(c["uid"], c["body"].get("ml")) or {})
-        R("GET", "/nutrition/summary", lambda c: self.nlog.day_summary(c["uid"], estimate=self._nut_result(c["uid"])))
         R("GET", "/safety/explain", self._explain)
-        R("GET", "/workouts/progression/(?P<code>[^/]+)", self._progression)
         R("POST", "/health/access-grants", lambda c: self.m.grant_health_access(c["uid"], c["body"].get("professional_id")))
 
     # ------------------------------------------------------------------ helpers
@@ -771,7 +768,7 @@ class App:
         p = self._nut_profile(uid)
         return estimate(p, self.w.gate, self.h.safety_request(uid, ()), self.ncfg) if p else None
 
-    _NUT_PROFILE_KEYS = {"sex", "height_cm", "weight_kg", "activity", "goal", "screening"}
+    _NUT_PROFILE_KEYS = {"sex", "height_cm", "weight_kg", "activity", "goal", "screening", "allergens", "diet_required"}
     _MEAL_REQ_KEYS = {"days", "allergens", "excluded_food_ids", "diet_required", "max_cook_minutes", "weekly_budget", "currency", "region", "pantry"}
 
     @staticmethod
@@ -782,6 +779,12 @@ class App:
     def _nut_out(self, n):
         d = _plain(n)
         d["safety_decision_id"] = pub("decision", n.safety_decision_id) if n.safety_decision_id else None
+        return d
+
+    def _nut_out_for(self, uid, n):
+        d = self._nut_out(n)
+        p = self.store.__dict__.get("nutrition_profiles", {}).get(uid) or {}
+        d["allergens"], d["diet_required"] = list(p.get("allergens") or []), list(p.get("diet_required") or [])
         return d
 
     def op_api_nut_001(self, c):
@@ -798,15 +801,20 @@ class App:
         if b.get("activity") not in ("sedentary", "light", "moderate", "active", "very_active") or b.get("goal", "maintain") not in ("maintain", "lose", "gain") \
                 or b.get("sex") not in (None, "male", "female"):
             raise ValidationFailed("activity/goal/sex")
+        from nutrition_engine.food import ALLERGENS, DIET_TAGS
+        for k, vocab in (("allergens", ALLERGENS), ("diet_required", DIET_TAGS)):
+            v = b.get(k, [])
+            if not isinstance(v, list) or len(v) > len(vocab) or any(x not in vocab for x in v) or len(set(v)) != len(v):
+                raise ValidationFailed(k)
         self.store.__dict__.setdefault("nutrition_profiles", {})[c["uid"]] = {k: b.get(k) for k in self._NUT_PROFILE_KEYS}
-        return self._nut_out(self._nut_result(c["uid"]))
+        return self._nut_out_for(c["uid"], self._nut_result(c["uid"]))
 
     def op_api_nut_002(self, c):
         self._need_consent(c["uid"])
         n = self._nut_result(c["uid"])
         if n is None:
             raise NotFound("nutrition_profile")
-        return self._nut_out(n)
+        return self._nut_out_for(c["uid"], n)
 
     def op_api_nut_003(self, c):
         """Weekly meal plan from the food/recipe/price data actually in the store. With no reviewed data the honest answer is NEEDS_CONTENT."""
@@ -820,10 +828,12 @@ class App:
             raise NotFound("nutrition_profile")
         foods = self.store.__dict__.setdefault("foods", {})
         recipes = list(self.store.__dict__.setdefault("recipes", {}).values())
-        book = PriceBook(self.store.__dict__.setdefault("price_quotes", {}).values())
+        prof = self.store.__dict__.get("nutrition_profiles", {}).get(c["uid"]) or {}
+        mine = [self._user_quote(q) for q in (self.store.user_prices.get(c["uid"]) or {}).values()]
+        book = PriceBook(list(self.store.__dict__.setdefault("price_quotes", {}).values()) + mine)
         try:
-            req = MealPlanRequest(today=_d.today(), days=int(b.get("days", 7)), allergens=tuple(b.get("allergens", ())),
-                                  excluded_food_ids=tuple(b.get("excluded_food_ids", ())), diet_required=tuple(b.get("diet_required", ())),
+            req = MealPlanRequest(today=_d.today(), days=int(b.get("days", 7)), allergens=tuple(sorted(set(b.get("allergens", ())) | set(prof.get("allergens") or ()))),
+                                  excluded_food_ids=tuple(b.get("excluded_food_ids", ())), diet_required=tuple(sorted(set(b.get("diet_required", ())) | set(prof.get("diet_required") or ()))),
                                   max_cook_minutes=b.get("max_cook_minutes"), weekly_budget=b.get("weekly_budget"), currency=b.get("currency"),
                                   region=b.get("region"), pantry=tuple(b.get("pantry", ())), allow_unreviewed=bool(self.rule_set.allow_unreviewed_content))
         except (TypeError, ValueError):
@@ -831,27 +841,278 @@ class App:
         res = plan_week(req, n, foods, recipes, book)
         d = _plain(res)
         d["safety_decision_id"] = pub("decision", res.safety_decision_id) if res.safety_decision_id else None
+        if mine:
+            d["labels"] = list(d.get("labels", [])) + ["user_entered_prices"]
         return d
 
-    def _nut_meal(self, c):
+    # ------------------------------------------------------------------ foods / recipes (browse), meal log, water, prices, shopping state
+    @staticmethod
+    def _q1(c, k):
+        return (c["query"].get(k) or [None])[0]
+
+    def _page(self, c, rows):
+        try:
+            page, size = int(self._q1(c, "page") or 1), int(self._q1(c, "page_size") or 20)
+        except ValueError:
+            raise BadRequest("pagination")
+        if page < 1 or not 1 <= size <= 100:
+            raise BadRequest("pagination")
+        out = {"count": len(rows), "results": rows[(page - 1) * size: page * size]}
+        if page * size < len(rows):
+            out["next"] = f"?page={page + 1}&page_size={size}"
+        return out
+
+    def _avoid(self, c):
+        from nutrition_engine.food import ALLERGENS
+        raw = self._q1(c, "avoid_allergens")
+        av = [x for x in (raw or "").split(",") if x]
+        if any(x not in ALLERGENS for x in av):
+            raise BadRequest("avoid_allergens")
+        return av
+
+    def _food_filters(self, c):
+        from nutrition_engine.food import DIET_TAGS
+        diet = self._q1(c, "diet") or ""
+        if diet and diet not in DIET_TAGS:
+            raise BadRequest("diet")
+        return diet
+
+    def op_api_food_001(self, c):
+        from nutrition_engine import catalog_view as cv
+        diet = self._food_filters(c)
+        rows = cv.search_foods(self.store.__dict__.setdefault("foods", {}), bool(self.rule_set.allow_unreviewed_content), self._q1(c, "q") or "",
+                               self._q1(c, "category") or "", diet, self._avoid(c))
+        return self._page(c, [cv.food_summary(f) for f in rows])
+
+    def op_api_food_002(self, c):
+        from nutrition_engine import catalog_view as cv
+        f = self.store.__dict__.setdefault("foods", {}).get(c["food_id"])
+        if f is None or not cv.visible(f.status, bool(self.rule_set.allow_unreviewed_content)):
+            raise NotFound()
+        return cv.food_detail(f)
+
+    def op_api_rec_001(self, c):
+        from nutrition_engine import catalog_view as cv
+        diet = self._food_filters(c)
+        slot, mm = self._q1(c, "slot") or "", self._q1(c, "max_minutes")
+        if slot and slot not in ("breakfast", "lunch", "dinner", "snack"):
+            raise BadRequest("slot")
+        try:
+            mm = int(mm) if mm is not None else None
+        except ValueError:
+            raise BadRequest("max_minutes")
+        foods = self.store.__dict__.setdefault("foods", {})
+        rows = cv.search_recipes(self.store.__dict__.setdefault("recipes", {}).values(), foods, bool(self.rule_set.allow_unreviewed_content), self._q1(c, "q") or "", slot, diet, mm, self._avoid(c))
+        return self._page(c, [cv.recipe_summary(r, foods) for r in rows])
+
+    def op_api_rec_002(self, c):
+        from nutrition_engine import catalog_view as cv
+        foods = self.store.__dict__.setdefault("foods", {})
+        r = self.store.__dict__.setdefault("recipes", {}).get(c["recipe_id"])
+        if r is None or not cv.recipe_is_servable(r, foods, bool(self.rule_set.allow_unreviewed_content)):
+            raise NotFound()
+        return cv.recipe_detail(r, foods)
+
+    # --- nutrition tracking (health-data consent + a nutrition result that is OK; REFER/BLOCKED users get no calorie tracking)
+    def _nut_ok(self, uid):
+        self._need_consent(uid)
+        n = self._nut_result(uid)
+        if n is None:
+            raise NotFound("nutrition_profile")
+        if n.status != "OK":
+            raise Conflict("nutrition_unavailable")
+        return n
+
+    def _day_arg(self, raw):
+        if raw is None or raw == "":
+            return date.today().toordinal()
+        try:
+            d = date.fromisoformat(raw)
+        except (TypeError, ValueError):
+            raise BadRequest("date")
+        if d > date.today() or (date.today() - d).days > 90:
+            raise BadRequest("date")                                      # no future entries; history window 90 days
+        return d.toordinal()
+
+    def _meal_out(self, uid, e):
+        prof = self.store.__dict__.get("nutrition_profiles", {}).get(uid) or {}
+        mine = set(prof.get("allergens") or ())
+        alert = None
+        if e.source == "catalog" and mine and (mine & set(e.allergens) or not e.allergens_known):
+            alert = {"allergens": sorted(mine & set(e.allergens)), "unknown": not e.allergens_known}
+        out = {"id": pub("meal", e.id), "date": date.fromordinal(e.day).isoformat(), "slot": e.slot or "snack", "name": e.name, "source": e.source,
+               "missing_nutrients": list(e.missing), "allergens": list(e.allergens), "allergens_known": e.allergens_known, "review_status": e.review_status, "allergen_alert": alert}
+        for k in ("kcal", "protein_g", "carbs_g", "fat_g", "amount", "food_id", "recipe_id", "name_fa"):
+            v = getattr(e, k)
+            if v is not None:
+                out[k] = round(v, 1) if isinstance(v, float) else v
+        return out
+
+    _MEAL_KEYS = {"slot", "date", "food_id", "grams", "recipe_id", "servings", "name", "kcal", "protein_g", "carbs_g", "fat_g"}
+
+    @staticmethod
+    def _num(v, lo, hi):
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not lo < v <= hi:
+            raise ValidationFailed("amount")
+        return float(v)
+
+    def op_api_nut_004(self, c):
+        from nutrition_engine import catalog_view as cv
+        from nutrition_engine.recipes import nutrition_per_serving, recipe_allergens
+        uid, b = c["uid"], c["body"]
+        self._nut_ok(uid)
+        self._strict(b, self._MEAL_KEYS, "meal")
+        if b.get("slot") not in ("breakfast", "lunch", "dinner", "snack"):
+            raise ValidationFailed("slot")
+        day = self._day_arg(b.get("date"))
+        kinds = [k for k in ("food_id", "recipe_id", "name") if k in b]
+        if len(kinds) != 1:
+            raise ValidationFailed("exactly_one_source")
+        allow = bool(self.rule_set.allow_unreviewed_content)
+        foods = self.store.__dict__.setdefault("foods", {})
+        if kinds[0] == "food_id":
+            f = foods.get(b["food_id"]) if isinstance(b["food_id"], str) else None
+            if f is None or not cv.visible(f.status, allow):
+                raise NotFound()
+            g = self._num(b.get("grams"), 0, 3000)
+            nutr = {k: v * g / 100.0 for k, v in f.per_100g.items()}
+            e = self.nlog.add_catalog_meal(uid, b["slot"], nutr, [k for k in cv.SUMMARY_NUTRIENTS if k not in f.per_100g], f.name_en, food_id=f.id, amount=g,
+                                           allergens=f.allergens, allergens_known=f.allergens_known, review_status=cv.food_label(f), name_fa=f.name_fa, day=day)
+        elif kinds[0] == "recipe_id":
+            r = self.store.__dict__.setdefault("recipes", {}).get(b["recipe_id"]) if isinstance(b["recipe_id"], str) else None
+            if r is None or not cv.recipe_is_servable(r, foods, allow):
+                raise NotFound()
+            sv = self._num(b.get("servings"), 0, 20)
+            per, missing = nutrition_per_serving(r, foods)
+            al, known = recipe_allergens(r, foods)
+            e = self.nlog.add_catalog_meal(uid, b["slot"], {k: v * sv for k, v in per.items()}, [m for m in missing if m in cv.SUMMARY_NUTRIENTS], r.name_en, recipe_id=r.id, amount=sv,
+                                           allergens=sorted(al), allergens_known=known, review_status=cv.recipe_label(r, foods), name_fa=r.name_fa, day=day)
+        else:
+            e = self.nlog.add_meal(uid, b["name"], b.get("kcal"), b.get("protein_g"), b.get("carbs_g"), b.get("fat_g"), day=day)
+            e = dataclasses.replace(e, slot=b["slot"])
+            self.store.meals[uid][-1] = e
+        return self._meal_out(uid, e)
+
+    def op_api_nut_005(self, c):
+        uid = c["uid"]
+        self._nut_ok(uid)
+        day = self._day_arg(self._q1(c, "date"))
+        return {"date": date.fromordinal(day).isoformat(), "meals": [self._meal_out(uid, e) for e in self.nlog.meals_on(uid, day)]}
+
+    def op_api_nut_006(self, c):
+        uid = c["uid"]
+        self._need_consent(uid)                                          # deleting own entries stays possible for every user, including REFER profiles
+        mid = resolve("meal", c["meal_id"], [e.id for e in self.store.meals.get(uid, [])])
+        self.nlog.delete_meal(uid, mid)
+        return {"message": "deleted"}
+
+    def op_api_nut_007(self, c):
+        uid, b = c["uid"], c["body"]
+        self._need_consent(uid)
+        self._strict(b, {"ml", "date"}, "water")
+        day = self._day_arg(b.get("date"))
+        self.nlog.add_water(uid, b.get("ml"), day=day)
+        return {"date": date.fromordinal(day).isoformat(), "water_ml": sum(w["ml"] for w in self.store.water.get(uid, []) if w["day"] == day)}
+
+    def op_api_nut_008(self, c):
+        uid = c["uid"]
+        n = self._nut_ok(uid)
+        day = self._day_arg(self._q1(c, "date"))
+        s = self.nlog.day_summary(uid, day=day, estimate=None)
+        s.pop("vs_estimate", None)
+        s["date"] = date.fromordinal(s.pop("day")).isoformat()
+        s["targets"] = {"tdee": list(n.tdee) if n.tdee else None, "macros": {k: list(v) for k, v in (n.macros or {}).items()} or None,
+                        "water_ml": list(n.water_ml) if n.water_ml else None}
+        s["uncertainty"], s["labels"] = n.uncertainty, list(n.labels)
+        return s
+
+    # --- user-entered prices (budget). Never invented: only what the user typed, labelled `user_entered`, expiring like every quote.
+    @staticmethod
+    def _user_quote(q):
+        from nutrition_engine import PriceQuote
+        return PriceQuote(q["food_id"], q["region"], q["currency"], q["price_per_kg"], date.fromisoformat(q["observed_on"]), "user_entered", "user_reported")
+
+    def op_api_nut_009(self, c):
+        return {"prices": [{**q, "source": "user_entered"} for q in sorted((self.store.user_prices.get(c["uid"]) or {}).values(), key=lambda q: q["food_id"])]}
+
+    def op_api_nut_010(self, c):
+        import re as _re
+        uid, b = c["uid"], c["body"]
+        self._strict(b, {"food_id", "price_per_kg", "currency", "region"}, "price")
+        if not isinstance(b.get("food_id"), str) or b["food_id"] not in self.store.__dict__.setdefault("foods", {}):
+            raise NotFound()
+        p = b.get("price_per_kg")
+        if isinstance(p, bool) or not isinstance(p, (int, float)) or not 0 < p <= 1e9:
+            raise ValidationFailed("price_per_kg")
+        if not isinstance(b.get("currency"), str) or not _re.fullmatch(r"[A-Z]{3}", b["currency"]) or not isinstance(b.get("region"), str) or not _re.fullmatch(r"[A-Za-z0-9-]{2,16}", b["region"]):
+            raise ValidationFailed("currency/region")
+        row = {"food_id": b["food_id"], "price_per_kg": float(p), "currency": b["currency"], "region": b["region"], "observed_on": date.today().isoformat()}
+        mine = dict(self.store.user_prices.get(uid) or {})
+        mine[b["food_id"]] = row
+        self.store.user_prices[uid] = mine
+        return {**row, "source": "user_entered"}
+
+    def op_api_nut_011(self, c):
+        uid = c["uid"]
+        mine = dict(self.store.user_prices.get(uid) or {})
+        if c["food_id"] not in mine:
+            raise NotFound()
+        del mine[c["food_id"]]
+        self.store.user_prices[uid] = mine
+        return {"message": "deleted"}
+
+    def op_api_nut_012(self, c):
+        return {"checked": list(self.store.shopping_state.get(c["uid"]) or [])}
+
+    def op_api_nut_013(self, c):
         b = c["body"]
-        return _plain(self.nlog.add_meal(c["uid"], b.get("name"), b.get("kcal"), b.get("protein_g"), b.get("carbs_g"), b.get("fat_g")))
+        self._strict(b, {"checked"}, "shopping_state")
+        v = b.get("checked")
+        if not isinstance(v, list) or len(v) > 300 or any(not isinstance(x, str) or not 1 <= len(x) <= 64 for x in v) or len(set(v)) != len(v):
+            raise ValidationFailed("checked")
+        self.store.shopping_state[c["uid"]] = list(v)
+        return {"checked": list(v)}
+
+    # --- progression (explainable, deterministic; suggestions only, never auto-applied and never overriding the Safety Core)
+    def op_api_wo_005(self, c):
+        from workout_engine.progression import SessionPerf, SetLog, decide
+        uid = c["uid"]
+        if not self.store.plans.get(uid):
+            raise NotFound()
+        if not self._decision_obj(uid).status.permits_content:
+            raise Conflict("safety_blocked")
+        cur = self.w.current(uid)["result"]
+        flags = cur.flags
+        items, seen = [], set()
+        for day in cur.days:
+            for e in day.exercises:
+                if e.code in seen:
+                    continue
+                seen.add(e.code)
+                hist = []
+                for w in sorted(self.store.workout_sessions.values(), key=lambda x: x["start"]):
+                    if w["user"] != uid or not w["finished"]:
+                        continue
+                    sets = tuple(SetLog(l["reps"], l["load_kg"], l["rpe"]) for l in w["logs"] if l["code"] == e.code and not l.get("skipped") and l["reps"] > 0)
+                    if sets or any(l["code"] == e.code for l in w["logs"]):
+                        hist.append(SessionPerf(w["start"], sets, e.sets, e.reps_min, e.reps_max, bool(sets), w.get("aborted_reason") == "pain", w.get("perceived_difficulty")))
+                rec = self.records.get(e.code)
+                eq = next((k for k in ("barbell", "dumbbell", "machine") if rec and k in rec.equipment), "other")
+                d = decide(hist, flags, eq, self.w.cfg)
+                last = next((x for x in reversed(hist) if x.sets), None)
+                item = {"exercise_id": pub("ex", e.code), "action": d.action, "reasons": list(d.reasons), "flags": list(d.flags), "confidence": d.confidence,
+                        "sessions_considered": len(hist)}
+                if last:
+                    item["last_load_kg"], item["last_reps"] = last.sets[-1].load_kg, last.sets[-1].reps
+                for k in ("new_load_kg", "target_reps", "factor"):
+                    if k in d.params:
+                        item[k] = d.params[k]
+                items.append(item)
+        return {"items": items, "note": "suggestions_only"}
 
     def _explain(self, c):
         from safety_core.explain import explain
         return explain(self.w.gate.evaluate(self._request_for(c["uid"])), "fa")
-
-    def _progression(self, c):
-        from workout_engine.progression import SessionPerf, SetLog, decide
-        code = c["code"]
-        hist = []
-        for w in self.store.workout_sessions.values():
-            if w["user"] == c["uid"] and w["finished"]:
-                sets = tuple(SetLog(l["reps"], l["load_kg"], l["rpe"]) for l in w["logs"] if l["code"] == code and not l.get("skipped"))
-                if sets:
-                    hist.append(SessionPerf(w["start"], sets, len(sets), 8, 12, True, False, None))
-        flags = self.store.plans[c["uid"]][-1]["result"].flags if self.store.plans.get(c["uid"]) else ()
-        return _plain(decide(hist, flags, "other", self.w.cfg))
 
     # ------------------------------------------------------------------ WSGI
     def __call__(self, environ, start_response):

@@ -16,7 +16,16 @@ class MealEntry:
     protein_g: Optional[float]
     carbs_g: Optional[float]
     fat_g: Optional[float]
-    source: str = "user_entered"
+    source: str = "user_entered"        # user_entered | catalog (computed from a food/recipe record; nutrients missing in the record stay None)
+    slot: str = ""
+    food_id: Optional[str] = None
+    recipe_id: Optional[str] = None
+    amount: Optional[float] = None      # grams (food) or servings (recipe)
+    missing: tuple = ()                 # nutrient keys the source record does not provide (never silently counted as 0)
+    allergens: tuple = ()
+    allergens_known: bool = True
+    review_status: str = "user_entered"
+    name_fa: Optional[str] = None
 
 
 class NutritionLog:
@@ -36,6 +45,15 @@ class NutritionLog:
         e = MealEntry(self.s.new_id("meal"), day if day is not None else self.today(), name.strip(), kcal, protein_g, carbs_g, fat_g)
         self.s.meals.setdefault(uid, []).append(e)
         return e
+
+    def add_catalog_meal(self, uid, slot, nutrients, missing, name, food_id=None, recipe_id=None, amount=None, allergens=(), allergens_known=True, review_status="unreviewed", name_fa=None, day=None):
+        e = MealEntry(self.s.new_id("meal"), day if day is not None else self.today(), name, nutrients.get("kcal"), nutrients.get("protein_g"), nutrients.get("carbs_g"),
+                      nutrients.get("fat_g"), "catalog", slot, food_id, recipe_id, amount, tuple(missing), tuple(allergens), allergens_known, review_status, name_fa)
+        self.s.meals.setdefault(uid, []).append(e)
+        return e
+
+    def meals_on(self, uid, day):
+        return [m for m in self.s.meals.get(uid, []) if m.day == day]
 
     def delete_meal(self, uid, mid):
         rows = self.s.meals.get(uid, [])

@@ -69,8 +69,9 @@ export function validateProfile(p: { height_cm?: number; weight_kg?: number; act
   return e;
 }
 
-export function buildProfileRequest(p: { sex?: string; height_cm: number; weight_kg: number; activity: string; screening: Record<string, boolean> }): NutritionProfileRequest {
-  return { ...(p.sex === "male" || p.sex === "female" ? { sex: p.sex } : {}), height_cm: p.height_cm, weight_kg: p.weight_kg,
+export function buildProfileRequest(p: { sex?: string; height_cm: number; weight_kg: number; activity: string; screening: Record<string, boolean>; allergens?: string[]; diet_required?: string[] }): NutritionProfileRequest {
+  return { allergens: (p.allergens ?? []).filter((a) => (ALLERGENS as readonly string[]).includes(a)) as NutritionProfileRequest["allergens"],
+    diet_required: (p.diet_required ?? []).filter((d) => (DIET_TAGS as readonly string[]).includes(d)) as NutritionProfileRequest["diet_required"], ...(p.sex === "male" || p.sex === "female" ? { sex: p.sex } : {}), height_cm: p.height_cm, weight_kg: p.weight_kg,
     activity: p.activity as NutritionProfileRequest["activity"], goal: "maintain", screening: p.screening as NutritionProfileRequest["screening"] };
 }
 

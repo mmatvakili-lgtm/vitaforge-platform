@@ -42,6 +42,7 @@ def happy_path(h: Harness) -> Dict[str, str]:
     for n, load in ((1, 20), (2, 25)):
         c("POST", f"/workouts/sessions/{ss['id']}/logs", {"client_uuid": str(uuid.uuid4()), "exercise_id": e0, "set_no": n, "reps": 8, "load_kg": load, "rpe": 7}, token=t)
     c("POST", f"/workouts/sessions/{ss['id']}/finish", {"perceived_difficulty": 6}, token=t)
+    c("GET", "/workouts/progression", token=t)
     c("GET", "/workouts/sessions", token=t); c("GET", "/progress/weekly", token=t); c("GET", "/progress/monthly", token=t); c("GET", "/dashboard", token=t)
     # health (after the plan so the plan flow is unaffected)
     cond = c("POST", "/health/conditions", {"region": "lower_back", "problem_type": "pain", "self_severity": 0, "side": "na", "trend": "better"}, token=t).body
@@ -62,6 +63,26 @@ def happy_path(h: Harness) -> Dict[str, str]:
                                     "screening": {"eating_disorder_risk": False, "medical_diet_needed": False, "pregnant_or_lactating": False}}, token=t)
     c("GET", "/nutrition/estimate", token=t)
     c("POST", "/nutrition/meal-plan", {"days": 7}, token=t)
+    # nutrition catalog / logging / prices / shopping (labelled test fixtures only, isolated to this harness store)
+    from nutrition_engine import FoodRecord, Recipe
+    tn = h.login("nut@ex.com"); h.onboard(tn)       # a user without conditions, so the Safety Core lets nutrition through
+    c("PUT", "/nutrition/profile", {"sex": "male", "height_cm": 175, "weight_kg": 70, "activity": "moderate", "goal": "maintain",
+                                    "screening": {"eating_disorder_risk": False, "medical_diet_needed": False, "pregnant_or_lactating": False}}, token=tn)
+    h.store.__dict__.setdefault("foods", {}).update({
+        "fx_a": FoodRecord("fx_a", "Fixture food a", per_100g={"kcal": 350, "protein_g": 12, "fat_g": 3, "carbs_g": 70}, allergens_known=True, is_test_fixture=True),
+        "fx_c": FoodRecord("fx_c", "Fixture food c", per_100g={"kcal": 60, "protein_g": 2, "fat_g": 0, "carbs_g": 12}, allergens_known=True, is_test_fixture=True)})
+    h.store.__dict__.setdefault("recipes", {})["fx_r1"] = Recipe(id="fx_r1", name_en="Fixture recipe r1", slots=("breakfast", "lunch", "dinner", "snack"),
+                                                                 ingredients=(("fx_a", 120), ("fx_c", 150)), steps=("Mix.",), is_test_fixture=True)
+    c("GET", "/foods", token=tn); c("GET", "/foods/fx_a", token=tn); c("GET", "/recipes", token=tn); c("GET", "/recipes/fx_r1", token=tn)
+    ml = c("POST", "/nutrition/meals", {"slot": "lunch", "food_id": "fx_a", "grams": 150}, token=tn).body
+    c("POST", "/nutrition/meals", {"slot": "dinner", "recipe_id": "fx_r1", "servings": 1}, token=tn)
+    c("GET", "/nutrition/meals", token=tn); c("GET", "/nutrition/summary", token=tn)
+    c("DELETE", f"/nutrition/meals/{ml['id']}", token=tn)
+    c("POST", "/nutrition/water", {"ml": 250}, token=tn)
+    c("GET", "/nutrition/prices", token=tn)
+    c("PUT", "/nutrition/prices", {"food_id": "fx_a", "price_per_kg": 100.0, "currency": "USD", "region": "US"}, token=tn)
+    c("DELETE", "/nutrition/prices/fx_a", token=tn)
+    c("PUT", "/nutrition/shopping-state", {"checked": ["fx_a"]}, token=tn); c("GET", "/nutrition/shopping-state", token=tn)
     # admin
     c("GET", "/admin/exercises", token=cad)
     cr = c("POST", "/admin/exercises", {"stable_code": "new_ex", "movement_pattern": "core", "difficulty": "beginner", "muscles": ["abs"]}, token=cad).body

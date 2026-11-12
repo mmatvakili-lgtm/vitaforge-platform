@@ -27,6 +27,8 @@ export function Header() {
         <Link href={`/${locale}/exercises`}>{t("nav.exercises")}</Link>
         <Link href={`/${locale}/history`}>{t("nav.history")}</Link>
         <Link href={`/${locale}/nutrition`}>{t("nav.nutrition")}</Link>
+        <Link href={`/${locale}/foods`}>{t("nav.foods")}</Link>
+        <Link href={`/${locale}/profile`}>{t("nav.profile")}</Link>
         <Link href={`/${locale}/login`}>{t("nav.login")}</Link>
         <button type="button" className="linklike" onClick={logout}>{t("nav.logout")}</button>
         <a href={switched} hrefLang={other} lang={other} onClick={() => { document.cookie = `vf_locale=${other}; Path=/; Max-Age=31536000; SameSite=Lax`; }}>{t("nav.language")}</a>

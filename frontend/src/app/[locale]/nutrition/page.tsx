@@ -119,6 +119,7 @@ export default function NutritionPage() {
 
   const [height, setHeight] = useState(""); const [weight, setWeight] = useState(""); const [activity, setActivity] = useState(""); const [sex, setSex] = useState("");
   const [screen, setScreen] = useState<Record<string, boolean | undefined>>({});
+  const [editing, setEditing] = useState(false); const [pAllergens, setPAllergens] = useState<string[]>([]); const [pDiet, setPDiet] = useState<string[]>([]);
 
   const [days, setDays] = useState("7"); const [allergens, setAllergens] = useState<string[]>([]); const [diet, setDiet] = useState<string[]>([]);
   const [maxCook, setMaxCook] = useState(""); const [budget, setBudget] = useState(""); const [currency, setCurrency] = useState(""); const [region, setRegion] = useState("");
@@ -135,7 +136,7 @@ export default function NutritionPage() {
     let live = true;
     api.call("API-NUT-002").then((r) => {
       if (!live) return;
-      if (r.ok) setEstimate(r.data); else if (r.status !== 404) fail(r.error, r.status);
+      if (r.ok) { setEstimate(r.data); setPAllergens(r.data.allergens ?? []); setPDiet(r.data.diet_required ?? []); setAllergens(r.data.allergens ?? []); setDiet(r.data.diet_required ?? []); } else if (r.status !== 404) fail(r.error, r.status);
       setBoot("ready");
     });
     return () => { live = false; };
@@ -148,10 +149,11 @@ export default function NutritionPage() {
     setFe(errs);
     if (Object.keys(errs).length) return;
     setBusy(true); setError(null);
-    const r = await api.call("API-NUT-001", { body: buildProfileRequest({ sex, height_cm: p.height_cm!, weight_kg: p.weight_kg!, activity, screening: screen as Record<string, boolean> }) });
+    const r = await api.call("API-NUT-001", { body: buildProfileRequest({ sex, height_cm: p.height_cm!, weight_kg: p.weight_kg!, activity, screening: screen as Record<string, boolean>, allergens: pAllergens, diet_required: pDiet }) });
     setBusy(false);
     if (!r.ok) return fail(r.error, r.status);
-    setEstimate(r.data); setPlan(null);
+    setEstimate(r.data); setPlan(null); setEditing(false);
+    setAllergens(r.data.allergens ?? []); setDiet(r.data.diet_required ?? []);
   }
 
   async function generate(e: FormEvent) {
@@ -182,7 +184,7 @@ export default function NutritionPage() {
     <>
       <Card title={t("nut.title")}><p>{t("nut.intro")}</p><ApiErrorView error={error} /></Card>
 
-      {!estimate && (
+      {(!estimate || editing) && (
         <Card title={t("nut.profile.title")}>
           <form onSubmit={saveProfile} noValidate>
             <Field id="height" label={t("nut.height")} error={fe.height_cm ? t("error.validation_failed") : undefined}><input id="height" inputMode="decimal" dir="ltr" value={height} onChange={(e) => setHeight(e.target.value)} /></Field>
@@ -200,11 +202,19 @@ export default function NutritionPage() {
                 <label className="check"><input type="radio" name={k} checked={screen[k] === false} onChange={() => setScreen({ ...screen, [k]: false })} />{t("screening.no")}</label>
               </fieldset>))}
             {fe.screening && <p className="field-error" role="alert">{t("screening.unanswered")}</p>}
+            <fieldset><legend>{t("nut.allergens")}</legend><p className="hint">{t("nut.profile.allergens.hint")}</p>
+              <div className="checks">{ALLERGENS.map((a) => <label key={a} className="check"><input type="checkbox" checked={pAllergens.includes(a)} onChange={(e) => tog(pAllergens, setPAllergens, a, e.target.checked)} />{t(`allergen.${a}`)}</label>)}</div></fieldset>
+            <fieldset><legend>{t("nut.diet")}</legend>
+              <div className="checks">{DIET_TAGS.map((d) => <label key={d} className="check"><input type="checkbox" checked={pDiet.includes(d)} onChange={(e) => tog(pDiet, setPDiet, d, e.target.checked)} />{t(`diet.${d}`)}</label>)}</div></fieldset>
             <Button type="submit" busy={busy}>{t("nut.profile.save")}</Button>
           </form>
         </Card>
       )}
 
+      {estimate && !editing && <div className="row"><Button type="button" onClick={() => setEditing(true)}>{t("nut.profile.edit")}</Button>
+        <ButtonLink href={`/${locale}/nutrition/log`} secondary>{t("nut.log.title")}</ButtonLink>
+        <ButtonLink href={`/${locale}/nutrition/shopping`} secondary>{t("nut.shop.title")}</ButtonLink>
+        <ButtonLink href={`/${locale}/foods`} secondary>{t("foods.title")}</ButtonLink></div>}
       {estimate && estimate.status === "OK" && <EstimateCard e={estimate} />}
       {estimate && estimate.status !== "OK" && (
         <Card title={t("nut.refer.title")}>

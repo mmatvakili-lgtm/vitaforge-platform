@@ -7,6 +7,7 @@ import type { SessionSummary, WorkoutDay, WorkoutSession } from "../../../lib/ap
 import { buildSetLog, finishRequest, isLogged, newUuid, nextSet, plannedSets, progress, skipSetLog, type PlannedSet, type SetDraft } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Progression } from "../../../components/Progression.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 
 const EMPTY: SetDraft = { reps: "", load: "", rpe: "" };
@@ -108,6 +109,7 @@ export default function WorkoutPage() {
   return (
     <Card title={day.title ?? t("wk.title")}>
       <ApiErrorView error={error} />
+      {!session && <Progression names={Object.fromEntries((day.exercises ?? []).map((x) => [x.exercise_id ?? "", x.name ?? ""]))} />}
       {!session && <Button type="button" busy={busy} onClick={start}>{t("wk.start")}</Button>}
       {session && (
         <>
