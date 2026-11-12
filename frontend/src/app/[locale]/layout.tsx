@@ -10,9 +10,11 @@ export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
 
+export const viewport = { themeColor: "#0f766e" };
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return isLocale(locale) ? { title: t(locale, "app.name"), description: t(locale, "app.tagline"), manifest: "/manifest.webmanifest", icons: { icon: "/icon.svg" }, themeColor: "#0f766e" } : {};
+  return isLocale(locale) ? { title: t(locale, "app.name"), description: t(locale, "app.tagline"), manifest: "/manifest.webmanifest", icons: { icon: "/icon.svg" } } : {};
 }
 
 export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
