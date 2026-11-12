@@ -24,7 +24,8 @@
 |---|---|---|
 | Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۳۸ سبز + ۱ skip، حالت in-memory و sqlite) |
 | تطابق OpenAPI با مسیرها | `AUTOMATED_TESTED` | Contract Harness هر ۷۵ عملیات را اجرا و پاسخ را با spec می‌سنجد |
-| Frontend (مسیرها: home, dashboard, login, register, verify, forgot, reset, onboarding, plan, exercises, exercises/[id], workout, history, nutrition, nutrition/log, nutrition/shopping, foods, profile) | `AUTOMATED_TESTED` | ۴۱ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
+| Frontend (مسیرها: home, dashboard, login, register, verify, forgot, reset, onboarding, plan, exercises, exercises/[id], workout, history, nutrition, nutrition/log, nutrition/shopping, foods, profile) | `AUTOMATED_TESTED` | ۴۳ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
+| PWA (manifest، آیکون SVG، service worker فقط برای دارایی‌های استاتیک؛ `/api/` و غیر-GET هرگز کش نمی‌شود) | `AUTOMATED_TESTED` | ۲ تست؛ نصب‌پذیری روی مرورگر واقعی بررسی نشده؛ آیکون PNG برای برخی پلتفرم‌ها `PLANNED` |
 | ثبت‌نام / ورود / خروج | `AUTOMATED_TESTED` | فقط در devserver و تست |
 | تأیید ایمیل | `AUTOMATED_TESTED` | بخش ۴؛ ارسال واقعی SMTP تأیید نشده |
 | بازیابی رمز | `AUTOMATED_TESTED` | outbox پایدار؛ SMTP تأیید نشده |
