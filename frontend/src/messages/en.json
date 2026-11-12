@@ -543,5 +543,8 @@
  "dash.meals": "Meals logged: {n}",
  "hist.trend": "Weekly volume",
  "hist.trend.item": "{sessions} sessions, {kg} kg",
- "hist.trend.hint": "Last 8 weeks, from your own logged sessions. Empty weeks mean nothing was logged."
+ "hist.trend.hint": "Last 8 weeks, from your own logged sessions. Empty weeks mean nothing was logged.",
+ "nut.log.week": "Last 7 days (energy)",
+ "nut.log.week.item": "{kcal} kcal, {ml} ml water",
+ "nut.log.week.hint": "Estimated from what you logged; unlogged days appear empty, not as zero intake."
 }

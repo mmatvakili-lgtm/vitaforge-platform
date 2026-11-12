@@ -35,3 +35,10 @@ export function barPct(value: number, max: number): number {
   if (!(value > 0) || !(max > 0)) return 0;
   return Math.max(4, Math.min(100, Math.round((value / max) * 100)));
 }
+
+/** The `n` calendar dates (YYYY-MM-DD, UTC) ending at `end`, oldest first. */
+export function lastDates(end: string, n: number): string[] {
+  const base = new Date(`${end}T00:00:00Z`);
+  if (Number.isNaN(base.getTime()) || n < 1) return [];
+  return Array.from({ length: n }, (_, i) => { const d = new Date(base); d.setUTCDate(d.getUTCDate() - (n - 1 - i)); return iso(d); });
+}

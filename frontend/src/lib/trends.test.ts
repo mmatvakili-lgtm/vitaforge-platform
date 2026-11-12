@@ -27,3 +27,9 @@ test("Sunday belongs to the previous Monday's week", () => {
 test("barPct", () => {
   assert.equal(barPct(0, 10), 0); assert.equal(barPct(1, 1000), 4); assert.equal(barPct(10, 10), 100); assert.equal(barPct(5, 0), 0);
 });
+import { lastDates } from "./trends.ts";
+test("lastDates is oldest-first, crosses month ends, rejects bad input", () => {
+  assert.deepEqual(lastDates("2026-03-02", 3), ["2026-02-28", "2026-03-01", "2026-03-02"]);
+  assert.deepEqual(lastDates("nope", 3), []);
+  assert.deepEqual(lastDates("2026-03-02", 0), []);
+});

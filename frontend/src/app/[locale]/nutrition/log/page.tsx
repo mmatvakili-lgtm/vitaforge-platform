@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../../lib/api/client.ts";
 import type { FoodSummary, MealEntry, NutritionDaySummary, RecipeSummary } from "../../../../lib/api/generated.ts";
 import { MEAL_SLOTS, alertKind, buildMealRequest, defaultSlot, groupBySlot, parsePositive, type MealSource, type Slot } from "../../../../lib/nutrition-log.ts";
+import { barPct, lastDates } from "../../../../lib/trends.ts";
 import { rangeText } from "../../../../lib/nutrition.ts";
 import { useApi, useT } from "../../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../../components/ui.tsx";
@@ -29,6 +30,7 @@ export default function LogPage() {
   const [m, setM] = useState({ name: "", kcal: "", protein_g: "", carbs_g: "", fat_g: "" });
   const [water, setWater] = useState("");
   const [formErr, setFormErr] = useState(false);
+  const [week, setWeek] = useState<Array<{ date: string; kcal: number; water: number; meals: number }> | null>(null);
 
   const fail = useCallback((e: ApiError, status: number) => {
     if (status === 401) { router.replace(`/${locale}/login`); return; }
@@ -45,6 +47,12 @@ export default function LogPage() {
   }, [api, fail]);
 
   useEffect(() => { load(date); }, [load, date]);
+  // 7-day strip from the user's own logged summaries (one request per day; days that fail are shown as empty, not guessed)
+  useEffect(() => {
+    let live = true;
+    Promise.all(lastDates(today(), 7).map((d) => api.call("API-NUT-008", { query: { date: d } }).then((r) => ({ date: d, kcal: r.ok ? r.data.kcal : 0, water: r.ok ? r.data.water_ml : 0, meals: r.ok ? r.data.meals : 0 })))).then((w) => { if (live) setWeek(w); });
+    return () => { live = false; };
+  }, [api, meals]);
   useEffect(() => {
     let live = true;
     api.call("API-FOOD-001", { query: { page_size: 100 } }).then((r) => { if (live && r.ok) setFoods(r.data.results ?? []); });
@@ -127,6 +135,20 @@ export default function LogPage() {
           </section>
         ))}
       </Card>
+
+      {week && week.some((d) => d.meals > 0 || d.water > 0) && (
+        <Card title={t("nut.log.week")}>
+          <ol className="bars">
+            {week.map((d) => (
+              <li key={d.date} title={t("nut.log.week.item", { kcal: Math.round(d.kcal), ml: d.water })}>
+                <span className="bar" style={{ blockSize: `${barPct(d.kcal, Math.max(...week.map((x) => x.kcal)))}%` }} />
+                <span className="muted bar-label"><time dateTime={d.date}>{new Intl.DateTimeFormat(locale === "fa" ? "fa-IR" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(d.date))}</time></span>
+                <span className="sr-only">{t("nut.log.week.item", { kcal: Math.round(d.kcal), ml: d.water })}</span>
+              </li>))}
+          </ol>
+          <p className="muted">{t("nut.log.week.hint")}</p>
+        </Card>
+      )}
 
       <Card title={t("nut.log.add")}>
         <form onSubmit={add} noValidate>
