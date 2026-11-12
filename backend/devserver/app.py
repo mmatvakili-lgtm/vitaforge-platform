@@ -721,6 +721,45 @@ class App:
             raise Conflict(e.detail)                       # an invalid/unsafe lifecycle move is a state conflict
         return self._admin_ex(self.store.exercise_meta[code])
 
+    # ---- food review queue (human decisions only; blockers are facts the reviewer must resolve at the source)
+    def _staff(self, c, allowed):
+        if self._role(c) not in allowed:
+            raise Forbidden()
+
+    def _admin_food(self, f):
+        from nutrition_engine.review import approval_blockers
+        last = next((a for a in reversed(self.store.audit) if a.get("kind") == "food_review" and a.get("food") == f.id), None)
+        out = {"id": f.id, "name_en": f.name_en, "status": f.status, "allergens_known": bool(f.allergens_known), "nutrient_count": len(f.per_100g),
+               "is_test_fixture": bool(f.is_test_fixture), "approval_blockers": approval_blockers(f),
+               "source": dataclasses.asdict(f.source) if f.source else None}
+        if last:
+            out["reviewed_by"] = pub("user", last["by"]); out["review_notes"] = last.get("notes", "")
+        return out
+
+    def op_api_adm_009(self, c):
+        self._staff(c, ("nutrition_reviewer", "content_admin", "admin"))
+        order = {"pending_review": 0, "reviewed": 1, "retired": 2}
+        foods = sorted(self.store.__dict__.setdefault("foods", {}).values(), key=lambda f: (order.get(f.status, 9), f.id))
+        return [self._admin_food(f) for f in foods[:500]]
+
+    def op_api_adm_010(self, c):
+        from nutrition_engine.review import decide
+        self._staff(c, ("nutrition_reviewer", "admin"))
+        foods = self.store.__dict__.setdefault("foods", {})
+        f = foods.get(c["food_id"])
+        if f is None:
+            raise NotFound()
+        b = c["body"]
+        try:
+            nf = decide(f, b["decision"], b.get("notes") or "")
+        except ValueError as e:
+            if str(e) in ("notes_required", "decision"):
+                raise ValidationFailed({"notes": "required"} if str(e) == "notes_required" else {"decision": "invalid"})
+            raise Conflict(str(e))                                  # approval blocked: the reasons are listed, nothing changes
+        foods[f.id] = nf
+        self.store.audit.append({"kind": "food_review", "food": f.id, "by": c["uid"], "decision": b["decision"], "notes": (b.get("notes") or "")[:1000], "at": self.sec()})
+        return self._admin_food(nf)
+
     def op_api_adm_004(self, c):
         rows = self.m.admin_list_rule_sets(self._role(c))["rule_sets"]
         return [self._rule_set(r["version"], r) for r in rows]

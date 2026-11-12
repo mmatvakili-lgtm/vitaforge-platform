@@ -100,3 +100,27 @@ def test_erase_drops_stored_export_copies(env):
     assert any("data" in r for r in h.store.privacy_requests.values())
     assert h.call("POST", "/privacy/delete", {"password": PASSWORD, "confirm": True}, token=t).status in (200, 202)
     assert not any("data" in r for r in h.store.privacy_requests.values() if r["kind"] == "export")
+
+
+def test_food_review_queue_blocks_unsafe_approval_and_records_the_reviewer(env):
+    from nutrition_engine.food import FoodSource
+    h, t = env
+    rev = h.login("nrev@ex.com", role="nutrition_reviewer")
+    store_foods = h.store.__dict__["foods"]
+    good = FoodRecord("real1", "Real food", per_100g={"kcal": 100, "protein_g": 5, "fat_g": 1, "carbs_g": 20}, allergens_known=True,
+                      nutrient_refs={k: {"id": "x", "unit": "g", "name": k} for k in ("kcal", "protein_g", "fat_g", "carbs_g")},
+                      source=FoodSource("usda_fdc_foundation", "1", license="CC0-1.0", license_verified=True))
+    nolic = FoodRecord("real2", "No license", per_100g={"kcal": 100}, allergens_known=True, nutrient_refs={"kcal": {"id": "x", "unit": "kcal", "name": "k"}}, source=FoodSource("usda_fdc_foundation", "2"))
+    store_foods.update({"real1": good, "real2": nolic})
+    assert h.call("GET", "/admin/foods", token=t).status == 403                    # normal users never see the queue
+    assert h.call("POST", "/admin/foods/real1/review", {"decision": "approve"}, token=t).status == 403
+    q = {f["id"]: f for f in h.call("GET", "/admin/foods", token=rev).body}
+    assert q["milky"]["approval_blockers"] == ["test_fixture", "no_source"] and q["real2"]["approval_blockers"] == ["license_not_verified"]
+    r = h.call("POST", "/admin/foods/real2/review", {"decision": "approve"}, token=rev)
+    assert r.status == 409 and store_foods["real2"].status == "pending_review"       # blocked: nothing changes
+    assert h.call("POST", "/admin/foods/real1/review", {"decision": "reject"}, token=rev).status == 422   # a reason is mandatory
+    ok = h.call("POST", "/admin/foods/real1/review", {"decision": "approve", "notes": "checked against FDC"}, token=rev)
+    assert ok.status == 200 and ok.body["status"] == "reviewed" and ok.body["reviewed_by"] and ok.body["review_notes"] == "checked against FDC"
+    assert h.call("POST", "/admin/foods/real1/review", {"decision": "retire", "notes": "superseded"}, token=rev).body["status"] == "retired"
+    assert h.call("POST", "/admin/foods/real1/review", {"decision": "approve"}, token=rev).status == 409   # a retired food cannot be approved again
+    assert h.call("POST", "/admin/foods/nope/review", {"decision": "approve"}, token=rev).status == 404

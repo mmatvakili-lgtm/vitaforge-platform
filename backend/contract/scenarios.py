@@ -82,6 +82,10 @@ def happy_path(h: Harness) -> Dict[str, str]:
     c("GET", "/nutrition/prices", token=tn)
     c("PUT", "/nutrition/prices", {"food_id": "fx_a", "price_per_kg": 100.0, "currency": "USD", "region": "US"}, token=tn)
     c("DELETE", "/nutrition/prices/fx_a", token=tn)
+    nrev = h.login("nrev@ex.com", role="nutrition_reviewer")                     # review queue: a test fixture can never be approved
+    c("GET", "/admin/foods", token=nrev)
+    c("POST", "/admin/foods/fx_a/review", {"decision": "approve"}, token=nrev)       # -> 409 (test_fixture blocker)
+    c("POST", "/admin/foods/fx_c/review", {"decision": "reject", "notes": "fixture only, not real data"}, token=nrev)
     c("PUT", "/nutrition/shopping-state", {"checked": ["fx_a"]}, token=tn); c("GET", "/nutrition/shopping-state", token=tn)
     # admin
     c("GET", "/admin/exercises", token=cad)

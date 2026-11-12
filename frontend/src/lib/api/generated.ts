@@ -60,6 +60,9 @@ export type AiChatRequest = { "purpose": "explain_plan" | "technique" | "general
 export type AiChatResponse = { "answer": string; "uncertainty"?: "none" | "low" | "medium" | "high"; "sources"?: Array<string>; "decision"?: SafetyDecision; "mode": "llm" | "rule_based_fallback" };
 export type ExerciseAdminList = Array<ExerciseAdmin>;
 export type ExerciseAdminWrite = { "stable_code": string; "movement_pattern": string; "difficulty": string; "translations"?: Record<string, unknown>; "muscles"?: Array<string>; "equipment"?: Array<string>; "region_loads"?: Record<string, unknown> };
+export type FoodAdmin = { "id": string; "name_en": string; "status": "pending_review" | "reviewed" | "retired"; "source"?: (Record<string, unknown>) | null; "allergens_known"?: boolean; "nutrient_count"?: number; "is_test_fixture"?: boolean; "approval_blockers": Array<string>; "reviewed_by"?: string; "review_notes"?: string };
+export type FoodAdminList = Array<FoodAdmin>;
+export type FoodReviewRequest = { "decision": "approve" | "reject" | "retire"; "notes"?: string };
 export type ExerciseAdmin = { "id"?: string; "stable_code"?: string; "review_status"?: "draft" | "scientific_review" | "safety_review" | "published" | "retired"; "version"?: number; "safety_tags_complete"?: boolean };
 export type TransitionRequest = { "to_status": "scientific_review" | "safety_review" | "published" | "retired" | "draft"; "notes"?: string };
 export type RuleSetList = Array<RuleSet>;
@@ -148,6 +151,8 @@ export interface OpTypes {
   "API-ADM-001": { body: undefined; res: ExerciseAdminList; path: Record<string, never>; query: Record<string, never> };
   "API-ADM-002": { body: ExerciseAdminWrite; res: ExerciseAdmin; path: Record<string, never>; query: Record<string, never> };
   "API-ADM-003": { body: TransitionRequest; res: ExerciseAdmin; path: { exercise_id: string }; query: Record<string, never> };
+  "API-ADM-009": { body: undefined; res: FoodAdminList; path: Record<string, never>; query: Record<string, never> };
+  "API-ADM-010": { body: FoodReviewRequest; res: FoodAdmin; path: { food_id: string }; query: Record<string, never> };
   "API-ADM-004": { body: undefined; res: RuleSetList; path: Record<string, never>; query: Record<string, never> };
   "API-ADM-005": { body: PublishRuleSetRequest; res: RuleSet; path: { rule_set_id: string }; query: Record<string, never> };
   "API-ADM-006": { body: undefined; res: AdminUserList; path: Record<string, never>; query: Record<string, never> };
@@ -719,6 +724,30 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
       403,
       404,
       409
+    ]
+  },
+  "API-ADM-009": {
+    "method": "GET",
+    "path": "/admin/foods",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401,
+      403
+    ]
+  },
+  "API-ADM-010": {
+    "method": "POST",
+    "path": "/admin/foods/{food_id}/review",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      403,
+      404,
+      409,
+      422
     ]
   },
   "API-ADM-004": {

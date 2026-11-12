@@ -1,10 +1,10 @@
-"""python manage.py create_staff --email a@b.co --password '...' --role admin|content_admin|exercise_reviewer|clinical_safety_reviewer
+"""python manage.py create_staff --email a@b.co --password '...' --role admin|content_admin|exercise_reviewer|nutrition_reviewer|clinical_safety_reviewer
 Creates a verified staff account through the same IdentityService the API uses (no separate password path). NEEDS LOCAL VERIFICATION."""
 import time
 
 from django.core.management.base import BaseCommand, CommandError
 
-ROLES = ("admin", "content_admin", "exercise_reviewer", "clinical_safety_reviewer", "professional")
+ROLES = ("admin", "content_admin", "exercise_reviewer", "nutrition_reviewer", "clinical_safety_reviewer", "professional")
 
 
 class Command(BaseCommand):

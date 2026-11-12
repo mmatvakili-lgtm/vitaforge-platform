@@ -1198,6 +1198,62 @@ components:
       - stable_code
       - movement_pattern
       - difficulty
+    FoodAdmin:
+      type: object
+      properties:
+        id:
+          type: string
+        name_en:
+          type: string
+        status:
+          enum:
+          - pending_review
+          - reviewed
+          - retired
+        source:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        allergens_known:
+          type: boolean
+        nutrient_count:
+          type: integer
+        is_test_fixture:
+          type: boolean
+        approval_blockers:
+          type: array
+          items:
+            type: string
+        reviewed_by:
+          type: string
+        review_notes:
+          type: string
+      additionalProperties: false
+      required:
+      - id
+      - name_en
+      - status
+      - approval_blockers
+      description: approve فقط وقتی ممکن است که approval_blockers خالی باشد؛ هیچ تأییدی خودکار یا ساختگی نیست.
+    FoodAdminList:
+      type: array
+      items:
+        $ref: '#/components/schemas/FoodAdmin'
+    FoodReviewRequest:
+      type: object
+      properties:
+        decision:
+          enum:
+          - approve
+          - reject
+          - retire
+        notes:
+          type: string
+          maxLength: 1000
+      additionalProperties: false
+      required:
+      - decision
     ExerciseAdmin:
       type: object
       properties:
@@ -4179,6 +4235,107 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TransitionRequest'
+  /admin/foods:
+    get:
+      operationId: api_adm_009
+      tags:
+      - admin
+      summary: صف بازبینی غذاها
+      x-id: API-ADM-009
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodAdminList'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - nutrition_reviewer
+      - content_admin
+      - super_admin
+      description: 'نقش‌های مجاز: nutrition_reviewer، content_admin، super_admin + بررسی Object-level.'
+  /admin/foods/{food_id}/review:
+    post:
+      operationId: api_adm_010
+      tags:
+      - admin
+      summary: تصمیم بازبینی غذا (تأیید/رد/بازنشستگی)
+      x-id: API-ADM-010
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodAdmin'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: دسترسی/رضایت/مجوز لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-roles:
+      - nutrition_reviewer
+      - super_admin
+      description: 'نقش‌های مجاز: nutrition_reviewer، super_admin + بررسی Object-level.'
+      parameters:
+      - name: food_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoodReviewRequest'
   /admin/safety/rule-sets:
     get:
       operationId: api_adm_004
