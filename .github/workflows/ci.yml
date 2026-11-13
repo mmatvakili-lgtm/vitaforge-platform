@@ -28,6 +28,12 @@ jobs:
   django-postgres:
     name: django + postgres (migrations, persistence)
     runs-on: ubuntu-latest
+    env:                                   # CI-only throw-away values (not secrets); DEBUG=true because this job tests persistence, not production hardening
+      DJANGO_DEBUG: "true"
+      DJANGO_SECRET_KEY: ci-only-not-a-secret-0123456789abcdefghijklmnop
+      DATABASE_URL: postgres://vitaforge:vitaforge@localhost:5432/vitaforge_test
+      REDIS_URL: redis://localhost:6379/0
+      ALLOWED_HOSTS: localhost,testserver
     services:
       postgres:
         image: postgres:16
