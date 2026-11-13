@@ -60,6 +60,10 @@ const login = await api.call("API-AUTH-003", { body: { identifier: email, passwo
 if (!login.ok) { console.log("login failed (account may need email verification):", login.status, login.error.code); process.exit(2); }
 console.log("ok  login ->", login.data.onboarding_status);
 ok("profile (session works via cookie)", await api.call("API-PRO-001"));
+const tgs = ok("telegram status", await api.call("API-TG-002"));
+if (!tgs.linked || tgs.notifications) throw new Error("telegram status must be linked with notifications OFF by default");
+if (!ok("telegram notifications on", await api.call("API-TG-003", { body: { enabled: true } })).notifications) throw new Error("opt-in not recorded");
+if (ok("telegram notifications off", await api.call("API-TG-003", { body: { enabled: false } })).notifications) throw new Error("opt-out not recorded");
 const steps: Array<[string, Record<string, unknown>]> = [["1", { age: 30 }], ["2", { goal: "strength", level: "beginner" }], ["3", { days_per_week: 3, session_minutes: 60 }], ["4", { equipment: ["dumbbell"] }]];
 for (const [s, a] of steps) ok(`onboarding step ${s}`, await api.call("API-ONB-002", { path: { step: s }, body: { answers: a } }));
 const docs = ok("consent docs", await api.call("API-PRIV-001"));

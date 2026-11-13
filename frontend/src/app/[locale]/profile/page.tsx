@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
-import type { ConsentDocumentList, DataRequest, Profile, ProfileUpdate } from "../../../lib/api/generated.ts";
+import type { ConsentDocumentList, DataRequest, Profile, ProfileUpdate, TelegramStatus } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
 
@@ -15,6 +15,7 @@ export default function ProfilePage() {
   const [p, setP] = useState<Profile | null>(null);
   const [docs, setDocs] = useState<Doc[]>([]);
   const [state, setState] = useState<Record<string, boolean>>({});
+  const [tg, setTg] = useState<TelegramStatus | null>(null);
   const [exp, setExp] = useState<DataRequest | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
   const [saved, setSaved] = useState(false);
@@ -25,10 +26,11 @@ export default function ProfilePage() {
 
   useEffect(() => {
     let live = true;
-    Promise.all([api.call("API-PRO-001"), api.call("API-PRIV-001")]).then(([a, b]) => {
+    Promise.all([api.call("API-PRO-001"), api.call("API-PRIV-001"), api.call("API-TG-002")]).then(([a, b, g]) => {
       if (!live) return;
       if (!a.ok) return fail(a.error, a.status);
       setP(a.data); if (b.ok) setDocs(b.data as Doc[]);
+      if (g.ok) setTg(g.data);
     });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,6 +52,12 @@ export default function ProfilePage() {
     const r = await api.call("API-PRIV-002", { body: { document_id: d.id, granted } });
     if (!r.ok) return fail(r.error, r.status);
     setState({ ...state, [d.id]: r.data.granted === true });
+  }
+  async function notifications(enabled: boolean) {
+    setError(null);
+    const r = await api.call("API-TG-003", { body: { enabled } });
+    if (!r.ok) return fail(r.error, r.status);
+    setTg(r.data);
   }
   async function requestExport() {
     setBusy(true); const r = await api.call("API-PRIV-003"); setBusy(false);
@@ -104,6 +112,16 @@ export default function ProfilePage() {
               <div className="row"><Button type="button" onClick={() => consent(d, true)}>{t("profile.consent.grant")}</Button>{d.type !== "terms" && <Button type="button" onClick={() => consent(d, false)}>{t("profile.consent.withdraw")}</Button>}</div>
             </li>))}
         </ul>
+      </Card>
+
+      <Card title={t("telegram.settings.title")}>
+        {tg?.linked ? (
+          <>
+            <Alert kind="success">{t("telegram.settings.linked")}</Alert>
+            <label className="check"><input type="checkbox" checked={tg.notifications} onChange={(e) => notifications(e.target.checked)} />{t("telegram.settings.notify")}</label>
+            <p className="hint">{t("telegram.settings.notifyHint")}</p>
+          </>
+        ) : <p className="muted">{t("telegram.settings.notLinked")}</p>}
       </Card>
 
       <Card title={t("profile.data")}>
