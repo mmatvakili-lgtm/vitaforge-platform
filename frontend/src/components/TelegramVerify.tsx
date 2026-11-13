@@ -16,7 +16,7 @@ export function TelegramVerify({ email, password }: { email: string; password: s
   const [expires, setExpires] = useState("");
   const [left, setLeft] = useState(0);
   const alive = useRef(true);
-  useEffect(() => () => { alive.current = false; }, []);
+  useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);   // re-armed on mount: React StrictMode runs mount->cleanup->mount in development
 
   const request = useCallback(async () => {
     setPhase("requesting"); setMsg("");

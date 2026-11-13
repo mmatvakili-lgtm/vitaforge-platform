@@ -27,3 +27,9 @@ test("poll outcomes: success only on 200, 401 keeps waiting", () => {
   assert.equal(pollOutcome(423), "locked");
   assert.equal(pollOutcome(500), "error");
 });
+
+import { readFileSync } from "node:fs";
+test("regression: TelegramVerify re-arms its mounted flag (React StrictMode mount/cleanup/mount left the button stuck on 'sending')", () => {
+  const src = readFileSync(new URL("../components/TelegramVerify.tsx", import.meta.url), "utf8");
+  assert.match(src, /alive\.current = true/);
+});
