@@ -55,11 +55,16 @@ export function nextSet(session: WorkoutSession | undefined, sets: PlannedSet[])
   return sets.find((s) => !isLogged(session, s));
 }
 
-export function finishRequest(o: { difficulty?: string; stoppedForPain?: boolean; notes?: string }): SessionFinishRequest {
+export const PAIN_REGIONS = ["neck", "shoulder", "elbow", "wrist_hand", "upper_back", "lower_back", "hip", "knee", "ankle_foot", "chest", "other"] as const;
+
+export function finishRequest(o: { difficulty?: string; stoppedForPain?: boolean; painRegion?: string; notes?: string }): SessionFinishRequest {
   const body: SessionFinishRequest = {};
   const d = o.difficulty ? num(o.difficulty) : undefined;
   if (d !== undefined && Number.isInteger(d) && d >= 1 && d <= 10) body.perceived_difficulty = d;
-  if (o.stoppedForPain) body.aborted_reason = "pain";
+  if (o.stoppedForPain) {
+    body.aborted_reason = "pain";
+    if (o.painRegion && (PAIN_REGIONS as readonly string[]).includes(o.painRegion)) body.pain_region = o.painRegion as NonNullable<SessionFinishRequest["pain_region"]>;
+  }
   if (o.notes && o.notes.trim()) body.notes = o.notes.trim().slice(0, 1000);
   return body;
 }

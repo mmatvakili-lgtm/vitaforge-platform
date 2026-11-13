@@ -157,3 +157,20 @@ def test_imported_food_can_only_be_approved_after_human_attestations_and_import_
     ids = [x["id"] for x in h.call("GET", "/foods?avoid_allergens=wheat", token=t).body["results"]]
     assert "fdc_111" not in ids and "plain" in ids        # the wheat food is hidden from a wheat-avoiding browse; allergen-free data remains
     assert "mystery" not in ids                           # unknown allergen data is never treated as safe when avoiding
+
+
+def test_pain_stop_returns_generic_non_diagnostic_followup_open_010():
+    h = Harness()
+    t = h.login("pain1@ex.com")
+    uid = h.store.by_email["pain1@ex.com"]
+    ws = h.store.workout_sessions
+    ws["s-pain"] = {"id": "s-pain", "user": uid, "finished": False, "logs": [], "start": 1, "start_ts": 1}
+    from devserver.app import pub
+    r = h.call("POST", f"/workouts/sessions/{pub('wks', 's-pain')}/finish", {"aborted_reason": "pain", "pain_region": "chest"}, token=t)
+    assert r.status == 200, r.body
+    f = r.body["safety_followup"]
+    assert f == {"referral_advised": True, "region": "chest", "plan_paused": False, "message_key": "pain_stop_chest"}
+    ws["s-ok"] = {"id": "s-ok", "user": uid, "finished": False, "logs": [], "start": 1, "start_ts": 1}
+    r2 = h.call("POST", f"/workouts/sessions/{pub('wks', 's-ok')}/finish", {"aborted_reason": "fatigue", "pain_region": "knee"}, token=t)
+    assert r2.status == 200 and "safety_followup" not in r2.body
+    assert ws["s-ok"].get("pain_region") is None                      # a region is only kept for pain stops

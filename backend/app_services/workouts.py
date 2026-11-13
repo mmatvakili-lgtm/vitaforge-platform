@@ -110,11 +110,11 @@ class WorkoutService:
         ws["logs"].append(entry)
         return entry, True
 
-    def finish(self, uid, sid, now=None, perceived_difficulty=None, aborted_reason=None, notes=None):
+    def finish(self, uid, sid, now=None, perceived_difficulty=None, aborted_reason=None, notes=None, pain_region=None):
         ws = self._own(uid, sid)
         if ws["finished"]:
             raise Conflict("already_finished")
-        ws.update(finished=True, end_ts=now, perceived_difficulty=perceived_difficulty, aborted_reason=aborted_reason, notes=notes)
+        ws.update(finished=True, end_ts=now, perceived_difficulty=perceived_difficulty, aborted_reason=aborted_reason, notes=notes, pain_region=pain_region if aborted_reason == "pain" else None)
         done = [l for l in ws["logs"] if not l.get("skipped")]
         dur = (now - ws["start_ts"]) // 60 if now is not None and ws.get("start_ts") is not None else None
         return {"volume_kg": sum(l["reps"] * l["load_kg"] for l in done), "sets_done": len(done), "duration_min": dur}

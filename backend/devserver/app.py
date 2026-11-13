@@ -679,8 +679,12 @@ class App:
     def op_api_log_003(self, c):
         b = c["body"]
         sid = resolve("wks", c["session_id"], [k for k, w in self.store.workout_sessions.items() if w["user"] == c["uid"]])
-        s = self.w.finish(c["uid"], sid, self.sec(), b.get("perceived_difficulty"), b.get("aborted_reason"), b.get("notes"))
+        s = self.w.finish(c["uid"], sid, self.sec(), b.get("perceived_difficulty"), b.get("aborted_reason"), b.get("notes"), b.get("pain_region"))
         out = {"id": pub("wks", sid), "volume_kg": s["volume_kg"], "sets_done": s["sets_done"]}
+        if b.get("aborted_reason") == "pain":                  # generic, non-diagnostic referral advice; never a clinical conclusion (OPEN-010)
+            rg = b.get("pain_region")
+            out["safety_followup"] = {"referral_advised": True, "region": rg, "plan_paused": False,
+                                      "message_key": "pain_stop_chest" if rg == "chest" else ("pain_stop_region" if rg and rg != "other" else "pain_stop_generic")}
         if s["duration_min"] is not None:
             out["duration_min"] = s["duration_min"]
         return out

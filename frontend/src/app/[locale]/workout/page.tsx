@@ -4,11 +4,10 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import type { SessionSummary, WorkoutDay, WorkoutSession } from "../../../lib/api/generated.ts";
-import { buildSetLog, finishRequest, isLogged, newUuid, nextSet, plannedSets, progress, skipSetLog, type PlannedSet, type SetDraft } from "../../../lib/workout-log.ts";
+import { PAIN_REGIONS, buildSetLog, finishRequest, isLogged, newUuid, nextSet, plannedSets, progress, skipSetLog, type PlannedSet, type SetDraft } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
 import { Progression } from "../../../components/Progression.tsx";
-import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 
 const EMPTY: SetDraft = { reps: "", load: "", rpe: "" };
 
@@ -28,6 +27,7 @@ export default function WorkoutPage() {
   const [difficulty, setDifficulty] = useState("");
   const [notes, setNotes] = useState("");
   const [pain, setPain] = useState(false);
+  const [painRegion, setPainRegion] = useState("");
   const [summary, setSummary] = useState<SessionSummary | null>(null);
   const pending = useRef<{ key: string; uuid: string } | null>(null);              // one client_uuid per set attempt => retries are idempotent
 
@@ -84,7 +84,7 @@ export default function WorkoutPage() {
     e.preventDefault();
     if (!session?.id) return;
     setBusy(true); setError(null);
-    const r = await api.call("API-LOG-003", { path: { session_id: session.id }, body: finishRequest({ difficulty, stoppedForPain: pain, notes }) });
+    const r = await api.call("API-LOG-003", { path: { session_id: session.id }, body: finishRequest({ difficulty, stoppedForPain: pain, painRegion, notes }) });
     setBusy(false);
     if (!r.ok) return setError(r.error);
     setSummary(r.data); await refresh(session.id);
@@ -99,7 +99,7 @@ export default function WorkoutPage() {
     return (
       <Card title={t("wk.summary")}>
         {session?.aborted_reason === "pain" && <Alert kind="warning">{t("wk.painWarn")}</Alert>}
-        {s?.safety_followup && <DecisionPanel decision={s.safety_followup} />}
+        {s?.safety_followup && <Alert kind="warning">{t(`wk.${s.safety_followup.message_key}`)}</Alert>}
         <p>{t("wk.sets", { n: n(s?.sets_done ?? session?.sets_done ?? 0) })} · {t("wk.volume", { kg: n(s?.volume_kg ?? session?.volume_kg ?? 0) })}{(s?.duration_min ?? session?.duration_min) !== undefined && <> · {t("wk.minutes", { n: n((s?.duration_min ?? session?.duration_min) as number) })}</>}</p>
         <div className="row"><ButtonLink href={`/${locale}/history`}>{t("wk.toHistory")}</ButtonLink><ButtonLink href={`/${locale}/plan`} secondary>{t("nav.plan")}</ButtonLink></div>
       </Card>
@@ -146,6 +146,14 @@ export default function WorkoutPage() {
               <Field id="difficulty" label={t("wk.difficulty")}><input id="difficulty" inputMode="numeric" dir="ltr" value={difficulty} onChange={(e) => setDifficulty(e.target.value)} /></Field>
               <Field id="notes" label={t("wk.notes")}><textarea id="notes" maxLength={1000} value={notes} onChange={(e) => setNotes(e.target.value)} /></Field>
               <label className="check"><input type="checkbox" checked={pain} onChange={(e) => setPain(e.target.checked)} /> {t("wk.pain")}</label>
+              {pain && (
+                <Field id="pain-region" label={t("wk.painRegion")}>
+                  <select id="pain-region" value={painRegion} onChange={(e) => setPainRegion(e.target.value)}>
+                    <option value="">—</option>
+                    {PAIN_REGIONS.map((r) => <option key={r} value={r}>{t(`region.${r}`)}</option>)}
+                  </select>
+                </Field>
+              )}
               {pain && <Alert kind="warning">{t("wk.painWarn")}</Alert>}
               <div className="row"><Button type="submit" busy={busy}>{t("wk.finish")}</Button><Button type="button" onClick={() => setFinishing(false)}>{t("sub.cancel")}</Button></div>
             </form>

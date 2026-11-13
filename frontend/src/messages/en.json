@@ -596,5 +596,20 @@
  "telegram.privacy": "Telegram is used only to verify your account. VitaForge never sends health information through Telegram, and notifications stay off unless you turn them on yourself.",
  "telegram.or": "Prefer email?",
  "telegram.loginHint": "Account not verified yet? Verify with Telegram",
- "error.telegram_unavailable": "Telegram verification is not available right now."
+ "error.telegram_unavailable": "Telegram verification is not available right now.",
+ "wk.painRegion": "Where? (optional)",
+ "wk.pain_stop_generic": "You stopped because of pain. Rest, do not train through it, and see a qualified professional if it persists or worsens. VitaForge does not diagnose.",
+ "wk.pain_stop_region": "You stopped because of pain. Avoid loading this area, and see a qualified professional if it persists or worsens. VitaForge does not diagnose.",
+ "wk.pain_stop_chest": "Chest pain can be serious. Stop exercising and seek medical help now if it is severe, spreads, or comes with shortness of breath, dizziness or sweating.",
+ "region.neck": "Neck",
+ "region.shoulder": "Shoulder",
+ "region.elbow": "Elbow",
+ "region.wrist_hand": "Wrist / hand",
+ "region.upper_back": "Upper back",
+ "region.lower_back": "Lower back",
+ "region.hip": "Hip",
+ "region.knee": "Knee",
+ "region.ankle_foot": "Ankle / foot",
+ "region.chest": "Chest",
+ "region.other": "Other"
 }

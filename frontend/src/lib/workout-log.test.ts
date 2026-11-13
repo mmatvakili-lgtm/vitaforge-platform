@@ -37,3 +37,9 @@ test("library query only carries active filters", () => {
   assert.deepEqual(libraryQuery({ q: " squat ", muscle: "quadriceps", equipment: "", difficulty: "beginner" }, 3), { page: 3, page_size: 20, q: "squat", muscle: "quadriceps", difficulty: "beginner" });
   assert.equal(pageCount(0), 1); assert.equal(pageCount(41), 3);
 });
+
+test("pain region is sent only with a pain stop and only when valid", () => {
+  assert.deepEqual(finishRequest({ stoppedForPain: true, painRegion: "knee" }), { aborted_reason: "pain", pain_region: "knee" });
+  assert.deepEqual(finishRequest({ stoppedForPain: true, painRegion: "bogus" }), { aborted_reason: "pain" });
+  assert.deepEqual(finishRequest({ painRegion: "knee" }), {});
+});

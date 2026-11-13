@@ -1051,10 +1051,45 @@ components:
           - fatigue
           - time
           - other
+        pain_region:
+          enum:
+          - neck
+          - shoulder
+          - elbow
+          - wrist_hand
+          - upper_back
+          - lower_back
+          - hip
+          - knee
+          - ankle_foot
+          - chest
+          - other
         notes:
           type: string
           maxLength: 1000
       additionalProperties: false
+    PainFollowup:
+      type: object
+      properties:
+        referral_advised:
+          type: boolean
+        region:
+          type:
+          - string
+          - 'null'
+        message_key:
+          enum:
+          - pain_stop_generic
+          - pain_stop_region
+          - pain_stop_chest
+        plan_paused:
+          type: boolean
+      additionalProperties: false
+      required:
+      - referral_advised
+      - message_key
+      description: 'پیگیری ایمنی پس از توقف به‌علت درد: فقط ارجاع و توصیه‌ی محتاطانه؛ هیچ تشخیص بالینی و هیچ SafetyDecision ساختگی. پیام از کلید
+        ترجمه‌شده‌ی ثابت می‌آید.'
     SessionSummary:
       type: object
       properties:
@@ -1068,7 +1103,7 @@ components:
         duration_min:
           type: integer
         safety_followup:
-          $ref: '#/components/schemas/SafetyDecision'
+          $ref: '#/components/schemas/PainFollowup'
       additionalProperties: false
     SessionList2:
       type: array
