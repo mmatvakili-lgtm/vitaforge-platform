@@ -611,5 +611,10 @@
  "region.knee": "زانو",
  "region.ankle_foot": "مچ پا / پا",
  "region.chest": "قفسه‌سینه",
- "region.other": "سایر"
+ "region.other": "سایر",
+ "telegram.settings.title": "تلگرام",
+ "telegram.settings.linked": "حساب تلگرام شما متصل است.",
+ "telegram.settings.notify": "اجازه می‌دهم VitaForge در تلگرام یادآوری برایم بفرستد",
+ "telegram.settings.notifyHint": "به‌صورت پیش‌فرض خاموش است. یادآورها هرگز اطلاعات سلامتی ندارند و هر زمان می‌توانید خاموشش کنید. (هنوز یادآوری‌ای ارسال نمی‌شود؛ این گزینه فقط رضایت شما را ثبت می‌کند.)",
+ "telegram.settings.notLinked": "تلگرام به این حساب متصل نیست."
 }
