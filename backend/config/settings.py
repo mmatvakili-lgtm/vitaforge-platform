@@ -23,6 +23,10 @@ LANGUAGE_CODE = "fa"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_HSTS_SECONDS = 0 if CFG["debug"] else 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not CFG["debug"]
+SECURE_REFERRER_POLICY = "same-origin"
+X_FRAME_OPTIONS = "DENY"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")   # behind the TLS-terminating proxy (nginx/Caddy) of the production deployment
 # The API (/api/v1/*) owns its cookies (ADR-0009: `sessionid` + `csrftoken`, set by the application with HttpOnly/Secure rules).
 CELERY_BROKER_URL = CFG["redis_url"]                  # reserved for background jobs; no Celery task exists yet
 CLINICAL_CONTENT_PUBLISHED = CFG["clinical_content_published"]

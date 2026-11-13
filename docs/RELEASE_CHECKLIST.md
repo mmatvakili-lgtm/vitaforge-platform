@@ -12,7 +12,7 @@
 | مورد | وضعیت | شواهد |
 |---|---|---|
 | هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۵۵۳ تست سبز (in-memory و sqlite)؛ روی ماشین مالک در حالت Django ← ۵۳۷ سبز و ۲ skip |
-| تطابق API توسعه با OpenAPI (هر ۷۸ endpoint) | `Passed` | تست `test_every_openapi_endpoint_is_implemented`؛ فقط وجود مسیر، نه تطابق کامل schema |
+| تطابق API توسعه با OpenAPI (هر ۸۲ endpoint) | `Passed` | تست `test_every_openapi_endpoint_is_implemented`؛ فقط وجود مسیر، نه تطابق کامل schema |
 | API توسعه (WSGI) + UI آزمایشی | `Passed` (فقط توسعه) | تست HTTP + اجرای واقعی `python3 -m devserver` |
 | داده حرکات بازبینی‌شده و دارای منبع علمی | `Blocked` | `OPEN-003/007`؛ فقط ۲۵ حرکت `experimental` |
 | آداپتور Django + مهاجرت‌ها | `Passed` (CI/مالک؛ در sandbox اجرا نشده) | job `django-store` روی PostgreSQL؛ تأیید ویندوز/SQLite معلق |
@@ -21,10 +21,10 @@
 | تحویل واقعی SMTP | `Blocked` | اعتبار SMTP و `mail_status --send-test`؛ `PROJECT_STATE.md` §۴ |
 | انتشار محتوا | `Blocked` | ۰ حرکت و ۰ غذای منتشرشده |
 | Django + SQLite روی ماشین مالک | `Passed` (اجرای مالک) | `migrate` و pytest در حالت Django |
-| PostgreSQL واقعی | `Not Run` | `DATABASE_URL` به Postgres؛ سپس `migrate` و pytest |
-| `npm audit` | `Open` | ۲ آسیب‌پذیری گزارش شد (۱ high)؛ خروجی بررسی نشده |
+| PostgreSQL واقعی | `Passed` (CI، job `django-postgres`، PostgreSQL ۱۶) | `makemigrations --check` + کل تست‌ها؛ اجرای مالک روی داده‌ی واقعی هنوز لازم است |
+| `npm audit` / `pip-audit` | `Passed` (CI، job `security`) | سطح high؛ Next ارتقا به ۱۶.۴.۶ |
 | پشتیبان‌گیری/بازیابی روی Postgres | `Not Run` | `backup_db` سپس `restore_db` روی دیتابیس خالی و مقایسه‌ی تعداد ردیف‌ها؛ رمزنگاری فایل پشتیبان با مالک |
-| Docker/CI | `Not Run` | فایل‌ها نوشته شده |
+| CI | `Passed` | `.github/workflows/ci.yml`، پنج job؛ Docker image هنوز ساخته/اجرا نشده (`Not Run`) |
 | محتوای بالینی (حرکات، قواعد R1xx..R5xx، مسیر B فعال) | `Blocked` | `OPEN-003`، `EXP-001..013` |
 | بررسی حقوقی و ارسال داده سلامت به AI | `Blocked` | `OPEN-002`، `OPEN-004` |
 | محتوای حمایتی/ریکاوری برای مشکلات جسمی | `Blocked` | `OPEN-008` |
