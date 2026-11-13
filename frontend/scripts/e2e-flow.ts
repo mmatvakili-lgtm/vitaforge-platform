@@ -38,9 +38,24 @@ async function verifyViaCapture(addr: string) {       // dev capture adapter onl
   ok("verify", await api.call("API-AUTH-002", { body: { identifier: addr, code: secret } }));
 }
 const unverified = await api.call("API-AUTH-003", { body: { identifier: email, password: pw } });
-if (unverified.ok) throw new Error("login succeeded before e-mail verification");
+if (unverified.ok) throw new Error("login succeeded before verification");
 console.log("ok  login refused before verification");
-await verifyViaCapture(email);
+// Telegram verification (PRIMARY channel). MOCKED: the dev-only simulate route plays Telegram; the single-use token is real.
+const wrong = await api.call("API-AUTH-010", { body: { identifier: email, password: "Wrong-Password-9" } });
+if (wrong.ok || wrong.status !== 401) throw new Error("telegram link must require the password (generic 401)");
+const link = ok("telegram link", await api.call("API-AUTH-010", { body: { identifier: email, password: pw } }));
+const tgToken = new URL(link.deep_link).searchParams.get("start")!;
+async function simulateStart(id: number, token: string) {
+  const r = await fetch(`${base}/dev/telegram/simulate-start`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ telegram_id: id, token }) });
+  if (!r.ok) throw new Error(`simulate-start HTTP ${r.status}; start the server with TELEGRAM_PROVIDER=capture in debug (devserver does this)`);
+}
+await simulateStart(900001, "z".repeat(32));
+if ((await api.call("API-AUTH-003", { body: { identifier: email, password: pw } })).ok) throw new Error("invalid token verified the account");
+console.log("ok  invalid token did not verify");
+await simulateStart(900001, tgToken);
+console.log("ok  telegram verification (mocked bot)");
+const replay = await api.call("API-AUTH-010", { body: { identifier: email, password: pw } });
+if (replay.ok || replay.status !== 409) throw new Error("verified account should answer 409 on a new link request");
 const login = await api.call("API-AUTH-003", { body: { identifier: email, password: pw } });
 if (!login.ok) { console.log("login failed (account may need email verification):", login.status, login.error.code); process.exit(2); }
 console.log("ok  login ->", login.data.onboarding_status);
