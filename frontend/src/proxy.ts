@@ -9,7 +9,7 @@ function preferred(req: NextRequest): string {
   return al.startsWith("en") ? "en" : "fa";
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (LOCALES.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`))) return NextResponse.next();
   const url = req.nextUrl.clone();

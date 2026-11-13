@@ -30,7 +30,7 @@
  "auth.register.title": "ساخت حساب",
  "auth.register.submit": "ثبت‌نام",
  "auth.register.have": "حساب دارید؟ ورود",
- "auth.register.done": "حساب ساخته شد. یک کد تأیید ۶ رقمی به ایمیل شما ارسال شد. آن را در مرحله بعد وارد کنید.",
+ "auth.register.done": "حساب ساخته شد. آن را با تلگرام در پایین تأیید کنید (یا با کد ایمیل، اگر ارسال شده باشد).",
  "auth.verify.title": "تأیید ایمیل",
  "auth.verify.code": "کد تأیید",
  "auth.verify.submit": "تأیید",
