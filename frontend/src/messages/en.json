@@ -579,5 +579,22 @@
  "review.attest": "Reviewer attestations",
  "review.attest.hint": "Tick only what you personally verified at the source. Allergens cannot be inferred from the nutrient data.",
  "review.attest.allergens": "I verified the allergen list below (leave all unticked if the food contains none)",
- "review.attest.license": "I verified the data license (admin only)"
+ "review.attest.license": "I verified the data license (admin only)",
+ "telegram.intro": "Verify your account with Telegram. It takes a few seconds and needs no email.",
+ "telegram.button": "Verify with Telegram",
+ "telegram.again": "Get a new Telegram link",
+ "telegram.open": "Open Telegram",
+ "telegram.pending": "Waiting for you to press Start in the Telegram bot…",
+ "telegram.steps": "Open the bot and press Start. Then come back here — this page continues automatically.",
+ "telegram.expiresIn": "Link expires in",
+ "telegram.expired": "The link expired. Request a new one.",
+ "telegram.verified": "Your account is verified.",
+ "telegram.alreadyVerified": "This account is already verified. Sign in.",
+ "telegram.linkFailed": "Could not create a link. Check your email and password and try again.",
+ "telegram.rateLimited": "Too many attempts. Wait a minute and try again.",
+ "telegram.unavailable": "Telegram verification is not available right now. Use the email code instead if it was sent.",
+ "telegram.privacy": "Telegram is used only to verify your account. VitaForge never sends health information through Telegram, and notifications stay off unless you turn them on yourself.",
+ "telegram.or": "Prefer email?",
+ "telegram.loginHint": "Account not verified yet? Verify with Telegram",
+ "error.telegram_unavailable": "Telegram verification is not available right now."
 }

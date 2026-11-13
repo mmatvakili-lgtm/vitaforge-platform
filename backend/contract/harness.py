@@ -30,14 +30,16 @@ class Exchange:
 
 
 class Harness:
-    def __init__(self, dev: bool = True, allow: bool = True, mail=None, rule_kwargs: Optional[dict] = None, store=None):
+    def __init__(self, dev: bool = True, allow: bool = True, mail=None, rule_kwargs: Optional[dict] = None, store=None, telegram=None):
         self.c = contract()
         s = store if store is not None else InMemoryStore()
         s.catalog = demo_catalog()
         s.relations = {c: [("demo_lunge_b" if "lunge" not in c else "demo_squat_b", "alternative")] for c in s.catalog}   # DEMO only
         rs = RuleSet(version=0, status="t", screening_questions=SCREENING, allow_unreviewed_content=allow, **(rule_kwargs or {}))
         from mailer.runtime import capture_runtime
-        self.app = App(s, rs, dev, mail or capture_runtime(s, "harness-secret-0123456789abcdef0123456789"))
+        from tgverify import capture_runtime as tg_capture
+        self.tg = telegram or tg_capture()
+        self.app = App(s, rs, dev, mail or capture_runtime(s, "harness-secret-0123456789abcdef0123456789"), telegram=self.tg)
         self.store = s
         self.log: List[Exchange] = []
         self._rx = [(op, re.compile("^/api/v1" + re.sub(r"\{\w+\}", r"[^/]+", op.path) + "$")) for op in self.c.ops]
@@ -88,6 +90,24 @@ class Harness:
         assert r.status == 200, (r.status, r.body)
         m = re.search(r"sessionid=([^;]+)", r.headers["Set-Cookie"])
         return m.group(1)
+
+    def tg_link(self, email: str, password: Optional[str] = None):
+        """Request a Telegram verification link (real endpoint); returns (response, token or None)."""
+        r = self.call("POST", "/auth/telegram/link", {"identifier": email, "password": password or PASSWORD})
+        tok = r.body["deep_link"].split("start=")[1] if r.status == 200 else None
+        return r, tok
+
+    def tg_start(self, tg_id: int, token: str, secret: Optional[str] = None, text: Optional[str] = None):
+        """What Telegram does when the user presses Start: POST the Update to the webhook with the secret header."""
+        upd = {"update_id": 1, "message": {"message_id": 1, "from": {"id": tg_id, "is_bot": False}, "chat": {"id": tg_id, "type": "private"},
+                                           "text": text if text is not None else "/start " + token}}
+        return self.call("POST", "/telegram/webhook", upd, headers={"X-Telegram-Bot-Api-Secret-Token": secret or self.tg.webhook_secret})
+
+    def verify_by_telegram(self, email: str, tg_id: int):
+        r, tok = self.tg_link(email)
+        assert r.status == 200, r.body
+        r = self.tg_start(tg_id, tok)
+        assert r.status == 200, r.body
 
     def captured(self, email: str, kind: str):
         return self.app.mail.sender.latest(email, kind)

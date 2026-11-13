@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field } from "../../../components/ui.tsx";
+import { TelegramVerify } from "../../../components/TelegramVerify.tsx";
 
 const PW = /^(?=.*[A-Z])(?=.*\d).{10,}$/;
 
@@ -37,7 +38,9 @@ export default function RegisterPage() {
     return (
       <Card title={t("auth.register.title")}>
         <Alert kind="success">{t("auth.register.done")}</Alert>
-        <div className="row"><ButtonLink href={`/${locale}/verify?email=${encodeURIComponent(email.trim())}`}>{t("auth.verify.title")}</ButtonLink><ButtonLink href={`/${locale}/login`} secondary>{t("nav.login")}</ButtonLink></div>
+        <TelegramVerify email={email} password={password} />
+        <p className="muted">{t("telegram.or")}</p>
+        <div className="row"><ButtonLink href={`/${locale}/verify?email=${encodeURIComponent(email.trim())}`} secondary>{t("auth.verify.title")}</ButtonLink><ButtonLink href={`/${locale}/login`} secondary>{t("nav.login")}</ButtonLink></div>
       </Card>
     );
   }

@@ -21,7 +21,8 @@ def _api_app():
     cfg = settings.CFG
     store = PersistentStore(DjangoBackend())
     mail = MailRuntime(build_sender(cfg["mail"], store.captured_mail), cfg["secret_key"], cfg["mail"]["frontend_base_url"])
-    return build_app(store, dev_content=cfg["dev_content"], dev_mode=cfg["debug"], mail=mail)
+    from tgverify import build_runtime
+    return build_app(store, dev_content=cfg["dev_content"], dev_mode=cfg["debug"], mail=mail, telegram=build_runtime(cfg["telegram"]))
 
 
 def application(environ, start_response):

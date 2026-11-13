@@ -7,6 +7,12 @@ export type VerifyRequest = { "identifier": string; "code": string };
 export type LoginRequest = { "identifier": string; "password": string };
 export type EmailOnlyRequest = { "identifier": string };
 export type PasswordResetConfirm = { "token": string; "new_password": string };
+export type TelegramLinkRequest = { "identifier": string; "password": string };
+export type TelegramLink = { "deep_link": string; "bot_username": string; "expires_at": string };
+export type TelegramUpdate = Record<string, unknown>;
+export type TelegramOk = { "ok": boolean };
+export type TelegramStatus = { "linked": boolean; "notifications": boolean };
+export type TelegramNotificationsRequest = { "enabled": boolean };
 export type SessionInfo = { "user_id"?: string; "expires_at"?: string; "onboarding_status"?: "not_started" | "in_progress" | "completed" };
 export type SessionList = Array<{ "id"?: string; "last_seen_at"?: string; "user_agent"?: string; "current"?: boolean }>;
 export type Profile = { "display_name"?: string; "sex"?: "female" | "male" | "unspecified"; "country"?: string; "timezone"?: string; "language"?: "fa" | "en"; "calendar"?: "jalali" | "gregorian"; "unit_system"?: "metric" | "imperial"; "digit_style"?: "latin" | "persian"; "onboarding_status"?: string };
@@ -109,6 +115,10 @@ export interface OpTypes {
   "API-AUTH-007": { body: undefined; res: SessionList; path: Record<string, never>; query: Record<string, never> };
   "API-AUTH-008": { body: undefined; res: Message; path: { session_id: string }; query: Record<string, never> };
   "API-AUTH-009": { body: EmailOnlyRequest; res: Message; path: Record<string, never>; query: Record<string, never> };
+  "API-AUTH-010": { body: TelegramLinkRequest; res: TelegramLink; path: Record<string, never>; query: Record<string, never> };
+  "API-TG-001": { body: TelegramUpdate; res: TelegramOk; path: Record<string, never>; query: Record<string, never> };
+  "API-TG-002": { body: undefined; res: TelegramStatus; path: Record<string, never>; query: Record<string, never> };
+  "API-TG-003": { body: TelegramNotificationsRequest; res: TelegramStatus; path: Record<string, never>; query: Record<string, never> };
   "API-PRO-001": { body: undefined; res: Profile; path: Record<string, never>; query: Record<string, never> };
   "API-PRO-002": { body: ProfileUpdate; res: Profile; path: Record<string, never>; query: Record<string, never> };
   "API-PRIV-001": { body: undefined; res: ConsentDocumentList; path: Record<string, never>; query: Record<string, never> };
@@ -274,6 +284,52 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
     "errors": [
       400,
       429
+    ]
+  },
+  "API-AUTH-010": {
+    "method": "POST",
+    "path": "/auth/telegram/link",
+    "secured": false,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      409,
+      423,
+      429,
+      503
+    ]
+  },
+  "API-TG-001": {
+    "method": "POST",
+    "path": "/telegram/webhook",
+    "secured": false,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      503
+    ]
+  },
+  "API-TG-002": {
+    "method": "GET",
+    "path": "/telegram/status",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401
+    ]
+  },
+  "API-TG-003": {
+    "method": "PUT",
+    "path": "/telegram/notifications",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      400,
+      401,
+      409,
+      422
     ]
   },
   "API-PRO-001": {

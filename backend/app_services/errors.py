@@ -19,6 +19,7 @@ class BadRequest(AppError): code, http = "bad_request", 400
 class TooManyRequests(AppError): code, http = "rate_limited", 429
 class Gone(AppError): code, http = "gone", 410
 class ConsentRequired(AppError): code, http = "consent_required", 403
+class ServiceUnavailable(AppError): code, http = "telegram_unavailable", 503
 class FeatureUnavailable(AppError): code, http = "feature_unavailable", 501
 
 

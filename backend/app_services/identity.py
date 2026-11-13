@@ -57,7 +57,8 @@ class IdentityService:
     def verify_email(self, uid: str):
         self._user(uid)["verified"] = True
 
-    def login(self, email: str, password: str, device: str = "") -> str:
+    def check_credentials(self, email: str, password: str) -> dict:
+        """Password check with the same lockout / generic-failure behaviour as login; returns the user record (verified or not)."""
         uid = self.s.by_email.get((email or "").strip().lower())
         u = self.s.users.get(uid) if uid else None
         now = self.clock()
@@ -70,6 +71,11 @@ class IdentityService:
                 if u["fails"] >= MAX_FAILS:
                     u["locked_until"], u["fails"] = now + LOCK_SECONDS, 0
             raise AuthFailed()                         # identical error for unknown user / wrong password
+        return u
+
+    def login(self, email: str, password: str, device: str = "") -> str:
+        u = self.check_credentials(email, password)
+        now = self.clock()
         if not u["verified"]:
             raise AuthFailed("unverified")
         u["fails"] = 0

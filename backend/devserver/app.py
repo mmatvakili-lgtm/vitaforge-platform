@@ -21,7 +21,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 from urllib.parse import parse_qs
 
 from app_services.catalog import CatalogService
-from app_services.errors import (AppError, AuthFailed, BadRequest, Conflict, ConsentRequired, FeatureUnavailable, Forbidden, Gone,
+from app_services.errors import (ServiceUnavailable, AppError, AuthFailed, BadRequest, Conflict, ConsentRequired, FeatureUnavailable, Forbidden, Gone,
                                  NeedsContent, NotFound, PaymentRequired, PreconditionRequired, SafetyBlocked, ValidationFailed)
 from app_services.extras import ExtrasService
 from app_services.health_profile import CONSENT_HEALTH, HealthProfileService
@@ -46,7 +46,7 @@ MESSAGES = {"validation_failed": "Request is invalid.", "auth_failed": "Authenti
             "quota_or_plan_required": "Your plan does not include this feature.", "precondition_required": "A prerequisite step is missing.",
             "needs_content": "Not enough reviewed exercises for your equipment and restrictions.", "feature_unavailable": "This feature is not available yet.",
             "bad_request": "Bad request.", "gone": "This link or code has expired.", "consent_required": "Valid health-data consent is required.",
-            "internal_error": "Internal error.", "csrf_failed": "CSRF check failed.", "bad_json": "Body is not valid JSON.", "too_large": "Body too large.", "rate_limited": "Too many requests. Try again later."}
+            "internal_error": "Internal error.", "csrf_failed": "CSRF check failed.", "bad_json": "Body is not valid JSON.", "too_large": "Body too large.", "rate_limited": "Too many requests. Try again later.", "telegram_unavailable": "Telegram verification is not available."}
 
 
 def _plain(o):
@@ -88,7 +88,7 @@ class Reply:
 
 
 class App:
-    def __init__(self, store: InMemoryStore, rule_set: RuleSet, dev_mode: bool = False, mail=None):
+    def __init__(self, store: InMemoryStore, rule_set: RuleSet, dev_mode: bool = False, mail=None, telegram=None):
         self.dev = dev_mode
         self.contract = contract()
         day = lambda: date.today().toordinal()
@@ -123,6 +123,11 @@ class App:
         self.mail = mail or MailRuntime(DisabledSender(), secrets.token_hex(32), "http://localhost:3000")   # no runtime given: nothing is delivered
         self.outbox = Outbox(store, self.mail.sender, self.mail.secret, self.sec, self.mail.frontend_base_url)
         self.acct = AccountMail(store, self.outbox, self.m, self.id, self.mail.secret, self.sec)
+        from tgverify import TelegramVerification
+        from tgverify.ports import DisabledSender as TgDisabled
+        from tgverify.runtime import TelegramRuntime
+        self.tgrt = telegram or TelegramRuntime(TgDisabled(), "", "")      # no runtime given: Telegram verification is unavailable
+        self.tgv = TelegramVerification(store, self.sec)
         store.__dict__.setdefault("verification", {})
         store.__dict__.setdefault("symptoms", {})
         store.__dict__.setdefault("cond_meta", {})
@@ -142,6 +147,9 @@ class App:
         # not in OpenAPI (nutrition is x-deferred; the rest are dev/engine extras)
         if self.dev and self.mail.sender.provider == "capture":     # explicit development configuration only (MAIL_PROVIDER=capture AND DJANGO_DEBUG=true)
             self.routes.append(("GET", re.compile("^/api/v1/dev/captured-mail$"), self._dev_captured_mail, False, None))
+        if self.dev and self.tgrt.sender.provider == "capture":     # explicit development configuration only (TELEGRAM_PROVIDER=capture AND DJANGO_DEBUG=true)
+            self.routes.append(("POST", re.compile("^/api/v1/dev/telegram/simulate-start$"), self._dev_tg_simulate, False, None))
+            self.routes.append(("GET", re.compile("^/api/v1/dev/telegram/outbox$"), self._dev_tg_outbox, False, None))
         R("GET", "/safety/explain", self._explain)
         R("POST", "/health/access-grants", lambda c: self.m.grant_health_access(c["uid"], c["body"].get("professional_id")))
 
@@ -253,10 +261,62 @@ class App:
             uid = self.id.register(b["email"], b["password"], b.get("language", "fa"), dob=dob.isoformat())
         except Conflict:
             return {"message": "registered"}                    # identical answer for an existing address: no account enumeration
-        self.acct._limit("verify", b["email"].strip().lower())   # the first message counts toward the resend cooldown
-        self.acct.issue_verification(uid)                       # persistent token + outbox row; registration NEVER verifies the account by itself
-        self._flush_mail()
+        if self.mail.sender.provider != "disabled":             # e-mail is optional: without a mail provider Telegram is the verification channel
+            self.acct._limit("verify", b["email"].strip().lower())   # the first message counts toward the resend cooldown
+            self.acct.issue_verification(uid)                   # persistent token + outbox row; registration NEVER verifies the account by itself
+            self._flush_mail()
         return {"message": "registered"}
+
+    # ------------------------------------------------------------------ Telegram verification (primary channel)
+    def op_api_auth_010(self, c):
+        b = c["body"]
+        u = self.id.check_credentials(b["identifier"], b["password"])      # ownership proof; identical 401 for unknown account / wrong password
+        if not self.tgrt.available:
+            raise ServiceUnavailable()
+        if u["verified"]:
+            raise Conflict("already_verified")
+        token, exp = self.tgv.issue(u["id"])
+        return {"deep_link": f"https://t.me/{self.tgrt.username}?start={token}", "bot_username": self.tgrt.username, "expires_at": iso(exp)}
+
+    def _tg_process(self, update) -> None:
+        from tgverify import webhook as W
+        parsed = W.parse_start(update)
+        if parsed is None:
+            return
+        tg_id, token = parsed
+        if token is None:
+            self.tgrt.sender.send_message(tg_id, W.HELP_TEXT)
+            return
+        ok = self.tgv.consume(token, tg_id)
+        self.tgrt.sender.send_message(tg_id, W.SUCCESS_TEXT if ok else W.FAILURE_TEXT)     # generic text: no account, e-mail or health data
+
+    def op_api_tg_001(self, c):
+        if not self.tgrt.available or not self.tgrt.webhook_secret:
+            raise ServiceUnavailable()
+        if not hmac.compare_digest(c.get("tg_secret", "").encode(), self.tgrt.webhook_secret.encode()):
+            raise AuthFailed()
+        self._tg_process(c["body"])
+        return {"ok": True}
+
+    def op_api_tg_002(self, c):
+        return self.tgv.status(c["uid"])
+
+    def op_api_tg_003(self, c):
+        if not self.tgv.status(c["uid"])["linked"]:
+            raise Conflict("telegram_not_linked")
+        return self.tgv.set_notifications(c["uid"], c["body"]["enabled"])
+
+    def _dev_tg_simulate(self, c):
+        """DEV ONLY: stands in for Telegram -> webhook. Still needs the real single-use token; it verifies nothing by itself."""
+        b = c["body"]
+        tg_id = b.get("telegram_id")
+        if isinstance(tg_id, bool) or not isinstance(tg_id, int) or not isinstance(b.get("token"), str):
+            raise ValidationFailed()
+        self._tg_process({"message": {"from": {"id": tg_id, "is_bot": False}, "chat": {"id": tg_id, "type": "private"}, "text": "/start " + b["token"]}})
+        return {"ok": True}
+
+    def _dev_tg_outbox(self, c):
+        return {"delivered": False, "provider": "capture", "messages": list(self.tgrt.sender.sent)}
 
     def _dev_captured_mail(self, c):
         """DEV ONLY (never registered unless the capture adapter is explicitly configured in debug): latest captured message for ?to=&kind=. Nothing was delivered."""
@@ -1202,7 +1262,8 @@ class App:
                 body = json.loads(raw) if raw else {}
             except (ValueError, UnicodeDecodeError):
                 return self._err(start_response, self._pick(op, 400, 422), "bad_json")
-            ctx = {"body": body, **mt.groupdict(), "query": parse_qs(environ.get("QUERY_STRING", "")), "ua": environ.get("HTTP_USER_AGENT", "")[:200]}
+            ctx = {"body": body, **mt.groupdict(), "query": parse_qs(environ.get("QUERY_STRING", "")), "ua": environ.get("HTTP_USER_AGENT", "")[:200],
+                   "tg_secret": environ.get("HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN", "")[:300]}
             try:
                 if auth:
                     cookies = SimpleCookie(environ.get("HTTP_COOKIE", ""))

@@ -45,6 +45,10 @@
 - SQLite یا PostgreSQL فقط با `DATABASE_URL` تعیین می‌شود. `.env.example`، compose و CI روی PostgreSQL‌اند؛ مالک با SQLite کار می‌کند. ماندگاری بین ری‌استارت روی PostgreSQL در CI آزمون می‌شود (job `django-store`)؛ روی SQLite ویندوز توسط مالک تأیید نشده (`VITAFORGE_TEST_STORE=django`).
 - مهاجرت‌ها: CI `makemigrations --check` اجرا می‌کند.
 
+## ۳-ب. تأیید حساب با تلگرام (کانال اصلی)
+
+وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED`؛ بات واقعی و Django اجرا نشده. جزئیات، API، متغیرها و دستورهای محلی: `docs/TELEGRAM_VERIFICATION.md`. ایمیل کانال دوم باقی است.
+
 ## ۴. ایمیل (میلستون ۱)
 
 وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED` (۵۲۸ تست backend، حالت in-memory و sqlite؛ فایل `mailer/tests/test_account_mail.py`). `SMTP_CONFIGURED`: خیر. `REAL_EMAIL_DELIVERY_VERIFIED`: خیر. `RUNTIME_VERIFIED`: فقط e2e با devserver و آداپتور capture؛ Django/PostgreSQL در این sandbox اجرا نشده.

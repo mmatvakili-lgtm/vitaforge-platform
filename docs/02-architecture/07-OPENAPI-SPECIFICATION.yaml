@@ -106,6 +106,64 @@ components:
       required:
       - token
       - new_password
+    TelegramLinkRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+        password:
+          type: string
+      additionalProperties: false
+      required:
+      - identifier
+      - password
+    TelegramLink:
+      type: object
+      properties:
+        deep_link:
+          type: string
+          pattern: ^https://t\.me/
+        bot_username:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+      required:
+      - deep_link
+      - bot_username
+      - expires_at
+    TelegramUpdate:
+      type: object
+      additionalProperties: true
+      description: Telegram Update object; only private-chat /start <token> messages are acted on.
+    TelegramOk:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      additionalProperties: false
+      required:
+      - ok
+    TelegramStatus:
+      type: object
+      properties:
+        linked:
+          type: boolean
+        notifications:
+          type: boolean
+      additionalProperties: false
+      required:
+      - linked
+      - notifications
+    TelegramNotificationsRequest:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+      additionalProperties: false
+      required:
+      - enabled
     SessionInfo:
       type: object
       properties:
@@ -2643,6 +2701,170 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/EmailOnlyRequest'
+  /auth/telegram/link:
+    post:
+      operationId: api_auth_010
+      tags:
+      - auth
+      summary: دریافت لینک تأیید تلگرام (اثبات مالکیت با رمز)
+      x-id: API-AUTH-010
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramLink'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '423':
+          description: حساب قفل
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: سرویس در دسترس نیست
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramLinkRequest'
+  /telegram/webhook:
+    post:
+      operationId: api_tg_001
+      tags:
+      - telegram
+      summary: وب‌هوک بات تلگرام (فقط با secret header)
+      x-id: API-TG-001
+      security: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramOk'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: سرویس در دسترس نیست
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramUpdate'
+  /telegram/status:
+    get:
+      operationId: api_tg_002
+      tags:
+      - telegram
+      summary: وضعیت اتصال تلگرام
+      x-id: API-TG-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramStatus'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /telegram/notifications:
+    put:
+      operationId: api_tg_003
+      tags:
+      - telegram
+      summary: رضایت صریح برای اعلان‌های آینده
+      x-id: API-TG-003
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramStatus'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramNotificationsRequest'
   /profile:
     get:
       operationId: api_pro_001

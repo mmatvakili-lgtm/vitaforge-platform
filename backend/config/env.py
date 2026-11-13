@@ -41,9 +41,12 @@ def load_config(env: Mapping[str, str]) -> dict:
            "clinical_content_published": _bool(env.get("CLINICAL_CONTENT_PUBLISHED")),
            "dev_content": _bool(env.get("VITAFORGE_DEV_CONTENT"))}
     from mailer.config import MailConfigError, load_mail_config
+    from tgverify.config import TelegramConfigError, load_telegram_config
     try:
-        cfg["mail"] = load_mail_config(env, cfg["debug"])
-    except MailConfigError as e:
+        cfg["telegram"] = load_telegram_config(env, cfg["debug"])
+        # e-mail is optional when Telegram (the primary channel) is live; otherwise production still requires SMTP
+        cfg["mail"] = load_mail_config(env, cfg["debug"], allow_disabled=cfg["telegram"]["provider"] == "live")
+    except (MailConfigError, TelegramConfigError) as e:
         raise ConfigError(str(e))
     if cfg["dev_content"] and not cfg["debug"]:
         raise ConfigError("VITAFORGE_DEV_CONTENT (experimental sample content) is only allowed with DJANGO_DEBUG=true")

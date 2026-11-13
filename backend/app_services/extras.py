@@ -117,6 +117,12 @@ class ExtrasService:
         if not u:
             raise NotFound()
         self.s.by_email.pop(u["email"], None)
+        tg = u.get("telegram")                                                       # free the Telegram id and drop pending tokens
+        if tg:
+            self.s.__dict__.setdefault("tg_links", {}).pop(str(tg["id"]), None)
+        for h in [h for h, r in self.s.__dict__.setdefault("tg_tokens", {}).items() if r.get("user") == uid]:
+            self.s.tg_tokens.pop(h, None)
+        self.s.__dict__.setdefault("tg_limits", {}).pop("issue:" + uid, None)
         for k in ("verification",):
             self.s.__dict__.setdefault(k, {}).pop(uid, None)
         idx = self.s.__dict__.setdefault("reset_index", {})

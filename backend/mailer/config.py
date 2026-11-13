@@ -10,16 +10,16 @@ class MailConfigError(Exception):
     pass
 
 
-def load_mail_config(env: Mapping[str, str], debug: bool) -> dict:
+def load_mail_config(env: Mapping[str, str], debug: bool, allow_disabled: bool = False) -> dict:
     provider = (env.get("MAIL_PROVIDER") or "").strip().lower()
     base = (env.get("FRONTEND_BASE_URL") or "http://localhost:3000").rstrip("/")
     if not provider:
-        if not debug:
+        if not debug and not allow_disabled:
             raise MailConfigError("MAIL_PROVIDER is not set: SMTP is not configured (production requires MAIL_PROVIDER=smtp)")
         provider = "disabled"                                           # development default: nothing is delivered, and nothing pretends to be
     if provider not in PROVIDERS:
         raise MailConfigError("MAIL_PROVIDER must be one of " + ",".join(PROVIDERS))
-    if not debug and provider != "smtp":
+    if not debug and provider != "smtp" and not (allow_disabled and provider == "disabled"):
         raise MailConfigError(f"MAIL_PROVIDER={provider} is only allowed with DJANGO_DEBUG=true; production requires smtp")
     cfg = {"provider": provider, "frontend_base_url": base}
     if provider == "smtp":

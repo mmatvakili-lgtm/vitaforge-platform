@@ -116,7 +116,15 @@ def happy_path(h: Harness) -> Dict[str, str]:
     v.store.mail_limits.clear()                                   # the cooldown would (correctly) answer 429; clear it to exercise the success path
     v.call("POST", "/auth/verify/resend", {"identifier": "ver@ex.com"})
     v.call("POST", "/auth/verify", {"identifier": "ver@ex.com", "code": v.captured("ver@ex.com", "verification")["secret"]})
+    # Telegram verification (primary channel)
+    g = Harness(dev=True)
+    g.register("tg@ex.com")
+    g.verify_by_telegram("tg@ex.com", 700100)
+    tg_tok = g.login("tg@ex.com")
+    g.call("GET", "/telegram/status", token=tg_tok)
+    g.call("PUT", "/telegram/notifications", {"enabled": True}, token=tg_tok)
     h.log.extend(v.log)
+    h.log.extend(g.log)
     t4 = h.login("priv@ex.com")
     c("POST", "/privacy/export", token=t4)
     rid = c("POST", "/privacy/export", token=t4).body["id"]

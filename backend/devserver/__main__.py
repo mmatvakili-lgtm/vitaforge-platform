@@ -5,11 +5,12 @@ from wsgiref.simple_server import make_server
 from app_services.store import InMemoryStore
 
 from mailer.runtime import capture_runtime
+from tgverify import capture_runtime as tg_capture_runtime
 
 from .bootstrap import build_app
 
 store = InMemoryStore()
-app = build_app(store, dev_content=True, dev_mode=True, mail=capture_runtime(store, os.environ.get("DJANGO_SECRET_KEY", "devserver-only-secret-0123456789abcdef")))
+app = build_app(store, dev_content=True, dev_mode=True, telegram=tg_capture_runtime(), mail=capture_runtime(store, os.environ.get("DJANGO_SECRET_KEY", "devserver-only-secret-0123456789abcdef")))
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8000"))
     print(f"DEV server on :{port} (demo content, NOT for real users)")

@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { ApiErrorView, Button, Card, Field } from "../../../components/ui.tsx";
+import { TelegramVerify } from "../../../components/TelegramVerify.tsx";
 
 export default function LoginPage() {
   const { locale, t } = useT();
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
+  const [tg, setTg] = useState(false);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -32,6 +34,8 @@ export default function LoginPage() {
         <ApiErrorView error={error} />
         <Button type="submit" busy={busy}>{t("auth.login.submit")}</Button>
       </form>
+      {error?.status === 401 && identifier.trim() && password && !tg && <p><button type="button" className="btn btn-secondary" onClick={() => setTg(true)}>{t("telegram.loginHint")}</button></p>}
+      {tg && <TelegramVerify email={identifier} password={password} />}
       <p><Link href={`/${locale}/register`}>{t("auth.login.noAccount")}</Link></p>
       <p><Link href={`/${locale}/forgot`}>{t("auth.login.forgot")}</Link></p>
       <p><Link href={`/${locale}/verify`}>{t("auth.login.haveCode")}</Link></p>

@@ -39,7 +39,7 @@ OWNER_KEYED = {"profiles", "health", "plans", "measurements", "pain_logs", "metr
 
 MAPS = ("catalog", "relations", "users", "by_email", "sessions", "profiles", "health", "plans", "workout_sessions", "exercise_meta", "rule_sets", "verification", "resets",
         "subs", "privacy_requests", "pain_logs", "metrics", "measurements", "cond_meta", "symptoms", "nutrition_profiles", "foods", "recipes", "price_quotes", "outbox", "reset_index", "mail_limits", "captured_mail",
-        "meals", "water", "user_prices", "shopping_state")
+        "meals", "water", "user_prices", "shopping_state", "tg_tokens", "tg_links", "tg_limits")
 LISTS = ("consents", "audit", "erasure_audit", "grants")
 
 
