@@ -45,6 +45,15 @@
 - SQLite یا PostgreSQL فقط با `DATABASE_URL` تعیین می‌شود. `.env.example`، compose و CI روی PostgreSQL‌اند؛ مالک با SQLite کار می‌کند. ماندگاری بین ری‌استارت روی PostgreSQL در CI آزمون می‌شود (job `django-store`)؛ روی SQLite ویندوز توسط مالک تأیید نشده (`VITAFORGE_TEST_STORE=django`).
 - مهاجرت‌ها: CI `makemigrations --check` اجرا می‌کند.
 
+## ۳-پ. روش توسعه و CI (از ۱۳ نوامبر ۲۰۲۶)
+
+- توسعه به‌صورت دسته‌های منسجم روی شاخه‌ی feature؛ ادغام در `main` فقط پس از تست‌های محلی سبز و (در صورت دسترسی) CI سبز. `main` شاخه‌ی استقرار است.
+- CI (`.github/workflows/ci.yml`) پنج job دارد: `backend` (حافظه + sqlite، drift تولید OpenAPI/کلاینت، lint مستندات)، `django-postgres` (makemigrations --check + کل تست‌ها روی PostgreSQL ۱۶ و Django)، `frontend` (`tsc --noEmit`، تست Node، `next build`)، `e2e` (سرور HTTP واقعی + کلاینت فرانت + Playwright)، `security` (`pip-audit`، `npm audit` سطح high، اسکن secret).
+- **نتیجه‌ی واقعی CI** (commit `942faaf`، شاخه‌ی `feature/ci-e2e`): هر پنج job سبز. یعنی برای اولین بار اجرای واقعی Django + PostgreSQL، `tsc` و `next build` (Next 16.4.6) تأیید شد.
+- e2e: `backend/e2e/test_live_http.py` همان کلاینت تایپ‌شده‌ی فرانت (`frontend/scripts/e2e-flow.ts`) را روی سرور HTTP واقعی اجرا می‌کند: ثبت‌نام، تأیید تلگرام (بات **mock**؛ توکن تک‌مصرف واقعی)، onboarding، رضایت، غربالگری، برنامه‌ی تمرین، ثبت تمرین، تغذیه، قیمت‌ها، داشبورد، سناریوی REFER و خروج. تست‌های ایمنی/دسترسی در `contract/tests` و `e2e/test_scenarios.py`.
+- تفکیک: بات تلگرام و ایمیل در همه‌ی تست‌ها mock/capture هستند؛ هیچ تست با سرویس خارجی واقعی وجود ندارد.
+- اصلاح یافته‌ی CI: افزایش شمارنده‌ی ID در PostgreSQL بیرون از تراکنش خطا می‌داد (۲۷ تست)؛ اکنون تراکنش کوتاه خودش را باز می‌کند.
+
 ## ۳-ب. تأیید حساب با تلگرام (کانال اصلی)
 
 وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED`؛ بات واقعی و Django اجرا نشده. جزئیات، API، متغیرها و دستورهای محلی: `docs/TELEGRAM_VERIFICATION.md`. ایمیل کانال دوم باقی است.
