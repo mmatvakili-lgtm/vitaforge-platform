@@ -15,3 +15,11 @@ test("blocker keys", () => {
   assert.deepEqual(blockerKey("no_source"), { key: "review.blocker.no_source" });
   assert.deepEqual(blockerKey("invalid:basis"), { key: "review.blocker.invalid", detail: "basis" });
 });
+
+test("attestations only travel with approve and only when ticked", () => {
+  const a = { allergensChecked: true, allergens: ["milk"], licenseChecked: true };
+  assert.deepEqual(reviewRequest("approve", "", a), { decision: "approve", allergens: ["milk"], allergens_confirmed: true, license_verified: true });
+  assert.deepEqual(reviewRequest("approve", "", { allergensChecked: true, allergens: [], licenseChecked: false }), { decision: "approve", allergens: [], allergens_confirmed: true });
+  assert.deepEqual(reviewRequest("approve", "", { allergensChecked: false, allergens: ["milk"], licenseChecked: false }), { decision: "approve" });
+  assert.deepEqual(reviewRequest("reject", "wrong data", a), { decision: "reject", notes: "wrong data" });
+});

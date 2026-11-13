@@ -1251,9 +1251,29 @@ components:
         notes:
           type: string
           maxLength: 1000
+        allergens:
+          type: array
+          items:
+            enum:
+            - milk
+            - egg
+            - fish
+            - shellfish
+            - tree_nut
+            - peanut
+            - wheat
+            - soy
+            - sesame
+          maxItems: 9
+        allergens_confirmed:
+          type: boolean
+        license_verified:
+          type: boolean
       additionalProperties: false
       required:
       - decision
+      description: allergens/license_verified are attestations of a human reviewer who checked the source; allergens requires allergens_confirmed=true;
+        license_verified requires the admin role; applied only with approve.
     ExerciseAdmin:
       type: object
       properties:

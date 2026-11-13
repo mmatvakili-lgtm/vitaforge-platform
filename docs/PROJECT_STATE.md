@@ -22,7 +22,7 @@
 
 | قابلیت | وضعیت | شواهد / محدودیت |
 |---|---|---|
-| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۵۲ سبز + ۱ skip، حالت in-memory و sqlite) |
+| Safety Core | `AUTOMATED_TESTED` | تست‌های backend (۵۵۳ سبز + ۱ skip، حالت in-memory و sqlite) |
 | تطابق OpenAPI با مسیرها | `AUTOMATED_TESTED` | Contract Harness هر ۷۸ عملیات را اجرا و پاسخ را با spec می‌سنجد |
 | Frontend (مسیرها: home, dashboard, login, register, verify, forgot, reset, onboarding, plan, exercises, exercises/[id], workout, history, nutrition, nutrition/log, nutrition/shopping, foods, profile) | `AUTOMATED_TESTED` | ۴۷ تست Node + e2e با devserver؛ همه‌ی لینک‌ها به صفحه‌ی موجود می‌رسند. اجرای install/tsc/build را مالک روی ویندوز گزارش کرده، در این sandbox اجرا نشده |
 | PWA (manifest، آیکون SVG، service worker فقط برای دارایی‌های استاتیک؛ `/api/` و غیر-GET هرگز کش نمی‌شود) | `AUTOMATED_TESTED` | ۲ تست؛ نصب‌پذیری روی مرورگر واقعی بررسی نشده؛ آیکون PNG برای برخی پلتفرم‌ها `PLANNED` |
@@ -34,7 +34,7 @@
 | کاتالوگ حرکات | محتوا بسته | ۳۰ حرکت اولیه، ۰ منتشرشده؛ ۸۷۶ رکورد staging همگی `pending_review` و لایسنس نامعتبر |
 | موتور تغذیه + مرور غذا/دستور پخت + لاگ وعده/آب + خلاصه‌ی روز + قیمت کاربر + لیست خرید پایدار + بودجه | `AUTOMATED_TESTED` | بدون غذای بازبینی‌شده → `NEEDS_CONTENT` و مرور خالی؛ آلرژن ذخیره‌شده فیلتر و هشدار می‌دهد و آلرژن نامعلوم ایمن فرض نمی‌شود؛ پروفایل REFER ثبت کالری را می‌بندد؛ داده‌ی وعده/آب/قیمت/لیست خرید پایدار و در erase پاک می‌شود؛ واردکننده‌ی FDC اجرا نشده؛ داده‌ی دستی کاربر با برچسب `user_entered` |
 | پروفایل / رضایت‌ها / export / حذف حساب (UI) | `AUTOMATED_TESTED` | صفحه‌ی profile به API‌های موجود وصل است؛ export واقعی (JSON، فقط مالک، ۲۴ ساعت، ۴۱۰ پس از انقضا، شامل تغذیه؛ OPEN-009 بسته) |
-| صف بازبینی غذا (API: `GET /admin/foods`، `POST /admin/foods/{id}/review`) | `AUTOMATED_TESTED` | فقط نقش `nutrition_reviewer`/admin؛ تأیید فقط وقتی `approval_blockers` خالی باشد (منبع، مجوز تأییدشده، آلرژن معلوم، انرژی، اعتبارسنجی، غیر-fixture)؛ رد/بازنشستگی با دلیل؛ بازبین در audit ثبت می‌شود؛ هیچ تأیید خودکاری نیست؛ UI: صفحه‌ی `/[locale]/admin/review` (فقط کارکنان؛ بدون لینک در ناوبری)؛ خود تصمیم‌ها همچنان به متخصص واقعی نیاز دارند |
+| واردسازی FDC (`manage.py import_foods`، همه `pending_review`، بدون بازنویسی رکوردهای موجود) + صف بازبینی غذا (API: `GET /admin/foods`، `POST /admin/foods/{id}/review`) | `AUTOMATED_TESTED` | فقط نقش `nutrition_reviewer`/admin؛ تأیید فقط وقتی `approval_blockers` خالی باشد (منبع، مجوز تأییدشده، آلرژن معلوم، انرژی، اعتبارسنجی، غیر-fixture)؛ آلرژن و مجوز با «تأیید صریح بازبین» ثبت می‌شود (آلرژن: nutrition_reviewer/admin؛ مجوز: فقط admin)؛ رد/بازنشستگی با دلیل؛ بازبین در audit ثبت می‌شود؛ هیچ تأیید خودکاری نیست؛ UI: صفحه‌ی `/[locale]/admin/review` (فقط کارکنان؛ بدون لینک در ناوبری)؛ خود تصمیم‌ها همچنان به متخصص واقعی نیاز دارند |
 | ارائه‌دهنده‌ی AI | `PLANNED` | فقط `StubProvider` |
 | پرداخت/اشتراک | `PLANNED` | `PaymentProvider` غیرفعال |
 | پشتیبان‌گیری/بازیابی | `IMPLEMENTED` (روی SQLite تست خودکار؛ Django/PostgreSQL تأیید نشده) | `manage.py backup_db --out f.json` و `restore_db --in f.json [--replace --yes]`؛ فایل JSON با checksum، مجوز 0600، بدون بازنویسی؛ نشست‌ها در پشتیبان نیست؛ رمزنگاری فایل با مالک (فایل حاوی داده‌ی سلامت است)؛ بازیابی فقط روی دیتابیس خالی مگر `--replace --yes`؛ تست‌ها `persistence/tests/test_backup.py` |

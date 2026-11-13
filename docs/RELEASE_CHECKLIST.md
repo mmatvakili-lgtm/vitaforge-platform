@@ -11,7 +11,7 @@
 
 | مورد | وضعیت | شواهد |
 |---|---|---|
-| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۵۵۲ تست سبز (in-memory و sqlite)؛ روی ماشین مالک در حالت Django ← ۵۳۷ سبز و ۲ skip |
+| هسته ایمنی، موتور تمرین، AI Gateway، Entitlement، سرویس‌های کاربردی | `Passed` | `cd backend && python3 -m pytest -q` ← ۵۵۳ تست سبز (in-memory و sqlite)؛ روی ماشین مالک در حالت Django ← ۵۳۷ سبز و ۲ skip |
 | تطابق API توسعه با OpenAPI (هر ۷۸ endpoint) | `Passed` | تست `test_every_openapi_endpoint_is_implemented`؛ فقط وجود مسیر، نه تطابق کامل schema |
 | API توسعه (WSGI) + UI آزمایشی | `Passed` (فقط توسعه) | تست HTTP + اجرای واقعی `python3 -m devserver` |
 | داده حرکات بازبینی‌شده و دارای منبع علمی | `Blocked` | `OPEN-003/007`؛ فقط ۲۵ حرکت `experimental` |
@@ -31,6 +31,8 @@
 | پرداخت | `Blocked` | `OPEN-001`، `OPEN-005` (`PaymentProvider` غیرفعال) |
 
 ## کارهای مالک (پس از پایان توسعه)
+
+راهنمای کامل و گام‌به‌گام: `docs/OWNER_GUIDE.md`.
 
 1. SMTP: سرویس + اعتبارنامه، `MAIL_PROVIDER=smtp`، `python manage.py mail_status --send-test you@example.com`، دیدن ایمیل در صندوق.
 2. PostgreSQL: `DATABASE_URL`، `migrate`، pytest.

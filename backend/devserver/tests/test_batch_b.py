@@ -124,3 +124,36 @@ def test_food_review_queue_blocks_unsafe_approval_and_records_the_reviewer(env):
     assert h.call("POST", "/admin/foods/real1/review", {"decision": "retire", "notes": "superseded"}, token=rev).body["status"] == "retired"
     assert h.call("POST", "/admin/foods/real1/review", {"decision": "approve"}, token=rev).status == 409   # a retired food cannot be approved again
     assert h.call("POST", "/admin/foods/nope/review", {"decision": "approve"}, token=rev).status == 404
+
+
+FDC_SAMPLE = {"FoundationFoods": [{"fdcId": 111, "description": "Oats, test sample", "publicationDate": "2025-01-01",
+    "foodNutrients": [{"nutrient": {"number": "208", "name": "Energy", "unitName": "kcal"}, "amount": 380},
+                      {"nutrient": {"number": "203", "name": "Protein", "unitName": "g"}, "amount": 13},
+                      {"nutrient": {"number": "204", "name": "Total lipid (fat)", "unitName": "g"}, "amount": 7},
+                      {"nutrient": {"number": "205", "name": "Carbohydrate, by difference", "unitName": "g"}, "amount": 65}]}]}
+
+
+def test_imported_food_can_only_be_approved_after_human_attestations_and_import_never_overwrites(env):
+    from nutrition_engine.fdc_import import import_fdc
+    from nutrition_engine.loader import load_foods
+    h, t = env
+    foods = h.store.__dict__["foods"]
+    rep = import_fdc(FDC_SAMPLE, "2026-11-13", "usda_fdc_foundation")
+    assert load_foods(foods, rep.accepted) == {"added": 1, "skipped_existing_or_not_pending": 0}
+    nrev = h.login("nrev@ex.com", role="nutrition_reviewer"); adm = h.login("adm@ex.com", role="admin")
+    item = {f["id"]: f for f in h.call("GET", "/admin/foods", token=nrev).body}["fdc_111"]
+    assert set(item["approval_blockers"]) == {"license_not_verified", "allergens_unknown"}   # exactly what a human must still attest
+    r = h.call("POST", "/admin/foods/fdc_111/review", {"decision": "approve", "allergens": ["wheat"]}, token=nrev)
+    assert r.status == 422                                                      # allergens need an explicit confirmation flag
+    r = h.call("POST", "/admin/foods/fdc_111/review", {"decision": "approve", "license_verified": True}, token=nrev)
+    assert r.status == 403                                                      # licence attestation is admin-only
+    r = h.call("POST", "/admin/foods/fdc_111/review", {"decision": "approve", "allergens": ["wheat"], "allergens_confirmed": True}, token=nrev)
+    assert r.status == 409 and foods["fdc_111"].allergens_known is False        # still blocked by the licence: nothing was saved
+    r = h.call("POST", "/admin/foods/fdc_111/review", {"decision": "approve", "allergens": ["wheat"], "allergens_confirmed": True, "license_verified": True, "notes": "checked"}, token=adm)
+    assert r.status == 200 and r.body["status"] == "reviewed"
+    assert foods["fdc_111"].allergens == ("wheat",) and foods["fdc_111"].allergens_known and foods["fdc_111"].source.license_verified
+    assert load_foods(foods, rep.accepted)["added"] == 0 and foods["fdc_111"].status == "reviewed"   # re-import never resets a reviewed food
+    h.call("PUT", "/nutrition/profile", {"sex": "male", "height_cm": 175, "weight_kg": 70, "activity": "moderate", "goal": "maintain", "screening": SC, "allergens": ["wheat"]}, token=t)
+    ids = [x["id"] for x in h.call("GET", "/foods?avoid_allergens=wheat", token=t).body["results"]]
+    assert "fdc_111" not in ids and "plain" in ids        # the wheat food is hidden from a wheat-avoiding browse; allergen-free data remains
+    assert "mystery" not in ids                           # unknown allergen data is never treated as safe when avoiding

@@ -575,5 +575,9 @@
  "review.notesRequired": "A written reason (at least 5 characters) is required.",
  "review.approve": "Approve",
  "review.reject": "Reject",
- "review.retire": "Retire"
+ "review.retire": "Retire",
+ "review.attest": "Reviewer attestations",
+ "review.attest.hint": "Tick only what you personally verified at the source. Allergens cannot be inferred from the nutrient data.",
+ "review.attest.allergens": "I verified the allergen list below (leave all unticked if the food contains none)",
+ "review.attest.license": "I verified the data license (admin only)"
 }

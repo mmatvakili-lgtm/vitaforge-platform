@@ -750,14 +750,19 @@ class App:
         if f is None:
             raise NotFound()
         b = c["body"]
+        if b.get("license_verified") and self._role(c) != "admin":
+            raise Forbidden()                                      # confirming a data licence is an owner/admin attestation, not a nutrition one
+        if b.get("allergens") is not None and not b.get("allergens_confirmed"):
+            raise ValidationFailed({"allergens_confirmed": "required"})
         try:
-            nf = decide(f, b["decision"], b.get("notes") or "")
+            nf = decide(f, b["decision"], b.get("notes") or "", b.get("allergens"), bool(b.get("license_verified")))
         except ValueError as e:
             if str(e) in ("notes_required", "decision"):
                 raise ValidationFailed({"notes": "required"} if str(e) == "notes_required" else {"decision": "invalid"})
             raise Conflict(str(e))                                  # approval blocked: the reasons are listed, nothing changes
         foods[f.id] = nf
-        self.store.audit.append({"kind": "food_review", "food": f.id, "by": c["uid"], "decision": b["decision"], "notes": (b.get("notes") or "")[:1000], "at": self.sec()})
+        self.store.audit.append({"kind": "food_review", "food": f.id, "by": c["uid"], "decision": b["decision"], "notes": (b.get("notes") or "")[:1000], "at": self.sec(),
+                                 "attested": {"allergens": b.get("allergens"), "license_verified": bool(b.get("license_verified"))}})
         return self._admin_food(nf)
 
     def op_api_adm_004(self, c):

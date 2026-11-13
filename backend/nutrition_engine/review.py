@@ -5,7 +5,7 @@ from __future__ import annotations
 import dataclasses
 from typing import List
 
-from .food import FoodRecord, validate_food
+from .food import ALLERGENS, FoodRecord, validate_food
 
 
 def approval_blockers(f: FoodRecord) -> List[str]:
@@ -26,9 +26,18 @@ def approval_blockers(f: FoodRecord) -> List[str]:
     return out
 
 
-def decide(f: FoodRecord, decision: str, notes: str) -> FoodRecord:
-    """Returns the updated record or raises ValueError(reason). Reject/retire need a written reason."""
+def decide(f: FoodRecord, decision: str, notes: str, allergens=None, license_verified: bool = False) -> FoodRecord:
+    """Returns the updated record or raises ValueError(reason). Reject/retire need a written reason.
+    `allergens` (a list, possibly empty) and `license_verified` are ATTESTATIONS by an authenticated human reviewer who checked them at the source;
+    they are applied only together with an approval and only if every blocker is then resolved (otherwise nothing is saved)."""
     if decision == "approve":
+        if allergens is not None:
+            bad = [a for a in allergens if a not in ALLERGENS]
+            if bad:
+                raise ValueError("decision")
+            f = dataclasses.replace(f, allergens=tuple(sorted(set(allergens))), allergens_known=True)
+        if license_verified and f.source is not None:
+            f = dataclasses.replace(f, source=dataclasses.replace(f.source, license_verified=True))
         b = approval_blockers(f)
         if b:
             raise ValueError(",".join(b))
