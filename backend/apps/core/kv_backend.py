@@ -59,10 +59,13 @@ class DjangoBackend:
         self._qs().filter(coll=self._c(coll), owner=owner).delete()
 
     def next_seq(self, name: str) -> int:
-        row, _ = IdSequence.objects.using(self.using).select_for_update().get_or_create(name=self.ns + name)
-        row.n += 1
-        row.save(update_fields=["n"])
-        return row.n
+        # Inside a request the store's transaction is already open. Outside one (service-level tests, management commands) PostgreSQL
+        # refuses SELECT ... FOR UPDATE, so the increment gets its own short transaction: the row lock still serialises concurrent callers.
+        with transaction.atomic(using=self.using):
+            row, _ = IdSequence.objects.using(self.using).select_for_update().get_or_create(name=self.ns + name)
+            row.n += 1
+            row.save(update_fields=["n"])
+            return row.n
 
     # --- backup / restore support (see persistence/backup.py). NEEDS LOCAL VERIFICATION against a real database.
     def dump_all(self):
