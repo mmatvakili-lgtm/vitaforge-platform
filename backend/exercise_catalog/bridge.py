@@ -13,10 +13,16 @@ class ProductionCatalogError(Exception):
     pass
 
 
+def ai_curated_demo_acknowledged() -> bool:
+    """The only way unreviewed content may run with VITAFORGE_ENV=production: the explicit public-demo mode AND its acknowledgement."""
+    return (os.environ.get("VITAFORGE_CONTENT_MODE", "").strip().lower() == "ai_curated_demo"
+            and os.environ.get("VITAFORGE_ACK_AI_CURATED_CONTENT", "").strip().lower() == "yes")
+
+
 def to_candidate(r: ExerciseRecord, dev_experimental: bool = False) -> ExerciseCandidate:
     """In production only `published` + reviewed tags pass (Safety Core SAF-R005 does the rest).
     `dev_experimental=True` marks sample content as usable for LOCAL demos only."""
-    if dev_experimental and os.environ.get("VITAFORGE_ENV", "").lower() == "production":
+    if dev_experimental and os.environ.get("VITAFORGE_ENV", "").lower() == "production" and not ai_curated_demo_acknowledged():
         raise ProductionCatalogError("dev_experimental is forbidden when VITAFORGE_ENV=production")
     loads = tuple(RegionLoad(g, r.region_loads.get(g, "high")) for g in REGIONS)      # unknown region => assume highest loading
     ok_tags = (r.safety_tags_status == "reviewed" and r.expert_review == "approved") or (dev_experimental and r.safety_tags_status == "unreviewed_estimate")

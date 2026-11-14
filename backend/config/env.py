@@ -39,7 +39,7 @@ def load_config(env: Mapping[str, str]) -> dict:
            "ai_external_health_data": _bool(env.get("AI_EXTERNAL_HEALTH_DATA")),
            "offline_workout_log": _bool(env.get("FEATURE_OFFLINE_WORKOUT_LOG")),
            "clinical_content_published": _bool(env.get("CLINICAL_CONTENT_PUBLISHED")),
-           "dev_content": _bool(env.get("VITAFORGE_DEV_CONTENT"))}
+           "dev_content": _bool(env.get("VITAFORGE_DEV_CONTENT")), "content_mode": "reviewed"}
     from mailer.config import MailConfigError, load_mail_config
     from tgverify.config import TelegramConfigError, load_telegram_config
     try:
@@ -50,6 +50,14 @@ def load_config(env: Mapping[str, str]) -> dict:
         raise ConfigError(str(e))
     if cfg["dev_content"] and not cfg["debug"]:
         raise ConfigError("VITAFORGE_DEV_CONTENT (experimental sample content) is only allowed with DJANGO_DEBUG=true")
+    mode = (env.get("VITAFORGE_CONTENT_MODE") or "reviewed").strip().lower()
+    if mode not in ("reviewed", "ai_curated_demo"):
+        raise ConfigError("VITAFORGE_CONTENT_MODE must be 'reviewed' or 'ai_curated_demo'")
+    if mode == "ai_curated_demo":
+        # Public demo / portfolio mode: AI-curated, NOT expert-reviewed content. Requires an explicit acknowledgement so it can never be enabled by accident.
+        if (env.get("VITAFORGE_ACK_AI_CURATED_CONTENT") or "").strip().lower() != "yes":
+            raise ConfigError("VITAFORGE_CONTENT_MODE=ai_curated_demo requires VITAFORGE_ACK_AI_CURATED_CONTENT=yes (content is not expert-reviewed)")
+        cfg["content_mode"], cfg["dev_content"] = mode, True
     if cfg["ai_external_health_data"]:
         raise ConfigError("AI_EXTERNAL_HEALTH_DATA must be false until legal review (OPEN-002/EXP-012)")
     if not cfg["debug"]:
