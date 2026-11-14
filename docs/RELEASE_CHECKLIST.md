@@ -24,7 +24,7 @@
 | PostgreSQL واقعی | `Passed` (CI، job `django-postgres`، PostgreSQL ۱۶) | `makemigrations --check` + کل تست‌ها؛ اجرای مالک روی داده‌ی واقعی هنوز لازم است |
 | `npm audit` / `pip-audit` | `Passed` (CI، job `security`) | سطح high؛ Next ارتقا به ۱۶.۴.۶ |
 | پشتیبان‌گیری/بازیابی روی Postgres | `Not Run` | `backup_db` سپس `restore_db` روی دیتابیس خالی و مقایسه‌ی تعداد ردیف‌ها؛ رمزنگاری فایل پشتیبان با مالک |
-| CI | `Passed` | `.github/workflows/ci.yml`، پنج job؛ Docker image هنوز ساخته/اجرا نشده (`Not Run`) |
+| CI + Docker | `Passed` | شش job؛ image های api و web ساخته می‌شوند و کانتینر api بوت می‌شود و `/health/live` پاسخ می‌دهد؛ کل compose هنوز اجرا نشده |
 | محتوای بالینی (حرکات، قواعد R1xx..R5xx، مسیر B فعال) | `Blocked` | `OPEN-003`، `EXP-001..013` |
 | بررسی حقوقی و ارسال داده سلامت به AI | `Blocked` | `OPEN-002`، `OPEN-004` |
 | محتوای حمایتی/ریکاوری برای مشکلات جسمی | `Blocked` | `OPEN-008` |
