@@ -179,4 +179,9 @@ ok("logout", await api.call("API-AUTH-004"));
 const after = await api.call("API-PRO-001");
 if (after.ok) throw new Error("session still valid after logout");
 console.log("ok  session rejected after logout (" + after.status + ")");
+// Last on purpose: an active pain report changes what the Safety Core approves for the plan.
+const pain = ok("health: pain log", await api.call("API-HEALTH-005", { body: { region: "knee", intensity: 6, timing: "general" } }));
+if (!pain.decision) throw new Error("a pain log must return the Safety Core decision");
+ok("health: condition", await api.call("API-HEALTH-002", { body: { region: "knee", problem_type: "pain" } }));
+if (ok("health profile", await api.call("API-HEALTH-001")).conditions?.length === 0) throw new Error("the reported condition must persist");
 console.log("E2E FLOW PASSED");
