@@ -1,4 +1,4 @@
-"""REAL BROWSER journey through the actual Next.js app (`next dev`, i.e. React StrictMode ON) against the dev API server.
+"""REAL BROWSER journey through the actual Next.js production build (`next start`) against the dev API server.
 Mocked: Telegram (the dev-only simulate route plays the bot; the single-use token is real). Real: Chromium, Next, React, cookies, proxy, API.
 Skipped (not faked) when node_modules, Playwright or Chromium are missing. Catches UI-only bugs the API tests cannot, e.g. a button stuck on 'sending'."""
 import os
@@ -38,11 +38,14 @@ def wait(url, timeout=120):
 def test_register_telegram_verify_and_land_on_onboarding_in_real_browser():
     api_port, web_port = free_port(), free_port()
     api = subprocess.Popen([sys.executable, "-m", "devserver"], cwd=ROOT / "backend", env={**os.environ, "PORT": str(api_port)}, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    web = subprocess.Popen(["npx", "next", "dev", "-p", str(web_port)], cwd=ROOT / "frontend", env={**os.environ, "BACKEND_URL": f"http://127.0.0.1:{api_port}", "NEXT_TELEMETRY_DISABLED": "1"},
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    env = {**os.environ, "BACKEND_URL": f"http://127.0.0.1:{api_port}", "NEXT_TELEMETRY_DISABLED": "1"}
+    # PRODUCTION build (`next start`): deterministic hydration. (`next dev` on CI never hydrated within 90 s; React StrictMode's double mount is covered by a unit regression test.)
+    build = subprocess.run(["npx", "next", "build"], cwd=ROOT / "frontend", env=env, capture_output=True, text=True, timeout=600)
+    assert build.returncode == 0, build.stdout[-1500:] + build.stderr[-1500:]
+    web = subprocess.Popen(["npx", "next", "start", "-p", str(web_port)], cwd=ROOT / "frontend", env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         wait(f"http://127.0.0.1:{api_port}/api/v1/health/live", 30)
-        wait(f"http://127.0.0.1:{web_port}/fa/login", 180)
+        wait(f"http://127.0.0.1:{web_port}/fa/login", 60)
         with pw.sync_playwright() as p:
             try:
                 b = p.chromium.launch()
@@ -56,7 +59,7 @@ def test_register_telegram_verify_and_land_on_onboarding_in_real_browser():
             pg.on("response", lambda r: errors.append(f"http{r.status}:{r.url[:100]}") if r.status >= 400 else None)
             pg.set_default_timeout(60000)
             pg.goto(f"http://127.0.0.1:{web_port}/fa/register")
-            # `next dev` compiles on demand: a click before hydration would submit the form natively (GET /fa/register?). Wait for React to attach.
+            # A click before hydration would submit the form natively (GET /fa/register?). Wait for React to attach.
             try:
                 pg.wait_for_function("() => { const f = document.querySelector('form'); return !!f && Object.keys(f).some(k => k.startsWith('__reactProps')); }", timeout=90000)
             except Exception:  # noqa: BLE001
