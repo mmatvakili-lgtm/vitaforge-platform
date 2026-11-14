@@ -31,7 +31,7 @@ def test_no_staged_record_is_publishable_or_published():
 
 def test_staging_never_enters_default_catalogue():
     ids = {r.id for r in load_starter()}
-    assert len(ids) == 30
+    assert len(ids) >= 30                       # starter + project-authored batches (grows with the AI-curated bank)
     assert not any(i.startswith("fedb_") for i in ids)
 
 
