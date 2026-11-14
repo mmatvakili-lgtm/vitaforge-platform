@@ -502,6 +502,16 @@ class App:
         self.store.assessments[c["uid"]] = rows[-20:]
         return self._assessment_view(c["uid"])
 
+    # ------------------------------------------------------------------ analytics (descriptive, from the user's own finished sessions)
+    def op_api_analytics_001(self, c):
+        from analytics import build
+        uid = c["uid"]
+        cat = self.store.catalog
+        muscle_of = {k: v.primary_muscle for k, v in cat.items()}
+        names = {k: (self.records[k].name_en if k in self.records else k) for k in cat}
+        mine = [w for w in self.store.workout_sessions.values() if w["user"] == uid]
+        return build(mine, date.today().toordinal(), muscle_of, names)
+
     # ------------------------------------------------------------------ health
     @staticmethod
     def _active_pain(problem_type, severity):

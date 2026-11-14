@@ -642,6 +642,126 @@ components:
         history_count:
           type: integer
       additionalProperties: false
+    Analytics:
+      type: object
+      properties:
+        method:
+          type: string
+        content_status:
+          const: ai_curated
+        weeks:
+          type: array
+          items:
+            type: object
+            properties:
+              week_ago:
+                type: integer
+              sessions:
+                type: integer
+              sets:
+                type: integer
+              volume_kg:
+                type: number
+            additionalProperties: false
+            required:
+            - week_ago
+            - sessions
+            - sets
+            - volume_kg
+        e1rm:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              name:
+                type:
+                - string
+                - 'null'
+              latest:
+                type: number
+              best:
+                type: number
+              change_pct:
+                type:
+                - number
+                - 'null'
+              series:
+                type: array
+                items:
+                  type:
+                  - number
+                  - 'null'
+            additionalProperties: false
+            required:
+            - code
+            - latest
+            - best
+            - change_pct
+            - series
+        muscles:
+          type: array
+          items:
+            type: object
+            properties:
+              muscle:
+                type: string
+              sets_last_week:
+                type: integer
+              avg_weekly_sets_4w:
+                type: number
+              status:
+                enum:
+                - low
+                - ok
+                - high
+              recent_two_weeks:
+                type: integer
+            additionalProperties: false
+            required:
+            - muscle
+            - sets_last_week
+            - avg_weekly_sets_4w
+            - status
+            - recent_two_weeks
+        streak_weeks:
+          type: integer
+        days_since_last:
+          type:
+          - integer
+          - 'null'
+        records_4w:
+          type: integer
+        insights:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              params:
+                type: object
+                additionalProperties: true
+            additionalProperties: false
+            required:
+            - key
+            - params
+        thresholds:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+      required:
+      - method
+      - content_status
+      - weeks
+      - e1rm
+      - muscles
+      - streak_weeks
+      - days_since_last
+      - records_4w
+      - insights
+      - thresholds
     HealthProfile:
       type: object
       properties:
@@ -3584,6 +3704,28 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AssessmentRequest'
+  /analytics:
+    get:
+      operationId: api_analytics_001
+      tags:
+      - analytics
+      summary: تحلیل تمرین‌های ثبت‌شده‌ی خود کاربر (۸ هفته؛ 1RM تخمینی، حجم، عضله، بینش)
+      x-id: API-ANALYTICS-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analytics'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /health/profile:
     get:
       operationId: api_health_001

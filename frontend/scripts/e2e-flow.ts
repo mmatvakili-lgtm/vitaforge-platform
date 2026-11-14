@@ -74,6 +74,8 @@ const asmt = ok("assessment", await api.call("API-ASSESS-002", { body: { answers
 const prof = asmt.profile as { weaknesses: { domain: string }[]; content_status: string } | null;
 if (!prof || prof.content_status !== "ai_curated" || prof.weaknesses[0]?.domain !== "pull") throw new Error("the assessment must be labelled ai_curated and find pull as the weakest domain");
 if (ok("assessment re-read", await api.call("API-ASSESS-001")).history_count !== 1) throw new Error("the assessment must persist");
+const an = ok("analytics", await api.call("API-ANALYTICS-001")) as { method: string; weeks: unknown[]; insights: { key: string }[] };
+if (an.method !== "analytics_v1" || an.weeks.length !== 8 || !an.insights.some((i) => i.key === "insufficient_data" || i.key)) throw new Error("analytics must return 8 weekly buckets and insights");
 const badAsmt = await api.call("API-ASSESS-002", { body: { answers: { squat_reps: 500 } } });
 if (badAsmt.ok) throw new Error("an out-of-range assessment answer must be rejected");
 const ready = ok("ready", await api.call("API-SYS-002"));

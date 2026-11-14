@@ -33,6 +33,7 @@ export type AssessmentRequest = { "answers": { "squat_reps"?: number; "squat_hee
 export type AssessmentDomain = { "score"?: (number) | null; "band"?: (string) | null; "level"?: (string) | null; "tested"?: boolean; "caution"?: boolean };
 export type AssessmentProfile = { "method"?: string; "content_status"?: "ai_curated"; "answers"?: Record<string, unknown>; "domains"?: Record<string, unknown>; "overall_level"?: (string) | null; "tested_count"?: number; "strengths"?: Array<Record<string, unknown>>; "weaknesses"?: Array<Record<string, unknown>>; "flags"?: Array<Record<string, unknown>>; "limiters"?: Array<string>; "priorities"?: Record<string, unknown>; "corrective_focus"?: Array<string>; "pain_reported"?: boolean; "pain_regions"?: Array<string>; "untested"?: Array<string> };
 export type AssessmentResult = { "profile"?: AssessmentProfile | unknown; "assessed_at"?: (string) | null; "history_count"?: number };
+export type Analytics = { "method": string; "content_status": "ai_curated"; "weeks": Array<{ "week_ago": number; "sessions": number; "sets": number; "volume_kg": number }>; "e1rm": Array<{ "code": string; "name"?: (string) | null; "latest": number; "best": number; "change_pct": (number) | null; "series": Array<(number) | null> }>; "muscles": Array<{ "muscle": string; "sets_last_week": number; "avg_weekly_sets_4w": number; "status": "low" | "ok" | "high"; "recent_two_weeks": number }>; "streak_weeks": number; "days_since_last": (number) | null; "records_4w": number; "insights": Array<{ "key": string; "params": Record<string, unknown> }>; "thresholds": Record<string, unknown> };
 export type HealthProfile = { "conditions"?: Array<Condition>; "out_of_scope"?: Array<string>; "latest_decision"?: SafetyDecision };
 export type ConditionRequest = { "region": string; "side"?: "left" | "right" | "both" | "na"; "problem_type": "pain" | "limited_motion" | "diagnosed_injury" | "surgery_history" | "other"; "onset_date"?: string; "trend"?: "better" | "same" | "worse" | "unknown"; "self_severity"?: number; "aggravating_factors"?: string; "relieving_factors"?: string };
 export type ConditionUpdate = { "trend"?: string; "self_severity"?: number; "aggravating_factors"?: string; "relieving_factors"?: string };
@@ -140,6 +141,7 @@ export interface OpTypes {
   "API-BODY-002": { body: MeasurementRequest; res: Measurement; path: Record<string, never>; query: Record<string, never> };
   "API-ASSESS-001": { body: undefined; res: AssessmentResult; path: Record<string, never>; query: Record<string, never> };
   "API-ASSESS-002": { body: AssessmentRequest; res: AssessmentResult; path: Record<string, never>; query: Record<string, never> };
+  "API-ANALYTICS-001": { body: undefined; res: Analytics; path: Record<string, never>; query: Record<string, never> };
   "API-HEALTH-001": { body: undefined; res: HealthProfile; path: Record<string, never>; query: Record<string, never> };
   "API-HEALTH-002": { body: ConditionRequest; res: Condition; path: Record<string, never>; query: Record<string, never> };
   "API-HEALTH-003": { body: ConditionUpdate; res: Condition; path: { condition_id: string }; query: Record<string, never> };
@@ -490,6 +492,15 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
       400,
       401,
       422
+    ]
+  },
+  "API-ANALYTICS-001": {
+    "method": "GET",
+    "path": "/analytics",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401
     ]
   },
   "API-HEALTH-001": {
