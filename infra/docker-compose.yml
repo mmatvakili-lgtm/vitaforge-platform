@@ -10,7 +10,7 @@ services:
     image: redis:7
     ports: ["6379:6379"]
   api:
-    build: { context: ../backend }
+    build: { context: .., dockerfile: backend/Dockerfile }
     env_file: ../.env
     depends_on: [db, redis]
     command: sh -c "python manage.py migrate && gunicorn config.wsgi:application -b 0.0.0.0:8000"
@@ -20,7 +20,7 @@ services:
     depends_on: [api]
     ports: ["3000:3000"]
   mail-worker:
-    build: { context: ../backend }
+    build: { context: .., dockerfile: backend/Dockerfile }
     env_file: ../.env
     depends_on: [db]
     command: python manage.py process_outbox --loop --interval 15

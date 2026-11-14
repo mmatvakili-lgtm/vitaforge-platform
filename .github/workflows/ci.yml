@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t vitaforge-api backend
+      - run: docker build -f backend/Dockerfile -t vitaforge-api .
       - run: docker build -t vitaforge-web frontend
       - name: backend container smoke test (throw-away debug config, sqlite)
         run: |
