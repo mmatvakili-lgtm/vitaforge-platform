@@ -2,7 +2,7 @@
 
 # تأیید حساب با تلگرام (کانال اصلی)
 
-وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED` (backend: ۵۸۳ تست در حالت in-memory و sqlite؛ frontend: ۵۶ تست Node). `RUNTIME_VERIFIED` با بات واقعی: خیر. `DJANGO_RUNTIME_VERIFIED` برای این قابلیت: خیر (در sandbox اجرا نشده). ایمیل/SMTP حذف نشده و کانال دوم است.
+وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED` (backend: ۵۸۳ تست در حالت in-memory و sqlite؛ frontend: ۵۶ تست Node). `RUNTIME_VERIFIED` با بات واقعی: بله، توسط مالک در ۲۰۲۶-۱۱-۱۳ (long polling با `telegram_poll`، ثبت‌نام → Start در بات → ورود خودکار). `DJANGO_RUNTIME_VERIFIED` برای این قابلیت: خیر (در sandbox اجرا نشده). ایمیل/SMTP حذف نشده و کانال دوم است.
 
 ## گردش کار
 1. کاربر ثبت‌نام می‌کند (حساب `verified=false`).

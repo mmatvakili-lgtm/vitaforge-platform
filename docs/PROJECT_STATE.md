@@ -60,7 +60,7 @@
 
 ## ۳-ب. تأیید حساب با تلگرام (کانال اصلی)
 
-وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED`؛ بات واقعی و Django اجرا نشده. جزئیات، API، متغیرها و دستورهای محلی: `docs/TELEGRAM_VERIFICATION.md`. ایمیل کانال دوم باقی است.
+وضعیت: `IMPLEMENTED` + `AUTOMATED_TESTED` + `RUNTIME_VERIFIED` (بات واقعی با long polling، مالک، ۲۰۲۶-۱۱-۱۳)؛ وبهوک production اجرا نشده. جزئیات، API، متغیرها و دستورهای محلی: `docs/TELEGRAM_VERIFICATION.md`. ایمیل کانال دوم باقی است.
 
 ## ۴. ایمیل (میلستون ۱)
 
