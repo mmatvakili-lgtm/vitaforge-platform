@@ -616,5 +616,9 @@
  "telegram.settings.linked": "Your Telegram account is connected.",
  "telegram.settings.notify": "Allow VitaForge to send me reminders on Telegram",
  "telegram.settings.notifyHint": "Off by default. Reminders never contain health information. You can turn this off at any time. (Reminders are not sent yet; this records your consent.)",
- "telegram.settings.notLinked": "Telegram is not connected to this account."
+ "telegram.settings.notLinked": "Telegram is not connected to this account.",
+ "profile.sessions.title": "Active sessions",
+ "profile.sessions.hint": "Devices signed in to your account. End any session you do not recognise.",
+ "profile.sessions.current": "This device",
+ "profile.sessions.end": "End session"
 }

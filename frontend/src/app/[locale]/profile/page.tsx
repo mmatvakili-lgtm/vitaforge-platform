@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
-import type { ConsentDocumentList, DataRequest, Profile, ProfileUpdate, TelegramStatus } from "../../../lib/api/generated.ts";
+import type { ConsentDocumentList, DataRequest, Profile, SessionList, ProfileUpdate, TelegramStatus } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
 
@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [docs, setDocs] = useState<Doc[]>([]);
   const [state, setState] = useState<Record<string, boolean>>({});
   const [tg, setTg] = useState<TelegramStatus | null>(null);
+  const [sessions, setSessions] = useState<SessionList>([]);
   const [exp, setExp] = useState<DataRequest | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
   const [saved, setSaved] = useState(false);
@@ -26,15 +27,23 @@ export default function ProfilePage() {
 
   useEffect(() => {
     let live = true;
-    Promise.all([api.call("API-PRO-001"), api.call("API-PRIV-001"), api.call("API-TG-002")]).then(([a, b, g]) => {
+    Promise.all([api.call("API-PRO-001"), api.call("API-PRIV-001"), api.call("API-TG-002"), api.call("API-AUTH-007")]).then(([a, b, g, ss]) => {
       if (!live) return;
       if (!a.ok) return fail(a.error, a.status);
       setP(a.data); if (b.ok) setDocs(b.data as Doc[]);
       if (g.ok) setTg(g.data);
+      if (ss.ok) setSessions(ss.data);
     });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api]);
+
+  async function endSession(id: string) {
+    setError(null);
+    const r = await api.call("API-AUTH-008", { path: { session_id: id } });
+    if (!r.ok) return fail(r.error, r.status);
+    setSessions((list) => list.filter((x) => x.id !== id));
+  }
 
   async function save(e: FormEvent) {
     e.preventDefault();
@@ -122,6 +131,17 @@ export default function ProfilePage() {
             <p className="hint">{t("telegram.settings.notifyHint")}</p>
           </>
         ) : <p className="muted">{t("telegram.settings.notLinked")}</p>}
+      </Card>
+
+      <Card title={t("profile.sessions.title")}>
+        <p className="hint">{t("profile.sessions.hint")}</p>
+        <ul className="plain">
+          {sessions.map((x) => (
+            <li key={x.id}>
+              <bdi dir="ltr">{(x.user_agent ?? "").slice(0, 80) || "—"}</bdi> <span className="muted"><bdi dir="ltr">{x.last_seen_at ?? ""}</bdi></span>
+              {x.current ? <strong> — {t("profile.sessions.current")}</strong> : x.id && <div className="row"><Button type="button" onClick={() => endSession(x.id!)}>{t("profile.sessions.end")}</Button></div>}
+            </li>))}
+        </ul>
       </Card>
 
       <Card title={t("profile.data")}>
