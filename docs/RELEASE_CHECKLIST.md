@@ -7,7 +7,7 @@
 | Document ID | DOC-REL |
 | Version | 0.1 |
 | Status | Active |
-| Updated | 2026-11-12 |
+| Updated | 2026-11-14 |
 
 | مورد | وضعیت | شواهد |
 |---|---|---|
@@ -16,7 +16,7 @@
 | API توسعه (WSGI) + UI آزمایشی | `Passed` (فقط توسعه) | تست HTTP + اجرای واقعی `python3 -m devserver` |
 | داده حرکات بازبینی‌شده و دارای منبع علمی | `Blocked` | `OPEN-003/007`؛ فقط ۲۵ حرکت `experimental` |
 | آداپتور Django + مهاجرت‌ها | `Passed` (CI/مالک؛ در sandbox اجرا نشده) | job `django-store` روی PostgreSQL؛ تأیید ویندوز/SQLite معلق |
-| Next.js | `Passed` (اجرای مالک، ۲۰۲۶-۱۱-۱۲) | `npm ci`، `tsc --noEmit` و `next build` (۳۷ صفحه) روی ویندوز بدون خطا؛ ۴۸ تست Node در sandbox؛ در CI نیست |
+| Next.js | `Passed` (CI job `frontend` + اجرای مالک ۲۰۲۶-۱۱-۱۲) | `tsc --noEmit`، تست‌های Node و `next build` در هر push |
 | توکن‌ها و outbox پایدار | `Passed` (خودکار، in-memory+sqlite) | `mailer/tests` |
 | تحویل واقعی SMTP | `Blocked` | اعتبار SMTP و `mail_status --send-test`؛ `PROJECT_STATE.md` §۴ |
 | انتشار محتوا | `Blocked` | ۰ حرکت و ۰ غذای منتشرشده |
@@ -25,6 +25,12 @@
 | `npm audit` / `pip-audit` | `Passed` (CI، job `security`) | سطح high؛ Next ارتقا به ۱۶.۴.۶ |
 | پشتیبان‌گیری/بازیابی روی Postgres | `Not Run` | `backup_db` سپس `restore_db` روی دیتابیس خالی و مقایسه‌ی تعداد ردیف‌ها؛ رمزنگاری فایل پشتیبان با مالک |
 | CI + Docker | `Passed` | شش job؛ image های api و web ساخته می‌شوند و کانتینر api بوت می‌شود و `/health/live` پاسخ می‌دهد؛ کل compose هنوز اجرا نشده |
+| تأیید حساب با تلگرام | `Passed` (CI با mock + اجرای مالک با بات واقعی ۲۰۲۶-۱۱-۱۳) | `backend/devserver/tests/test_telegram.py`؛ وبهوک production اجرا نشده (`Not Run`) |
+| هدرهای امنیتی و CSP (فقط `self`) | `Passed` (CI) | e2e مرورگر واقعی بدون نقض CSP؛ `'unsafe-inline'` برای اسکریپت‌های Next باقی است (CSP مبتنی بر nonce = بهبود آینده) |
+| e2e مرورگر واقعی (Chromium، build تولیدی) | `Passed` (CI؛ تلگرام mock) | ثبت‌نام ← تأیید تلگرام ← onboarding؛ حالت‌های خطای ورود: ۴۲۹، ۵۰۳، آفلاین (خطای API در لایه‌ی شبکه‌ی مرورگر شبیه‌سازی می‌شود)؛ حالت dev/StrictMode فقط با تست واحد پوشش دارد |
+| e2e کلاینت فرانت روی سرور HTTP واقعی | `Passed` (CI) | ثبت‌نام، تلگرام، onboarding، تمرین، تغذیه، داشبورد، اندازه‌های بدن، سلامت/درد، نشست‌ها، خروج |
+| صفحات کاربر برای اندازه‌های بدن، سلامت/درد و نشست‌های فعال | `Passed` (CI)؛ بررسی دستی UI `Not Run` | `/body`، `/health`، کارت نشست‌ها در `/profile` |
+| API بدون رابط کاربری | `Not Run` | HEALTH-003/004/007، EX-003، WO-003، AI-001 (غیرفعال)، SUB، ADM-001..008 (بخشی از مدیریت) |
 | محتوای بالینی (حرکات، قواعد R1xx..R5xx، مسیر B فعال) | `Blocked` | `OPEN-003`، `EXP-001..013` |
 | بررسی حقوقی و ارسال داده سلامت به AI | `Blocked` | `OPEN-002`، `OPEN-004` |
 | محتوای حمایتی/ریکاوری برای مشکلات جسمی | `Blocked` | `OPEN-008` |
