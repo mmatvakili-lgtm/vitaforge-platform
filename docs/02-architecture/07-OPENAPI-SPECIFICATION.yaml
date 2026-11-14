@@ -448,6 +448,184 @@ components:
           items:
             type: string
       additionalProperties: false
+    AssessmentRequest:
+      type: object
+      properties:
+        answers:
+          type: object
+          additionalProperties: false
+          properties:
+            squat_reps:
+              type: integer
+              minimum: 0
+              maximum: 100
+            squat_heels_down:
+              type: boolean
+            squat_knees_cave:
+              type: boolean
+            hinge_reach:
+              enum:
+              - above_knee
+              - shin
+              - toes
+              - palms_floor
+            glute_bridge_s:
+              type: integer
+              minimum: 0
+              maximum: 180
+            push_variant:
+              enum:
+              - wall
+              - incline
+              - knee
+              - standard
+            push_reps:
+              type: integer
+              minimum: 0
+              maximum: 100
+            pull_variant:
+              enum:
+              - none
+              - inverted_row
+              - band_assisted
+              - pullup
+            pull_reps:
+              type: integer
+              minimum: 0
+              maximum: 50
+            plank_s:
+              type: integer
+              minimum: 0
+              maximum: 300
+            side_plank_left_s:
+              type: integer
+              minimum: 0
+              maximum: 180
+            side_plank_right_s:
+              type: integer
+              minimum: 0
+              maximum: 180
+            balance_left_s:
+              type: integer
+              minimum: 0
+              maximum: 60
+            balance_right_s:
+              type: integer
+              minimum: 0
+              maximum: 60
+            overhead_reach:
+              enum:
+              - 'no'
+              - partial
+              - 'yes'
+            ankle_knee_to_wall_cm:
+              type: integer
+              minimum: 0
+              maximum: 20
+            cardio_minutes:
+              type: integer
+              minimum: 0
+              maximum: 60
+            pain_regions:
+              type: array
+              items:
+                type: string
+              maxItems: 20
+      additionalProperties: false
+      required:
+      - answers
+    AssessmentDomain:
+      type: object
+      properties:
+        score:
+          type:
+          - integer
+          - 'null'
+        band:
+          type:
+          - string
+          - 'null'
+        level:
+          type:
+          - string
+          - 'null'
+        tested:
+          type: boolean
+        caution:
+          type: boolean
+      additionalProperties: false
+    AssessmentProfile:
+      type: object
+      properties:
+        method:
+          type: string
+        content_status:
+          const: ai_curated
+        answers:
+          type: object
+          additionalProperties: true
+        domains:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AssessmentDomain'
+        overall_level:
+          type:
+          - string
+          - 'null'
+        tested_count:
+          type: integer
+        strengths:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        weaknesses:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        flags:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        limiters:
+          type: array
+          items:
+            type: string
+        priorities:
+          type: object
+          additionalProperties:
+            type: number
+        corrective_focus:
+          type: array
+          items:
+            type: string
+        pain_reported:
+          type: boolean
+        pain_regions:
+          type: array
+          items:
+            type: string
+        untested:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    AssessmentResult:
+      type: object
+      properties:
+        profile:
+          oneOf:
+          - $ref: '#/components/schemas/AssessmentProfile'
+          - type: 'null'
+        assessed_at:
+          type:
+          - string
+          - 'null'
+        history_count:
+          type: integer
+      additionalProperties: false
     HealthProfile:
       type: object
       properties:
@@ -3329,6 +3507,67 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MeasurementRequest'
+  /assessment:
+    get:
+      operationId: api_assess_001
+      tags:
+      - assessment
+      summary: آخرین ارزیابی حرکتی و پروفایل نقاط قوت/ضعف
+      x-id: API-ASSESS-001
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResult'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: api_assess_002
+      tags:
+      - assessment
+      summary: ثبت تست‌های خودسنجی و محاسبه‌ی پروفایل (قطعی، heuristic_v1)
+      x-id: API-ASSESS-002
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResult'
+        '400':
+          description: درخواست نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentRequest'
   /health/profile:
     get:
       operationId: api_health_001

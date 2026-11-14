@@ -28,6 +28,10 @@ export type OnboardingStepRequest = { "answers": Record<string, unknown> };
 export type MeasurementRequest = { "metric": "height" | "weight" | "waist" | "abdomen" | "chest" | "arm" | "forearm" | "thigh" | "calf" | "body_fat_pct" | "lean_mass"; "value": number; "unit": string; "source": "measured" | "estimated"; "method"?: string; "measured_at"?: string };
 export type Measurement = { "id"?: string; "metric"?: string; "value"?: number; "unit"?: string; "source"?: string; "measured_at"?: string };
 export type BodyOverview = { "latest"?: Record<string, unknown>; "bmi"?: { "value"?: number; "label"?: "screening_index" }; "whtr"?: { "value"?: number; "label"?: "screening_index" }; "trend_notes"?: Array<string> };
+export type AssessmentRequest = { "answers": { "squat_reps"?: number; "squat_heels_down"?: boolean; "squat_knees_cave"?: boolean; "hinge_reach"?: "above_knee" | "shin" | "toes" | "palms_floor"; "glute_bridge_s"?: number; "push_variant"?: "wall" | "incline" | "knee" | "standard"; "push_reps"?: number; "pull_variant"?: "none" | "inverted_row" | "band_assisted" | "pullup"; "pull_reps"?: number; "plank_s"?: number; "side_plank_left_s"?: number; "side_plank_right_s"?: number; "balance_left_s"?: number; "balance_right_s"?: number; "overhead_reach"?: "no" | "partial" | "yes"; "ankle_knee_to_wall_cm"?: number; "cardio_minutes"?: number; "pain_regions"?: Array<string> } };
+export type AssessmentDomain = { "score"?: (number) | null; "band"?: (string) | null; "level"?: (string) | null; "tested"?: boolean; "caution"?: boolean };
+export type AssessmentProfile = { "method"?: string; "content_status"?: "ai_curated"; "answers"?: Record<string, unknown>; "domains"?: Record<string, unknown>; "overall_level"?: (string) | null; "tested_count"?: number; "strengths"?: Array<Record<string, unknown>>; "weaknesses"?: Array<Record<string, unknown>>; "flags"?: Array<Record<string, unknown>>; "limiters"?: Array<string>; "priorities"?: Record<string, unknown>; "corrective_focus"?: Array<string>; "pain_reported"?: boolean; "pain_regions"?: Array<string>; "untested"?: Array<string> };
+export type AssessmentResult = { "profile"?: AssessmentProfile | unknown; "assessed_at"?: (string) | null; "history_count"?: number };
 export type HealthProfile = { "conditions"?: Array<Condition>; "out_of_scope"?: Array<string>; "latest_decision"?: SafetyDecision };
 export type ConditionRequest = { "region": string; "side"?: "left" | "right" | "both" | "na"; "problem_type": "pain" | "limited_motion" | "diagnosed_injury" | "surgery_history" | "other"; "onset_date"?: string; "trend"?: "better" | "same" | "worse" | "unknown"; "self_severity"?: number; "aggravating_factors"?: string; "relieving_factors"?: string };
 export type ConditionUpdate = { "trend"?: string; "self_severity"?: number; "aggravating_factors"?: string; "relieving_factors"?: string };
@@ -133,6 +137,8 @@ export interface OpTypes {
   "API-ONB-003": { body: undefined; res: Onboarding; path: Record<string, never>; query: Record<string, never> };
   "API-BODY-001": { body: undefined; res: BodyOverview; path: Record<string, never>; query: Record<string, never> };
   "API-BODY-002": { body: MeasurementRequest; res: Measurement; path: Record<string, never>; query: Record<string, never> };
+  "API-ASSESS-001": { body: undefined; res: AssessmentResult; path: Record<string, never>; query: Record<string, never> };
+  "API-ASSESS-002": { body: AssessmentRequest; res: AssessmentResult; path: Record<string, never>; query: Record<string, never> };
   "API-HEALTH-001": { body: undefined; res: HealthProfile; path: Record<string, never>; query: Record<string, never> };
   "API-HEALTH-002": { body: ConditionRequest; res: Condition; path: Record<string, never>; query: Record<string, never> };
   "API-HEALTH-003": { body: ConditionUpdate; res: Condition; path: { condition_id: string }; query: Record<string, never> };
@@ -459,6 +465,26 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
     "path": "/body/measurements",
     "secured": true,
     "success": 201,
+    "errors": [
+      400,
+      401,
+      422
+    ]
+  },
+  "API-ASSESS-001": {
+    "method": "GET",
+    "path": "/assessment",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401
+    ]
+  },
+  "API-ASSESS-002": {
+    "method": "PUT",
+    "path": "/assessment",
+    "secured": true,
+    "success": 200,
     "errors": [
       400,
       401,
