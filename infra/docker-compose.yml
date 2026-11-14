@@ -1,4 +1,5 @@
-# WRITTEN, NOT RUN (DATABASE_URL in .env must use host "db"/"redis" when the api service runs inside compose)
+# Images are built and smoke-tested by CI (job `docker`); the full compose stack has NOT been run end to end.
+# DATABASE_URL in .env must use host "db"/"redis" when the api service runs inside compose.
 services:
   db:
     image: postgres:16
@@ -14,6 +15,10 @@ services:
     depends_on: [db, redis]
     command: sh -c "python manage.py migrate && gunicorn config.wsgi:application -b 0.0.0.0:8000"
     ports: ["8000:8000"]
+  web:
+    build: { context: ../frontend, args: { BACKEND_URL: "http://api:8000" } }
+    depends_on: [api]
+    ports: ["3000:3000"]
   mail-worker:
     build: { context: ../backend }
     env_file: ../.env
