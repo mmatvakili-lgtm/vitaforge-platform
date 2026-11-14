@@ -27,6 +27,7 @@ export function Header() {
         <Link href={`/${locale}/exercises`}>{t("nav.exercises")}</Link>
         <Link href={`/${locale}/history`}>{t("nav.history")}</Link>
         <Link href={`/${locale}/body`}>{t("nav.body")}</Link>
+        <Link href={`/${locale}/health`}>{t("nav.health")}</Link>
         <Link href={`/${locale}/nutrition`}>{t("nav.nutrition")}</Link>
         <Link href={`/${locale}/foods`}>{t("nav.foods")}</Link>
         <Link href={`/${locale}/profile`}>{t("nav.profile")}</Link>

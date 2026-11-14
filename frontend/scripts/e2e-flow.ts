@@ -175,6 +175,11 @@ const g2 = ok("#2 generate", await api.call("API-WO-001", { body: {} }));
 const v2 = decidePlanView(g2.decision, g2.plan);
 console.log("    decision:", bad.status, "->", g2.decision.status, "view:", v2.kind);
 if (v2.kind === "plan") throw new Error("SAFETY VIOLATION: plan shown despite red flag");
+// Last before logout on purpose: an active pain report changes what the Safety Core approves for the plan.
+const pain = ok("health: pain log", await api.call("API-HEALTH-005", { body: { region: "knee", intensity: 6, timing: "general" } }));
+if (!pain.decision) throw new Error("a pain log must return the Safety Core decision");
+ok("health: condition", await api.call("API-HEALTH-002", { body: { region: "knee", problem_type: "pain" } }));
+if (ok("health profile", await api.call("API-HEALTH-001")).conditions?.length === 0) throw new Error("the reported condition must persist");
 ok("logout", await api.call("API-AUTH-004"));
 const after = await api.call("API-PRO-001");
 if (after.ok) throw new Error("session still valid after logout");
