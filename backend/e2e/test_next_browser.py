@@ -127,6 +127,7 @@ def test_register_telegram_verify_and_land_on_onboarding_in_real_browser(stack):
                 pg.wait_for_function("() => { const f = document.querySelector('form'); return !!f && Object.keys(f).some(k => k.startsWith('__reactProps')); }", timeout=90000)
             except Exception:  # noqa: BLE001
                 raise AssertionError("page never hydrated: " + pg.url + " | form keys: " + repr(pg.evaluate("() => { const f = document.querySelector('form'); return f ? Object.keys(f) : null; }")) + " | scripts: " + repr(pg.evaluate("() => [...document.scripts].map(s => s.src).slice(0, 8)")) + " | errors: " + repr(errors)[:2500])
+            assert pg.get_attribute("#password", "aria-describedby") == "password-hint"   # the hint is programmatically tied to its input (a11y)
             pg.fill("#email", "browser@ex.com")
             pg.fill("#password", "Str0ng-Passw0rd")
             pg.fill("#dob", "1995-04-12")

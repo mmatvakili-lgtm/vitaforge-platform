@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import type { ApiError } from "../lib/api/client.ts";
 import { invalidFields } from "../lib/api/client.ts";
 import { useT } from "../lib/react/context.tsx";
@@ -23,10 +23,19 @@ export function ApiErrorView({ error }: { error: ApiError | null }) {
 }
 
 export function Field({ id, label, hint, error, children }: { id: string; label: string; hint?: string; error?: string; children: ReactNode }) {
+  // Link the hint and the error to the control so screen readers announce them (explicit aria-describedby on the child is kept and extended).
+  const ids = [hint ? `${id}-hint` : "", error ? `${id}-err` : ""].filter(Boolean);
+  let control = children;
+  if (isValidElement(children) && (ids.length > 0 || error)) {
+    const el = children as ReactElement<Record<string, unknown>>;
+    const own = typeof el.props["aria-describedby"] === "string" ? (el.props["aria-describedby"] as string).split(" ") : [];
+    const all = [...new Set([...own, ...ids])].join(" ");
+    control = cloneElement(el, { ...(all ? { "aria-describedby": all } : {}), ...(error ? { "aria-invalid": true } : {}) });
+  }
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
-      {children}
+      {control}
       {hint && <p className="hint" id={`${id}-hint`}>{hint}</p>}
       {error && <p className="field-error" id={`${id}-err`} role="alert">{error}</p>}
     </div>
