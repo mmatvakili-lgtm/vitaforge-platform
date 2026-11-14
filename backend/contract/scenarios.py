@@ -27,6 +27,7 @@ def happy_path(h: Harness) -> Dict[str, str]:
     c("GET", "/assessment", token=t)
     c("PUT", "/assessment", token=t, body={"answers": {"squat_reps": 20, "push_variant": "knee", "push_reps": 8, "plank_s": 40}})
     c("GET", "/body/overview", token=t)
+    c("GET", "/analytics", token=t)
     # catalog + plan
     ex = c("GET", "/exercises?page=1&page_size=5", token=t).body
     eid = ex["results"][0]["id"]
