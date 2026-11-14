@@ -51,6 +51,9 @@ def test_register_telegram_verify_and_land_on_onboarding_in_real_browser():
             pg = b.new_page()
             errors = []
             pg.on("pageerror", lambda e: errors.append(str(e)))
+            pg.on("console", lambda m: errors.append("console:" + m.type + ":" + m.text[:300]) if m.type in ("error", "warning") else None)
+            pg.on("requestfailed", lambda r: errors.append("reqfail:" + r.url[:120]))
+            pg.on("response", lambda r: errors.append(f"http{r.status}:{r.url[:100]}") if r.status >= 400 else None)
             pg.set_default_timeout(60000)
             pg.goto(f"http://127.0.0.1:{web_port}/fa/register")
             pg.fill("#email", "browser@ex.com")
@@ -60,7 +63,7 @@ def test_register_telegram_verify_and_land_on_onboarding_in_real_browser():
             try:
                 pg.get_by_role("button", name="تأیید با تلگرام").wait_for(timeout=30000)
             except Exception:  # noqa: BLE001
-                raise AssertionError("telegram button not shown; page text: " + pg.inner_text("body")[:800] + " | js errors: " + repr(errors))
+                raise AssertionError("telegram button not shown; page text: " + pg.url + " | " + pg.inner_text("body")[:400] + " | html: " + pg.content()[-1500:] + " | js errors: " + repr(errors)[:1500])
             pg.get_by_role("button", name="تأیید با تلگرام").click()
             link = pg.locator("a[href^='https://t.me/']")
             link.wait_for()                                                  # a stuck 'sending…' button would time out here
