@@ -57,6 +57,10 @@ def test_register_telegram_verify_and_land_on_onboarding_in_real_browser():
             pg.fill("#password", "Str0ng-Passw0rd")
             pg.fill("#dob", "1995-04-12")
             pg.click("button[type=submit]")
+            try:
+                pg.get_by_role("button", name="تأیید با تلگرام").wait_for(timeout=30000)
+            except Exception:  # noqa: BLE001
+                raise AssertionError("telegram button not shown; page text: " + pg.inner_text("body")[:800] + " | js errors: " + repr(errors))
             pg.get_by_role("button", name="تأیید با تلگرام").click()
             link = pg.locator("a[href^='https://t.me/']")
             link.wait_for()                                                  # a stuck 'sending…' button would time out here
