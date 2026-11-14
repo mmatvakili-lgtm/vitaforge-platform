@@ -71,7 +71,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: pip install -r backend/requirements-light.txt && python -m playwright install --with-deps chromium
-      - run: cd frontend && npm install --no-audit --no-fund
+      - run: cd frontend && npm ci --no-audit --no-fund
       - run: cd backend && python -m pytest -q e2e devserver/tests/test_browser_smoke.py
   docker:
     name: docker (images build, backend container boots and answers health)
@@ -100,7 +100,7 @@ jobs:
         run: pip install pip-audit && pip-audit -r backend/requirements.txt --no-deps --disable-pip || pip-audit -r backend/requirements.txt
       - name: node dependencies (production, high+)
         working-directory: frontend
-        run: npm install --package-lock-only --no-audit --no-fund && npm audit --omit=dev --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
       - name: no committed secrets (bot tokens, private keys)
         run: |
           if git grep -nIE '[0-9]{8,10}:[A-Za-z0-9_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}' -- . ':!docs' ':!*.test.ts' ':!backend/*/tests/*'; then echo "possible secret committed"; exit 1; fi

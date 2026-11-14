@@ -36,7 +36,7 @@
 |---|---|---|---|
 | 1 | چرخاندن توکن بات (`/revoke` در BotFather) و ساخت secret جدید | توکن و secret در اسکرین‌شات دیده شدند | `TELEGRAM_VERIFICATION.md` |
 | 2 | دامنه + HTTPS + سرور؛ `.env` production؛ `telegram_set_webhook --url ...` | وبهوک production اجرا نشده است؛ `telegram_poll` فقط برای توسعه است | `TELEGRAM_VERIFICATION.md` §ج |
-| 3 | `npm install` و commit کردن `frontend/package-lock.json` (از طریق PR) | فایل lock در مخزن نیست؛ نصب قابل بازتولید نیست | — |
+| 3 | ~~commit کردن `package-lock.json`~~ | انجام شد (PR #17)؛ CI با `npm ci` نصب می‌کند | — |
 | 4 | واردسازی داده‌ی FDC و بازبینی غذاها (مالک یا متخصص تغذیه) | بدون آن برنامه‌ی غذایی `NEEDS_CONTENT` است | `OWNER_GUIDE.md` گام ۴ |
 | 5 | بازبینی متخصص تمرین و ایمنی بالینی؛ انتشار حرکات | تا آن موقع برنامه‌ی تمرین `NEEDS_CONTENT` و محصول «آزمایشی» است (OPEN-003) | گام ۵ و ۸ |
 | 6 | بررسی حقوقی: حریم خصوصی، شرایط استفاده، مجوز داده‌ها، متن رضایت‌ها | OPEN-002، OPEN-004؛ ارسال داده‌ی سلامت به AI تا آن موقع خاموش است | گام ۸ |
