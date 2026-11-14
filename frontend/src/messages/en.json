@@ -780,5 +780,7 @@
  "assess.limiter.posterior_chain_mobility": "Limited posterior-chain flexibility",
  "assess.painNote": "You reported pain during the tests. This app does not diagnose; to log it and get a safety evaluation, go to:",
  "assess.disclaimer": "This is a general screening, not a medical diagnosis; only the Safety Core makes safety decisions about your plan.",
- "nav.assessment": "Assessment"
+ "nav.assessment": "Assessment",
+ "banner.aiCurated": "Demo / experimental version: exercise and nutrition content is AI-curated and not expert-reviewed. This is not medical advice; see a clinician for pain or illness.",
+ "banner.devSample": "Development build: sample data, unreviewed."
 }

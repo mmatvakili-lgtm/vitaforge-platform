@@ -22,12 +22,12 @@ def _api_app():
     store = PersistentStore(DjangoBackend())
     mail = MailRuntime(build_sender(cfg["mail"], store.captured_mail), cfg["secret_key"], cfg["mail"]["frontend_base_url"])
     from tgverify import build_runtime
-    return build_app(store, dev_content=cfg["dev_content"], dev_mode=cfg["debug"], mail=mail, telegram=build_runtime(cfg["telegram"]))
+    return build_app(store, dev_content=cfg["dev_content"], dev_mode=cfg["debug"], content_mode=cfg["content_mode"], mail=mail, telegram=build_runtime(cfg["telegram"]))
 
 
 def application(environ, start_response):
     from .routing import goes_to_api
-    dev = os.environ.get("VITAFORGE_DEV_CONTENT", "").lower() in ("1", "true", "yes")
+    dev = os.environ.get("VITAFORGE_DEV_CONTENT", "").lower() in ("1", "true", "yes")   # root page only for the plain dev flag, never for the public demo
     if goes_to_api(environ.get("PATH_INFO", ""), dev):
         return _api_app()(environ, start_response)
     return _django(environ, start_response)

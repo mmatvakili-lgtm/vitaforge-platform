@@ -85,7 +85,7 @@ EP=[
 ("API-WO-005","get","/workouts/progression","workouts","پیشنهاد پیشرفت قابل‌توضیح برای حرکت‌های برنامه (فقط پیشنهاد)",U,"",None,"ProgressionList","200",["401","404","409"]),
 ("API-NUT-003","post","/nutrition/meal-plan","nutrition","برنامه غذایی هفتگی؛ بدون داده بازبینی‌شده NEEDS_CONTENT (نیازمند رضایت سلامت)",U,"","MealPlanRequest","MealPlanResponse","200",["400","401","403","404","422"]),
 ("API-SYS-001","get","/health/live","system","Liveness (بدون وابستگی)",PUB,"",None,"Message","200",[]),
-("API-SYS-002","get","/health/ready","system","Readiness (DB/Redis)",PUB,"",None,"Message","200",["503"]),
+("API-SYS-002","get","/health/ready","system","Readiness (DB/Redis) + content_mode",PUB,"",None,"Ready","200",["503"]),
 ]
 ERR_TXT={"400":"درخواست نامعتبر","401":"احراز هویت لازم","402":"نیازمند ارتقای پلن (غیرایمنی)","403":"دسترسی/رضایت/مجوز لازم","404":"یافت نشد","409":"تعارض وضعیت","410":"منقضی","422":"خطای اعتبارسنجی","423":"حساب قفل","429":"محدودیت نرخ","501":"درگاه پرداخت پیکربندی نشده","503":"سرویس در دسترس نیست"}
 schemas={}
@@ -98,6 +98,7 @@ S=lambda **k:{"type":"string",**k}
 schemas.update({
 "Error":obj({"code":S(),"message":S(),"details":{"type":"object","additionalProperties":True},"request_id":S()},["code","message"]),
 "Message":obj({"message":S()},["message"]),
+"Ready":obj({"message":S(),"content_mode":{"enum":["reviewed","dev_sample","ai_curated_demo"]}},["message","content_mode"],"reviewed = فقط محتوای بازبینی‌شده؛ dev_sample = نمونه‌ی توسعه؛ ai_curated_demo = دمو عمومی با محتوای گردآوری‌شده توسط AI بدون تأیید متخصص"),
 "RegisterRequest":obj({"email":S(format="email"),"phone":S(pattern=r"^\+[1-9]\d{6,14}$"),"password":S(minLength=10,maxLength=128),"date_of_birth":S(format="date"),"language":{"enum":["fa","en"]}},["password","date_of_birth"]),
 "VerifyRequest":obj({"identifier":S(),"code":S(minLength=6,maxLength=6)},["identifier","code"]),
 "LoginRequest":obj({"identifier":S(),"password":S()},["identifier","password"]),

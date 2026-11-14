@@ -76,6 +76,8 @@ if (!prof || prof.content_status !== "ai_curated" || prof.weaknesses[0]?.domain 
 if (ok("assessment re-read", await api.call("API-ASSESS-001")).history_count !== 1) throw new Error("the assessment must persist");
 const badAsmt = await api.call("API-ASSESS-002", { body: { answers: { squat_reps: 500 } } });
 if (badAsmt.ok) throw new Error("an out-of-range assessment answer must be rejected");
+const ready = ok("ready", await api.call("API-SYS-002"));
+if (ready.content_mode !== "dev_sample") throw new Error("the dev e2e server must report content_mode=dev_sample");
 const sess = ok("sessions list", await api.call("API-AUTH-007"));
 if (!sess.some((x) => x.current)) throw new Error("the current session must be listed and marked current");
 const steps: Array<[string, Record<string, unknown>]> = [["1", { age: 30 }], ["2", { goal: "strength", level: "beginner" }], ["3", { days_per_week: 3, session_minutes: 60 }], ["4", { equipment: ["dumbbell"] }]];

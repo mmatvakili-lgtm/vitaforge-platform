@@ -2,6 +2,7 @@
 
 export type Error = { "code": string; "message": string; "details"?: Record<string, unknown>; "request_id"?: string };
 export type Message = { "message": string };
+export type Ready = { "message": string; "content_mode": "reviewed" | "dev_sample" | "ai_curated_demo" };
 export type RegisterRequest = { "email"?: string; "phone"?: string; "password": string; "date_of_birth": string; "language"?: "fa" | "en" };
 export type VerifyRequest = { "identifier": string; "code": string };
 export type LoginRequest = { "identifier": string; "password": string };
@@ -194,7 +195,7 @@ export interface OpTypes {
   "API-WO-005": { body: undefined; res: ProgressionList; path: Record<string, never>; query: Record<string, never> };
   "API-NUT-003": { body: MealPlanRequest; res: MealPlanResponse; path: Record<string, never>; query: Record<string, never> };
   "API-SYS-001": { body: undefined; res: Message; path: Record<string, never>; query: Record<string, never> };
-  "API-SYS-002": { body: undefined; res: Message; path: Record<string, never>; query: Record<string, never> };
+  "API-SYS-002": { body: undefined; res: Ready; path: Record<string, never>; query: Record<string, never> };
 }
 
 export type OpId = keyof OpTypes;

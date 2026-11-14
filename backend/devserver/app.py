@@ -88,7 +88,8 @@ class Reply:
 
 
 class App:
-    def __init__(self, store: InMemoryStore, rule_set: RuleSet, dev_mode: bool = False, mail=None, telegram=None):
+    def __init__(self, store: InMemoryStore, rule_set: RuleSet, dev_mode: bool = False, mail=None, telegram=None, content_mode: str = "reviewed"):
+        self.content_mode = content_mode if content_mode == "ai_curated_demo" else ("dev_sample" if rule_set.allow_unreviewed_content else "reviewed")
         self.dev = dev_mode
         self.contract = contract()
         day = lambda: date.today().toordinal()
@@ -111,7 +112,7 @@ class App:
         self.ai = AIGateway(StubProvider() if dev_mode else _Unconfigured())   # production: rule-based fallback until a provider is approved
         from ai_gateway import DecisionLayer, ExerciseKnowledgeBase
         from nutrition_engine import NutritionConfig, NutritionLog
-        self.layer = DecisionLayer(self.ai, ExerciseKnowledgeBase([], allow_experimental=dev_mode), "fa")
+        self.layer = DecisionLayer(self.ai, ExerciseKnowledgeBase([], allow_experimental=dev_mode or self.content_mode == "ai_curated_demo"), "fa")
         self.nlog = NutritionLog(store, day)
         for _n in ("foods", "recipes", "price_quotes", "user_prices", "shopping_state"):
             store.__dict__.setdefault(_n, {})
@@ -218,7 +219,7 @@ class App:
         published = (not getattr(self.rule_set, "allow_unreviewed_content", False)) and bool(used) \
             and all(r is not None and r.publication_status == "published" for r in used)
         out = {"plan_id": pub("plan", uid), "version_no": ver, "structure": res.structure or "unknown",
-               "rationale": {"content_status": "published" if published else "experimental_unreviewed", "reasons": list(res.reasons), "flags": list(res.flags), "label": res.label,
+               "rationale": {"content_status": "published" if published else ("ai_curated_unreviewed" if self.content_mode == "ai_curated_demo" else "experimental_unreviewed"), "reasons": list(res.reasons), "flags": list(res.flags), "label": res.label,
                              "omissions": [f"{o.day}:{o.slot}:{o.reason}" for o in res.omissions], "balance": _plain(res.balance)},
                "safety_decision_id": pub("decision", res.safety_decision_id), "days": days}
         if "goal" in st:
@@ -892,7 +893,7 @@ class App:
         return {"message": "ok"}
 
     def op_api_sys_002(self, c):
-        return {"message": "ok"}
+        return {"message": "ok", "content_mode": self.content_mode}
 
     # ------------------------------------------------------------------ non-OpenAPI extras (nutrition is x-deferred)
     def _nut_profile(self, uid):

@@ -38,6 +38,22 @@ components:
       additionalProperties: false
       required:
       - message
+    Ready:
+      type: object
+      properties:
+        message:
+          type: string
+        content_mode:
+          enum:
+          - reviewed
+          - dev_sample
+          - ai_curated_demo
+      additionalProperties: false
+      required:
+      - message
+      - content_mode
+      description: reviewed = فقط محتوای بازبینی‌شده؛ dev_sample = نمونه‌ی توسعه؛ ai_curated_demo = دمو عمومی با محتوای گردآوری‌شده توسط AI بدون
+        تأیید متخصص
     RegisterRequest:
       type: object
       properties:
@@ -5892,7 +5908,7 @@ paths:
       operationId: api_sys_002
       tags:
       - system
-      summary: Readiness (DB/Redis)
+      summary: Readiness (DB/Redis) + content_mode
       x-id: API-SYS-002
       security: []
       responses:
@@ -5901,7 +5917,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/Ready'
         '503':
           description: سرویس در دسترس نیست
           content:

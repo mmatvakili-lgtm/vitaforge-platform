@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { dirOf, isLocale, LOCALES, t } from "../../lib/i18n.ts";
 import { LocaleProvider } from "../../lib/react/context.tsx";
+import { ContentModeBanner } from "../../components/ContentModeBanner.tsx";
 import { Header, Notice } from "../../components/Header.tsx";
 import { RegisterSW } from "../../components/RegisterSW.tsx";
 import "../globals.css";
@@ -26,6 +27,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <RegisterSW />
         <LocaleProvider locale={locale}>
           <Header />
+          <ContentModeBanner />
           <main className="container">{children}</main>
           <footer className="container"><Notice /></footer>
         </LocaleProvider>
