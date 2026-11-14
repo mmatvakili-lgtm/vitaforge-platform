@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import type { HealthProfile, SafetyDecision } from "../../../lib/api/generated.ts";
+import { permitsPlan } from "../../../lib/plan-view.ts";
 import { PAIN_REGIONS } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
@@ -64,7 +65,7 @@ export default function HealthPage() {
           <h2>{t("health.conditions")}</h2>
           {(hp.conditions ?? []).length === 0 ? <p className="muted">{t("health.none")}</p> : (
             <ul className="plain">{hp.conditions!.map((c, i) => <li key={c.id ?? i}>{t(`region.${c.region}`)} — {t(`health.problem.${c.problem_type}`)}{c.self_severity !== undefined && ` (${n(c.self_severity)}/10)`}</li>)}</ul>)}
-          {hp.latest_decision && hp.latest_decision.status !== "OK" && !decision && <DecisionPanel decision={hp.latest_decision} />}
+          {hp.latest_decision && !permitsPlan(hp.latest_decision.status) && !decision && <DecisionPanel decision={hp.latest_decision} />}
 
           <h2>{t("health.logPain")}</h2>
           <form onSubmit={logPain} noValidate>
@@ -80,7 +81,7 @@ export default function HealthPage() {
             <Button type="submit" busy={busy}>{t("health.save")}</Button>
           </form>
           {Number(intensity) > 0 && <Alert kind="warning">{t(guidance)}</Alert>}
-          {decision && decision.status !== "OK" && <DecisionPanel decision={decision} />}
+          {decision && !permitsPlan(decision.status) && <DecisionPanel decision={decision} />}
 
           <h2>{t("health.addCondition")}</h2>
           <form onSubmit={addCondition} noValidate>
