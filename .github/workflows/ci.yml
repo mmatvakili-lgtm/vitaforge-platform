@@ -72,6 +72,20 @@ jobs:
         with: { node-version: 22 }
       - run: pip install -r backend/requirements-light.txt && python -m playwright install --with-deps chromium
       - run: cd backend && python -m pytest -q e2e devserver/tests/test_browser_smoke.py
+  docker:
+    name: docker (images build, backend container boots and answers health)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f backend/Dockerfile -t vitaforge-api .
+      - run: docker build -t vitaforge-web frontend
+      - name: backend container smoke test (throw-away debug config, sqlite)
+        run: |
+          docker run -d --name api -p 8000:8000 -e DJANGO_DEBUG=true -e DJANGO_SECRET_KEY=ci-only-not-a-secret-0123456789abcdefghijklmnop \
+            -e DATABASE_URL=sqlite:////tmp/ci.sqlite3 -e REDIS_URL=redis://localhost:6379/0 -e ALLOWED_HOSTS=localhost,127.0.0.1 \
+            vitaforge-api sh -c "python manage.py migrate && gunicorn config.wsgi:application -b 0.0.0.0:8000"
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8000/api/v1/health/live && exit 0; sleep 2; done
+          docker logs api; exit 1
   security:
     name: security (dependency audit, secret scan)
     runs-on: ubuntu-latest
