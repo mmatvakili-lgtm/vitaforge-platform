@@ -59,6 +59,7 @@ class EngineInput:
     supportive_regions: Tuple[str, ...] = ()   # regions with a recorded history and NO active pain (Path A)
     priority_muscles: Tuple[str, ...] = ()      # user-chosen focus; only a tie-breaking preference, never overrides Safety Core or volume caps
     supportive_enabled: bool = False           # True only when reviewed supportive content is published
+    profile: Optional[Mapping[str, Any]] = None  # movement-assessment profile (assessment.evaluate output); shapes selection/volume only, never safety
     config: EngineConfig = field(default_factory=EngineConfig)
 
 

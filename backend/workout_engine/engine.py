@@ -22,6 +22,31 @@ PRESCRIPTION = {
     ("fat_loss", "advanced"): (3, 10, 15, 7.0, 60),
 }
 
+# --- movement-assessment integration (heuristic, AI-curated; shapes choices but never approves anything: the Safety Core still gates every code)
+DOMAIN_OF = {"squat": "legs", "lunge": "legs", "hinge": "hinge", "push_horizontal": "push", "push_vertical": "push",
+             "pull_horizontal": "pull", "pull_vertical": "pull", "core": "core", "rotation": "core", "carry": "core"}
+CORRECTIVE = {"ankle_mobility": "ankle_dorsiflexion_rock", "squat_heel_lift": "ankle_dorsiflexion_rock", "overhead_mobility": "wall_slide",
+              "posterior_chain_mobility": "wall_hip_hinge", "knee_control": "clamshell"}
+UNILATERAL_HINTS = ("single_", "split_squat", "_lunge", "step_up", "pistol", "bulgarian", "skater", "curtsy")
+PRIORITY_BUMP = 1.15                     # pattern weight at/above which one extra set is prescribed (inside the weekly volume cap)
+
+
+def _profile_view(profile):
+    """(target level per pattern, extra-set patterns, asymmetry?, limiters) from an assessment profile; empty when absent/untrusted."""
+    if not isinstance(profile, dict) or profile.get("method") != "heuristic_v1":
+        return {}, set(), False, ()
+    levels = {}
+    for pat, dom in DOMAIN_OF.items():
+        lv = (profile.get("domains", {}).get(dom) or {}).get("level")
+        if lv in LEVEL_RANK:
+            levels[pat] = lv
+    pri = profile.get("priorities", {}) or {}
+    bump = {p for p, w in pri.items() if isinstance(w, (int, float)) and w >= PRIORITY_BUMP}
+    asym = any(f.get("key", "").endswith("_asymmetry") for f in profile.get("flags", []) or [])
+    lim = tuple(x for x in profile.get("limiters", []) or [] if x in CORRECTIVE)
+    return levels, bump, asym, lim
+
+
 # slot = (name, movement_pattern, role)
 FULL_BODY = [("squat", "squat", "main"), ("hinge", "hinge", "main"), ("push", "push_horizontal", "main"),
              ("pull", "pull_horizontal", "main"), ("core", "core", "accessory")]
@@ -99,6 +124,9 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
         sets = max(1, sets - 1); reasons.append("recovery:red->sets-1")
     elif inp.recovery_state == "amber":
         reasons.append("recovery:amber")
+    p_levels, p_bump, p_asym, p_limiters = _profile_view(inp.profile)
+    if p_levels or p_limiters:
+        reasons.append("profile:heuristic_v1")
     used_week: Dict[str, int] = {}
     omissions: List[Omission] = []
     days: List[PlannedDay] = []
@@ -126,19 +154,31 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
                 s -= 1 if c.code in caution else 0
                 s -= used_week.get(c.code, 0)
                 s -= 0.5 if c.code in inp.recent_codes else 0     # variety vs recent plans
+                tgt = p_levels.get(pattern)
+                if tgt is not None:                                # match exercise difficulty to the user's tested level in this pattern
+                    gap = LEVEL_RANK[c.candidate.difficulty] - LEVEL_RANK[tgt]
+                    s -= 2.0 * gap if gap > 0 else 0.4 * -gap
+                if p_asym and any(h in c.code for h in UNILATERAL_HINTS):
+                    s += 0.6                                       # asymmetry found: prefer single-side work
                 return (-s, c.code)                 # stable tie-break by code => deterministic
             best = sorted(cands, key=score)[0]
             if best.role != role or best.code in caution:
                 alt_used += 1
             muscle = best.primary_muscle
-            if muscle_sets.get(muscle, 0) + sets > cfg.max_weekly_sets_per_muscle[inp.level]:
+            eff_sets = sets + 1 if pattern in p_bump else sets          # weaker pattern -> one extra set (never past the cap)
+            if muscle_sets.get(muscle, 0) + eff_sets > cfg.max_weekly_sets_per_muscle[inp.level]:
+                eff_sets = sets
+            if muscle_sets.get(muscle, 0) + eff_sets > cfg.max_weekly_sets_per_muscle[inp.level]:
                 omissions.append(Omission(name, slot, "weekly-volume-cap"))
                 continue
-            muscle_sets[muscle] = muscle_sets.get(muscle, 0) + sets
+            muscle_sets[muscle] = muscle_sets.get(muscle, 0) + eff_sets
             used_week[best.code] = used_week.get(best.code, 0) + 1
             day_codes.add(best.code)
-            chosen.append(PlannedExercise(best.code, sets if role == "main" else max(2, sets - 1), rmin, rmax, rpe, rest, slot,
+            n_sets = eff_sets if role == "main" else max(2, eff_sets - 1)
+            chosen.append(PlannedExercise(best.code, n_sets, rmin, rmax, rpe, rest, slot,
                                           "slot-match" + ("+repeat-relaxed" if relaxed else "") + ("+caution" if best.code in caution else "")
+                                          + ("+extra-set:weak-area" if eff_sets > sets else "")
+                                          + (f"+level:{p_levels[pattern]}" if pattern in p_levels else "")
                                           + ("+supportive" if inp.supportive_enabled and set(best.supports_regions) & set(inp.supportive_regions) else "")
                                           + ("+priority" if best.primary_muscle in inp.priority_muscles else "")))
         # WO-C01 time budget: drop accessories from the end
@@ -158,6 +198,14 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
             return _fail("NEEDS_CONTENT", reasons + [f"WO-C06:{name}"], decision, cfg, decision.flags, omissions)
         order = {s_[0]: i for i, s_ in enumerate(slots)}
         chosen.sort(key=lambda e: (by_code[e.code].role != "main", order[e.slot]))        # main lifts first, then accessories, slot order
+        if p_limiters:                                   # one corrective drill per session (rotating), only if allowed and it fits the time budget
+            lim = p_limiters[len(days) % len(p_limiters)]
+            code = CORRECTIVE[lim]
+            if code in by_code and code not in day_codes:
+                corr = PlannedExercise(code, 2, 8, 12, 3.0, 30, "corrective", f"corrective:{lim}")
+                if minutes([corr] + chosen) <= inp.session_minutes:
+                    chosen.insert(0, corr)
+                    reasons.append(f"corrective:{lim}:{code}")
         days.append(PlannedDay(name, tuple(chosen), minutes(chosen)))
 
     # S7 safety post-pass (defence in depth)

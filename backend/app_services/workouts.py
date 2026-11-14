@@ -14,6 +14,10 @@ class WorkoutService:
         self.s, self.h, self.gate, self.today, self.cfg = store, health, gate, clock_days, config
         self.now = clock_s or (lambda: None)
 
+    def _latest_profile(self, uid):
+        rows = self.s.__dict__.get("assessments", {}).get(uid) or []
+        return rows[-1].get("profile") if rows else None
+
     def generate(self, uid, preferred_structure="__profile__"):
         p = self.s.profiles.get(uid)
         if not p or not p.get("complete"):
@@ -28,7 +32,8 @@ class WorkoutService:
         rs = self.gate.rule_set
         supportive = tuple(sorted({c.region for c in base.conditions if not c.active_pain and c.status != "no_known_limitation"}))
         inp = dataclasses.replace(inp, priority_muscles=tuple(st["goal"].get("priority_muscles", ())), supportive_regions=supportive,
-                                  supportive_enabled=bool(rs.clinical_content_published or rs.allow_unreviewed_content))
+                                  supportive_enabled=bool(rs.clinical_content_published or rs.allow_unreviewed_content),
+                                  profile=self._latest_profile(uid))
         res = generate_plan(inp, base, self.gate)
         # the same pre-pass request the engine used (S1), so the returned decision is the one that gated the plan
         pre = self.gate.evaluate(dataclasses.replace(base, candidates=tuple(c.candidate for c in sorted(inp.catalog, key=lambda c: c.code)),
