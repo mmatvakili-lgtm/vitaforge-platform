@@ -129,7 +129,7 @@ class ExtrasService:
         self.s.__dict__.setdefault("resets", {}).pop(idx.pop(uid, None), None)
         for k in [k for k, r in self.s.__dict__.setdefault("outbox", {}).items() if r.get("user") == uid]:
             self.s.outbox.pop(k, None)
-        for k in ("profiles", "health", "plans", "measurements", "pain_logs", "metrics", "symptoms", "cond_meta", "nutrition_profiles", "meals", "water", "user_prices", "shopping_state"):
+        for k in ("profiles", "health", "plans", "measurements", "pain_logs", "metrics", "symptoms", "cond_meta", "nutrition_profiles", "meals", "water", "user_prices", "shopping_state", "assessments"):
             self.s.__dict__.setdefault(k, {}).pop(uid, None)
         for r in self.s.__dict__.get("privacy_requests", {}).values():                 # stored export copies hold health data: erase them too
             if r.get("user") == uid:

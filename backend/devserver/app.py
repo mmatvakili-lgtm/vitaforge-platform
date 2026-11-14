@@ -481,6 +481,26 @@ class App:
         return {"id": pub("metric", f"{c['uid']}:{r['n']}"), "metric": r["metric"], "value": r["value"], "unit": r["unit"], "source": r["source"],
                 "measured_at": b.get("measured_at") or iso(self.sec())}
 
+    # ------------------------------------------------------------------ assessment (deterministic, ai_curated)
+    def _assessment_view(self, uid):
+        rows = self.store.__dict__.setdefault("assessments", {}).get(uid, [])
+        last = rows[-1] if rows else None
+        return {"profile": last["profile"] if last else None, "assessed_at": last["at"] if last else None, "history_count": len(rows)}
+
+    def op_api_assess_001(self, c):
+        return self._assessment_view(c["uid"])
+
+    def op_api_assess_002(self, c):
+        from assessment import AssessmentError, evaluate
+        try:
+            profile = evaluate(c["body"]["answers"])
+        except AssessmentError:
+            raise ValidationFailed("assessment")
+        rows = self.store.__dict__.setdefault("assessments", {}).get(c["uid"], [])
+        rows = list(rows) + [{"at": iso(self.sec()), "profile": profile}]
+        self.store.assessments[c["uid"]] = rows[-20:]
+        return self._assessment_view(c["uid"])
+
     # ------------------------------------------------------------------ health
     @staticmethod
     def _active_pain(problem_type, severity):
