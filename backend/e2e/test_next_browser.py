@@ -100,7 +100,8 @@ def test_login_error_states_are_shown_and_the_form_recovers(stack, mode):
         assert pg.locator("[role=alert]").first.inner_text().strip()    # a visible, non-empty message
         failing["on"] = False                                           # the API is back: the same form must work again
         pg.click("button[type=submit]")
-        pg.locator("[role=alert]").first.wait_for()                     # real API now answers 401 for the unknown user: still an alert, form still usable
+        # the real API now answers 401 for the unknown user: wait until the request finished (button idle again) and an alert is shown
+        pg.wait_for_function("() => { const b = document.querySelector('button[type=submit]'); return b && !b.disabled && document.querySelector('[role=alert]'); }")
         assert pg.locator("button[type=submit]").is_enabled()
         b.close()
 
