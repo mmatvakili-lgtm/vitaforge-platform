@@ -1429,6 +1429,10 @@ components:
       properties:
         confirm_sources_attached:
           const: true
+        signoff_ref:
+          type: string
+          minLength: 1
+          maxLength: 200
         notes:
           type: string
       additionalProperties: false

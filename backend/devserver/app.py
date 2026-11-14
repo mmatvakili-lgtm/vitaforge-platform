@@ -847,8 +847,8 @@ class App:
         version = resolve("rs", c["rule_set_id"], list(known))
         if known[version]["status"] == "published":
             raise Conflict("already_published")
-        # DOC-07 has no sign-off reference field: `notes` carries the external expert approval reference and must be non-empty
-        r = self.cat.publish_rule_set(role, c["uid"], version, c["body"].get("notes"))
+        # `signoff_ref` is the external expert approval reference (EXP-*); `notes` is still accepted for older clients. One of them must be non-empty.
+        r = self.cat.publish_rule_set(role, c["uid"], version, c["body"].get("signoff_ref") or c["body"].get("notes"))
         return self._rule_set(version, r)
 
     def op_api_adm_006(self, c):
