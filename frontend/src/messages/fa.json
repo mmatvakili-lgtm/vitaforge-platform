@@ -616,5 +616,9 @@
  "telegram.settings.linked": "حساب تلگرام شما متصل است.",
  "telegram.settings.notify": "اجازه می‌دهم VitaForge در تلگرام یادآوری برایم بفرستد",
  "telegram.settings.notifyHint": "به‌صورت پیش‌فرض خاموش است. یادآورها هرگز اطلاعات سلامتی ندارند و هر زمان می‌توانید خاموشش کنید. (هنوز یادآوری‌ای ارسال نمی‌شود؛ این گزینه فقط رضایت شما را ثبت می‌کند.)",
- "telegram.settings.notLinked": "تلگرام به این حساب متصل نیست."
+ "telegram.settings.notLinked": "تلگرام به این حساب متصل نیست.",
+ "profile.sessions.title": "نشست‌های فعال",
+ "profile.sessions.hint": "دستگاه‌هایی که با حساب شما وارد شده‌اند. اگر نشستی را نمی‌شناسید، آن را ببندید.",
+ "profile.sessions.current": "این دستگاه",
+ "profile.sessions.end": "بستن نشست"
 }
