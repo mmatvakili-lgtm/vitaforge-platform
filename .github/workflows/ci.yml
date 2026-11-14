@@ -71,6 +71,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: pip install -r backend/requirements-light.txt && python -m playwright install --with-deps chromium
+      - run: cd frontend && npm install --no-audit --no-fund
       - run: cd backend && python -m pytest -q e2e devserver/tests/test_browser_smoke.py
   docker:
     name: docker (images build, backend container boots and answers health)

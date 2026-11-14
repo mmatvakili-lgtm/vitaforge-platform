@@ -168,7 +168,7 @@ schemas.update({
 "TransitionRequest":obj({"to_status":{"enum":["scientific_review","safety_review","published","retired","draft"]},"notes":S()},["to_status"]),
 "RuleSetList":{"type":"array","items":{"$ref":"#/components/schemas/RuleSet"}},
 "RuleSet":obj({"id":S(format="uuid"),"version":{"type":"integer"},"status":{"enum":["draft_unreviewed","clinical_reviewed","published","retired"]},"reviewed_by":S(format="uuid")}),
-"PublishRuleSetRequest":obj({"confirm_sources_attached":{"const":True},"notes":S()},["confirm_sources_attached"]),
+"PublishRuleSetRequest":obj({"confirm_sources_attached":{"const":True},"signoff_ref":S(minLength=1,maxLength=200),"notes":S()},["confirm_sources_attached"]),
 "AdminUserList":{"type":"array","items":obj({"id":S(format="uuid"),"status":S(),"roles":{"type":"array","items":S()}})},
 "HealthGrantRequest":obj({"grantee_id":S(format="uuid"),"subject_user_id":S(format="uuid"),"reason":S(minLength=10),"duration_minutes":{"type":"integer","minimum":1,"maximum":240}},["grantee_id","subject_user_id","reason","duration_minutes"]),
 "HealthGrant":obj({"id":S(format="uuid"),"expires_at":S(format="date-time")}),

@@ -79,6 +79,9 @@ def test_admin_rules_for_plans_rule_sets_and_exercise_drafts():
     assert no_ref.status in (400, 422) and h.store.rule_sets[11]["status"] == "draft_unreviewed"                      # no expert sign-off reference, no publication
     ok = h.call("POST", f"/admin/safety/rule-sets/{rid}/publish", {"confirm_sources_attached": True, "notes": "EXP-77 signed"}, token=tk["reviewer"])
     assert ok.status == 200 and ok.body["status"] == "published" and ok.body["reviewed_by"]
+    h.store.rule_sets[12] = {"status": "draft_unreviewed"}
+    ok2 = h.call("POST", f"/admin/safety/rule-sets/{pub('rs', 12)}/publish", {"confirm_sources_attached": True, "signoff_ref": "EXP-78"}, token=tk["reviewer"])
+    assert ok2.status == 200 and h.store.rule_sets[12]["ref"] == "EXP-78"                                         # OPEN-011: dedicated sign-off field
     n = len(h.call("GET", "/exercises?page_size=100", token=tk["user"]).body["results"])
     h.call("POST", "/admin/exercises", {"stable_code": "draft_only", "movement_pattern": "core", "difficulty": "beginner"}, token=tk["content_admin"])
     assert len(h.call("GET", "/exercises?page_size=100", token=tk["user"]).body["results"]) == n                    # drafts are never public
