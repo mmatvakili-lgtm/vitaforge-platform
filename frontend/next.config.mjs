@@ -2,9 +2,27 @@
  *  CSRF cookie (ADR-0009) are first-party and no CORS is needed. */
 const backend = process.env.BACKEND_URL ?? "http://127.0.0.1:8000";
 
+const dev = process.env.NODE_ENV !== "production";
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  `connect-src 'self'${dev ? " ws: wss:" : ""}`,
+  "manifest-src 'self'",
+  "worker-src 'self'",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "object-src 'none'",
+].join("; ");
+
 export default {
   reactStrictMode: true,
-  // Headers that cannot break the app. A full script-src CSP needs per-request nonces and a real-browser check: tracked as a release-candidate item.
+  // CSP without nonces: scripts only from our own origin plus Next's inline bootstrap ('unsafe-inline'); everything else (third-party scripts,
+  // framing, plugins, cross-origin requests) is blocked. A nonce-based policy would force every page to render dynamically: tracked as hardening.
+  // Verified by the real-browser e2e (no CSP violations on the register -> Telegram -> onboarding journey).
   async headers() {
     return [{
       source: "/:path*",
@@ -13,7 +31,7 @@ export default {
         { key: "X-Frame-Options", value: "DENY" },
         { key: "Referrer-Policy", value: "same-origin" },
         { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
-        { key: "Content-Security-Policy", value: "frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" },
+        { key: "Content-Security-Policy", value: csp },
       ],
     }];
   },
