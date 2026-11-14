@@ -56,6 +56,8 @@ def test_register_telegram_verify_and_land_on_onboarding_in_real_browser():
             pg.on("response", lambda r: errors.append(f"http{r.status}:{r.url[:100]}") if r.status >= 400 else None)
             pg.set_default_timeout(60000)
             pg.goto(f"http://127.0.0.1:{web_port}/fa/register")
+            # `next dev` compiles on demand: a click before hydration would submit the form natively (GET /fa/register?). Wait for React to attach.
+            pg.wait_for_function("() => { const f = document.querySelector('form'); return !!f && Object.keys(f).some(k => k.startsWith('__reactProps')); }", timeout=120000)
             pg.fill("#email", "browser@ex.com")
             pg.fill("#password", "Str0ng-Passw0rd")
             pg.fill("#dob", "1995-04-12")
