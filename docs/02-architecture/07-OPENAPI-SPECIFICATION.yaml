@@ -1186,6 +1186,10 @@ components:
                 format: uuid
               name:
                 type: string
+              muscles:
+                type: array
+                items:
+                  type: string
               role:
                 enum:
                 - warmup

@@ -209,7 +209,7 @@ class App:
                 role = getattr(self.store.catalog.get(e.code), "role", "accessory")
                 r = self.records.get(e.code)
                 exs.append({"workout_exercise_id": pub("wex", f"{uid}:{ver}:{i}:{k}"), "exercise_id": pub("ex", e.code),
-                            "name": (r.name_fa or r.name_en) if r else e.code, "role": role if role in ("warmup", "main", "accessory", "cooldown") else "accessory",
+                            "name": (r.name_fa or r.name_en) if r else e.code, "muscles": list(r.primary_muscles) if r else [], "role": role if role in ("warmup", "main", "accessory", "cooldown") else "accessory",
                             "sets": [{"set_no": n + 1, "reps_min": e.reps_min, "reps_max": e.reps_max, "target_rpe": e.rpe, "rest_sec": e.rest_seconds}
                                      for n in range(e.sets)]})
             days.append({"day_id": pub("day", f"{uid}:{ver}:{i}"), "day_index": i, "title": d.name, "est_minutes": d.estimated_minutes, "exercises": exs})

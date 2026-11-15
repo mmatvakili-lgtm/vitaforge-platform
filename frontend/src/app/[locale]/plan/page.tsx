@@ -8,6 +8,8 @@ import { currentPlanView, decidePlanView, type PlanView } from "../../../lib/pla
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Loading } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
+import { Body3D } from "../../../components/Body3D.tsx";
+import { muscleRegion } from "../../../lib/body3d.ts";
 
 function PlanBody({ plan, modified, onSubstitute }: { plan: WorkoutPlan; modified: boolean; onSubstitute: (workoutExerciseId: string, reason: string) => Promise<void> }) {
   const { locale, t, n } = useT();
@@ -25,6 +27,11 @@ function PlanBody({ plan, modified, onSubstitute }: { plan: WorkoutPlan; modifie
       {(plan.days ?? []).map((d, i) => (
         <section key={d.day_id ?? i} className="day">
           <h2>{d.title ?? t("plan.day", { n: (d.day_index ?? i) + 1 })}{d.est_minutes !== undefined && <span className="muted"> · {t("plan.minutes", { n: d.est_minutes })}</span>}</h2>
+          {(() => {
+            const focus: Record<string, "focus"> = {};
+            for (const e of d.exercises ?? []) for (const m of e.muscles ?? []) { const r = muscleRegion(m); if (r) focus[r] = "focus"; }
+            return Object.keys(focus).length > 0 ? <div className="body-stage"><Body3D height={220} status={focus} label={t("plan.bodyAria")} /></div> : null;
+          })()}
           {d.day_id && <ButtonLink href={`/${locale}/workout?day=${d.day_id}`}>{t("plan.start")}</ButtonLink>}
           <ol className="exercises">
             {(d.exercises ?? []).map((e, k) => (

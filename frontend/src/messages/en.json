@@ -825,5 +825,6 @@
  "analytics.pickedNone": "{muscle}: no logged sets in the last 8 weeks",
  "analytics.streakLabel": "active weeks in a row",
  "analytics.recordsLabel": "records in 4 weeks",
- "analytics.lastLabel": "days since last session"
+ "analytics.lastLabel": "days since last session",
+ "plan.bodyAria": "3D body with the muscles trained on this day highlighted. Drag to rotate."
 }

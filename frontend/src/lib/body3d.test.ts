@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { BODY_REGIONS, buildMesh, hexToRgb, pickRegion, renderMesh, shade } from "./body3d.ts";
+import { BODY_REGIONS, buildMesh, hexToRgb, muscleRegion, pickRegion, renderMesh, shade } from "./body3d.ts";
 
 const mesh = buildMesh();
 const O = { yaw: 0, pitch: 0, width: 300, height: 500 };
@@ -44,4 +44,10 @@ test("colour helpers", () => {
   assert.deepEqual(hexToRgb("fff"), [255, 255, 255]);
   assert.equal(shade([100, 100, 100], 0), "rgb(38,38,38)");
   assert.equal(shade([255, 255, 255], 1), "rgb(255,255,255)");
+});
+
+test("every catalogue muscle maps to a drawn region or an explicit null", () => {
+  for (const m of ["quadriceps", "glutes", "chest", "anterior deltoid", "rhomboids", "erector spinae", "obliques"]) assert.ok(BODY_REGIONS.includes(muscleRegion(m)!), m);
+  assert.equal(muscleRegion("hip flexors"), null);
+  assert.equal(muscleRegion("neck"), null);
 });
