@@ -5,13 +5,13 @@ const backend = process.env.BACKEND_URL ?? "http://127.0.0.1:8000";
 const dev = process.env.NODE_ENV !== "production";
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${dev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
   `connect-src 'self'${dev ? " ws: wss:" : ""}`,
   "manifest-src 'self'",
-  "worker-src 'self'",
+  "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

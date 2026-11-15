@@ -890,5 +890,19 @@
  "plan.phase.peak": "Peak week: the standard target intensity.",
  "plan.phase.deload": "Deload week: fewer sets and lower intensity so your body can recover.",
  "plan.phase.reentry": "Easing back in after a break: starting lighter.",
- "plan.phase.auto": "Lightened automatically because recent sessions were logged as very hard."
+ "plan.phase.auto": "Lightened automatically because recent sessions were logged as very hard.",
+ "body3d.loading": "Preparing the anatomy model…",
+ "body3d.controls": "Body view controls",
+ "body3d.front": "Front",
+ "body3d.back": "Back",
+ "body3d.spin": "Spin",
+ "body3d.bones": "Skeleton",
+ "body3d.hint": "Drag to turn; tap a muscle.",
+ "credits.anatomy": "Anatomy model: Z-Anatomy / BodyParts3D (CC BY-SA 4.0) · viewer: three.js (MIT)",
+ "plan.legend.exercise": "Target muscles of this exercise",
+ "plan.legend.day": "Muscles trained today",
+ "plan.legend.restOfDay": "Rest of today's muscles",
+ "plan.days": "Plan days",
+ "plan.dayMuscles": "Muscles of this day",
+ "plan.exerciseDetail": "Exercise details"
 }

@@ -890,5 +890,19 @@
  "plan.phase.peak": "هفته‌ی اوج — شدت هدف استاندارد.",
  "plan.phase.deload": "هفته‌ی سبک (دیلود) — ست‌ها و شدت کمتر تا بدنت ریکاوری کند.",
  "plan.phase.reentry": "بازگشت تدریجی — بعد از وقفه، با شدت کمتر شروع می‌کنیم.",
- "plan.phase.auto": "به‌دلیل فشار بالای ثبت‌شده در جلسه‌های اخیر، خودکار سبک شد."
+ "plan.phase.auto": "به‌دلیل فشار بالای ثبت‌شده در جلسه‌های اخیر، خودکار سبک شد.",
+ "body3d.loading": "در حال آماده‌سازی مدل آناتومی…",
+ "body3d.controls": "کنترل نمایش بدن",
+ "body3d.front": "جلو",
+ "body3d.back": "پشت",
+ "body3d.spin": "چرخش",
+ "body3d.bones": "اسکلت",
+ "body3d.hint": "بکش تا بچرخد؛ روی یک عضله بزن.",
+ "credits.anatomy": "مدل آناتومی: Z-Anatomy / BodyParts3D (CC BY-SA 4.0) · نمایش: three.js (MIT)",
+ "plan.legend.exercise": "عضله‌ی هدف این حرکت",
+ "plan.legend.day": "عضلات این روز",
+ "plan.legend.restOfDay": "بقیه‌ی عضلات این روز",
+ "plan.days": "روزهای برنامه",
+ "plan.dayMuscles": "عضلات این روز",
+ "plan.exerciseDetail": "جزئیات حرکت"
 }
