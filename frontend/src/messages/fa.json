@@ -825,5 +825,6 @@
  "analytics.pickedNone": "{muscle}: در ۸ هفته‌ی اخیر ستی ثبت نشده",
  "analytics.streakLabel": "هفته‌ی فعال پیاپی",
  "analytics.recordsLabel": "رکورد در ۴ هفته",
- "analytics.lastLabel": "روز از آخرین جلسه"
+ "analytics.lastLabel": "روز از آخرین جلسه",
+ "plan.bodyAria": "بدن سه‌بعدی با عضله‌های هدف همین روز. برای چرخاندن بکش."
 }

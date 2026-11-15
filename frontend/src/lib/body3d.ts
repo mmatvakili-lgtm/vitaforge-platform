@@ -32,6 +32,14 @@ export const PARTS: readonly Part[] = [
   { region: "none", c: [0.09, 0.03, 0.06], r: [0.04, 0.03, 0.08], mirror: true },     // foot
 ];
 
+/** Catalogue muscle names (schema vocabulary) -> body regions drawn by the model; null = not drawn separately. */
+export function muscleRegion(muscle: string): string | null {
+  const m: Record<string, string> = { "anterior deltoid": "shoulders", "posterior deltoid": "shoulders", deltoids: "shoulders", shoulders: "shoulders", trapezius: "traps", "middle trapezius": "traps", "lower trapezius": "traps",
+    rhomboids: "middle back", "middle back": "middle back", "erector spinae": "lower back", "lower back": "lower back", obliques: "abdominals", core: "abdominals", abdominals: "abdominals", abductors: "glutes",
+    chest: "chest", lats: "lats", biceps: "biceps", triceps: "triceps", forearms: "forearms", glutes: "glutes", quadriceps: "quadriceps", hamstrings: "hamstrings", adductors: "adductors", calves: "calves" };
+  return m[muscle] ?? null;
+}
+
 export const BODY_REGIONS = Array.from(new Set(PARTS.map((p) => p.region).filter((r) => r !== "none")));
 
 const LAT = 8, LON = 14;
