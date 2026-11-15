@@ -826,5 +826,10 @@
  "analytics.streakLabel": "active weeks in a row",
  "analytics.recordsLabel": "records in 4 weeks",
  "analytics.lastLabel": "days since last session",
- "plan.bodyAria": "3D body with the muscles trained on this day highlighted. Drag to rotate."
+ "plan.bodyAria": "3D body with the muscles trained on this day highlighted. Drag to rotate.",
+ "wk.restTimer": "Rest timer",
+ "wk.restLeft": "Rest: {n} s left",
+ "wk.restDone": "Rest is over. Ready for the next set.",
+ "wk.restSkip": "Skip rest",
+ "wk.restNext": "Next set"
 }

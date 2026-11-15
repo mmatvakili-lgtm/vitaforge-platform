@@ -826,5 +826,10 @@
  "analytics.streakLabel": "هفته‌ی فعال پیاپی",
  "analytics.recordsLabel": "رکورد در ۴ هفته",
  "analytics.lastLabel": "روز از آخرین جلسه",
- "plan.bodyAria": "بدن سه‌بعدی با عضله‌های هدف همین روز. برای چرخاندن بکش."
+ "plan.bodyAria": "بدن سه‌بعدی با عضله‌های هدف همین روز. برای چرخاندن بکش.",
+ "wk.restTimer": "زمان‌سنج استراحت",
+ "wk.restLeft": "استراحت: {n} ثانیه مانده",
+ "wk.restDone": "استراحت تمام شد. برای ست بعدی آماده‌ای.",
+ "wk.restSkip": "رد کردن استراحت",
+ "wk.restNext": "ست بعدی"
 }

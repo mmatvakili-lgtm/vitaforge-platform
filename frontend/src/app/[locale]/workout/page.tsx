@@ -8,6 +8,9 @@ import { PAIN_REGIONS, buildSetLog, finishRequest, isLogged, newUuid, nextSet, p
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
 import { Progression } from "../../../components/Progression.tsx";
+import { RestTimer } from "../../../components/RestTimer.tsx";
+import { Body3D } from "../../../components/Body3D.tsx";
+import { muscleRegion } from "../../../lib/body3d.ts";
 
 const EMPTY: SetDraft = { reps: "", load: "", rpe: "" };
 
@@ -29,6 +32,7 @@ export default function WorkoutPage() {
   const [pain, setPain] = useState(false);
   const [painRegion, setPainRegion] = useState("");
   const [summary, setSummary] = useState<SessionSummary | null>(null);
+  const [rest, setRest] = useState<{ id: number; sec: number } | null>(null);
   const pending = useRef<{ key: string; uuid: string } | null>(null);              // one client_uuid per set attempt => retries are idempotent
 
   useEffect(() => {
@@ -77,6 +81,7 @@ export default function WorkoutPage() {
     setBusy(false);
     if (!r.ok) return setError(r.error);
     pending.current = null; setDraft(EMPTY); setPr(Boolean(r.data.personal_record));
+    setRest(!skip && p.restSec !== undefined && p.restSec > 0 ? { id: Date.now(), sec: p.restSec } : null);
     await refresh(session.id);
   }
 
@@ -116,9 +121,15 @@ export default function WorkoutPage() {
           <p className="muted" aria-live="polite">{t("wk.progress", { done: n(prog.done), total: n(prog.total) })}</p>
           <progress value={prog.done} max={Math.max(1, prog.total)} aria-label={t("wk.progress", { done: n(prog.done), total: n(prog.total) })} />
           {pr && <Alert kind="success">{t("wk.pr")}</Alert>}
+          {rest && !finishing && <RestTimer key={rest.id} seconds={rest.sec} onDone={() => setRest(null)} />}
           {next && !finishing && (
             <section className="day" aria-labelledby="cur">
               <h2 id="cur">{next.name} · {t("wk.set", { n: n(next.setNo) })}</h2>
+              {(() => {
+                const focus: Record<string, "focus"> = {};
+                for (const m of (day.exercises ?? []).find((x) => x.exercise_id === next.exerciseId)?.muscles ?? []) { const g = muscleRegion(m); if (g) focus[g] = "focus"; }
+                return Object.keys(focus).length > 0 ? <div className="body-stage"><Body3D height={180} status={focus} label={t("plan.bodyAria")} /></div> : null;
+              })()}
               <p className="muted">
                 {next.repsMin !== undefined && next.repsMax !== undefined && t("wk.target", { reps: `${n(next.repsMin)}–${n(next.repsMax)}` })}
                 {next.durationSec !== undefined && next.repsMin === undefined && t("wk.targetTime", { sec: n(next.durationSec) })}
