@@ -7,6 +7,7 @@ import { insightMessageKey, insightParams, sparkRuns } from "../../../lib/analyt
 import { barPct } from "../../../lib/trends.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { ApiErrorView, Card, Loading } from "../../../components/ui.tsx";
+import { Body3D, type RegionStatus } from "../../../components/Body3D.tsx";
 
 export default function AnalyticsPage() {
   const { locale, t, n } = useT();
@@ -14,6 +15,7 @@ export default function AnalyticsPage() {
   const router = useRouter();
   const [data, setData] = useState<Analytics | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
 
   useEffect(() => {
     void (async () => {
@@ -33,6 +35,22 @@ export default function AnalyticsPage() {
       {data && (
         <>
           <p className="muted">{t("analytics.note")}</p>
+          <section aria-label={t("analytics.body")}>
+            <h2>{t("analytics.body")}</h2>
+            <div className="body-stage">
+              <Body3D status={Object.fromEntries(data.muscles.map((m) => [m.muscle, m.status as RegionStatus]))} selected={picked} onPick={setPicked} label={t("analytics.bodyAria")} />
+              <div className="legend" aria-hidden="true">
+                {(["low", "ok", "high"] as const).map((k) => <span key={k}><i className="dot" style={{ background: `var(--body-${k})` }} />{t(`analytics.legend.${k}`)}</span>)}
+                <span><i className="dot" style={{ background: "var(--body-base)" }} />{t("analytics.legend.none")}</span>
+              </div>
+            </div>
+            <p className="muted">{t("analytics.bodyHint")}</p>
+            {picked && (() => {
+              const m = data.muscles.find((x) => x.muscle === picked);
+              const name = label(picked, picked);
+              return <p role="status">{m ? t("analytics.picked", { muscle: name, avg: n(m.avg_weekly_sets_4w) }) : t("analytics.pickedNone", { muscle: name })}</p>;
+            })()}
+          </section>
           <section aria-label={t("analytics.insights")}>
             <h2>{t("analytics.insights")}</h2>
             <ul className="plain">
@@ -45,11 +63,11 @@ export default function AnalyticsPage() {
           </section>
           <section aria-label={t("analytics.consistency")}>
             <h2>{t("analytics.consistency")}</h2>
-            <ul className="plain">
-              <li>{t("analytics.streak", { n: n(data.streak_weeks) })}</li>
-              <li>{t("analytics.records", { n: n(data.records_4w) })}</li>
-              {data.days_since_last !== null && <li>{t("analytics.lastSession", { n: n(data.days_since_last) })}</li>}
-            </ul>
+            <div className="stat-grid">
+              <div className="stat"><span className="num">{n(data.streak_weeks)}</span><small>{t("analytics.streakLabel")}</small></div>
+              <div className="stat"><span className="num">{n(data.records_4w)}</span><small>{t("analytics.recordsLabel")}</small></div>
+              {data.days_since_last !== null && <div className="stat"><span className="num">{n(data.days_since_last)}</span><small>{t("analytics.lastLabel")}</small></div>}
+            </div>
           </section>
           <section aria-label={t("analytics.weekly")}>
             <h2>{t("analytics.weekly")}</h2>
