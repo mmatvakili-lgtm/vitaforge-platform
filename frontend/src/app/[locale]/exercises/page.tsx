@@ -7,6 +7,7 @@ import type { ExerciseSummary } from "../../../lib/api/generated.ts";
 import { LIBRARY_DIFFICULTY, LIBRARY_EQUIPMENT, LIBRARY_MUSCLES, NO_FILTERS, libraryQuery, pageCount, type Filters } from "../../../lib/exercises.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Body3D } from "../../../components/Body3D.tsx";
 
 function Select({ id, label, value, onChange, options, prefix }: { id: string; label: string; value: string; onChange: (v: string) => void; options: readonly string[]; prefix: string }) {
   const { t } = useT();
@@ -49,6 +50,20 @@ export default function LibraryPage() {
 
   return (
     <Card title={t("lib.title")}>
+      <div className="body-stage">
+        <Body3D
+          height={240}
+          label={t("lib.bodyAria")}
+          selected={filters.muscle || null}
+          status={{}}
+          onPick={(region) => {
+            if (!region || !(LIBRARY_MUSCLES as readonly string[]).includes(region)) return;
+            const next = { ...filters, muscle: filters.muscle === region ? "" : region };
+            setDraft(next); setFilters(next); setPage(1);
+          }}
+        />
+      </div>
+      <p className="muted">{t("lib.bodyHint")}</p>
       <form onSubmit={submit} role="search">
         <Field id="q" label={t("lib.search")}><input id="q" type="search" placeholder={t("lib.searchPh")} value={draft.q} onChange={(e) => setDraft({ ...draft, q: e.target.value })} /></Field>
         <div className="row">

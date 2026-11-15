@@ -831,5 +831,7 @@
  "wk.restLeft": "Rest: {n} s left",
  "wk.restDone": "Rest is over. Ready for the next set.",
  "wk.restSkip": "Skip rest",
- "wk.restNext": "Next set"
+ "wk.restNext": "Next set",
+ "lib.bodyAria": "3D body used as a muscle filter. Tap a muscle to list its exercises; tap it again to clear.",
+ "lib.bodyHint": "Tap a muscle on the body to filter the library."
 }
