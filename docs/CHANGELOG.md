@@ -2,6 +2,12 @@
 
 # CHANGELOG
 
+## 2026-11-15
+- موتور تمرین آگاه از ارزیابی حرکتی (سختی هدف، ست اضافه برای الگوی ضعیف، حرکت اصلاحی، ترجیح تک‌طرفه)؛ ایمنی همچنان تنها تأییدکننده (PR #23).
+- تحلیل تمرین `API-ANALYTICS-001` و صفحه‌ی تحلیل (PR #24).
+- پیکربندی استقرار رایگان `render.yaml` و `DEPLOY_FREE.md` (PR #25).
+- UI نسل ۲: سه پوسته، تایپوگرافی، بدن سه‌بعدی رویه‌ای (PR #26)؛ بانک حرکات دسته‌ی ۴ (۲۲۹ حرکت) و بدن در داشبورد (PR #27)؛ بدن هدف هر روز در برنامه (PR #28).
+
 ## 2026-11-09 (ب)
 - `Django Runtime Validation`: **Not Run** (بدون شبکه؛ لایه Django ۵۶ عملیات ندارد) — `DJANGO_RUNTIME_VALIDATION.md`، `tools/django_preflight.py`.
 - امنیت انتشار حرکات: بستن مسیرهای دور زدن (سرویس، Bridge، Loader، CheckConstraint)؛ `EXERCISE_CATALOG_SECURITY.md`؛ `API_GAPS.md`.
