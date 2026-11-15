@@ -1,0 +1,27 @@
+# Free public demo (portfolio / gym / sharing). See docs/DEPLOY_FREE.md for the owner's step-by-step.
+# Render free web services sleep after ~15 min idle (cold start ~1 min) and have an EPHEMERAL disk, so ALL data lives in Neon Postgres (DATABASE_URL).
+# Render's own free Postgres expires after 30 days and is therefore NOT used. Secrets are never in this file (sync: false = entered in the dashboard).
+services:
+  - type: web
+    name: vitaforge-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    # migrate first, then serve on Render's $PORT; 2 workers fit the 512 MB free instance
+    dockerCommand: sh -c "python manage.py migrate --noinput && gunicorn config.wsgi:application -b 0.0.0.0:$PORT --workers 2 --timeout 60"
+    healthCheckPath: /api/v1/health/live
+    autoDeploy: true
+    envVars:
+      - { key: DJANGO_DEBUG, value: "false" }
+      - { key: DJANGO_SECRET_KEY, generateValue: true }
+      - { key: DATABASE_URL, sync: false }          # Neon connection string (pooled), ends with ?sslmode=require
+      - { key: REDIS_URL, value: "redis://unused.invalid:6379/0" }   # required by config validation, reserved/unused (no Celery task exists)
+      - { key: ALLOWED_HOSTS, sync: false }         # the *.onrender.com host of this service, e.g. vitaforge-api.onrender.com
+      - { key: FRONTEND_BASE_URL, sync: false }     # the Vercel URL, e.g. https://vitaforge.vercel.app
+      - { key: VITAFORGE_CONTENT_MODE, value: ai_curated_demo }
+      - { key: VITAFORGE_ACK_AI_CURATED_CONTENT, value: "yes" }
+      - { key: AI_EXTERNAL_HEALTH_DATA, value: "false" }
+      - { key: TELEGRAM_BOT_TOKEN, sync: false }
+      - { key: TELEGRAM_BOT_USERNAME, sync: false }
+      - { key: TELEGRAM_WEBHOOK_SECRET, sync: false }
