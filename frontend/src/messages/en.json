@@ -808,5 +808,22 @@
  "analytics.insight.rpe_high": "Your recent sets average RPE {avg}. Consider an easier week if you feel run down.",
  "analytics.insight.inactive": "It has been {days} days since your last finished session.",
  "analytics.insight.records": "You set {count} new load records in the last 4 weeks.",
- "analytics.insight.unknown": "New insight available."
+ "analytics.insight.unknown": "New insight available.",
+ "nav.theme": "Theme",
+ "theme.system": "Theme: automatic",
+ "theme.forge": "Forge (dark)",
+ "theme.lab": "Lab (light)",
+ "theme.track": "Track (poster)",
+ "analytics.body": "Body map",
+ "analytics.bodyAria": "Interactive 3D body. Drag or use the arrow keys to rotate; tap a muscle to select it.",
+ "analytics.bodyHint": "Colours show your weekly sets per muscle against the general band. Tap a muscle for details.",
+ "analytics.legend.low": "below band",
+ "analytics.legend.ok": "in band",
+ "analytics.legend.high": "above band",
+ "analytics.legend.none": "no data",
+ "analytics.picked": "{muscle}: {avg} sets/week (4-week average)",
+ "analytics.pickedNone": "{muscle}: no logged sets in the last 8 weeks",
+ "analytics.streakLabel": "active weeks in a row",
+ "analytics.recordsLabel": "records in 4 weeks",
+ "analytics.lastLabel": "days since last session"
 }

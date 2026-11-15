@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { otherLocale } from "../lib/i18n.ts";
 import { useApi, useT } from "../lib/react/context.tsx";
+import { ThemeSwitcher } from "./ThemeSwitcher.tsx";
 
 export function Header() {
   const { locale, t } = useT();
@@ -35,6 +36,7 @@ export function Header() {
         <Link href={`/${locale}/profile`}>{t("nav.profile")}</Link>
         <Link href={`/${locale}/login`}>{t("nav.login")}</Link>
         <button type="button" className="linklike" onClick={logout}>{t("nav.logout")}</button>
+        <ThemeSwitcher />
         <a href={switched} hrefLang={other} lang={other} onClick={() => { document.cookie = `vf_locale=${other}; Path=/; Max-Age=31536000; SameSite=Lax`; }}>{t("nav.language")}</a>
       </nav>
     </header>

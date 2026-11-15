@@ -808,5 +808,22 @@
  "analytics.insight.rpe_high": "میانگین RPE ست‌های اخیرت {avg} است. اگر خسته‌ای یک هفته‌ی سبک‌تر در نظر بگیر.",
  "analytics.insight.inactive": "{days} روز از آخرین جلسه‌ی تمام‌شده‌ات می‌گذرد.",
  "analytics.insight.records": "در ۴ هفته‌ی اخیر {count} رکورد بار جدید ثبت کردی.",
- "analytics.insight.unknown": "نکته‌ی جدید در دسترس است."
+ "analytics.insight.unknown": "نکته‌ی جدید در دسترس است.",
+ "nav.theme": "پوسته",
+ "theme.system": "پوسته: خودکار",
+ "theme.forge": "Forge (تیره)",
+ "theme.lab": "Lab (روشن)",
+ "theme.track": "Track (پوستری)",
+ "analytics.body": "نقشه‌ی بدن",
+ "analytics.bodyAria": "بدن سه‌بعدی تعاملی. برای چرخاندن بکش یا از کلیدهای جهت‌نما استفاده کن؛ روی یک عضله بزن تا انتخاب شود.",
+ "analytics.bodyHint": "رنگ‌ها ست هفتگی هر عضله را نسبت به بازه‌ی عمومی نشان می‌دهند. برای جزئیات روی عضله بزن.",
+ "analytics.legend.low": "زیر بازه",
+ "analytics.legend.ok": "در بازه",
+ "analytics.legend.high": "بالای بازه",
+ "analytics.legend.none": "بدون داده",
+ "analytics.picked": "{muscle}: {avg} ست در هفته (میانگین ۴ هفته)",
+ "analytics.pickedNone": "{muscle}: در ۸ هفته‌ی اخیر ستی ثبت نشده",
+ "analytics.streakLabel": "هفته‌ی فعال پیاپی",
+ "analytics.recordsLabel": "رکورد در ۴ هفته",
+ "analytics.lastLabel": "روز از آخرین جلسه"
 }
