@@ -97,3 +97,12 @@ button:active:not(:disabled) { transform: translateY(0); }
 .rest svg { grid-area: 1 / 1; }
 .rest .rest-clock { grid-area: 1 / 1; align-self: center; font-size: 1.6rem; }
 .rest p, .rest button { grid-column: 1; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 1rem; align-items: center; margin-block: 1rem 1.5rem; }
+.hero-title { font-size: clamp(2rem, 6vw, 3.6rem); line-height: 1.15; margin: .25rem 0 .75rem; text-wrap: balance; }
+.kicker { font-family: var(--font-num); text-transform: uppercase; letter-spacing: .12em; color: var(--accent); margin: 0; font-size: .85rem; }
+.lede { font-size: 1.1rem; color: var(--muted); max-inline-size: 36rem; }
+.hero-stage { border-radius: var(--radius); background: radial-gradient(ellipse 14rem 20rem at 50% 45%, var(--glow), transparent 70%); min-inline-size: 0; }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .75rem; margin-block: 1rem; }
+.feature { border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1rem; background: var(--card); }
+.feature h2 { margin: 0 0 .3rem; font-size: 1.05rem; }
+@media (max-width: 720px) { .hero { grid-template-columns: 1fr; } .hero-stage { order: -1; } }
