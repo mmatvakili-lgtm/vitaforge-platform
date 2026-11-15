@@ -1,0 +1,4068 @@
+[
+ {
+  "id": "single_arm_cable_row",
+  "name_en": "Single-Arm Cable Row",
+  "name_fa": "روئینگ تک‌دست با کابل",
+  "aliases": [],
+  "description": "روئینگ تک‌دست با کابل",
+  "primary_muscles": [
+   "lats",
+   "rhomboids"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "posterior deltoid",
+   "core"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "رو به دستگاه بایست و دسته را با یک دست بگیر",
+   "آرنج را کنار بدن به عقب بکش و کتف را جمع کن",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "چرخش تنه",
+   "بالا آمدن شانه"
+  ],
+  "alternatives": [
+   "dumbbell_row"
+  ],
+  "regressions": [
+   "seated_cable_row"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "machine_row",
+  "name_en": "Machine Row",
+  "name_fa": "روئینگ با دستگاه",
+  "aliases": [],
+  "description": "روئینگ با دستگاه",
+  "primary_muscles": [
+   "lats",
+   "rhomboids",
+   "middle trapezius"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "posterior deltoid"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "machine"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "سینه را به تکیه‌گاه بچسبان و دسته‌ها را بگیر",
+   "آرنج‌ها را به عقب بکش و کتف‌ها را جمع کن",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "جلو و عقب رفتن تنه",
+   "بالا آمدن شانه‌ها"
+  ],
+  "alternatives": [
+   "seated_cable_row"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "pendlay_row",
+  "name_en": "Pendlay Row",
+  "name_fa": "پندلی رو",
+  "aliases": [],
+  "description": "پندلی رو",
+  "primary_muscles": [
+   "lats",
+   "rhomboids",
+   "middle trapezius"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "erector spinae",
+   "posterior deltoid"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "barbell"
+  ],
+  "difficulty": "advanced",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "هالتر روی زمین؛ تنه تقریباً موازی زمین و کمر خنثی",
+   "هالتر را منفجر نه، کنترل‌شده تا پایین سینه بکش",
+   "روی زمین بگذار و هر تکرار را از صفر شروع کن"
+  ],
+  "common_mistakes": [
+   "گرد شدن کمر",
+   "بلند کردن تنه با کشیدن"
+  ],
+  "alternatives": [
+   "barbell_bent_over_row"
+  ],
+  "regressions": [
+   "barbell_bent_over_row"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "high",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "low",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "loaded_spine",
+    "lower_back"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "فشار زیاد روی کمر"
+  ],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "cable_face_pull",
+  "name_en": "Cable Face Pull",
+  "name_fa": "فیس‌پول با کابل",
+  "aliases": [],
+  "description": "فیس‌پول با کابل",
+  "primary_muscles": [
+   "posterior deltoid",
+   "rhomboids",
+   "middle trapezius"
+  ],
+  "secondary_muscles": [
+   "lower trapezius"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "طناب را هم‌سطح صورت ببند و دو سر را بگیر",
+   "به سمت صورت بکش و آرنج‌ها را بالا و بیرون ببر",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "کشیدن با کمر",
+   "وزنه‌ی زیاد"
+  ],
+  "alternatives": [
+   "band_face_pull"
+  ],
+  "regressions": [
+   "band_face_pull"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "reverse_fly_machine",
+  "name_en": "Machine Reverse Fly",
+  "name_fa": "فلای معکوس با دستگاه",
+  "aliases": [],
+  "description": "فلای معکوس با دستگاه",
+  "primary_muscles": [
+   "posterior deltoid",
+   "rhomboids"
+  ],
+  "secondary_muscles": [
+   "middle trapezius"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [
+   "machine"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "رو به پشتی بنشین و دسته‌ها را هم‌سطح شانه بگیر",
+   "دست‌ها را به عقب و بیرون باز کن",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "بالا آمدن شانه‌ها",
+   "کشیدن با تنه"
+  ],
+  "alternatives": [
+   "rear_delt_fly"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "towel_door_row",
+  "name_en": "Towel Door Row",
+  "name_fa": "روئینگ با حوله و در",
+  "aliases": [],
+  "description": "روئینگ با حوله و در",
+  "primary_muscles": [
+   "lats",
+   "rhomboids"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "core"
+  ],
+  "movement_pattern": "pull_horizontal",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "حوله را دور دستگیره‌ی محکم در ببند (در بسته و ایمن)",
+   "کمی به عقب تکیه بده و بدن را صاف نگه دار",
+   "آرنج‌ها را به عقب بکش و بدن را نزدیک کن"
+  ],
+  "common_mistakes": [
+   "رها شدن حوله",
+   "افتادن لگن"
+  ],
+  "alternatives": [
+   "band_row"
+  ],
+  "regressions": [],
+  "progressions": [
+   "inverted_row"
+  ],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "moderate",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "فقط با در و دستگیره‌ی کاملاً محکم"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "neutral_grip_pull_up",
+  "name_en": "Neutral-Grip Pull-Up",
+  "name_fa": "بارفیکس دست‌موازی",
+  "aliases": [],
+  "description": "بارفیکس دست‌موازی",
+  "primary_muscles": [
+   "lats",
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "rhomboids",
+   "forearms",
+   "core"
+  ],
+  "movement_pattern": "pull_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "pull_up_bar"
+  ],
+  "difficulty": "advanced",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دسته‌های موازی را بگیر و آویزان شو",
+   "سینه را به سمت دست‌ها بکش",
+   "کنترل‌شده پایین بیا"
+  ],
+  "common_mistakes": [
+   "تاب خوردن",
+   "کامل پایین نیامدن"
+  ],
+  "alternatives": [
+   "pull_up"
+  ],
+  "regressions": [
+   "pull_up_negative"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "moderate",
+   "wrist": "none",
+   "hand": "moderate",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "close_grip_lat_pulldown",
+  "name_en": "Close-Grip Lat Pulldown",
+  "name_fa": "لت‌پول‌داون دست نزدیک",
+  "aliases": [],
+  "description": "لت‌پول‌داون دست نزدیک",
+  "primary_muscles": [
+   "lats",
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "rhomboids",
+   "forearms"
+  ],
+  "movement_pattern": "pull_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دسته‌ی V را بگیر و کمی به عقب تکیه بده",
+   "دسته را تا بالای سینه بکش",
+   "آهسته بالا ببر"
+  ],
+  "common_mistakes": [
+   "کشیدن با کمر",
+   "پایین آوردن پشت گردن"
+  ],
+  "alternatives": [
+   "lat_pulldown"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "low",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "single_arm_lat_pulldown",
+  "name_en": "Single-Arm Lat Pulldown",
+  "name_fa": "لت‌پول‌داون تک‌دست",
+  "aliases": [],
+  "description": "لت‌پول‌داون تک‌دست",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "core"
+  ],
+  "movement_pattern": "pull_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "با یک دست دسته‌ی کابل بالا را بگیر",
+   "آرنج را به سمت پهلو بکش",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "چرخش تنه",
+   "بالا آمدن شانه"
+  ],
+  "alternatives": [
+   "lat_pulldown"
+  ],
+  "regressions": [
+   "lat_pulldown"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "low",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "assisted_pull_up_machine",
+  "name_en": "Assisted Pull-Up Machine",
+  "name_fa": "بارفیکس با دستگاه کمکی",
+  "aliases": [],
+  "description": "بارفیکس با دستگاه کمکی",
+  "primary_muscles": [
+   "lats",
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "rhomboids",
+   "forearms"
+  ],
+  "movement_pattern": "pull_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "machine"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "وزن کمکی را تنظیم کن و روی تکیه‌گاه بایست",
+   "دسته‌ها را بگیر و بدن را بالا بکش",
+   "کنترل‌شده پایین بیا"
+  ],
+  "common_mistakes": [
+   "رها شدن در پایین",
+   "وزنه‌ی کمکی بیش از نیاز"
+  ],
+  "alternatives": [
+   "lat_pulldown"
+  ],
+  "regressions": [],
+  "progressions": [
+   "pull_up"
+  ],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "low",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "straight_arm_pulldown_cable",
+  "name_en": "Cable Straight-Arm Pulldown",
+  "name_fa": "پول‌داون دست صاف با کابل",
+  "aliases": [],
+  "description": "پول‌داون دست صاف با کابل",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "triceps",
+   "core"
+  ],
+  "movement_pattern": "pull_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "کمی جلو خم شو و میله‌ی کابل بالا را بگیر",
+   "دست‌ها تقریباً صاف؛ میله را تا ران پایین بیاور",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "خم کردن آرنج",
+   "حرکت دادن تنه"
+  ],
+  "alternatives": [
+   "straight_arm_pulldown_band"
+  ],
+  "regressions": [
+   "straight_arm_pulldown_band"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "machine_shoulder_press",
+  "name_en": "Machine Shoulder Press",
+  "name_fa": "پرس شانه با دستگاه",
+  "aliases": [],
+  "description": "پرس شانه با دستگاه",
+  "primary_muscles": [
+   "anterior deltoid",
+   "deltoids"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "movement_pattern": "push_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "machine"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "صندلی را تنظیم کن تا دسته‌ها هم‌سطح شانه باشند",
+   "پشت را به تکیه‌گاه بچسبان و دسته‌ها را بالا هل بده",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "قوس کمر",
+   "بالا آمدن شانه‌ها"
+  ],
+  "alternatives": [
+   "seated_dumbbell_press"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "dumbbell_z_press",
+  "name_en": "Dumbbell Z-Press",
+  "name_fa": "پرس شانه Z با دمبل",
+  "aliases": [],
+  "description": "پرس شانه Z با دمبل",
+  "primary_muscles": [
+   "anterior deltoid",
+   "deltoids"
+  ],
+  "secondary_muscles": [
+   "triceps",
+   "core"
+  ],
+  "movement_pattern": "push_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "advanced",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی زمین بنشین، پاها صاف جلو و کمر راست",
+   "دمبل‌ها را بالای سر هل بده",
+   "کنترل‌شده تا شانه برگردان"
+  ],
+  "common_mistakes": [
+   "عقب افتادن تنه",
+   "قوس کمر"
+  ],
+  "alternatives": [
+   "dumbbell_overhead_press"
+  ],
+  "regressions": [
+   "seated_dumbbell_press"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "low",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "kettlebell_press",
+  "name_en": "Kettlebell Overhead Press",
+  "name_fa": "پرس بالای سر با کتل‌بل",
+  "aliases": [],
+  "description": "پرس بالای سر با کتل‌بل",
+  "primary_muscles": [
+   "anterior deltoid",
+   "deltoids"
+  ],
+  "secondary_muscles": [
+   "triceps",
+   "core"
+  ],
+  "movement_pattern": "push_vertical",
+  "exercise_type": "strength",
+  "equipment": [
+   "kettlebell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "کتل‌بل را در حالت رک کنار شانه نگه دار",
+   "با فشار بالای سر ببر؛ بازو نزدیک گوش",
+   "کنترل‌شده به رک برگردان"
+  ],
+  "common_mistakes": [
+   "قوس کمر",
+   "مچ خمیده"
+  ],
+  "alternatives": [
+   "dumbbell_overhead_press"
+  ],
+  "regressions": [
+   "seated_dumbbell_press"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "main",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "barbell_curl",
+  "name_en": "Barbell Curl",
+  "name_fa": "جلو بازو با هالتر",
+  "aliases": [],
+  "description": "جلو بازو با هالتر",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "barbell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "هالتر را زیردست و به عرض شانه بگیر",
+   "آرنج ثابت؛ هالتر را بالا بیاور",
+   "آهسته پایین ببر"
+  ],
+  "common_mistakes": [
+   "تاب دادن کمر",
+   "جلو آمدن آرنج"
+  ],
+  "alternatives": [
+   "dumbbell_biceps_curl"
+  ],
+  "regressions": [
+   "dumbbell_biceps_curl"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "moderate",
+   "wrist": "moderate",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "incline_dumbbell_curl",
+  "name_en": "Incline Dumbbell Curl",
+  "name_fa": "جلو بازو روی نیمکت شیب‌دار",
+  "aliases": [],
+  "description": "جلو بازو روی نیمکت شیب‌دار",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell",
+   "bench"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "نیمکت با شیب ۶۰ درجه؛ دست‌ها آویزان",
+   "آرنج ثابت؛ دمبل‌ها را بالا بیاور",
+   "آهسته پایین ببر تا کشش خفیف"
+  ],
+  "common_mistakes": [
+   "جلو آمدن شانه",
+   "تاب دادن"
+  ],
+  "alternatives": [
+   "dumbbell_biceps_curl"
+  ],
+  "regressions": [
+   "dumbbell_biceps_curl"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "moderate",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "cable_biceps_curl",
+  "name_en": "Cable Biceps Curl",
+  "name_fa": "جلو بازو با کابل",
+  "aliases": [],
+  "description": "جلو بازو با کابل",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "رو به کابل پایین بایست و دسته را زیردست بگیر",
+   "آرنج ثابت؛ دسته را بالا بیاور",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "عقب رفتن تنه",
+   "حرکت آرنج"
+  ],
+  "alternatives": [
+   "dumbbell_biceps_curl"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "low",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "pull",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "rope_triceps_pushdown",
+  "name_en": "Cable Rope Triceps Pushdown",
+  "name_fa": "پشت بازو طناب با کابل",
+  "aliases": [],
+  "description": "پشت بازو طناب با کابل",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "طناب را از کابل بالا بگیر و آرنج‌ها را کنار بدن ثابت کن",
+   "طناب را پایین بزن و در انتها دو سر را از هم باز کن",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "جلو آمدن آرنج",
+   "خم شدن شانه"
+  ],
+  "alternatives": [
+   "triceps_pushdown_band"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "moderate",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "cable_overhead_triceps_extension",
+  "name_en": "Cable Overhead Triceps Extension",
+  "name_fa": "پشت بازو بالای سر با کابل",
+  "aliases": [],
+  "description": "پشت بازو بالای سر با کابل",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "core"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "پشت به کابل بایست و طناب را بالای سر بگیر",
+   "آرنج‌ها بالا و ثابت؛ دست‌ها را صاف کن",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "باز شدن آرنج‌ها",
+   "قوس کمر"
+  ],
+  "alternatives": [
+   "overhead_dumbbell_triceps_extension"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "moderate",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "overhead_load",
+    "shoulder"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "close_grip_push_up",
+  "name_en": "Close-Grip Push-Up",
+  "name_fa": "شنا دست نزدیک",
+  "aliases": [],
+  "description": "شنا دست نزدیک",
+  "primary_muscles": [
+   "triceps",
+   "chest"
+  ],
+  "secondary_muscles": [
+   "anterior deltoid",
+   "core"
+  ],
+  "movement_pattern": "push_horizontal",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دست‌ها کمی باریک‌تر از شانه",
+   "آرنج‌ها نزدیک بدن؛ پایین برو",
+   "با فشار بالا بیا"
+  ],
+  "common_mistakes": [
+   "بازشدن آرنج",
+   "افتادن لگن"
+  ],
+  "alternatives": [
+   "push_up"
+  ],
+  "regressions": [
+   "knee_push_up"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "moderate",
+   "wrist": "moderate",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": "push",
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "good_morning_bodyweight",
+  "name_en": "Bodyweight Good Morning",
+  "name_fa": "گود مورنینگ با وزن بدن",
+  "aliases": [],
+  "description": "گود مورنینگ با وزن بدن",
+  "primary_muscles": [
+   "hamstrings",
+   "glutes",
+   "erector spinae"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "hinge",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دست‌ها پشت سر یا روی سینه، زانوها نرم",
+   "لگن را به عقب ببر و تنه را با کمر صاف خم کن",
+   "با فشار لگن به جلو برگرد"
+  ],
+  "common_mistakes": [
+   "گرد شدن کمر",
+   "قفل شدن زانو"
+  ],
+  "alternatives": [
+   "wall_hip_hinge"
+  ],
+  "regressions": [],
+  "progressions": [
+   "dumbbell_romanian_deadlift"
+  ],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "barbell_good_morning",
+  "name_en": "Barbell Good Morning",
+  "name_fa": "گود مورنینگ با هالتر",
+  "aliases": [],
+  "description": "گود مورنینگ با هالتر",
+  "primary_muscles": [
+   "hamstrings",
+   "glutes",
+   "erector spinae"
+  ],
+  "secondary_muscles": [
+   "core"
+  ],
+  "movement_pattern": "hinge",
+  "exercise_type": "strength",
+  "equipment": [
+   "barbell"
+  ],
+  "difficulty": "advanced",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "هالتر روی کتف‌ها و زانوها نرم",
+   "لگن را به عقب ببر و تنه را با کمر صاف خم کن",
+   "با فشار لگن به جلو برگرد"
+  ],
+  "common_mistakes": [
+   "گرد شدن کمر",
+   "بار بیش از حد"
+  ],
+  "alternatives": [
+   "barbell_romanian_deadlift"
+  ],
+  "regressions": [
+   "good_morning_bodyweight"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "high",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "loaded_spine",
+    "lower_back"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "بار روی کمر؛ سبک شروع کن"
+  ],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "machine_hip_abduction",
+  "name_en": "Machine Hip Abduction",
+  "name_fa": "ابداکشن ران با دستگاه",
+  "aliases": [],
+  "description": "ابداکشن ران با دستگاه",
+  "primary_muscles": [
+   "abductors",
+   "glutes"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "machine"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی دستگاه بنشین و پدها را کنار رانها بگذار",
+   "پاها را به بیرون باز کن",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "حرکت ضربه‌ای",
+   "وزنه‌ی زیاد"
+  ],
+  "alternatives": [
+   "side_lying_hip_abduction"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "machine_hip_adduction",
+  "name_en": "Machine Hip Adduction",
+  "name_fa": "اداکشن ران با دستگاه",
+  "aliases": [],
+  "description": "اداکشن ران با دستگاه",
+  "primary_muscles": [
+   "adductors"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "machine"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی دستگاه بنشین و پدها را داخل رانها بگذار",
+   "پاها را آهسته به هم نزدیک کن",
+   "کنترل‌شده باز کن"
+  ],
+  "common_mistakes": [
+   "حرکت ضربه‌ای",
+   "دامنه‌ی بیش از راحتی"
+  ],
+  "alternatives": [
+   "copenhagen_plank"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "low",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "groin_load",
+    "groin"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "cable_glute_kickback",
+  "name_en": "Cable Glute Kickback",
+  "name_fa": "ردپا با کابل",
+  "aliases": [],
+  "description": "ردپا با کابل",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "مچ‌بند را به یک مچ ببند و کمی جلو خم شو",
+   "پا را به عقب ببر بدون قوس کمر",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "قوس کمر",
+   "چرخش لگن"
+  ],
+  "alternatives": [
+   "donkey_kick"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "box_step_down",
+  "name_en": "Box Step-Down",
+  "name_fa": "پایین آمدن از جعبه",
+  "aliases": [],
+  "description": "پایین آمدن از جعبه",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "lunge",
+  "exercise_type": "strength",
+  "equipment": [
+   "box"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "روی جعبه‌ی کوتاه با یک پا بایست",
+   "پای دیگر را آهسته به سمت زمین پایین ببر",
+   "با پای ایستاده بالا بیا"
+  ],
+  "common_mistakes": [
+   "افتادن زانو به داخل",
+   "فرود با ضربه"
+  ],
+  "alternatives": [
+   "step_up"
+  ],
+  "regressions": [],
+  "progressions": [
+   "dumbbell_step_up"
+  ],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "knee_load",
+    "knee"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "reverse_nordic",
+  "name_en": "Reverse Nordic Curl",
+  "name_fa": "نوردیک معکوس",
+  "aliases": [],
+  "description": "نوردیک معکوس",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "hip flexors"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "advanced",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "زانو روی پد و بدن صاف از زانو تا سر",
+   "آهسته به عقب خم شو تا کشش جلوی ران",
+   "با فشار چهارسر برگرد"
+  ],
+  "common_mistakes": [
+   "شکستن در لگن",
+   "حرکت سریع"
+  ],
+  "alternatives": [
+   "leg_extension_machine"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "high",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "knee_load",
+    "knee"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "بار زیاد روی زانو"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "tibialis_wall_raise",
+  "name_en": "Wall Tibialis Raise",
+  "name_fa": "بالا بردن پنجه کنار دیوار",
+  "aliases": [],
+  "description": "بالا بردن پنجه کنار دیوار",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "other",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "پشت به دیوار و پاشنه‌ها کمی جلوتر از دیوار",
+   "پنجه‌ها را به بالا بکش",
+   "آهسته پایین بیاور"
+  ],
+  "common_mistakes": [
+   "خم شدن زانو",
+   "حرکت سریع"
+  ],
+  "alternatives": [
+   "single_leg_calf_raise"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "kettlebell_goblet_reverse_lunge",
+  "name_en": "Goblet Reverse Lunge",
+  "name_fa": "لانج عقب گابلت",
+  "aliases": [],
+  "description": "لانج عقب گابلت",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "core"
+  ],
+  "movement_pattern": "lunge",
+  "exercise_type": "strength",
+  "equipment": [
+   "kettlebell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "کتل‌بل را جلوی سینه نگه دار",
+   "یک قدم به عقب بردار و زانوی عقب را پایین ببر",
+   "با پای جلو فشار بده و برگرد"
+  ],
+  "common_mistakes": [
+   "جلو رفتن زانو",
+   "افتادن تنه"
+  ],
+  "alternatives": [
+   "reverse_lunge"
+  ],
+  "regressions": [
+   "reverse_lunge"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "knee_load",
+    "knee"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "crunch",
+  "name_en": "Crunch",
+  "name_fa": "کرانچ",
+  "aliases": [],
+  "description": "کرانچ",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "core",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "طاق‌باز؛ زانوها خم و پاها روی زمین",
+   "سر و کتف‌ها را کمی از زمین بلند کن",
+   "آهسته برگرد"
+  ],
+  "common_mistakes": [
+   "کشیدن گردن",
+   "بلند کردن کامل کمر"
+  ],
+  "alternatives": [
+   "reverse_crunch"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "low",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "v_up",
+  "name_en": "V-Up",
+  "name_fa": "وی‌آپ",
+  "aliases": [],
+  "description": "وی‌آپ",
+  "primary_muscles": [
+   "abdominals",
+   "hip flexors"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "core",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "advanced",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "طاق‌باز؛ دست‌ها بالای سر و پاها صاف",
+   "هم‌زمان دست‌ها و پاها را به هم نزدیک کن",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "حرکت ضربه‌ای",
+   "افتادن کمر"
+  ],
+  "alternatives": [
+   "lying_leg_raise"
+  ],
+  "regressions": [
+   "hollow_hold"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "trunk_flexion_load",
+    "lower_back"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "flutter_kicks",
+  "name_en": "Flutter Kicks",
+  "name_fa": "ضربات پروانه‌ای پا",
+  "aliases": [],
+  "description": "ضربات پروانه‌ای پا",
+  "primary_muscles": [
+   "abdominals",
+   "hip flexors"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "core",
+  "exercise_type": "strength",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "طاق‌باز؛ کمر چسبیده به زمین",
+   "پاها را کمی بلند کن و به‌طور متناوب بالا و پایین ببر",
+   "کمر را از زمین جدا نکن"
+  ],
+  "common_mistakes": [
+   "قوس کمر",
+   "پاهای خیلی پایین"
+  ],
+  "alternatives": [
+   "lying_leg_raise"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "plank_reach",
+  "name_en": "Plank Reach",
+  "name_fa": "پلانک با دست‌دراز",
+  "aliases": [],
+  "description": "پلانک با دست‌دراز",
+  "primary_muscles": [
+   "abdominals",
+   "core"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "glutes"
+  ],
+  "movement_pattern": "core",
+  "exercise_type": "stability",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "وضعیت پلانک روی دست‌ها",
+   "یک دست را جلو دراز کن بدون چرخش لگن",
+   "دست را برگردان و عوض کن"
+  ],
+  "common_mistakes": [
+   "چرخش لگن",
+   "افتادن کمر"
+  ],
+  "alternatives": [
+   "plank_shoulder_tap"
+  ],
+  "regressions": [
+   "plank"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "none",
+   "wrist": "moderate",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "dumbbell_side_bend",
+  "name_en": "Dumbbell Side Bend",
+  "name_fa": "خم‌شدن به پهلو با دمبل",
+  "aliases": [],
+  "description": "خم‌شدن به پهلو با دمبل",
+  "primary_muscles": [
+   "obliques"
+  ],
+  "secondary_muscles": [
+   "core"
+  ],
+  "movement_pattern": "core",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "یک دمبل در یک دست و قامت راست",
+   "به پهلو به‌آرامی خم شو",
+   "با انقباض پهلو برگرد"
+  ],
+  "common_mistakes": [
+   "وزنه‌ی زیاد",
+   "خم شدن به جلو"
+  ],
+  "alternatives": [
+   "side_plank"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "low",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "loaded_spine",
+    "lower_back"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "waiter_carry",
+  "name_en": "Waiter Carry",
+  "name_fa": "حمل گارسونی",
+  "aliases": [],
+  "description": "حمل گارسونی",
+  "primary_muscles": [
+   "shoulders",
+   "core",
+   "obliques"
+  ],
+  "secondary_muscles": [
+   "forearms",
+   "trapezius"
+  ],
+  "movement_pattern": "carry",
+  "exercise_type": "strength",
+  "equipment": [
+   "kettlebell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "کتل‌بل را با یک دست بالای سر و بازو نزدیک گوش نگه دار",
+   "قامت راست و تنه ثابت راه برو",
+   "دست را عوض کن"
+  ],
+  "common_mistakes": [
+   "قوس کمر",
+   "خم شدن مچ"
+  ],
+  "alternatives": [
+   "suitcase_carry"
+  ],
+  "regressions": [
+   "single_arm_farmer_carry"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "none",
+   "wrist": "low",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "overhead_load",
+    "shoulder"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "goblet_carry",
+  "name_en": "Goblet Carry",
+  "name_fa": "حمل گابلت",
+  "aliases": [],
+  "description": "حمل گابلت",
+  "primary_muscles": [
+   "core",
+   "forearms"
+  ],
+  "secondary_muscles": [
+   "trapezius",
+   "glutes"
+  ],
+  "movement_pattern": "carry",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دمبل را عمودی جلوی سینه بگیر",
+   "قامت راست و گام‌های آرام",
+   "مسافت یا زمان هدف را برو"
+  ],
+  "common_mistakes": [
+   "خم شدن به جلو",
+   "حبس نفس"
+  ],
+  "alternatives": [
+   "farmer_carry"
+  ],
+  "regressions": [],
+  "progressions": [
+   "farmer_carry"
+  ],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "low",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "overhead_dumbbell_carry",
+  "name_en": "Overhead Dumbbell Carry",
+  "name_fa": "حمل بالای سر با دمبل",
+  "aliases": [],
+  "description": "حمل بالای سر با دمبل",
+  "primary_muscles": [
+   "shoulders",
+   "core"
+  ],
+  "secondary_muscles": [
+   "trapezius",
+   "triceps"
+  ],
+  "movement_pattern": "carry",
+  "exercise_type": "strength",
+  "equipment": [
+   "dumbbell"
+  ],
+  "difficulty": "advanced",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "دمبل را با دو دست بالای سر نگه دار",
+   "قامت راست و دنده‌ها پایین",
+   "کوتاه و آرام راه برو"
+  ],
+  "common_mistakes": [
+   "قوس کمر",
+   "قفل شدن آرنج بیش از حد"
+  ],
+  "alternatives": [
+   "waiter_carry"
+  ],
+  "regressions": [
+   "waiter_carry"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "high",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "overhead_load",
+    "shoulder"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "بار بالای سر؛ سبک شروع کن"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "landmine_rotation",
+  "name_en": "Landmine Rotation",
+  "name_fa": "چرخش لندمین",
+  "aliases": [],
+  "description": "چرخش لندمین",
+  "primary_muscles": [
+   "obliques",
+   "core"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "glutes"
+  ],
+  "movement_pattern": "rotation",
+  "exercise_type": "strength",
+  "equipment": [
+   "barbell"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "سر هالتر را در لندمین بگذار و با دو دست بگیر",
+   "از لگن بچرخ و هالتر را قوسی ببر",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "چرخش فقط کمر",
+   "بار زیاد"
+  ],
+  "alternatives": [
+   "woodchop_cable"
+  ],
+  "regressions": [
+   "band_woodchop"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "low",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "loaded_rotation",
+    "lower_back"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "half_kneeling_pallof_press",
+  "name_en": "Half-Kneeling Pallof Press",
+  "name_fa": "پالوف نیم‌زانو",
+  "aliases": [],
+  "description": "پالوف نیم‌زانو",
+  "primary_muscles": [
+   "obliques",
+   "core"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "movement_pattern": "rotation",
+  "exercise_type": "stability",
+  "equipment": [
+   "band"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "نیم‌زانو کنار کش بایست و آن را مقابل سینه بگیر",
+   "دست‌ها را جلو هل بده و چرخش را مهار کن",
+   "کنترل‌شده برگرد"
+  ],
+  "common_mistakes": [
+   "چرخش تنه",
+   "خم شدن به پهلو"
+  ],
+  "alternatives": [
+   "pallof_press_band"
+  ],
+  "regressions": [
+   "pallof_press_band"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "cable_low_to_high_chop",
+  "name_en": "Cable Low-to-High Chop",
+  "name_fa": "چاپ پایین به بالا با کابل",
+  "aliases": [],
+  "description": "چاپ پایین به بالا با کابل",
+  "primary_muscles": [
+   "obliques",
+   "core"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "glutes"
+  ],
+  "movement_pattern": "rotation",
+  "exercise_type": "strength",
+  "equipment": [
+   "cable"
+  ],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "کابل را پایین ببند و از کنار بدن با دو دست بگیر",
+   "از لگن بچرخ و دسته را مورب بالا ببر",
+   "با کنترل برگرد"
+  ],
+  "common_mistakes": [
+   "چرخش فقط کمر",
+   "وزنه‌ی زیاد"
+  ],
+  "alternatives": [
+   "woodchop_cable"
+  ],
+  "regressions": [
+   "band_woodchop"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "moderate",
+   "spine_other": "low",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "loaded_rotation",
+    "lower_back"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "gym"
+  ],
+  "breathing": "هنگام پایین آوردن دم و هنگام فشار یا کشش بازدم."
+ },
+ {
+  "id": "jump_rope",
+  "name_en": "Jump Rope",
+  "name_fa": "طناب‌زنی",
+  "aliases": [],
+  "description": "طناب‌زنی",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [
+   "quadriceps",
+   "deltoids"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "plyometric",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "طناب را هم‌اندازه‌ی قد تنظیم کن",
+   "با مچ بچرخان و پرش‌های کوچک بزن",
+   "ریتم ثابت و فرود نرم"
+  ],
+  "common_mistakes": [
+   "پرش بلند",
+   "فرود روی پاشنه"
+  ],
+  "alternatives": [
+   "jumping_jacks"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "moderate",
+   "foot": "moderate",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "impact",
+    "knee"
+   ],
+   [
+    "impact",
+    "ankle"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "ضربه‌ی تکراری روی مفاصل پایین‌تنه"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "stair_climb",
+  "name_en": "Stair Climb",
+  "name_fa": "بالا رفتن از پله",
+  "aliases": [],
+  "description": "بالا رفتن از پله",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "calves"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "cardio",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "از پله‌ی ثابت و ایمن بالا برو",
+   "با گام‌های کنترل‌شده و کل کف پا",
+   "برای پایین آمدن از آسانسور یا آهسته با نرده"
+  ],
+  "common_mistakes": [
+   "دویدن روی پله",
+   "فشار روی پنجه"
+  ],
+  "alternatives": [
+   "brisk_walk"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "low",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "مراقب لغزش؛ نرده را بگیر"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "bear_crawl",
+  "name_en": "Bear Crawl",
+  "name_fa": "خزش خرسی",
+  "aliases": [],
+  "description": "خزش خرسی",
+  "primary_muscles": [
+   "core",
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "quadriceps",
+   "triceps"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "stability",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "چهار دست‌وپا؛ زانوها را کمی از زمین بلند کن",
+   "دست و پای مخالف را هم‌زمان جلو ببر",
+   "کمر صاف و لگن ثابت"
+  ],
+  "common_mistakes": [
+   "بالا آمدن لگن",
+   "گام‌های بزرگ"
+  ],
+  "alternatives": [
+   "mountain_climber"
+  ],
+  "regressions": [
+   "bird_dog"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "moderate",
+   "elbow": "none",
+   "wrist": "high",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "low",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [
+   [
+    "wrist_load",
+    "wrist"
+   ]
+  ],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "inchworm",
+  "name_en": "Inchworm",
+  "name_fa": "کرم‌حرکتی",
+  "aliases": [],
+  "description": "کرم‌حرکتی",
+  "primary_muscles": [
+   "hamstrings",
+   "core"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "calves"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "mobility",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "ایستاده خم شو و دست‌ها را روی زمین بگذار",
+   "دست‌ها را تا پلانک جلو ببر",
+   "قدم‌های کوچک به سمت دست‌ها بیا و بایست"
+  ],
+  "common_mistakes": [
+   "خم کردن زیاد زانو",
+   "افتادن کمر در پلانک"
+  ],
+  "alternatives": [
+   "world_greatest_stretch"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "moderate",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "shoulder_cars",
+  "name_en": "Shoulder CARs",
+  "name_fa": "چرخش‌های کنترل‌شده‌ی شانه",
+  "aliases": [],
+  "description": "چرخش‌های کنترل‌شده‌ی شانه",
+  "primary_muscles": [
+   "shoulders",
+   "deltoids"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "other",
+  "exercise_type": "mobility",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "ایستاده؛ یک دست را کامل بالا و عقب ببر",
+   "شانه را در بزرگ‌ترین دایره‌ی آرام و بدون درد بچرخان",
+   "جهت را عوض کن و دست دیگر"
+  ],
+  "common_mistakes": [
+   "جبران با کمر",
+   "سرعت زیاد"
+  ],
+  "alternatives": [
+   "wall_slide"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "اگر درد داری متوقف شو"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "hip_cars",
+  "name_en": "Hip CARs",
+  "name_fa": "چرخش‌های کنترل‌شده‌ی لگن",
+  "aliases": [],
+  "description": "چرخش‌های کنترل‌شده‌ی لگن",
+  "primary_muscles": [
+   "glutes",
+   "hip flexors"
+  ],
+  "secondary_muscles": [
+   "abductors"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "mobility",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "ایستاده کنار دیوار و زانو را بالا بیاور",
+   "ران را به بیرون و عقب بچرخان در دایره‌ی بزرگ و آرام",
+   "جهت و پا را عوض کن"
+  ],
+  "common_mistakes": [
+   "چرخش کمر",
+   "سرعت زیاد"
+  ],
+  "alternatives": [
+   "hip_90_90_switch"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "low",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "اگر درد داری متوقف شو"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "deep_squat_hold",
+  "name_en": "Deep Squat Hold",
+  "name_fa": "نگه‌داشتن اسکوات عمیق",
+  "aliases": [],
+  "description": "نگه‌داشتن اسکوات عمیق",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes",
+   "adductors"
+  ],
+  "secondary_muscles": [
+   "calves"
+  ],
+  "movement_pattern": "other",
+  "exercise_type": "mobility",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "isometric",
+  "range_of_motion": "",
+  "instructions": [
+   "پاها کمی بازتر از شانه و پنجه‌ها کمی به بیرون",
+   "تا راحت‌ترین عمق پایین برو و پاشنه‌ها روی زمین",
+   "نگه دار و عمیق نفس بکش"
+  ],
+  "common_mistakes": [
+   "بلند شدن پاشنه",
+   "افتادن زانو به داخل"
+  ],
+  "alternatives": [
+   "goblet_squat"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "moderate",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "moderate",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "اگر درد زانو داری عمق را کم کن"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "couch_stretch",
+  "name_en": "Couch Stretch",
+  "name_fa": "کشش جلوی ران نیمکتی",
+  "aliases": [],
+  "description": "کشش جلوی ران نیمکتی",
+  "primary_muscles": [
+   "quadriceps",
+   "hip flexors"
+  ],
+  "secondary_muscles": [],
+  "movement_pattern": "other",
+  "exercise_type": "stretching",
+  "equipment": [],
+  "difficulty": "intermediate",
+  "contraction": "isometric",
+  "range_of_motion": "",
+  "instructions": [
+   "یک زانو را کنار دیوار یا نیمکت بگذار و ساق پا را بالا ببر",
+   "پای دیگر جلو؛ لگن را عقب بچرخان",
+   "نگه دار و عمیق نفس بکش"
+  ],
+  "common_mistakes": [
+   "قوس کمر",
+   "فشار زیاد روی زانو"
+  ],
+  "alternatives": [
+   "kneeling_hip_flexor_stretch"
+  ],
+  "regressions": [
+   "kneeling_hip_flexor_stretch"
+  ],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "none",
+   "shoulder": "none",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "low",
+   "groin": "none",
+   "knee": "moderate",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [
+   "فشار روی زانو؛ پد بگذار"
+  ],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ },
+ {
+  "id": "quadruped_t_spine_rotation",
+  "name_en": "Quadruped T-Spine Rotation",
+  "name_fa": "چرخش ستون سینه‌ای چهاردست‌وپا",
+  "aliases": [],
+  "description": "چرخش ستون سینه‌ای چهاردست‌وپا",
+  "primary_muscles": [
+   "middle back",
+   "obliques"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "movement_pattern": "rotation",
+  "exercise_type": "mobility",
+  "equipment": [],
+  "difficulty": "beginner",
+  "contraction": "concentric_eccentric",
+  "range_of_motion": "",
+  "instructions": [
+   "چهار دست‌وپا؛ یک دست پشت سر",
+   "آرنج را به سمت سقف بچرخان",
+   "برگرد و تکرار کن"
+  ],
+  "common_mistakes": [
+   "چرخش کمر",
+   "حرکت سریع"
+  ],
+  "alternatives": [
+   "open_book_rotation"
+  ],
+  "regressions": [],
+  "progressions": [],
+  "region_loads": {
+   "lower_back": "none",
+   "spine_other": "none",
+   "neck": "none",
+   "mid_back": "low",
+   "shoulder": "low",
+   "elbow": "none",
+   "wrist": "none",
+   "hand": "none",
+   "hip": "none",
+   "groin": "none",
+   "knee": "none",
+   "ankle": "none",
+   "foot": "none",
+   "muscle_tendon": "none",
+   "other": "none"
+  },
+  "role": "accessory",
+  "push_pull": null,
+  "supports_regions": [],
+  "publication_status": "experimental",
+  "expert_review": "pending",
+  "safety_tags_status": "unreviewed_estimate",
+  "evidence_level": "none",
+  "is_sample": true,
+  "sources": [
+   {
+    "source_id": "authored_unreviewed",
+    "reference": "AI-curated general knowledge; no citations",
+    "license_ok_for_commercial": true
+   }
+  ],
+  "last_reviewed": null,
+  "contraindications": [],
+  "cautions": [],
+  "license_status": "project_authored",
+  "review_notes": [
+   "گردآوری‌شده توسط AI؛ بازبینی متخصص نشده است (تصمیم D-001). برآورد بار نواحی تقریبی است و فقط هسته‌ی ایمنی درباره‌ی پذیرش تصمیم می‌گیرد."
+  ],
+  "limitations": [],
+  "environments": [
+   "home",
+   "gym"
+  ],
+  "breathing": "تنفس آرام و عمیق؛ نفس را حبس نکن."
+ }
+]

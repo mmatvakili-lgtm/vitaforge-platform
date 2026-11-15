@@ -6,6 +6,8 @@ import type { Dashboard, NutritionDaySummary, ProgressReport } from "../../../li
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { ApiErrorView, ButtonLink, Card, Loading } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
+import { Body3D, type RegionStatus } from "../../../components/Body3D.tsx";
+import type { Analytics } from "../../../lib/api/generated.ts";
 
 export default function DashboardPage() {
   const { locale, t, n } = useT();
@@ -15,6 +17,7 @@ export default function DashboardPage() {
   const [week, setWeek] = useState<ProgressReport | null>(null);
   const [nut, setNut] = useState<NutritionDaySummary | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
+  const [an, setAn] = useState<Analytics | null>(null);
   useEffect(() => {
     let live = true;
     Promise.all([api.call("API-DASH-001"), api.call("API-PROG-001")]).then(([a, b]) => {
@@ -22,6 +25,7 @@ export default function DashboardPage() {
       if (!a.ok) { if (a.status === 401) return router.replace(`/${locale}/login`); return setError(a.error); }
       setD(a.data); if (b.ok) setWeek(b.data);
     });
+    api.call("API-ANALYTICS-001").then((r) => { if (live && r.ok) setAn(r.data); });   // decorative: the dashboard works without it
     api.call("API-NUT-008").then((r) => { if (live && r.ok) setNut(r.data); });   // absent (no consent/profile/OK result) => the block is simply not shown
     return () => { live = false; };
   }, [api, router, locale]);
@@ -34,6 +38,13 @@ export default function DashboardPage() {
       {d && (
         <>
           {(d.alerts ?? []).length > 0 && (<><h2>{t("dash.alerts")}</h2>{d.alerts!.map((a, i) => <DecisionPanel key={i} decision={a} />)}</>)}
+          {an && an.muscles.length > 0 && (
+            <div className="body-stage">
+              <Body3D height={300} status={Object.fromEntries(an.muscles.map((m) => [m.muscle, m.status as RegionStatus]))} label={t("analytics.bodyAria")} />
+              <div className="legend" aria-hidden="true">
+                {(["low", "ok", "high"] as const).map((k) => <span key={k}><i className="dot" style={{ background: `var(--body-${k})` }} />{t(`analytics.legend.${k}`)}</span>)}
+              </div>
+            </div>)}
           <h2>{t("dash.week")}</h2>
           <ul className="plain">
             <li>{t("dash.sessions")}: {n(w.sessions ?? 0)}</li>
