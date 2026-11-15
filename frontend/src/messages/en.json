@@ -833,5 +833,18 @@
  "wk.restSkip": "Skip rest",
  "wk.restNext": "Next set",
  "lib.bodyAria": "3D body used as a muscle filter. Tap a muscle to list its exercises; tap it again to clear.",
- "lib.bodyHint": "Tap a muscle on the body to filter the library."
+ "lib.bodyHint": "Tap a muscle on the body to filter the library.",
+ "home.kicker": "Adaptive training assistant",
+ "home.title": "Train around how you actually move.",
+ "home.bodyAria": "Rotating 3D body that highlights the muscles trained in different sessions. Drag to rotate.",
+ "home.f.assess.title": "Movement assessment",
+ "home.f.assess.body": "A short self-test finds your strongest and weakest patterns. Every limiter is shown with the reason.",
+ "home.f.plan.title": "A plan that follows the result",
+ "home.f.plan.body": "Exercise difficulty, extra sets and corrective drills follow your profile. A deterministic safety layer approves every exercise.",
+ "home.f.track.title": "Log and watch it respond",
+ "home.f.track.body": "Log sets, use the rest timer, and see estimated 1RM, weekly volume and muscle balance.",
+ "home.f.body.title": "Your body, in 3D",
+ "home.f.body.body": "Tap a muscle to filter the exercise library or see how much you train it. Works in Persian and English, and installs as an app.",
+ "home.honest.title": "What this demo is",
+ "home.honest.body": "Exercise content is compiled by AI and has not been reviewed by a coach or clinician. It is a portfolio and gym-testing build, not medical advice. Stop and see a professional if something hurts."
 }
