@@ -24,6 +24,11 @@ function PlanBody({ plan, modified, onSubstitute }: { plan: WorkoutPlan; modifie
       </p>
       {plan.rationale?.content_status !== "published" && <Alert kind="warning"><strong>{t("plan.experimental.title")}</strong><p>{t("plan.experimental.body")}</p></Alert>}
       {modified && <Alert kind="warning">{t("plan.modified")}</Alert>}
+      {(() => {
+        const rs = (plan.rationale?.reasons ?? []) as string[];
+        const ph = rs.find((x) => x.startsWith("phase:"))?.slice(6);
+        return ph ? <Alert kind="info"><strong>{t("plan.phase.title")}:</strong> {t(`plan.phase.${ph}`)}{rs.includes("deload:auto:rpe_high") && <> {t("plan.phase.auto")}</>}</Alert> : null;
+      })()}
       {(plan.days ?? []).map((d, i) => (
         <section key={d.day_id ?? i} className="day">
           <h2>{d.title ?? t("plan.day", { n: (d.day_index ?? i) + 1 })}{d.est_minutes !== undefined && <span className="muted"> · {t("plan.minutes", { n: d.est_minutes })}</span>}</h2>
