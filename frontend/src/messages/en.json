@@ -883,5 +883,12 @@
  "journey.next.review.title": "You completed this week",
  "journey.next.review.body": "Review your progress and muscle map.",
  "journey.next.review.cta": "Review progress",
- "today.meals": "meals"
+ "today.meals": "meals",
+ "plan.phase.title": "This week's phase",
+ "plan.phase.base": "Base week: leave reps in reserve and settle the technique.",
+ "plan.phase.build": "Build week: slightly higher intensity.",
+ "plan.phase.peak": "Peak week: the standard target intensity.",
+ "plan.phase.deload": "Deload week: fewer sets and lower intensity so your body can recover.",
+ "plan.phase.reentry": "Easing back in after a break: starting lighter.",
+ "plan.phase.auto": "Lightened automatically because recent sessions were logged as very hard."
 }

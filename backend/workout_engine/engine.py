@@ -7,6 +7,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 from safety_core import SafetyCore
 from safety_core.models import SafetyRequest
 
+from .periodization import adjust, decide_phase
 from .models import (GOALS, LEVELS, LEVEL_RANK, STRUCTURES, CatalogExercise, EngineConfig, EngineInput, Omission,
                      PlanResult, PlannedDay, PlannedExercise)
 
@@ -124,7 +125,13 @@ def _generate(inp: EngineInput, base: SafetyRequest, gate: SafetyCore) -> PlanRe
         sets = max(1, sets - 1); reasons.append("recovery:red->sets-1")
     elif inp.recovery_state == "amber":
         reasons.append("recovery:amber")
+    phase, phase_reasons = decide_phase(inp.block_week, inp.load_signals, cfg.block_weeks)
+    if phase != "standard":
+        sets, rpe = adjust(phase, sets, rpe, cfg.deload_factor)
+        reasons.extend(phase_reasons)
     p_levels, p_bump, p_asym, p_limiters = _profile_view(inp.profile)
+    if phase in ("deload", "reentry"):
+        p_bump = ()                                  # no extra weak-area sets while easing off
     if p_levels or p_limiters:
         reasons.append("profile:heuristic_v1")
     used_week: Dict[str, int] = {}

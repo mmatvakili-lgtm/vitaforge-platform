@@ -41,6 +41,7 @@ class EngineConfig:
     load_step_kg: Mapping[str, float] = field(default_factory=lambda: {"barbell": 2.5, "dumbbell": 2.0, "machine": 2.5, "other": 1.0})
     deload_every_weeks: int = 6
     deload_factor: float = 0.6
+    block_weeks: int = 4                    # mesocycle length: weeks 1-3 build, the last week is a deload
 
 
 @dataclass(frozen=True)
@@ -59,6 +60,8 @@ class EngineInput:
     supportive_regions: Tuple[str, ...] = ()   # regions with a recorded history and NO active pain (Path A)
     priority_muscles: Tuple[str, ...] = ()      # user-chosen focus; only a tie-breaking preference, never overrides Safety Core or volume caps
     supportive_enabled: bool = False           # True only when reviewed supportive content is published
+    block_week: Optional[int] = None           # 1-based week inside the mesocycle; None = no periodization (standard prescription)
+    load_signals: Tuple[str, ...] = ()          # descriptive analytics keys ('rpe_high', 'inactive') that may trigger an automatic deload / re-entry
     profile: Optional[Mapping[str, Any]] = None  # movement-assessment profile (assessment.evaluate output); shapes selection/volume only, never safety
     config: EngineConfig = field(default_factory=EngineConfig)
 

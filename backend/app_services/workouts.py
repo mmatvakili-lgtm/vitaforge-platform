@@ -18,6 +18,19 @@ class WorkoutService:
         rows = self.s.__dict__.get("assessments", {}).get(uid) or []
         return rows[-1].get("profile") if rows else None
 
+    def _periodization(self, uid):
+        """(week inside the mesocycle, descriptive load signals) from the user's own finished sessions; (None, ()) without history."""
+        from analytics import build
+        mine = [w for w in self.s.workout_sessions.values() if w["user"] == uid]
+        done = [w for w in mine if w.get("finished")]
+        if not done:
+            return None, ()
+        today = self.today()
+        weeks = (today - min(w["start"] for w in done)) // 7
+        a = build(mine, today, {k: v.primary_muscle for k, v in self.s.catalog.items()}, {})
+        signals = tuple(i["key"] for i in a["insights"] if i["key"] in ("rpe_high", "inactive"))
+        return weeks % self.cfg.block_weeks + 1, signals
+
     def generate(self, uid, preferred_structure="__profile__"):
         p = self.s.profiles.get(uid)
         if not p or not p.get("complete"):
@@ -31,9 +44,10 @@ class WorkoutService:
         base = self.h.safety_request(uid)
         rs = self.gate.rule_set
         supportive = tuple(sorted({c.region for c in base.conditions if not c.active_pain and c.status != "no_known_limitation"}))
+        bw, sig = self._periodization(uid)
         inp = dataclasses.replace(inp, priority_muscles=tuple(st["goal"].get("priority_muscles", ())), supportive_regions=supportive,
                                   supportive_enabled=bool(rs.clinical_content_published or rs.allow_unreviewed_content),
-                                  profile=self._latest_profile(uid))
+                                  profile=self._latest_profile(uid), block_week=bw, load_signals=sig)
         res = generate_plan(inp, base, self.gate)
         # the same pre-pass request the engine used (S1), so the returned decision is the one that gated the plan
         pre = self.gate.evaluate(dataclasses.replace(base, candidates=tuple(c.candidate for c in sorted(inp.catalog, key=lambda c: c.code)),
