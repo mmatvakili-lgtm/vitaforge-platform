@@ -46,6 +46,7 @@
 | DEC-153 | Repository Port به‌جای Store حافظه‌ای | C مرحله‌ای (ADR-0013) | `Accepted` | OPEN-013 | conformance روی InMemory و PostgreSQL |
 | DEC-150 | اعتبارسنجی Django اجرا نشد | B؛ `tools/django_preflight.py` و دستورات اجرا در `DJANGO_RUNTIME_VALIDATION.md` | `Accepted` | OPEN-013 | اجرای Harness روی Django توسط مالک/CI |
 | DEC-151 | درگاه انتشار حرکت مستقل از نقش‌ها | B؛ سرویس بدون `record` منتشر نمی‌کند؛ Bridge ادعای published را تنزل می‌دهد؛ Loader رد می‌کند؛ `CheckConstraint` در مدل Django؛ `dev_experimental` در `VITAFORGE_ENV=production` ممنوع | `Implemented` | OPEN-012 | `test_publication_security` |
+| DEC-160 | موتور برنامه بدون بن‌بست و روزهای چندعضله‌ای | B؛ WO-C06 اصلاح شد: نبودن حرکت main فقط برچسب می‌خورد؛ جایگزینی الگو، تنظیم ست/استراحت برای زمان، بازگشت به ساختار دیگر؛ ایمنی بدون تغییر | `Implemented` | — | `test_plan_balance` |
 | DEC-146 | نسخه OpenAPI = 3.1.0 | B؛ معنای اسکیما تغییری نکرد | `Implemented` | — | `test_contract_spec` |
 | DEC-147 | افزودن پاسخ 400 به چند عملیات | B؛ اسکیمای بدنه تغییر نکرد | `Implemented` | — | `test_contract_requests` |
 | DEC-148 | اعتبارسنجی قرارداد فقط روی Dev Adapter | گزارش صریح: قرارداد روی `devserver` اعتبارسنجی شده نه Django؛ هر دو باید همین Harness را بگذرانند | `Accepted` | — | `CONTRACT_REPORT.md` |

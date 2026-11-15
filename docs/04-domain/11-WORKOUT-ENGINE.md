@@ -75,7 +75,7 @@ Confidence: `high` اگر همه slotها با حرکت اولویت اول پر
 | WO-C03 | تعادل: نسبت push:pull در بازه config؛ گروه عضلانی بدون پوشش اعلام شود |
 | WO-C04 | حجم هفتگی هر گروه ≤ سقف level (config) |
 | WO-C05 | شروع مبتدی: حرکات `difficulty ≤ beginner/skill ≤ cap` |
-| WO-C06 | هیچ جلسه‌ای بدون حرکت main نباشد؛ در غیر این صورت NEEDS_CONTENT |
+| WO-C06 | (اصلاح‌شده، DEC-160) هر جلسه حداقل ۳ حرکت (۲ برای جلسه‌ی کمتر از ۴۰ دقیقه) دارد؛ اگر تجهیزات کاربر حرکت main ندارد، مهم‌ترین حرکت انتخاب‌شده لنگر روز می‌شود و برنامه آن را برچسب می‌زند (`no-main-available`)؛ فقط در نبود حداقل حرکت NEEDS_CONTENT |
 
 ## 8. پیشرفت (Progression)
 - روش‌ها: Double Progression (پیش‌فرض)، Linear Progression (مبتدی، حرکات اصلی)، Autoregulation با RPE. Periodization/Volume-Intensity: Deferred.
