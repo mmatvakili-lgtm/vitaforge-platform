@@ -2,8 +2,8 @@
 
 
 def _all():
-    from . import core_mobility, lower, upper
-    return {"lower": lower.ROWS, "upper": upper.ROWS, "core_mobility": core_mobility.ROWS}
+    from . import core_mobility, extra, lower, upper
+    return {"lower": lower.ROWS, "upper": upper.ROWS, "core_mobility": core_mobility.ROWS, "extra": extra.ROWS}
 
 
 ALL_BATCHES = _all()
