@@ -1,0 +1,19 @@
+Third-party content shipped under /vendor
+
+anatomy/anatomy.glb
+  3D anatomical muscle + skeleton model, derived from Z-Anatomy (https://www.z-anatomy.com/, https://github.com/LluisV/Z-Anatomy-Sample),
+  itself based on BodyParts3D (c) The Database Center for Life Science. Preparation (extraction, decimation, group metadata, Draco compression)
+  by https://github.com/tiralonghipol/free-muscles (file public/anatomy.glb), which states it is licensed CC BY-SA 4.0.
+  License: Creative Commons Attribution-ShareAlike 4.0 International, https://creativecommons.org/licenses/by-sa/4.0/
+  Any redistributed or modified version of this file must stay CC BY-SA 4.0 and credit Z-Anatomy and BodyParts3D.
+  VitaForge does not modify the file; it only colours the named meshes at run time and fits a procedural head around the skull bones.
+
+three/ (three.module.min.js r170, GLTFLoader, DRACOLoader, BufferGeometryUtils, RoomEnvironment)
+  three.js, MIT License, (c) 2010-2024 three.js authors, https://github.com/mrdoob/three.js
+  Import specifiers in the example loaders were rewritten to relative paths; no other change.
+
+draco/ (decoder files)
+  Draco decoder as shipped with three.js examples, Apache License 2.0 (Draco, (c) Google).
+
+body-viewer.js
+  VitaForge's own viewer code.

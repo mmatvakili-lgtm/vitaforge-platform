@@ -37,7 +37,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Header />
           <ContentModeBanner />
           <main className="container">{children}</main>
-          <footer className="container"><Notice /></footer>
+          <footer className="container"><Notice /><p className="credits">{t(locale, "credits.anatomy")} · <a href="/vendor/NOTICE.txt">NOTICE</a></p></footer>
         </LocaleProvider>
       </body>
     </html>
