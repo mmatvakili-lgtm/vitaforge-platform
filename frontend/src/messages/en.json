@@ -967,5 +967,6 @@
  "motion.title": "Movement preview",
  "motion.fallback": "Approximate preview based on movement pattern",
  "motion.aria": "Exercise movement animation",
- "motion.hold": "Isometric hold"
+ "motion.hold": "Isometric hold",
+ "motion.mocap": "Real motion capture (CC0)"
 }

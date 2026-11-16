@@ -224,3 +224,6 @@ summary.tab::-webkit-details-marker { display: none; }
 .an-loading { background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--fg) 8%, transparent) 50%, transparent 70%) var(--card); background-size: 200% 100%; animation: an-sh 1.4s linear infinite; }
 @keyframes an-sh { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .an-muscle { animation: none; } }
+.an3-stage { position: relative; inline-size: 100%; }
+.an3-stage canvas { inline-size: 100%; block-size: 100%; display: block; touch-action: pan-y; cursor: grab; }
+.an3-stage .an-loading { position: absolute; inset: 0; }
