@@ -9,6 +9,7 @@ import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Loading } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 import { Body3D } from "../../../components/Body3D.tsx";
+import { ExerciseAnimById } from "../../../components/ExerciseAnim.tsx";
 import { muscleRegion } from "../../../lib/body3d.ts";
 
 function PlanBody({ plan, modified, onSubstitute }: { plan: WorkoutPlan; modified: boolean; onSubstitute: (workoutExerciseId: string, reason: string) => Promise<void> }) {
@@ -41,8 +42,11 @@ function PlanBody({ plan, modified, onSubstitute }: { plan: WorkoutPlan; modifie
       })()}
       <div className="plan-split">
         <aside className="plan-body">
+          {(selEx ?? day?.exercises?.[0])?.exercise_id && (
+            <ExerciseAnimById key={(selEx ?? day?.exercises?.[0])!.exercise_id} exerciseId={(selEx ?? day?.exercises?.[0])!.exercise_id!} muscles={(selEx ?? day?.exercises?.[0])!.muscles} height={190} />
+          )}
           <div className="body-stage">
-            <Body3D height={420} status={bodyStatus} label={t("plan.bodyAria")} />
+            <Body3D height={300} status={bodyStatus} label={t("plan.bodyAria")} />
             <div className="legend" aria-hidden="true">
               <span><i className="dot" style={{ background: "var(--body-focus)" }} />{exSel ? t("plan.legend.exercise") : t("plan.legend.day")}</span>
               {exSel && dayMuscles.size > 0 && <span><i className="dot" style={{ background: "var(--body-high)" }} />{t("plan.legend.restOfDay")}</span>}
