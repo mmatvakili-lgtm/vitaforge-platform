@@ -968,5 +968,14 @@
  "motion.fallback": "نمایش تقریبی بر اساس الگوی حرکت",
  "motion.aria": "انیمیشن اجرای حرکت",
  "motion.hold": "نگه‌داشتن ایزومتریک",
- "motion.mocap": "ضبط حرکتی واقعی (CC0)"
+ "motion.mocap": "ضبط حرکتی واقعی (CC0)",
+ "motion.tag.pause": "مکث در نقطه‌ی سخت",
+ "motion.tag.tempo": "ریتم آهسته",
+ "motion.tag.explosive": "انفجاری",
+ "motion.tag.single": "تک‌اندام",
+ "motion.tag.wide": "حالت باز",
+ "motion.tag.partial": "دامنه‌ی کوتاه",
+ "motion.tag.deep": "دامنه‌ی کامل",
+ "motion.tag.incline": "سطح بالا",
+ "motion.tag.decline": "پا بالا"
 }

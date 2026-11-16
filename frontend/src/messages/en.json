@@ -968,5 +968,14 @@
  "motion.fallback": "Approximate preview based on movement pattern",
  "motion.aria": "Exercise movement animation",
  "motion.hold": "Isometric hold",
- "motion.mocap": "Real motion capture (CC0)"
+ "motion.mocap": "Real motion capture (CC0)",
+ "motion.tag.pause": "Paused rep",
+ "motion.tag.tempo": "Slow tempo",
+ "motion.tag.explosive": "Explosive",
+ "motion.tag.single": "Unilateral",
+ "motion.tag.wide": "Wide stance",
+ "motion.tag.partial": "Partial range",
+ "motion.tag.deep": "Full depth",
+ "motion.tag.incline": "Incline",
+ "motion.tag.decline": "Decline"
 }

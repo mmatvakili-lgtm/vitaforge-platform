@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { L, bounds, motionFor, poseAt, solve, type Pose, type Prop, type Skeleton, type V } from "../lib/motion.ts";
+import { L, bounds, motionFor, poseAt, solve, variantFor, type Pose, type Prop, type Skeleton, type V } from "../lib/motion.ts";
 import { muscleRegion } from "../lib/body3d.ts";
 import { useApi, useT } from "../lib/react/context.tsx";
 
@@ -106,7 +106,7 @@ function ExerciseAnim2D({ code, pattern, muscles, height = 260 }: { code: string
     minX -= (want - w) / 2; maxX += (want - w) / 2;
     return { minX, maxX, minY, maxY, w: maxX - minX, h: maxY - minY, hanging, bx: b.minX, bX: b.maxX };
   }, [template]);
-  const pose: Pose = poseAt(template, u);
+  const pose: Pose = poseAt(template, u, variantFor(code));
   const s = solve(pose);
   const ghosts = template.loop === "pingpong" ? [template.frames[0], template.frames[template.frames.length - 1]].map(solve) : [];
   const pinned = template.frames.find((f) => f.handA);
@@ -179,6 +179,7 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
   const playRef = useRef(true);
   playRef.current = playing;
   const clip = clipFor(code, template.key);
+  const variant = useMemo(() => variantFor(code), [code]);
 
   useEffect(() => {
     let dead = false;
@@ -212,11 +213,11 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
       acc += dt;
       if (now - last < 24) return;
       last = now;
-      v.setSolved(solve(poseAt(template, ((acc / 1000) / template.period) % 1)));
+      v.setSolved(solve(poseAt(template, ((acc / 1000) / (template.period * variant.speed)) % 1, variant)));
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [phase, template, regions, clip]);
+  }, [phase, template, regions, clip, variant]);
 
   if (phase === "fallback") return <ExerciseAnim2D code={code} pattern={pattern} muscles={muscles} height={height} />;
   return (
@@ -228,6 +229,7 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
       <figcaption>
         <span className="an-cue">{t(`motion.cue.${template.key}`)}</span>
         {template.hold && <span className="tag">{t("motion.hold")}</span>}
+        {variant.tags.map((g) => <span key={g} className="tag">{t(`motion.tag.${g}`)}</span>)}
         {clip && <span className="muted">{t("motion.mocap")}</span>}
         {!exact && <span className="muted">{t("motion.fallback")}</span>}
         <button type="button" className="an-btn" onClick={() => { setPlaying((p) => !p); fig.current?.setAutoRotate(false); }} aria-pressed={playing}>{playing ? t("motion.pause") : t("motion.play")}</button>
