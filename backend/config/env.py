@@ -40,6 +40,10 @@ def load_config(env: Mapping[str, str]) -> dict:
            "offline_workout_log": _bool(env.get("FEATURE_OFFLINE_WORKOUT_LOG")),
            "clinical_content_published": _bool(env.get("CLINICAL_CONTENT_PUBLISHED")),
            "dev_content": _bool(env.get("VITAFORGE_DEV_CONTENT")), "content_mode": "reviewed"}
+    if cfg["debug"] and env.get("VITAFORGE_DEV_CONTENT") is None:
+        # Local/test runs must never dead-end on the "no reviewed content" gate: with DJANGO_DEBUG=true the sample catalogue
+        # (labelled experimental, with warnings) is the default. Set VITAFORGE_DEV_CONTENT=false to test the strict posture.
+        cfg["dev_content"] = True
     from mailer.config import MailConfigError, load_mail_config
     from tgverify.config import TelegramConfigError, load_telegram_config
     try:

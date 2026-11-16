@@ -26,3 +26,9 @@ def test_unknown_mode_rejected_and_other_production_rules_still_apply():
     for bad in ({"AI_EXTERNAL_HEALTH_DATA": "true"}, {"ALLOWED_HOSTS": "*"}, {"DJANGO_SECRET_KEY": "short"}):
         with pytest.raises(ConfigError):
             load_config({**demo, **bad})
+
+
+def test_debug_defaults_to_sample_content_but_strict_can_be_forced():
+    assert load_config({**OK, "DJANGO_DEBUG": "true"})["dev_content"] is True
+    assert load_config({**OK, "DJANGO_DEBUG": "true", "VITAFORGE_DEV_CONTENT": "false"})["dev_content"] is False
+    assert load_config({**OK, "DJANGO_DEBUG": "false"})["dev_content"] is False
