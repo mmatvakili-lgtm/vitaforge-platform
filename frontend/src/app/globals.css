@@ -326,3 +326,10 @@ fieldset { border: 1px solid color-mix(in srgb, var(--line) 80%, transparent); b
 .chip, .tag { border-radius: 99px; }
 .plan-body { inset-block-start: 3.8rem; }
 @media (max-width: 860px) { .plan-body { background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); } }
+.an-wrap { display: grid; gap: .4rem; }
+.an-tabs { display: inline-flex; gap: .25rem; padding: .2rem; border-radius: 99px; border: 1px solid var(--line); justify-self: start; background: color-mix(in srgb, var(--card) 70%, transparent); }
+.an-tabs button { min-block-size: 36px; padding: .1rem .9rem; border-radius: 99px; border: 0; background: transparent; color: var(--muted); box-shadow: none; background-image: none; }
+.an-tabs button.on { color: var(--accent-fg); background-image: linear-gradient(145deg, var(--accent), color-mix(in srgb, var(--accent) 62%, var(--info))); }
+.an-photo .an3-stage { background: #111; }
+.an-photo img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain; opacity: 0; transition: opacity .6s ease; }
+.an-photo img.on { opacity: 1; }

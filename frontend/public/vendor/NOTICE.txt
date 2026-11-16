@@ -19,3 +19,5 @@ body-viewer.js
   VitaForge's own viewer code.
 
 figure.glb: Mannequin mesh and animation clips (Jog, Sprint, Walk, Jumping Jacks, Pushup) from the Mesh2Motion / Quaternius Universal Animation Library, CC0 1.0 (no attribution required).
+
+Exercise reference photos (public/exercise-media): from the free-exercise-db public dataset (github.com/yuhonas/free-exercise-db, repo licence Unlicense). Image provenance is not independently verified; accepted as a demo/test-server risk by the owner on 2026-11-16. Replace or remove before any commercial use.

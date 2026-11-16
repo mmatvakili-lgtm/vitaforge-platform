@@ -44,3 +44,9 @@
 - `exercise_catalog` (schema، importer، منابع، ۲۵ حرکت نمونه)، `nutrition_engine`، `progression`/recovery، لایه تصمیم AI، توضیح ایمنی؛ `DECISION_REGISTRY` و `CAPABILITY_STATUS`؛ ۲۸۰ تست.
 
 </div>
+
+<div dir="rtl">
+
+- تب «عکس مرجع» در کارت انیمیشن حرکت: ۸۳ حرکت با دو عکس شروع/پایان (free-exercise-db) در کنار مانکن سه‌بعدی؛ کش SW؛ اعتبار و ریسک مجوز در THIRD_PARTY_LICENSES.
+
+</div>

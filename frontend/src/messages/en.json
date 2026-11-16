@@ -977,5 +977,11 @@
  "motion.tag.partial": "Partial range",
  "motion.tag.deep": "Full depth",
  "motion.tag.incline": "Incline",
- "motion.tag.decline": "Decline"
+ "motion.tag.decline": "Decline",
+ "motion.tab3d": "3D",
+ "motion.tabPhoto": "Photos",
+ "motion.photoAria": "Reference photos of the start and end position",
+ "motion.photoStart": "Start position",
+ "motion.photoEnd": "End position",
+ "motion.photoCredit": "Photos: free-exercise-db (public dataset; image provenance unverified)"
 }

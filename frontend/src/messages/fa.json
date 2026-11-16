@@ -977,5 +977,11 @@
  "motion.tag.partial": "دامنه‌ی کوتاه",
  "motion.tag.deep": "دامنه‌ی کامل",
  "motion.tag.incline": "سطح بالا",
- "motion.tag.decline": "پا بالا"
+ "motion.tag.decline": "پا بالا",
+ "motion.tab3d": "سه‌بعدی",
+ "motion.tabPhoto": "عکس مرجع",
+ "motion.photoAria": "عکس‌های مرجع شروع و پایان حرکت",
+ "motion.photoStart": "وضعیت شروع",
+ "motion.photoEnd": "وضعیت پایان",
+ "motion.photoCredit": "عکس‌ها: free-exercise-db (مجموعه‌ی عمومی؛ منشأ تصاویر تأیید نشده)"
 }
