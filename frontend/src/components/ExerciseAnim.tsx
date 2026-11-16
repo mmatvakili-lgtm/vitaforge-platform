@@ -72,7 +72,7 @@ function Props({ props, s, barY, minX, maxX }: { props: readonly Prop[]; s: Skel
   );
 }
 
-export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
+function ExerciseAnim2D({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
   const { t } = useT();
   const { template, exact } = useMemo(() => motionFor(code, pattern), [code, pattern]);
   const regions = useMemo(() => {
@@ -130,6 +130,107 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
         {reps && <span className="tag">{reps}</span>}
         {!exact && <span className="muted">{t("motion.fallback")}</span>}
         <button type="button" className="an-btn" onClick={() => setPlaying((p) => !p)} aria-pressed={playing}>{playing ? t("motion.pause") : t("motion.play")}</button>
+      </figcaption>
+    </figure>
+  );
+}
+
+type Fig = {
+  setSolved(sk: Skeleton): void; setTargets(r: readonly string[]): void; setProps(p: readonly string[]): void;
+  frame(minX: number, maxX: number, minY: number, maxY: number, ground: boolean, hang: boolean, bar: number): void;
+  playClip(n: string): boolean; stopClip(): void; setAutoRotate(on: boolean): void; dispose(): void;
+};
+type FigApi = { create(c: HTMLCanvasElement, o: Record<string, unknown>): Fig | null };
+declare global { interface Window { VFFigure?: FigApi } }
+let figPromise: Promise<FigApi> | null = null;
+function loadFigure(): Promise<FigApi> {
+  if (typeof window === "undefined") return Promise.reject(new Error("ssr"));
+  if (window.VFFigure) return Promise.resolve(window.VFFigure);
+  figPromise ??= new Promise<FigApi>((resolve, reject) => {
+    window.addEventListener("vffigure:ready", () => (window.VFFigure ? resolve(window.VFFigure) : reject(new Error("figure missing"))), { once: true });
+    const el = document.createElement("script");
+    el.type = "module"; el.src = "/vendor/figure-viewer.js"; el.onerror = () => reject(new Error("figure script"));
+    document.head.appendChild(el);
+  });
+  return figPromise;
+}
+
+/** Real motion-capture clips (CC0) used where one exists; everything else is driven by our own IK solver. */
+function clipFor(code: string, key: string): string | null {
+  if (key === "jacks" && /jumping_jacks/.test(code)) return "Jumping Jacks";
+  if (key === "jog" && /easy_jog/.test(code)) return "Jog";
+  if (key === "walk" && /brisk_walk/.test(code)) return "Walk";
+  if (key === "pushup" && /^(push_up|wide_push_up|close_grip_push_up|decline_push_up)$/.test(code)) return "Pushup";
+  return null;
+}
+
+/** Skinned 3D mannequin performing the exercise (WebGL); falls back to the 2D skeleton when WebGL or the model is unavailable. */
+export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
+  const { t } = useT();
+  const { template, exact } = useMemo(() => motionFor(code, pattern), [code, pattern]);
+  const regions = useMemo(() => {
+    const given = (muscles ?? []).map((m) => muscleRegion(m) ?? m).filter((m, i, a) => !!m && a.indexOf(m) === i);
+    return given.length ? given : template.targets;
+  }, [muscles, template]);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const fig = useRef<Fig | null>(null);
+  const [phase, setPhase] = useState<"loading" | "ready" | "fallback">("loading");
+  const [playing, setPlaying] = useState(true);
+  const playRef = useRef(true);
+  playRef.current = playing;
+  const clip = clipFor(code, template.key);
+
+  useEffect(() => {
+    let dead = false;
+    let v: Fig | null = null;
+    loadFigure().then((api) => {
+      if (dead || !canvas.current) return;
+      v = api.create(canvas.current, { onReady: () => { if (!dead) setPhase("ready"); }, onError: () => { if (!dead) setPhase("fallback"); } });
+      if (!v) return setPhase("fallback");
+      fig.current = v;
+    }).catch(() => { if (!dead) setPhase("fallback"); });
+    return () => { dead = true; fig.current = null; v?.dispose(); };
+  }, []);
+
+  useEffect(() => {
+    const v = fig.current;
+    if (!v || phase !== "ready") return;
+    const b = bounds(template.frames);
+    const hang = template.props.includes("bar-hang");
+    const bar = template.frames.find((f) => f.handA)?.handA?.[1] ?? 188;
+    v.frame(b.minX, b.maxX, hang ? b.minY : Math.min(0, b.minY), b.maxY, true, hang, bar);
+    v.setProps(clip ? [] : template.props);
+    v.setTargets(regions);
+    if (clip && v.playClip(clip)) return;
+    v.stopClip();
+    let acc = 0, prev: number | null = null, last = 0, raf = 0;
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      const dt = prev === null ? 0 : now - prev;
+      prev = now;
+      if (!playRef.current) return;
+      acc += dt;
+      if (now - last < 24) return;
+      last = now;
+      v.setSolved(solve(poseAt(template, ((acc / 1000) / template.period) % 1)));
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [phase, template, regions, clip]);
+
+  if (phase === "fallback") return <ExerciseAnim2D code={code} pattern={pattern} muscles={muscles} height={height} />;
+  return (
+    <figure className="an an3" aria-label={t("motion.aria")}>
+      <div className="an3-stage" style={{ blockSize: height }}>
+        <canvas ref={canvas} role="img" aria-label={t("motion.aria")} />
+        {phase === "loading" && <div className="an-loading" aria-hidden="true" />}
+      </div>
+      <figcaption>
+        <span className="an-cue">{t(`motion.cue.${template.key}`)}</span>
+        {template.hold && <span className="tag">{t("motion.hold")}</span>}
+        {clip && <span className="muted">{t("motion.mocap")}</span>}
+        {!exact && <span className="muted">{t("motion.fallback")}</span>}
+        <button type="button" className="an-btn" onClick={() => { setPlaying((p) => !p); fig.current?.setAutoRotate(false); }} aria-pressed={playing}>{playing ? t("motion.pause") : t("motion.play")}</button>
       </figcaption>
     </figure>
   );

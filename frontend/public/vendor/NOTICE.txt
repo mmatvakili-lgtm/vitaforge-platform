@@ -17,3 +17,5 @@ draco/ (decoder files)
 
 body-viewer.js
   VitaForge's own viewer code.
+
+figure.glb: Mannequin mesh and animation clips (Jog, Sprint, Walk, Jumping Jacks, Pushup) from the Mesh2Motion / Quaternius Universal Animation Library, CC0 1.0 (no attribution required).
