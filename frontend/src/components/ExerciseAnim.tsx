@@ -239,7 +239,8 @@ function ExerciseAnim3D({ code, pattern, muscles, height = 260 }: { code: string
 }
 
 let mediaIdx: Promise<Record<string, { name: string }>> | null = null;
-const loadMedia = () => (mediaIdx ??= fetch("/exercise-media/index.json").then((r) => (r.ok ? r.json() : {})).catch(() => ({})));
+const loadMedia = (): Promise<Record<string, { name: string }>> =>
+  (mediaIdx ??= fetch("/exercise-media/index.json").then((r) => (r.ok ? (r.json() as Promise<Record<string, { name: string }>>) : {})).catch(() => ({})));
 
 /** Reference photos (start / end position) from free-exercise-db, shown as a gentle crossfade. */
 function PhotoRef({ code, height }: { code: string; height: number }) {
