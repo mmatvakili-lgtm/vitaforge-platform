@@ -7,6 +7,8 @@ export type Result<T> = { ok: true; status: number; data: T } | { ok: false; sta
 export interface ClientOptions {
   baseUrl?: string;                                     // default "/api/v1" (same origin; Next proxies to Django)
   fetchImpl?: typeof fetch;
+  /** Browser only: identical GETs share one in-flight request and successful results are reused for this many ms (cleared by any write). */
+  cacheMs?: number;
   readCookie?: (name: string) => string | undefined;   // default: document.cookie (browser)
 }
 
@@ -32,7 +34,7 @@ export function createClient(opts: ClientOptions = {}) {
   const doFetch = opts.fetchImpl ?? ((...a: Parameters<typeof fetch>) => fetch(...a));
   const cookie = opts.readCookie ?? browserCookie;
 
-  async function call<K extends OpId>(id: K, args: CallArgs<K> = {}): Promise<Result<OpTypes[K]["res"]>> {
+  async function callRaw<K extends OpId>(id: K, args: CallArgs<K> = {}): Promise<Result<OpTypes[K]["res"]>> {
     const op = OPERATIONS[id];
     const headers: Record<string, string> = { Accept: "application/json" };
     let body: string | undefined;
@@ -58,6 +60,20 @@ export function createClient(opts: ClientOptions = {}) {
     if (res.ok) return { ok: true, status: res.status, data: json as OpTypes[K]["res"] };
     const b = (json ?? {}) as { code?: string; message?: string; request_id?: string; details?: unknown };
     return { ok: false, status: res.status, error: { status: res.status, code: b.code ?? "unexpected_status", message: b.message ?? "", requestId: b.request_id, details: b.details } };
+  }
+
+  const ttl = opts.cacheMs ?? 0;
+  const seen = new Map<string, { at: number; p: Promise<Result<unknown>> }>();
+  async function call<K extends OpId>(id: K, args: CallArgs<K> = {}): Promise<Result<OpTypes[K]["res"]>> {
+    if (OPERATIONS[id].method !== "GET") { seen.clear(); return callRaw(id, args); }
+    if (ttl <= 0) return callRaw(id, args);
+    const key = id + JSON.stringify([args.path, args.query]);
+    const hit = seen.get(key);
+    if (hit && Date.now() - hit.at < ttl) return hit.p as Promise<Result<OpTypes[K]["res"]>>;
+    const p = callRaw(id, args);
+    seen.set(key, { at: Date.now(), p });
+    p.then((r) => { if (!r.ok) seen.delete(key); });
+    return p;
   }
 
   return { call };

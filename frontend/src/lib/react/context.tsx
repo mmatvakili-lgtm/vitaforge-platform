@@ -4,7 +4,7 @@ import { createClient, type ApiClient, type ApiError } from "../api/client.ts";
 import { errorMessage, formatNumber, t as tr, type Locale } from "../i18n.ts";
 
 const LocaleCtx = createContext<Locale>("fa");
-const client: ApiClient = createClient();   // one same-origin client; the Next rewrite proxies /api/v1 to Django
+const client: ApiClient = createClient({ cacheMs: 3000 });   // one same-origin client; the Next rewrite proxies /api/v1 to Django
 
 export function LocaleProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
   return <LocaleCtx.Provider value={locale}>{children}</LocaleCtx.Provider>;

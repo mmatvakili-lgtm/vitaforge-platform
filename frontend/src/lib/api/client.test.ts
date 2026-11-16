@@ -59,3 +59,18 @@ test("network failure and non-JSON error bodies do not throw", async () => {
   const r2 = await createClient({ fetchImpl: html, readCookie: () => undefined }).call("API-ONB-001");
   assert.ok(!r2.ok && r2.error.code === "unexpected_status");
 });
+
+test("cacheMs: identical GETs share one request, writes clear the cache, errors are not cached", async () => {
+  let n = 0;
+  const fetchImpl = (async (_u: string, init?: RequestInit) => { n++; return new Response(init?.method === "GET" ? "{}" : "{}", { status: n === 4 ? 500 : 200 }); }) as unknown as typeof fetch;
+  const c = createClient({ fetchImpl, cacheMs: 5000, readCookie: () => undefined });
+  await Promise.all([c.call("API-PRO-001"), c.call("API-PRO-001")]);
+  assert.equal(n, 1);
+  await c.call("API-AUTH-004");                       // a write clears the cache
+  await c.call("API-PRO-001");
+  assert.equal(n, 3);
+  const bad = await c.call("API-DASH-001");           // 500 is returned but not cached
+  assert.equal(bad.ok, false);
+  await c.call("API-DASH-001");
+  assert.equal(n, 5);
+});
