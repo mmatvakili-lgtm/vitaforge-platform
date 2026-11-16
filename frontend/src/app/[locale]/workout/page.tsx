@@ -10,6 +10,7 @@ import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from ".
 import { Progression } from "../../../components/Progression.tsx";
 import { RestTimer } from "../../../components/RestTimer.tsx";
 import { Body3D } from "../../../components/Body3D.tsx";
+import { ExerciseAnimById } from "../../../components/ExerciseAnim.tsx";
 import { muscleRegion } from "../../../lib/body3d.ts";
 
 const EMPTY: SetDraft = { reps: "", load: "", rpe: "" };
@@ -125,6 +126,7 @@ export default function WorkoutPage() {
           {next && !finishing && (
             <section className="day" aria-labelledby="cur">
               <h2 id="cur">{next.name} · {t("wk.set", { n: n(next.setNo) })}</h2>
+              <ExerciseAnimById key={next.exerciseId} exerciseId={next.exerciseId} muscles={(day.exercises ?? []).find((x) => x.exercise_id === next.exerciseId)?.muscles} height={200} />
               {(() => {
                 const focus: Record<string, "focus"> = {};
                 for (const m of (day.exercises ?? []).find((x) => x.exercise_id === next.exerciseId)?.muscles ?? []) { const g = muscleRegion(m); if (g) focus[g] = "focus"; }

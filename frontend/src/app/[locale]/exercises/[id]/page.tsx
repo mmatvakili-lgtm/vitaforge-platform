@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { ApiError } from "../../../../lib/api/client.ts";
 import type { ExerciseDetail } from "../../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../../lib/react/context.tsx";
+import { ExerciseAnim } from "../../../../components/ExerciseAnim.tsx";
 import { Alert, ApiErrorView, Card, Loading } from "../../../../components/ui.tsx";
 
 export default function ExercisePage() {
@@ -35,6 +36,7 @@ export default function ExercisePage() {
       {ex && (
         <div>
           {!reviewed && <Alert kind="warning">{t("ex.unreviewed")}</Alert>}
+          {ex.code && <ExerciseAnim code={ex.code} height={280} />}
           {ex.description && <p>{ex.description}</p>}
           {ex.compatibility?.status && <p><strong>{t("ex.compat")}:</strong> {t(`ex.compat.${ex.compatibility.status}`)}</p>}
           {(ex.steps ?? []).length > 0 && (<><h2>{t("ex.steps")}</h2><ol>{ex.steps!.map((s, i) => <li key={i}>{s}</li>)}</ol></>)}

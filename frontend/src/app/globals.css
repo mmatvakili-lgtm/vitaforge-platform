@@ -204,3 +204,23 @@ summary.tab::-webkit-details-marker { display: none; }
   .plan-body .body-stage { block-size: 300px; }
   .plan-body .body3d-wrap { block-size: 300px !important; }
 }
+
+/* --- exercise animation (procedural skeleton) --- */
+.an { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--body-focus) 10%, var(--card)), var(--card)); overflow: hidden; }
+.an svg { display: block; }
+.an-near { stroke: var(--body-base); fill: none; } .an-far { stroke: var(--body-dim); fill: none; }
+.an-head { fill: var(--body-head); stroke: var(--body-base); stroke-width: 3; }
+.an-ghost { opacity: .14; }
+.an-muscle { stroke: var(--body-focus); opacity: .85; animation: an-pulse 1.6s ease-in-out infinite; fill: none; filter: drop-shadow(0 0 6px var(--body-focus)); }
+.an-joint { fill: var(--body-focus); }
+@keyframes an-pulse { 50% { opacity: .45; } }
+.an-floorline { stroke: var(--line); stroke-width: 2; }
+.an-weight rect, .an-weight circle { fill: var(--fg); opacity: .8; } .an-metal { stroke: var(--muted); fill: none; } .an-metal-fill { fill: var(--muted) !important; }
+.an-furn { fill: color-mix(in srgb, var(--fg) 14%, var(--card)); stroke: var(--line); }
+.an-band { stroke: var(--body-high); fill: none; stroke-dasharray: 5 3; }
+.an figcaption { display: flex; flex-wrap: wrap; gap: .5rem .8rem; align-items: center; padding: .6rem .9rem; border-block-start: 1px solid var(--line); font-size: .86rem; }
+.an-cue { flex: 1 1 14rem; }
+.an-btn { min-block-size: 36px; padding: .2rem .9rem; border-radius: 2rem; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+.an-loading { background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--fg) 8%, transparent) 50%, transparent 70%) var(--card); background-size: 200% 100%; animation: an-sh 1.4s linear infinite; }
+@keyframes an-sh { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .an-muscle { animation: none; } }
