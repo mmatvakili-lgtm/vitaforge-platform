@@ -165,7 +165,7 @@ function clipFor(code: string, key: string): string | null {
 }
 
 /** Skinned 3D mannequin performing the exercise (WebGL); falls back to the 2D skeleton when WebGL or the model is unavailable. */
-export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
+function ExerciseAnim3D({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
   const { t } = useT();
   const { template, exact } = useMemo(() => motionFor(code, pattern), [code, pattern]);
   const regions = useMemo(() => {
@@ -235,6 +235,45 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
         <button type="button" className="an-btn" onClick={() => { setPlaying((p) => !p); fig.current?.setAutoRotate(false); }} aria-pressed={playing}>{playing ? t("motion.pause") : t("motion.play")}</button>
       </figcaption>
     </figure>
+  );
+}
+
+let mediaIdx: Promise<Record<string, { name: string }>> | null = null;
+const loadMedia = (): Promise<Record<string, { name: string }>> =>
+  (mediaIdx ??= fetch("/exercise-media/index.json").then((r) => (r.ok ? (r.json() as Promise<Record<string, { name: string }>>) : {})).catch(() => ({})));
+
+/** Reference photos (start / end position) from free-exercise-db, shown as a gentle crossfade. */
+function PhotoRef({ code, height }: { code: string; height: number }) {
+  const { t } = useT();
+  const [i, setI] = useState(0);
+  useEffect(() => { const id = setInterval(() => setI((x) => 1 - x), 1400); return () => clearInterval(id); }, []);
+  return (
+    <figure className="an an-photo" aria-label={t("motion.photoAria")}>
+      <div className="an3-stage" style={{ blockSize: height }}>
+        {[0, 1].map((k) => <img key={k} src={`/exercise-media/${code}/${k}.webp`} alt={k === 0 ? t("motion.photoStart") : t("motion.photoEnd")} loading="lazy" decoding="async" className={i === k ? "on" : ""} />)}
+      </div>
+      <figcaption><span className="an-cue muted">{t("motion.photoCredit")}</span></figcaption>
+    </figure>
+  );
+}
+
+/** Animation card: 3D mannequin by default; a second tab shows real reference photos when the exercise has them. */
+export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
+  const { t } = useT();
+  const [hasPhoto, setHasPhoto] = useState(false);
+  const [view, setView] = useState<"3d" | "photo">("3d");
+  useEffect(() => { let live = true; loadMedia().then((m) => { if (live) setHasPhoto(!!m[code]); }); return () => { live = false; }; }, [code]);
+  useEffect(() => setView("3d"), [code]);
+  return (
+    <div className="an-wrap">
+      {hasPhoto && (
+        <div className="an-tabs" role="tablist" aria-label={t("motion.title")}>
+          <button type="button" role="tab" aria-selected={view === "3d"} className={view === "3d" ? "on" : ""} onClick={() => setView("3d")}>{t("motion.tab3d")}</button>
+          <button type="button" role="tab" aria-selected={view === "photo"} className={view === "photo" ? "on" : ""} onClick={() => setView("photo")}>{t("motion.tabPhoto")}</button>
+        </div>
+      )}
+      {view === "photo" && hasPhoto ? <PhotoRef code={code} height={height} /> : <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />}
+    </div>
   );
 }
 

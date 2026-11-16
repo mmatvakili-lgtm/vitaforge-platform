@@ -131,6 +131,7 @@ class RuleSet:
     screening_questions: Tuple[str, ...] = ()        # required red-flag question keys (EXP-001; draft)
     clinical_content_published: bool = False         # reviewed red-flag list + referral texts available?
     allow_unreviewed_content: bool = False           # True only in dev/test environments
+    advisory_mode: bool = False                      # demo/test posture (DEC-ADVISORY): refer-and-warn, still produce a plan
     path_b_activity_rules_published: bool = False    # EXP-011 reviewed B4 rules available?
     caution_max_loading: str = "none"                # self-reported-only regions: conservative default
     reviewed_flag_urgency: str = "non_urgent"        # urgency when a red flag is positive (EXP-001 refines)

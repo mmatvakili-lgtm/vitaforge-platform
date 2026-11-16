@@ -15,7 +15,7 @@ def _starter() -> tuple:
     return tuple(load_starter())
 
 
-def build_app(store, dev_content: bool = False, dev_mode: bool = False, mail=None, telegram=None, content_mode: str = "reviewed") -> App:
+def build_app(store, dev_content: bool = False, dev_mode: bool = False, mail=None, telegram=None, content_mode: str = "reviewed", advisory: bool = False) -> App:
     """`dev_content=True` loads the EXPERIMENTAL sample catalogue and lets the Safety Core accept unreviewed content (LOCAL DEMO ONLY).
     Default (False) is the production posture: no content is published, so plan generation is refused by the Safety Core (SAF-R013)."""
     rows = list(_starter())
@@ -33,7 +33,7 @@ def build_app(store, dev_content: bool = False, dev_mode: bool = False, mail=Non
                     store.catalog[k] = v
                 if fresh:
                     store.relations = relations(rows)
-    rs = RuleSet(version=0, status=("ai-curated-demo" if content_mode == "ai_curated_demo" else "dev-demo") if dev_content else "production", screening_questions=SCREENING, allow_unreviewed_content=dev_content)
+    rs = RuleSet(version=0, status=("ai-curated-demo" if content_mode == "ai_curated_demo" else "dev-demo") if dev_content else "production", screening_questions=SCREENING, allow_unreviewed_content=dev_content, advisory_mode=bool(advisory and dev_content))
     app = App(store, rs, dev_mode=dev_mode, mail=mail, telegram=telegram, content_mode=content_mode if dev_content else "reviewed")
     app.layer.kb.records = rows
     app.records = {r.id: r for r in rows}

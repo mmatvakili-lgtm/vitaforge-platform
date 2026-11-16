@@ -8,7 +8,7 @@ self.addEventListener("fetch", (e) => {
   const req = e.request; const url = new URL(req.url);
   if (req.method !== "GET" || url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/api/")) return;
-  if (!(url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/vendor/") || url.pathname === "/icon.svg")) return;
+  if (!(url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/vendor/") || url.pathname.startsWith("/exercise-media/") || url.pathname === "/icon.svg")) return;
   e.respondWith(caches.open(CACHE).then(async (c) => {
     const hit = await c.match(req); if (hit) return hit;
     const res = await fetch(req); if (res.ok) c.put(req, res.clone()); return res;

@@ -47,6 +47,7 @@ R_PATH_C = "SAF-R016"
 R_BAD_RULE = "SAF-R018"
 R_EQUIPMENT = "SAF-R019"
 R_LEVEL = "SAF-R020"
+R_ADVISORY = "SAF-R021"     # advisory mode: a referral/stop condition was downgraded to a warning (plan still produced)
 _LEVEL_RANK = {"beginner": 0, "intermediate": 1, "advanced": 2}
 
 TERMINAL_STATUSES = {
@@ -234,33 +235,53 @@ def _evaluate(request: SafetyRequest, rule_set: RuleSet) -> SafetyDecision:
         return _make(request, rule_set, DecisionStatus.NEEDS_INFO, reasons=(R_MISSING,), questions=missing)
 
     # ---- stage 2: out of scope
+    adv = rule_set.advisory_mode
+    adv_reasons: List[str] = []              # advisory mode: conditions that would stop a plan become warnings
+    adv_urgency: List[str] = []
+
+    def _advise(codes, urgency):
+        adv_reasons.append(R_ADVISORY)
+        adv_reasons.extend(codes)
+        if urgency:
+            adv_urgency.append(urgency)
+
     active_flags = [f for f in request.out_of_scope_flags if f.active]
     if active_flags:
         code = R_PREGNANCY if any(f.flag_type == "pregnancy" for f in active_flags) else R_OUT_OF_SCOPE
-        return _make(request, rule_set, DecisionStatus.BLOCK_OUT_OF_SCOPE, reasons=(code,), urgency="non_urgent")
+        if not adv:
+            return _make(request, rule_set, DecisionStatus.BLOCK_OUT_OF_SCOPE, reasons=(code,), urgency="non_urgent")
+        _advise((code,), "non_urgent")
 
     # ---- stage 3: red flags (positive answer always stops; conservative even if list is unreviewed)
     positives = sorted(k for k, v in request.red_flag_answers.items() if v is True)
     if positives:
-        return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_RED_FLAG,),
-                     urgency=rule_set.reviewed_flag_urgency)
+        if not adv:
+            return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_RED_FLAG,),
+                         urgency=rule_set.reviewed_flag_urgency)
+        _advise((R_RED_FLAG,), rule_set.reviewed_flag_urgency)
     unanswered = sorted(k for k in rule_set.screening_questions if request.red_flag_answers.get(k) is None)
-    if unanswered:
+    if unanswered and not adv:
         return _make(request, rule_set, DecisionStatus.NEEDS_INFO, reasons=(R_MISSING,), questions=unanswered)
     term = _clinical_rule_decision(request, rule_set, stage_max=4)
     if term is not None:
-        return term
+        if not adv or term.status in (DecisionStatus.BLOCK_CONSENT,):
+            return term
+        _advise(term.reasons, term.referral_urgency)
 
     # ---- stage 4: urgent-referral status recorded
     if any(c.status == "needs_urgent_referral" for c in request.conditions):
-        return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_URGENT_STATUS,), urgency="urgent")
+        if not adv:
+            return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_URGENT_STATUS,), urgency="urgent")
+        _advise((R_URGENT_STATUS,), "urgent")
 
     # ---- clinical-content gate (DOC-09 §8): no content for real users until reviewed lists exist
     if not rule_set.clinical_content_published and not rule_set.allow_unreviewed_content:
         return _make(request, rule_set, DecisionStatus.ERROR_FAILSAFE, reasons=(R_CONTENT_UNREVIEWED,))
 
     if request.context.get("pathway_c_requested"):
-        return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_PATH_C,), urgency="non_urgent")
+        if not adv:
+            return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_PATH_C,), urgency="non_urgent")
+        _advise((R_PATH_C,), "non_urgent")
 
     # ---- stage 5: pathway B (new / undiagnosed pain without professional restriction)
     restricted_regions = {r.region for r in request.restrictions if r.region}
@@ -278,15 +299,20 @@ def _evaluate(request: SafetyRequest, rule_set: RuleSet) -> SafetyDecision:
     if path_b:
         pathway = "B"
         if any(c.worsening for c in path_b):
-            return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_WORSENING,),
-                         urgency="non_urgent", pathway="B")
+            if not adv:
+                return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_WORSENING,),
+                             urgency="non_urgent", pathway="B")
+            _advise((R_WORSENING,), "non_urgent")
         mapping = dict(rule_set.path_b_related_regions)
         if not rule_set.path_b_activity_rules_published or any(c.region not in mapping for c in path_b):
-            return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_PATHB_NO_RULES,),
-                         urgency="non_urgent", pathway="B", flags=("NO_PROGRAM_PATH_B",))
+            if not adv:
+                return _make(request, rule_set, DecisionStatus.STOP_AND_REFER, reasons=(R_PATHB_NO_RULES,),
+                             urgency="non_urgent", pathway="B", flags=("NO_PROGRAM_PATH_B",))
+            _advise((R_PATHB_NO_RULES,), "non_urgent")
+            flags.append("NO_PROGRAM_PATH_B")
         for c in path_b:
             b_blocked_regions.add(c.region)
-            b_blocked_regions.update(mapping[c.region])
+            b_blocked_regions.update(mapping.get(c.region, ()))
         flags.append("PROGRESSION_LOCKED")
 
     # ---- limited regions from conditions (path A style filters)
@@ -341,24 +367,29 @@ def _evaluate(request: SafetyRequest, rule_set: RuleSet) -> SafetyDecision:
             load = loads.get(region)
             if load is None or load != "none":
                 item_reasons.append(R_RESTRICTION)
+        soft_reasons: List[str] = []         # advisory mode: shown as warnings, item stays allowed
         for region in caution_regions:
             load = loads.get(region)
             if load is None or LOADING_RANK[load] > caution_rank:
-                item_reasons.append(R_CAUTION_REGION)
+                (soft_reasons if adv else item_reasons).append(R_CAUTION_REGION)
         for code, region in cand.contraindications:
-            if region is None and limit_names:
-                item_reasons.append(R_CONTRA)
-            elif region is not None and region in limit_names:
-                item_reasons.append(R_CONTRA)
+            if (region is None and limit_names) or (region is not None and region in limit_names):
+                (soft_reasons if adv else item_reasons).append(R_CONTRA)
         caution = any((region is None and limit_names) or (region in limit_names) for _c, region in cand.cautions)
         results.append(ItemResult(code=cand.code, allowed=not item_reasons,
-                                  reasons=tuple(dict.fromkeys(item_reasons)), caution=bool(caution and not item_reasons)))
+                                  reasons=tuple(dict.fromkeys(item_reasons + soft_reasons)),
+                                  caution=bool((caution or soft_reasons) and not item_reasons)))
 
     any_blocked = any(not r.allowed for r in results)
     any_caution = any(r.caution for r in results)
-    modified = any_blocked or any_caution or pathway in ("A", "B")
+    modified = any_blocked or any_caution or pathway in ("A", "B") or bool(adv_reasons)
+    urgency = ("urgent" if "urgent" in adv_urgency else "non_urgent") if adv_urgency else None
+    if adv_reasons:
+        flags.append("ADVISORY_REFER")
+        reasons = list(reasons) + adv_reasons
     if results and not any(r.allowed for r in results):
         return _make(request, rule_set, DecisionStatus.RESTRICT, per_item=results,
-                     reasons=tuple(reasons) + (R_NO_VALID_ITEMS,), pathway=pathway, flags=flags)
+                     reasons=tuple(reasons) + (R_NO_VALID_ITEMS,), pathway=pathway, flags=flags, urgency=urgency)
     status = DecisionStatus.ALLOW_WITH_MODIFICATION if modified else DecisionStatus.ALLOW
-    return _make(request, rule_set, status, per_item=results, reasons=reasons, pathway=pathway, flags=flags)
+    return _make(request, rule_set, status, per_item=results, reasons=reasons, pathway=pathway, flags=flags,
+                 urgency=urgency)

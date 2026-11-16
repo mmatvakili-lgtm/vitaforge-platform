@@ -62,6 +62,11 @@ def load_config(env: Mapping[str, str]) -> dict:
         if (env.get("VITAFORGE_ACK_AI_CURATED_CONTENT") or "").strip().lower() != "yes":
             raise ConfigError("VITAFORGE_CONTENT_MODE=ai_curated_demo requires VITAFORGE_ACK_AI_CURATED_CONTENT=yes (content is not expert-reviewed)")
         cfg["content_mode"], cfg["dev_content"] = mode, True
+    # Advisory posture (DEC-ADVISORY): refer-and-warn but still produce plans. Only with demo/test content; default on there, never in production.
+    adv = env.get("VITAFORGE_ADVISORY")
+    cfg["advisory"] = cfg["dev_content"] if adv is None else _bool(adv)
+    if cfg["advisory"] and not cfg["dev_content"]:
+        raise ConfigError("VITAFORGE_ADVISORY is only allowed with demo/test content (DJANGO_DEBUG=true or ai_curated_demo)")
     if cfg["ai_external_health_data"]:
         raise ConfigError("AI_EXTERNAL_HEALTH_DATA must be false until legal review (OPEN-002/EXP-012)")
     if not cfg["debug"]:

@@ -274,5 +274,8 @@ def plan_week(req: MealPlanRequest, nutrition: NutritionResult, foods: Mapping[s
                 reasons.append("NUT-BUDGET-EXCEEDED")
     if pn and any(not (pn[0] * 0.8 <= d.protein_g <= pn[1] * 1.2) for d in days):
         reasons.append("NUT-PROTEIN-OUTSIDE-RANGE-SOME-DAYS")
+    if "NUT-ADVISORY" in nutrition.reasons:                                # advisory posture: carry the doctor-referral warning into the plan
+        reasons = [r for r in nutrition.reasons if r.startswith("NUT-ADVISORY") or r in ("NUT-R02", "NUT-R04", "NUT-OUT-OF-RANGE-GUARD")] + reasons
+        labels = list(labels) + ["advisory_see_doctor"]
     return MealPlanResult("OK", tuple(reasons), tuple(days), tuple(shopping), None if total is None else round(total, 2), tuple(sorted(unpriced)), met,
                           tuple(labels), target, nutrition.safety_decision_id)
