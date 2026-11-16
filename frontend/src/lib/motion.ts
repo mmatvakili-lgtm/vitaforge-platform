@@ -93,8 +93,44 @@ export function blend(a: Pose, b: Pose, t: number): Pose {
     legs: lerpT(a.legs, b.legs, t), handA: lerpV(a.handA, b.handA, t), handB: lerpV(a.handB, b.handB, t), arms: lerpT(a.arms, b.arms, t), head: lerpN(a.head, b.head, t) };
 }
 
+/** Per-exercise modifiers layered on a shared motion template so that variants of one pattern do not look identical. */
+export type Variant = { amp: number; pause: number; speed: number; single: boolean; wide: boolean; tilt: number; tags: readonly string[] };
+export const NEUTRAL: Variant = { amp: 1, pause: 0, speed: 1, single: false, wide: false, tilt: 0, tags: [] };
+export function variantFor(code: string): Variant {
+  const c = code.toLowerCase(), tags: string[] = [];
+  const v = { ...NEUTRAL };
+  if (/paused|pause_|_pause|isometric/.test(c)) { v.pause = 0.38; tags.push("pause"); }
+  if (/tempo|slow|eccentric|negative/.test(c)) { v.speed = 1.7; tags.push("tempo"); }
+  if (/jump|explosive|power|plyo|clean|snatch|swing|burpee|skater/.test(c)) { v.speed = 0.62; tags.push("explosive"); }
+  if (/single_leg|one_leg|bulgarian|rear_foot|split_squat|pistol|single_arm|one_arm|unilateral|step_up|step_down/.test(c)) { v.single = true; tags.push("single"); }
+  if (/wide|sumo|cossack|lateral/.test(c)) { v.wide = true; tags.push("wide"); }
+  if (/half|partial|mini|quarter|short_range/.test(c)) { v.amp = 0.62; tags.push("partial"); }
+  else if (/deep|full_range|atg|ass_to_grass/.test(c)) { v.amp = 1.1; tags.push("deep"); }
+  if (/incline|elevated|decline/.test(c)) { v.tilt = /decline|feet_elevated/.test(c) ? -1 : 1; tags.push(v.tilt > 0 ? "incline" : "decline"); }
+  return { ...v, tags };
+}
+
+const shift = (p: V | undefined, dx: number, dy: number): V | undefined => (p ? [p[0] + dx, p[1] + dy] : p);
+function applyVariant(p: Pose, v: Variant): Pose {
+  if (!v.single && !v.wide && !v.tilt) return p;
+  const q: Pose = { ...p };
+  if (v.wide && q.footA) { q.footA = shift(q.footA, 10, 0); q.footB = shift(q.footB, -14, 0); }
+  if (v.single && q.footB && (p.mode ?? "hip") === "hip" && q.hip && q.hip[1] > 40) q.footB = shift(q.footB, 34, 30);      // free leg held off the floor
+  if (v.tilt && q.handA && (p.mode ?? "hip") === "rigid") {
+    const lift = v.tilt > 0 ? 28 : 0;                                       // hands on a raised surface (incline) / feet raised (decline)
+    q.handA = shift(q.handA, 0, lift); q.handB = shift(q.handB, 0, lift);
+    if (v.tilt < 0 && q.ankle) q.ankle = shift(q.ankle, 0, 26);
+    q.legUp = (q.legUp ?? 0) + (v.tilt > 0 ? -10 : 8); q.torsoUp = (q.torsoUp ?? 0) + (v.tilt > 0 ? -8 : 8);
+  }
+  return q;
+}
+
 /** Pose at normalised time u in [0,1) of one repetition. pingpong: frame0 -> last -> frame0; cycle: frames loop. */
-export function poseAt(tpl: Template, u: number): Pose {
+export function poseAt(tpl: Template, u: number, v: Variant = NEUTRAL): Pose {
+  return applyVariant(poseBase(tpl, u, v), v);
+}
+
+function poseBase(tpl: Template, u: number, v: Variant): Pose {
   const f = tpl.frames, n = f.length;
   if (n === 1) return f[0];
   const x = ((u % 1) + 1) % 1;
@@ -102,7 +138,9 @@ export function poseAt(tpl: Template, u: number): Pose {
     const s = x * n, i = Math.floor(s) % n;
     return blend(f[i], f[(i + 1) % n], ease(s - Math.floor(s)));
   }
-  const tri = x < 0.5 ? x * 2 : (1 - x) * 2;               // 0 -> 1 -> 0
+  let tri = x < 0.5 ? x * 2 : (1 - x) * 2;               // 0 -> 1 -> 0
+  if (v.pause > 0) tri = Math.min(1, tri / (1 - v.pause));   // dwell at the hardest point (paused reps)
+  tri *= v.amp;                                            // partial / deep range of motion
   const s = tri * (n - 1), i = Math.min(Math.floor(s), n - 2);
   return blend(f[i], f[i + 1], ease(s - i));
 }

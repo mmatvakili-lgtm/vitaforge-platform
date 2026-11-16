@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { L, TEMPLATES, bounds, ik, motionFor, poseAt, solve } from "./motion.ts";
+import { L, TEMPLATES, bounds, ik, motionFor, poseAt, solve, variantFor } from "./motion.ts";
 
 const codes: [string, string][] = JSON.parse(readFileSync(new URL("./motion.codes.json", import.meta.url), "utf8"));
 const d = (a: readonly [number, number], b: readonly [number, number]) => Math.hypot(a[0] - b[0], a[1] - b[1]);
@@ -43,4 +43,19 @@ test("implements follow the exercise name", () => {
   assert.ok(!motionFor("bodyweight_squat").template.props.includes("dumbbell"));
   assert.ok(motionFor("barbell_back_squat").template.props.includes("barbell-back"));
   assert.ok(motionFor("push_up").template.key === "pushup" && motionFor("knee_push_up").template.key === "pushup_knee");
+});
+
+test("variants: modifiers are recognised and every exercise stays finite and above the floor under its own variant", () => {
+  assert.ok(variantFor("pause_back_squat").pause > 0 && variantFor("bulgarian_split_squat").single && variantFor("wide_push_up").wide);
+  assert.ok(variantFor("half_squat").amp < 1 && variantFor("jump_squat").speed < 1 && variantFor("incline_push_up").tilt === 1);
+  for (const [code, pattern] of codes) {
+    const { template } = motionFor(code, pattern), v = variantFor(code);
+    for (let i = 0; i < 12; i++) {
+      const s = solve(poseAt(template, i / 12, v));
+      for (const p of Object.values(s)) assert.ok(Number.isFinite(p[0]) && Number.isFinite(p[1]), `${code} NaN`);
+      if (!/hang|pull|dip/.test(template.key)) assert.ok(Math.min(s.toeA[1], s.ankleA[1], s.handA[1]) > -30, `${code} sinks`);
+    }
+  }
+  const signatures = new Set(codes.map(([c, p]) => `${motionFor(c, p).template.key}|${JSON.stringify(motionFor(c, p).template.props)}|${JSON.stringify({ ...variantFor(c), tags: 0 })}`));
+  assert.ok(signatures.size >= 90, `only ${signatures.size} distinct motion signatures`);
 });
