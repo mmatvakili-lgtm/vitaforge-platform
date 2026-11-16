@@ -81,13 +81,30 @@ def estimate(p: NutritionProfile, gate: SafetyCore, base: SafetyRequest, cfg: Nu
         return NutritionResult("NEEDS_INFO", ("NUT-BAD-INPUT",), ("activity/goal/sex",), safety_decision_id=d.decision_id)
     if not (10 <= p.age < 120) or not (100 <= p.height_cm <= 250) or not (25 <= p.weight_kg <= 400):
         return NutritionResult("NEEDS_INFO", ("NUT-IMPLAUSIBLE-INPUT",), ("age/height/weight",), safety_decision_id=d.decision_id)
+    # Advisory posture (DEC-ADVISORY, demo/test only): referral conditions become warnings and the maintenance-only estimate is still shown.
+    # Goal deficits/surpluses stay disabled, so nobody is ever pushed toward restriction.
+    advisory = bool(getattr(getattr(gate, "rule_set", None), "advisory_mode", False))
+    adv_reasons: list = []
+
+    def _refer(code):
+        if not advisory:
+            return NutritionResult("REFER", (code,), safety_decision_id=d.decision_id)
+        adv_reasons.append(code)
+        return None
+
     if p.screening["eating_disorder_risk"]:                                   # NUT-R02 (DEC-117)
-        return NutritionResult("REFER", ("NUT-R02",), safety_decision_id=d.decision_id)
+        r = _refer("NUT-R02")
+        if r:
+            return r
     if p.screening["medical_diet_needed"] or p.screening["pregnant_or_lactating"]:   # NUT-R04 / out of scope
-        return NutritionResult("REFER", ("NUT-R04",), safety_decision_id=d.decision_id)
+        r = _refer("NUT-R04")
+        if r:
+            return r
     bmi = p.weight_kg / (p.height_cm / 100) ** 2
     if bmi < cfg.bmi_min_for_targets or bmi > cfg.bmi_max_for_targets or p.age > cfg.age_max_for_targets:
-        return NutritionResult("REFER", ("NUT-OUT-OF-RANGE-GUARD",), safety_decision_id=d.decision_id)
+        r = _refer("NUT-OUT-OF-RANGE-GUARD")
+        if r:
+            return r
 
     sexes = (p.sex,) if p.sex else SEXES
     vals = [_bmr(s, p.weight_kg, p.height_cm, p.age) for s in sexes]
@@ -97,6 +114,8 @@ def estimate(p: NutritionProfile, gate: SafetyCore, base: SafetyRequest, cfg: Nu
     pal = cfg.pal[p.activity]
     tdee = (low * pal, central * pal, high * pal)
     reasons = ["NUT-ESTIMATE"]
+    if adv_reasons:
+        reasons = ["NUT-ADVISORY"] + adv_reasons + reasons
     macros = water = None
     if cfg.show_unverified_ranges or cfg.bounds_reviewed:
         macros = {"protein_g": (round(cfg.protein_g_per_kg[0] * p.weight_kg), round(cfg.protein_g_per_kg[1] * p.weight_kg)),
@@ -109,7 +128,8 @@ def estimate(p: NutritionProfile, gate: SafetyCore, base: SafetyRequest, cfg: Nu
         reasons.append("NUT-R03:goal-targets-disabled")                       # maintenance estimate only
     adj = "enabled" if cfg.bounds_reviewed else "disabled_pending_expert_review"
     unc = "high" if p.sex is None else "medium"
-    return NutritionResult("OK", tuple(reasons), bmr=(round(low), round(central), round(high)),
+    labels = NutritionResult.__dataclass_fields__["labels"].default + (("advisory_see_doctor",) if adv_reasons else ())
+    return NutritionResult("OK", tuple(reasons), labels=labels, bmr=(round(low), round(central), round(high)),
                            tdee=tuple(round(x) for x in tdee), macros=macros, water_ml=water, goal_adjustment=adj, uncertainty=unc,
                            safety_decision_id=d.decision_id)
 

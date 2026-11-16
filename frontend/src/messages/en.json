@@ -983,5 +983,10 @@
  "motion.photoAria": "Reference photos of the start and end position",
  "motion.photoStart": "Start position",
  "motion.photoEnd": "End position",
- "motion.photoCredit": "Photos: free-exercise-db (public dataset; image provenance unverified)"
+ "motion.photoCredit": "Photos: free-exercise-db (public dataset; image provenance unverified)",
+ "nut.reason.NUT-ADVISORY": "Warning: your situation needs a doctor/dietitian review. This is a demo suggestion only; avoid foods that are a problem for you and see a doctor if it is serious.",
+ "nut.label.advisory_see_doctor": "Advisory: see a doctor",
+ "safety.advisory.title": "Important warning; the plan is still shown",
+ "safety.advisory.urgent": "If you have acute symptoms (chest pain, fainting, shortness of breath) see a doctor or emergency care immediately.",
+ "safety.advisory.body": "Your situation needs a doctor's review. Skip or lighten the flagged moves and stop and see a doctor if pain or symptoms worsen."
 }

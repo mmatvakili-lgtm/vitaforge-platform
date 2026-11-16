@@ -25,7 +25,7 @@ def free_port():
 
 def test_frontend_client_full_journey_against_live_http_server():
     port = free_port()
-    srv = subprocess.Popen([sys.executable, "-m", "devserver"], cwd=ROOT / "backend", env={**os.environ, "PORT": str(port)}, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    srv = subprocess.Popen([sys.executable, "-m", "devserver"], cwd=ROOT / "backend", env={**os.environ, "PORT": str(port), "VITAFORGE_ADVISORY": "false"}, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
     try:
         url = f"http://127.0.0.1:{port}/api/v1/health/live"
         for _ in range(60):

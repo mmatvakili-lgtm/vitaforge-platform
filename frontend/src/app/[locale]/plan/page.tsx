@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import type { WorkoutPlan } from "../../../lib/api/generated.ts";
 import { currentPlanView, decidePlanView, type PlanView } from "../../../lib/plan-view.ts";
+import { safetyReason } from "../../../lib/i18n.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Loading } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
@@ -156,6 +157,14 @@ export default function PlanPage() {
       {error?.code === "precondition_required" && <ButtonLink href={`/${locale}/onboarding`} secondary>{t("nav.onboarding")}</ButtonLink>}
       {!view && <Loading />}
       {view?.kind === "empty" && <p>{t("plan.empty")}</p>}
+      {view?.kind === "plan" && view.decision?.reasons?.some((r) => r.code === "SAF-R021") && (
+        <Alert kind="warning">
+          <strong>{t("safety.advisory.title")}</strong>
+          <p>{t("safety.advisory.body")}</p>
+          {view.decision.referral?.urgency === "urgent" && <p>{t("safety.advisory.urgent")}</p>}
+          <ul>{(view.decision.reasons ?? []).filter((r) => r.code && r.code !== "SAF-R021").map((r) => <li key={r.code}>{safetyReason(locale, r.code!)}</li>)}</ul>
+        </Alert>
+      )}
       {view?.kind === "plan" && <PlanBody plan={view.plan} modified={view.modified} onSubstitute={substitute} />}
       {noAlt && <Alert kind="warning">{t("error.no_valid_alternative")}</Alert>}
       {notice && <Alert kind="success">{t("plan.substituted")}</Alert>}

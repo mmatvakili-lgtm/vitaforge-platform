@@ -32,3 +32,13 @@ def test_debug_defaults_to_sample_content_but_strict_can_be_forced():
     assert load_config({**OK, "DJANGO_DEBUG": "true"})["dev_content"] is True
     assert load_config({**OK, "DJANGO_DEBUG": "true", "VITAFORGE_DEV_CONTENT": "false"})["dev_content"] is False
     assert load_config({**OK, "DJANGO_DEBUG": "false"})["dev_content"] is False
+
+
+def test_advisory_defaults_on_with_demo_content_and_is_refused_in_production():
+    import pytest
+    from config.env import ConfigError, load_config
+    base = dict(OK)
+    assert load_config({**base, "DJANGO_DEBUG": "true"})["advisory"] is True
+    assert load_config({**base, "DJANGO_DEBUG": "true", "VITAFORGE_ADVISORY": "false"})["advisory"] is False
+    with pytest.raises(ConfigError):
+        load_config({**base, "VITAFORGE_ADVISORY": "true"})

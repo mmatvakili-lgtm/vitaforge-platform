@@ -23,6 +23,7 @@ TEXT: Dict[str, Dict[str, str]] = {
     "SAF-R018": {"fa": "قاعده ایمنی نامعتبر؛ برای ایمنی متوقف شد.", "en": "Invalid safety rule; stopped for safety."},
     "SAF-R019": {"fa": "تجهیزات لازم برای این حرکت در اختیار شما نیست.", "en": "You do not have the equipment this exercise needs."},
     "SAF-R020": {"fa": "سطح دشواری حرکت بالاتر از سطح فعلی شماست.", "en": "Exercise difficulty is above your current level."},
+    "SAF-R021": {"fa": "هشدار: وضعیت شما نیاز به بررسی پزشک دارد. برنامه‌ی زیر فقط پیشنهاد آزمایشی است؛ حرکت‌های علامت‌دار را انجام ندهید و اگر درد/علائم شدید است حتماً به پزشک مراجعه کنید.", "en": "Warning: your situation needs a doctor's review. The plan below is a demo suggestion only; skip flagged moves and see a doctor if symptoms are significant."},
     "SAF-R100": {"fa": "علامت هشدار گزارش شد؛ لطفاً قبل از تمرین با متخصص/پزشک مشورت کن.", "en": "A warning sign was reported; please consult a professional before training."},
     "SAF-R101": {"fa": "وضعیت ثبت‌شده شما نیاز به ارجاع فوری دارد.", "en": "Your recorded status needs urgent referral."},
     "SAF-R102": {"fa": "درد در حال بدتر شدن است؛ ارجاع به متخصص.", "en": "Pain is getting worse; referral advised."},

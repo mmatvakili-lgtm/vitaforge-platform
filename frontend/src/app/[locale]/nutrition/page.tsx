@@ -27,6 +27,7 @@ function EstimateCard({ e }: { e: NutritionEstimate }) {
   return (
     <Card title={t("nut.estimate.title")}>
       <Labels labels={e.labels ?? []} />
+      {(e.reasons ?? []).includes("NUT-ADVISORY") && <Alert kind="warning"><p>{t("nut.reason.NUT-ADVISORY")}</p></Alert>}
       {tdee && <p><strong>{t("nut.estimate.tdee")}:</strong> {t("nut.estimate.range", { low: n(tdee[0]), high: n(tdee[2]) })} <span className="muted">({n(tdee[1])})</span></p>}
       {Object.keys(macros).length > 0 && (<><h2>{t("nut.estimate.macros")}</h2><ul className="plain">{Object.entries(macros).map(([k, [a, b]]) => (
         <li key={k}>{t(`nutrient.${k}`)}: {n(a)}–{n(b)}</li>))}</ul></>)}
@@ -71,6 +72,7 @@ function PlanView({ res, wantedBudget }: { res: MealPlanResponse; wantedBudget: 
   return (
     <div>
       <Labels labels={res.labels} />
+      {res.reasons.includes("NUT-ADVISORY") && <Alert kind="warning"><p>{reasonText(locale, "NUT-ADVISORY")}</p></Alert>}
       {(res.labels.includes("unreviewed_food_data") || res.labels.includes("test_fixture_data")) && <Alert kind="warning"><strong>{t("nut.unreviewed.title")}</strong><p>{t("nut.unreviewed.body")}</p></Alert>}
       <Alert kind={bs === "met" ? "success" : bs === "none" ? "info" : "warning"}>
         <p>{t(`nut.budget.${bs}`)}</p>
