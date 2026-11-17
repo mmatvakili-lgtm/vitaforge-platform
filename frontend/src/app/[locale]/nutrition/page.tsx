@@ -101,8 +101,11 @@ function PlanView({ res, wantedBudget }: { res: MealPlanResponse; wantedBudget: 
           <h2>{t("nut.shop.title")}</h2>
           {res.shopping.length === 0 ? <p className="muted">{t("nut.shop.empty")}</p> : (
             <ul className="shopping">{res.shopping.map((s) => (
-              <li key={s.food_id}><strong>{s.name_en}</strong> — {t("nut.shop.grams", { n: s.grams ?? 0 })}
-                {s.in_pantry ? <span className="tag">{t("nut.shop.pantry")}</span> : <span className="muted"> · {s.cost != null ? t("nut.shop.cost", { n: s.cost }) : t("nut.shop.noPrice")}</span>}</li>))}</ul>
+              <li key={s.food_id}>
+                <span className="sh-name">{(locale === "fa" ? s.name_fa : null) ?? <bdi dir="ltr">{s.name_en}</bdi>}</span>
+                <span className="sh-qty">{t("nut.shop.grams", { n: n(s.grams ?? 0) })}</span>
+                {s.in_pantry ? <span className="tag">{t("nut.shop.pantry")}</span> : <span className="sh-cost muted">{s.cost != null ? t("nut.shop.cost", { n: s.cost }) : t("nut.shop.noPrice")}</span>}
+              </li>))}</ul>
           )}
         </section>
       )}

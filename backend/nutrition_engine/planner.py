@@ -81,6 +81,7 @@ class ShoppingItem:
     grams: float
     cost: Optional[float]
     in_pantry: bool
+    name_fa: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -252,7 +253,7 @@ def plan_week(req: MealPlanRequest, nutrition: NutritionResult, foods: Mapping[s
     shopping = []
     for fid in sorted(grams):
         c = None if req.weekly_budget is None or fid in pantry else prices.cost(fid, grams[fid], req.region, req.currency, req.today)
-        shopping.append(ShoppingItem(fid, foods[fid].name_en, round(grams[fid]), None if c is None else round(c, 2), fid in pantry))
+        shopping.append(ShoppingItem(fid, foods[fid].name_en, round(grams[fid]), None if c is None else round(c, 2), fid in pantry, foods[fid].name_fa))
 
     reasons = ["NUT-PLAN-ESTIMATE"]
     labels = ["estimate", "not_medical_advice", "maintenance_energy_only"]

@@ -2115,6 +2115,10 @@ components:
           type: string
         name_en:
           type: string
+        name_fa:
+          type:
+          - string
+          - 'null'
         grams:
           type: number
         cost:

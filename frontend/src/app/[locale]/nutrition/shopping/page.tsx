@@ -117,7 +117,7 @@ export default function ShoppingPage() {
                 const id = s.food_id ?? ""; const q = priceOf(id);
                 return (
                   <li key={id}>
-                    <label className="check"><input type="checkbox" checked={live.includes(id)} onChange={() => tick(id)} /> {s.name_en} — {n(Math.round(s.grams ?? 0))} g{s.in_pantry ? ` (${t("nut.shop.pantry")})` : ""}</label>
+                    <label className="check"><input type="checkbox" checked={live.includes(id)} onChange={() => tick(id)} /> {(locale === "fa" ? s.name_fa : null) ?? <bdi dir="ltr">{s.name_en}</bdi>} — {t("nut.shop.grams", { n: n(Math.round(s.grams ?? 0)) })}{s.in_pantry ? ` (${t("nut.shop.pantry")})` : ""}</label>
                     {" "}<span className="muted">{s.cost != null ? `${t("nut.shop.cost")}: ${n(Math.round(s.cost))}` : t("nut.shop.noPrice")}</span>
                     <div className="row">
                       <input aria-label={t("shop.pricePerKg")} inputMode="decimal" dir="ltr" placeholder={q ? `${q.price_per_kg} ${q.currency}` : t("shop.pricePerKg")} value={priceDraft[id] ?? ""} onChange={(e) => setPriceDraft({ ...priceDraft, [id]: e.target.value })} />

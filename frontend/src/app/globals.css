@@ -57,7 +57,11 @@ progress { inline-size: 100%; block-size: .5rem; }
 .meal h3 { margin-block: 0 .2rem; }
 .macros { font-size: .95rem; margin-block: .2rem; }
 .allergens { font-size: .9rem; margin-block: .2rem; }
-.shopping li { padding-block: .25rem; border-block-end: 1px dashed var(--line); }
+.shopping { list-style: none; padding: 0; display: grid; gap: .4rem; }
+.shopping li { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .75rem; padding: .6rem .8rem; border: 1px solid var(--line); border-radius: .6rem; background: color-mix(in srgb, var(--card) 70%, transparent); }
+.shopping .sh-name { flex: 1 1 10rem; font-weight: 600; }
+.shopping .sh-qty { font-variant-numeric: tabular-nums; padding: .1rem .55rem; border-radius: 999px; border: 1px solid var(--line); }
+.shopping .sh-cost { margin-inline-start: auto; font-size: .9em; }
 .notes { margin-block: .5rem; }
 
 .bars { list-style: none; display: flex; align-items: flex-end; gap: .4rem; block-size: 9rem; padding: 0; margin: .5rem 0; }
@@ -356,3 +360,7 @@ fieldset { border: 1px solid color-mix(in srgb, var(--line) 80%, transparent); b
 @media (prefers-reduced-motion: reduce) { .sel-list { animation: none; } .choice button { transition: none; } }
 .an-video { justify-self: start; display: inline-flex; align-items: center; gap: .4rem; min-block-size: 40px; padding: .2rem .9rem; border-radius: 99px; border: 1px solid var(--line); color: var(--accent); text-decoration: none; font-weight: 500; }
 .an-video:hover { border-color: var(--accent); }
+
+/* Secondary buttons: the global gradient rule above is more specific, so force a readable outlined look. */
+button.btn-secondary, a.btn.btn-secondary { background: color-mix(in srgb, var(--accent) 10%, transparent) !important; background-image: none !important; color: var(--fg) !important; border: 1px solid var(--accent) !important; box-shadow: none !important; }
+button.btn-secondary:hover:not(:disabled), a.btn.btn-secondary:hover { background: color-mix(in srgb, var(--accent) 22%, transparent) !important; }
