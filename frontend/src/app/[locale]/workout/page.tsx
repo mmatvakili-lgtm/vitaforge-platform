@@ -7,6 +7,7 @@ import type { SessionSummary, WorkoutDay, WorkoutSession } from "../../../lib/ap
 import { PAIN_REGIONS, buildSetLog, finishRequest, isLogged, newUuid, nextSet, plannedSets, progress, skipSetLog, type PlannedSet, type SetDraft } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 import { Progression } from "../../../components/Progression.tsx";
 import { RestTimer } from "../../../components/RestTimer.tsx";
 import { Body3D } from "../../../components/Body3D.tsx";
@@ -161,10 +162,10 @@ export default function WorkoutPage() {
               <label className="check"><input type="checkbox" checked={pain} onChange={(e) => setPain(e.target.checked)} /> {t("wk.pain")}</label>
               {pain && (
                 <Field id="pain-region" label={t("wk.painRegion")}>
-                  <select id="pain-region" value={painRegion} onChange={(e) => setPainRegion(e.target.value)}>
+                  <Select id="pain-region" value={painRegion} onChange={(e) => setPainRegion(e.target.value)}>
                     <option value="">—</option>
                     {PAIN_REGIONS.map((r) => <option key={r} value={r}>{t(`region.${r}`)}</option>)}
-                  </select>
+                  </Select>
                 </Field>
               )}
               {pain && <Alert kind="warning">{t("wk.painWarn")}</Alert>}

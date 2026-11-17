@@ -8,6 +8,7 @@ import { buildSetLog, finishRequest, newUuid, plannedSets } from "../src/lib/wor
 import { libraryQuery, NO_FILTERS } from "../src/lib/exercises.ts";
 import { SCREENING_QUESTIONS, SCREENING_VERSION } from "../src/lib/onboarding.ts";
 
+const ADVISORY = process.env.E2E_ADVISORY === "1";   // server posture: advisory (warn, still give plans) vs strict (stop and refer)
 const base = process.argv[2] ?? "http://127.0.0.1:8000/api/v1";
 const jar = new Map<string, string>();
 const fetchImpl = (async (url: string, init: RequestInit) => {
@@ -132,7 +133,10 @@ ok("nutrition estimate GET", await api.call("API-NUT-002"));
 const mp = ok("meal plan", await api.call("API-NUT-003", { body: { days: 7 } }));
 const mv = mealView(mp);
 console.log("    meal view:", mv.kind, mp.status);
-if (mv.kind === "plan") throw new Error("meal plan shown without verified content");
+if (process.env.E2E_DUMP) console.log(JSON.stringify(mp, null, 1).slice(0, 6000));
+if (mv.kind !== "plan") throw new Error("demo nutrition content must yield a meal plan, got " + mv.kind);
+if (!(mp.labels ?? []).includes("unreviewed_food_data")) throw new Error("a plan from unreviewed foods must be labelled");
+if (!(mp.days?.length)) throw new Error("meal plan has no days");
 // Batch B: progression, saved allergens, food browsing, meal/water log, prices, shopping state (real client against the real API)
 const prog = ok("progression", await api.call("API-WO-005"));
 console.log("    progression items:", prog.items.length, prog.items.slice(0, 1).map((i) => i.action).join(","));
@@ -169,7 +173,9 @@ if (ok("meals after delete", await api.call("API-NUT-005", { query: {} })).meals
 const est2 = ok("nutrition profile (REFER)", await api.call("API-NUT-001", { body: buildProfileRequest({ height_cm: 175, weight_kg: 70, activity: "moderate", screening: { ...sc, medical_diet_needed: true } }) }));
 const mp2 = ok("meal plan after REFER", await api.call("API-NUT-003", { body: {} }));
 console.log("    after refer:", est2.status, mealView(mp2).kind);
-if (mealView(mp2).kind === "plan") throw new Error("meal plan shown for a referred user");
+if (ADVISORY) {
+  if (mealView(mp2).kind !== "plan" || !mp2.reasons.includes("NUT-ADVISORY")) throw new Error("advisory posture must give a plan WITH the doctor warning");
+} else if (mealView(mp2).kind === "plan") throw new Error("meal plan shown for a referred user");
 
 // negative path: a positive red flag must never yield a plan
 const email2 = `e2e2${Date.now()}@example.com`;
@@ -184,7 +190,9 @@ ok("#2 complete onboarding", await api.call("API-ONB-003"));
 const g2 = ok("#2 generate", await api.call("API-WO-001", { body: {} }));
 const v2 = decidePlanView(g2.decision, g2.plan);
 console.log("    decision:", bad.status, "->", g2.decision.status, "view:", v2.kind);
-if (v2.kind === "plan") throw new Error("SAFETY VIOLATION: plan shown despite red flag");
+if (ADVISORY) {
+  if (v2.kind !== "plan" || !(g2.decision.reasons ?? []).some((r) => r.code === "SAF-R021")) throw new Error("advisory posture must give a plan WITH the warning");
+} else if (v2.kind === "plan") throw new Error("SAFETY VIOLATION: plan shown despite red flag");
 // Last before logout on purpose: an active pain report changes what the Safety Core approves for the plan.
 const pain = ok("health: pain log", await api.call("API-HEALTH-005", { body: { region: "knee", intensity: 6, timing: "general" } }));
 if (!pain.decision) throw new Error("a pain log must return the Safety Core decision");

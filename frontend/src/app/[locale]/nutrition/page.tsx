@@ -10,6 +10,7 @@ import {
 } from "../../../lib/nutrition.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 
 const num = (s: string) => (s.trim() === "" ? undefined : Number(normalizeDigits(s.trim())));
 
@@ -78,6 +79,7 @@ function PlanView({ res, wantedBudget }: { res: MealPlanResponse; wantedBudget: 
         <p>{t(`nut.budget.${bs}`)}</p>
         {bs !== "none" && res.total_cost != null && <p>{t("nut.budget.total", { n: res.total_cost })}</p>}
         {bs === "unverifiable" && (res.unpriced_food_ids ?? []).length > 0 && <p>{t("nut.budget.unpriced", { n: res.unpriced_food_ids!.length })}</p>}
+        {bs === "unverifiable" && <p><ButtonLink href={`/${locale}/nutrition/shopping`}>{t("nut.budget.enterPrices")}</ButtonLink></p>}
       </Alert>
       <ul className="plain notes">{res.reasons.filter((r) => r !== "NUT-PLAN-ESTIMATE" || true).map((r) => <li key={r} className="muted">{reasonText(locale, r)}</li>)}</ul>
       <div role="tablist" aria-label={t("nut.view.week")} className="tabs">
@@ -192,10 +194,10 @@ export default function NutritionPage() {
             <Field id="height" label={t("nut.height")} error={fe.height_cm ? t("error.validation_failed") : undefined}><input id="height" inputMode="decimal" dir="ltr" value={height} onChange={(e) => setHeight(e.target.value)} /></Field>
             <Field id="weight" label={t("nut.weight")} error={fe.weight_kg ? t("error.validation_failed") : undefined}><input id="weight" inputMode="decimal" dir="ltr" value={weight} onChange={(e) => setWeight(e.target.value)} /></Field>
             <Field id="activity" label={t("nut.activity")} error={fe.activity ? t("error.validation_failed") : undefined}>
-              <select id="activity" value={activity} onChange={(e) => setActivity(e.target.value)}><option value="" />{ACTIVITY.map((a) => <option key={a} value={a}>{t(`activity.${a}`)}</option>)}</select>
+              <Select id="activity" value={activity} onChange={(e) => setActivity(e.target.value)}><option value="" />{ACTIVITY.map((a) => <option key={a} value={a}>{t(`activity.${a}`)}</option>)}</Select>
             </Field>
             <Field id="sex" label={t("nut.sex")}>
-              <select id="sex" value={sex} onChange={(e) => setSex(e.target.value)}><option value="">{t("sex.unset")}</option><option value="male">{t("sex.male")}</option><option value="female">{t("sex.female")}</option></select>
+              <Select id="sex" value={sex} onChange={(e) => setSex(e.target.value)}><option value="">{t("sex.unset")}</option><option value="male">{t("sex.male")}</option><option value="female">{t("sex.female")}</option></Select>
             </Field>
             <h2>{t("nut.screen.title")}</h2>
             {SCREEN_KEYS.map((k) => (
@@ -229,7 +231,7 @@ export default function NutritionPage() {
       {eligible && (
         <Card title={t("nut.prefs.title")}>
           <form onSubmit={generate} noValidate>
-            <Field id="days" label={t("nut.days")}><select id="days" value={days} onChange={(e) => setDays(e.target.value)}>{[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d}</option>)}</select></Field>
+            <Field id="days" label={t("nut.days")}><Select id="days" value={days} onChange={(e) => setDays(e.target.value)}>{[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d}</option>)}</Select></Field>
             <fieldset><legend>{t("nut.allergens")}</legend><p className="hint">{t("nut.allergens.hint")}</p>
               <div className="checks">{ALLERGENS.map((a) => <label key={a} className="check"><input type="checkbox" checked={allergens.includes(a)} onChange={(e) => tog(allergens, setAllergens, a, e.target.checked)} />{t(`allergen.${a}`)}</label>)}</div></fieldset>
             <fieldset><legend>{t("nut.diet")}</legend>

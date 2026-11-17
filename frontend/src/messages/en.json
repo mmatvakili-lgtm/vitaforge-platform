@@ -988,5 +988,7 @@
  "nut.label.advisory_see_doctor": "Advisory: see a doctor",
  "safety.advisory.title": "Important warning; the plan is still shown",
  "safety.advisory.urgent": "If you have acute symptoms (chest pain, fainting, shortness of breath) see a doctor or emergency care immediately.",
- "safety.advisory.body": "Your situation needs a doctor's review. Skip or lighten the flagged moves and stop and see a doctor if pain or symptoms worsen."
+ "safety.advisory.body": "Your situation needs a doctor's review. Skip or lighten the flagged moves and stop and see a doctor if pain or symptoms worsen.",
+ "nut.budget.enterPrices": "Enter prices in the shopping list",
+ "motion.video": "Watch a form video for this move (YouTube search, new tab)"
 }

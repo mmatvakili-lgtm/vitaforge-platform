@@ -5,6 +5,7 @@ import type { ApiError } from "../../../lib/api/client.ts";
 import type { ConsentDocumentList, DataRequest, Profile, SessionList, ProfileUpdate, TelegramStatus } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 
 type Doc = NonNullable<ConsentDocumentList[number]>;
 
@@ -100,11 +101,11 @@ export default function ProfilePage() {
         <ApiErrorView error={error} />
         <form onSubmit={save} noValidate>
           <Field id="dn" label={t("profile.displayName")}><input id="dn" maxLength={60} value={p.display_name ?? ""} onChange={(e) => set("display_name", e.target.value)} /></Field>
-          <Field id="pl" label={t("profile.language")}><select id="pl" value={p.language ?? "fa"} onChange={(e) => set("language", e.target.value as Profile["language"])}><option value="fa">{t("language.fa")}</option><option value="en">{t("language.en")}</option></select></Field>
-          <Field id="pu" label={t("profile.units")}><select id="pu" value={p.unit_system ?? "metric"} onChange={(e) => set("unit_system", e.target.value as Profile["unit_system"])}><option value="metric">{t("profile.units.metric")}</option><option value="imperial">{t("profile.units.imperial")}</option></select></Field>
-          <Field id="pc" label={t("profile.calendar")}><select id="pc" value={p.calendar ?? "jalali"} onChange={(e) => set("calendar", e.target.value as Profile["calendar"])}><option value="jalali">{t("profile.calendar.jalali")}</option><option value="gregorian">{t("profile.calendar.gregorian")}</option></select></Field>
-          <Field id="pd" label={t("profile.digits")}><select id="pd" value={p.digit_style ?? "persian"} onChange={(e) => set("digit_style", e.target.value as Profile["digit_style"])}><option value="persian">{t("profile.digits.persian")}</option><option value="latin">{t("profile.digits.latin")}</option></select></Field>
-          <Field id="ps" label={t("nut.sex")}><select id="ps" value={p.sex ?? "unspecified"} onChange={(e) => set("sex", e.target.value as Profile["sex"])}><option value="unspecified">{t("sex.unset")}</option><option value="male">{t("sex.male")}</option><option value="female">{t("sex.female")}</option></select></Field>
+          <Field id="pl" label={t("profile.language")}><Select id="pl" value={p.language ?? "fa"} onChange={(e) => set("language", e.target.value as Profile["language"])}><option value="fa">{t("language.fa")}</option><option value="en">{t("language.en")}</option></Select></Field>
+          <Field id="pu" label={t("profile.units")}><Select id="pu" value={p.unit_system ?? "metric"} onChange={(e) => set("unit_system", e.target.value as Profile["unit_system"])}><option value="metric">{t("profile.units.metric")}</option><option value="imperial">{t("profile.units.imperial")}</option></Select></Field>
+          <Field id="pc" label={t("profile.calendar")}><Select id="pc" value={p.calendar ?? "jalali"} onChange={(e) => set("calendar", e.target.value as Profile["calendar"])}><option value="jalali">{t("profile.calendar.jalali")}</option><option value="gregorian">{t("profile.calendar.gregorian")}</option></Select></Field>
+          <Field id="pd" label={t("profile.digits")}><Select id="pd" value={p.digit_style ?? "persian"} onChange={(e) => set("digit_style", e.target.value as Profile["digit_style"])}><option value="persian">{t("profile.digits.persian")}</option><option value="latin">{t("profile.digits.latin")}</option></Select></Field>
+          <Field id="ps" label={t("nut.sex")}><Select id="ps" value={p.sex ?? "unspecified"} onChange={(e) => set("sex", e.target.value as Profile["sex"])}><option value="unspecified">{t("sex.unset")}</option><option value="male">{t("sex.male")}</option><option value="female">{t("sex.female")}</option></Select></Field>
           <Button type="submit" busy={busy}>{t("profile.save")}</Button>
           {saved && <Alert kind="success">{t("profile.saved")}</Alert>}
         </form>

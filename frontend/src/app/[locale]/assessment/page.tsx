@@ -8,6 +8,7 @@ import { buildAnswers, DOMAIN_ORDER, STEPS, type Draft, type FieldSpec, type Pro
 import { PAIN_REGIONS } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 
 export default function AssessmentPage() {
   const { locale, t, n } = useT();
@@ -53,14 +54,14 @@ export default function AssessmentPage() {
         {f.kind === "int" ? (
           <input id={f.key} inputMode="numeric" dir="ltr" autoComplete="off" value={v} onChange={(x) => set(f.key, x.target.value)} placeholder={f.unit ? t(`assess.unit.${f.unit}`) : undefined} />
         ) : f.kind === "enum" ? (
-          <select id={f.key} value={v} onChange={(x) => set(f.key, x.target.value)}>
+          <Select id={f.key} value={v} onChange={(x) => set(f.key, x.target.value)}>
             <option value="">{t("assess.skip")}</option>
             {f.options.map((o) => <option key={o} value={o}>{t(`assess.o.${f.key}.${o}`)}</option>)}
-          </select>
+          </Select>
         ) : (
-          <select id={f.key} value={v} onChange={(x) => set(f.key, x.target.value)}>
+          <Select id={f.key} value={v} onChange={(x) => set(f.key, x.target.value)}>
             <option value="">{t("assess.skip")}</option><option value="yes">{t("assess.yes")}</option><option value="no">{t("assess.no")}</option>
-          </select>
+          </Select>
         )}
       </Field>
     );

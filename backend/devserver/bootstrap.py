@@ -15,24 +15,50 @@ def _starter() -> tuple:
     return tuple(load_starter())
 
 
+_SEED_LOCK = __import__("threading").Lock()   # Django serves requests on threads: only one may seed an empty database, the others wait and then find it seeded
+
+
+def _seed_demo(store, rows) -> None:
+    """Seed the demo catalogue and the demo nutrition content once, never overwriting existing state. The common case (already seeded) is two
+    cheap point lookups per collection with NO write transaction; only a fresh database takes the lock and a transaction, so concurrent first
+    requests queue instead of colliding on the database write lock."""
+    from nutrition_engine.demo_content import demo_content
+    dfoods, drecipes = demo_content()
+    fk, rk = list(dfoods), [r.id for r in drecipes]
+    foods, recipes = store.__dict__.setdefault("foods", {}), store.__dict__.setdefault("recipes", {})
+
+    def missing() -> bool:
+        return bool((rows and (rows[0].id not in store.catalog or rows[-1].id not in store.catalog))
+                    or fk[0] not in foods or fk[-1] not in foods or rk[0] not in recipes or rk[-1] not in recipes)
+
+    if not missing():
+        return
+    import contextlib
+    with _SEED_LOCK:
+        tx = getattr(store, "transaction", None)
+        with (tx() if tx else contextlib.nullcontext()):
+            if not missing():                       # another thread seeded while we waited
+                return
+            have = set(store.catalog) if len(store.catalog) else set()
+            fresh = {r.id: to_catalog_entry(r, dev_experimental=True) for r in rows if r.id not in have}
+            for k, v in fresh.items():
+                store.catalog[k] = v
+            if fresh:
+                store.relations = relations(rows)
+            for k, v in dfoods.items():
+                if k not in foods:
+                    foods[k] = v
+            for r in drecipes:
+                if r.id not in recipes:
+                    recipes[r.id] = r
+
+
 def build_app(store, dev_content: bool = False, dev_mode: bool = False, mail=None, telegram=None, content_mode: str = "reviewed", advisory: bool = False) -> App:
     """`dev_content=True` loads the EXPERIMENTAL sample catalogue and lets the Safety Core accept unreviewed content (LOCAL DEMO ONLY).
     Default (False) is the production posture: no content is published, so plan generation is refused by the Safety Core (SAF-R013)."""
     rows = list(_starter())
     if dev_content:
-        tx = getattr(store, "transaction", None)
-        import contextlib
-        with (tx() if tx else contextlib.nullcontext()):
-            # Seed once and never overwrite state already in the database. Two point lookups (first/last bank row) replace the former
-            # `not store.catalog` which scanned and decoded every catalogue row on EVERY request; rows added by later bank batches are
-            # appended without touching existing ones.
-            if rows and (rows[0].id not in store.catalog or rows[-1].id not in store.catalog):
-                have = set(store.catalog) if len(store.catalog) else set()
-                fresh = {r.id: to_catalog_entry(r, dev_experimental=True) for r in rows if r.id not in have}
-                for k, v in fresh.items():
-                    store.catalog[k] = v
-                if fresh:
-                    store.relations = relations(rows)
+        _seed_demo(store, rows)
     rs = RuleSet(version=0, status=("ai-curated-demo" if content_mode == "ai_curated_demo" else "dev-demo") if dev_content else "production", screening_questions=SCREENING, allow_unreviewed_content=dev_content, advisory_mode=bool(advisory and dev_content))
     app = App(store, rs, dev_mode=dev_mode, mail=mail, telegram=telegram, content_mode=content_mode if dev_content else "reviewed")
     app.layer.kb.records = rows

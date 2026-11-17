@@ -75,3 +75,16 @@ def load_config(env: Mapping[str, str]) -> dict:
         if "*" in cfg["allowed_hosts"]:
             raise ConfigError("wildcard ALLOWED_HOSTS forbidden in production")
     return cfg
+
+
+def tune_database(db: dict) -> dict:
+    """SQLite (local/demo runs) under Django's threaded server: the default deferred transactions deadlock into "database is locked" (HTTP 500)
+    when two requests write at once (e.g. the first page load seeding the catalogue while other calls arrive). IMMEDIATE transactions make
+    writers queue instead, WAL lets readers proceed, and a long busy timeout absorbs bursts. PostgreSQL configs are returned unchanged."""
+    if "sqlite" not in str(db.get("ENGINE", "")):
+        return db
+    opts = dict(db.get("OPTIONS") or {})
+    opts.setdefault("transaction_mode", "IMMEDIATE")
+    opts.setdefault("timeout", 30)
+    opts.setdefault("init_command", "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;")
+    return {**db, "OPTIONS": opts}

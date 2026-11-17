@@ -34,7 +34,7 @@ export function Field({ id, label, hint, error, children }: { id: string; label:
   }
   return (
     <div className="field">
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id} id={`${id}-lbl`}>{label}</label>
       {control}
       {hint && <p className="hint" id={`${id}-hint`}>{hint}</p>}
       {error && <p className="field-error" id={`${id}-err`} role="alert">{error}</p>}

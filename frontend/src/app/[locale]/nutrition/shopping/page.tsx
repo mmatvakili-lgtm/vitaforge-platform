@@ -8,6 +8,7 @@ import { pruneChecked, toggleChecked, validatePrice } from "../../../../lib/nutr
 import { normalizeDigits } from "../../../../lib/i18n.ts";
 import { useApi, useT } from "../../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../../components/ui.tsx";
+import { Select } from "../../../../components/Select.tsx";
 
 export default function ShoppingPage() {
   const { locale, t, n } = useT();
@@ -95,7 +96,7 @@ export default function ShoppingPage() {
       <Card title={t("nut.shop.title")}>
         <ApiErrorView error={error} />
         <form onSubmit={submit} noValidate>
-          <Field id="sd" label={t("nut.days")}><select id="sd" value={days} onChange={(e) => setDays(e.target.value)}>{[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d}</option>)}</select></Field>
+          <Field id="sd" label={t("nut.days")}><Select id="sd" value={days} onChange={(e) => setDays(e.target.value)}>{[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d}</option>)}</Select></Field>
           <p className="hint">{t("nut.budget.hint")}</p>
           <div className="row">
             <Field id="sb" label={t("nut.budget")} error={fe.weekly_budget ? t("error.validation_failed") : undefined}><input id="sb" inputMode="decimal" dir="ltr" value={budget} onChange={(e) => setBudget(e.target.value)} /></Field>
