@@ -149,7 +149,7 @@ function loadFigure(): Promise<FigApi> {
   figPromise ??= new Promise<FigApi>((resolve, reject) => {
     window.addEventListener("vffigure:ready", () => (window.VFFigure ? resolve(window.VFFigure) : reject(new Error("figure missing"))), { once: true });
     const el = document.createElement("script");
-    el.type = "module"; el.src = "/vendor/figure-viewer.js"; el.onerror = () => reject(new Error("figure script"));
+    el.type = "module"; el.src = "/vendor/figure-viewer.js?v=5"; el.onerror = () => reject(new Error("figure script"));
     document.head.appendChild(el);
   });
   return figPromise;
@@ -196,13 +196,15 @@ function ExerciseAnim3D({ code, pattern, muscles, height = 260 }: { code: string
   useEffect(() => {
     const v = fig.current;
     if (!v || phase !== "ready") return;
-    const b = bounds(template.frames);
-    const hang = template.props.includes("bar-hang");
-    const bar = template.frames.find((f) => f.handA)?.handA?.[1] ?? 188;
-    v.frame(b.minX, b.maxX, hang ? b.minY : Math.min(0, b.minY), b.maxY, true, hang, bar);
-    v.setProps(clip ? [] : template.props);
-    if (!clip && template.box) v.calibrateBox(solve(template.frames[template.box.frame]), template.box.feet); else v.setBox(null);
-    v.setTargets(regions);
+    try {
+      const b = bounds(template.frames);
+      const hang = template.props.includes("bar-hang");
+      const bar = template.frames.find((f) => f.handA)?.handA?.[1] ?? 188;
+      v.frame(b.minX, b.maxX, hang ? b.minY : Math.min(0, b.minY), b.maxY, true, hang, bar);
+      v.setProps(clip ? [] : template.props);
+      if (!clip && template.box && typeof v.calibrateBox === "function") v.calibrateBox(solve(template.frames[template.box.frame]), template.box.feet); else v.setBox(null);
+      v.setTargets(regions);
+    } catch { setPhase("fallback"); return; }
     if (clip && v.playClip(clip)) return;
     v.stopClip();
     let acc = 0, prev: number | null = null, last = 0, raf = 0;
@@ -214,7 +216,7 @@ function ExerciseAnim3D({ code, pattern, muscles, height = 260 }: { code: string
       acc += dt;
       if (now - last < 24) return;
       last = now;
-      v.setSolved(solve(poseAt(template, ((acc / 1000) / (template.period * variant.speed)) % 1, variant)));
+      try { v.setSolved(solve(poseAt(template, ((acc / 1000) / (template.period * variant.speed)) % 1, variant))); } catch { cancelAnimationFrame(raf); setPhase("fallback"); }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
