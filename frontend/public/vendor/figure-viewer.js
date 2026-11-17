@@ -178,6 +178,17 @@ function create(canvas, options = {}) {
       aim(`lowerarm_${s}`, `hand_${s}`, dirOf(elbow, hand));
     };
     arm(n, sk.elbowA, sk.handA); arm(f, sk.elbowB, sk.handB);
+    // fingers: closed around a held prop (dumbbell, bar, handle, cable), softly curled otherwise
+    const grip = S.grip ?? 0.3;
+    if (grip > 0) {
+      const FING = { index: [1.15, 1.5, 0.9], middle: [1.2, 1.55, 0.9], ring: [1.25, 1.55, 0.9], pinky: [1.3, 1.5, 0.85] };
+      for (const sd of [n, f]) {
+        for (const [fg, ang] of Object.entries(FING)) ang.forEach((a, k) => { const b = bn(`${fg}_0${k + 1}_${sd}`); if (b) b.rotateZ(GRIP_SIGN * a * grip); });
+        const t1 = bn(`thumb_02_${sd}`), t2 = bn(`thumb_03_${sd}`);
+        if (t1) t1.rotateZ(GRIP_SIGN * 0.7 * grip); if (t2) t2.rotateZ(GRIP_SIGN * 0.8 * grip);
+        bn(`hand_${sd}`)?.updateMatrixWorld(true);
+      }
+    }
     // head follows the neck direction
     aim("neck_01", "head", dirOf(sk.neck, sk.head));
     S.model.updateMatrixWorld(true);
@@ -201,7 +212,9 @@ function create(canvas, options = {}) {
   function clearProps() { while (S.props.children.length) { const o = S.props.children.pop(); o.geometry?.dispose?.(); } }
   function lat(len, r, mat) { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 20), mat); m.rotation.x = Math.PI / 2; return m; }
   function plate(r, w, z) { const m = lat(w, r, matPlate); m.position.z = z; return m; }
-  function setProps(list) { S.propList = list || []; clearProps(); }
+  const GRIP_SIGN = 1;
+  function setBox(b) { S.box = b || null; }
+  function setProps(list) { S.propList = list || []; clearProps(); S.grip = S.propList.some((p) => /^(dumbbell|kettlebell|barbell|bar-hang|band-hands|cable-hands)/.test(p)) ? 1 : 0.3; }
   function updateProps(sk, lift) {
     clearProps();
     const add = (o, x, y, z = 0) => { o.position.set(x * K, y * K + lift, z); S.props.add(o); return o; };
@@ -216,7 +229,7 @@ function create(canvas, options = {}) {
       }
       else if (p === "seat") { const m = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.07, 0.36), matWood); add(m, sk.hip[0], sk.hip[1] - 11); const post = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.07), matWood); post.position.set(m.position.x, m.position.y - 0.19, 0); S.props.add(post); }
       else if (p === "bench-back" || p === "bench-seat") { const m = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.08, 0.34), matWood); const x = p === "bench-back" ? (sk.shoulder[0] + sk.hip[0]) / 2 : sk.handA[0] - 20; const y = p === "bench-back" ? Math.min(sk.shoulder[1], sk.hip[1]) - 13 : sk.handA[1] - 6; add(m, x, y); m.position.y -= 0.18; const leg = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3, 0.3), matWood); leg.position.set(m.position.x - 0.35, m.position.y - 0.19, 0); S.props.add(leg); const leg2 = leg.clone(); leg2.position.x = m.position.x + 0.35; S.props.add(leg2); m.position.y += 0.18; leg.position.y += 0.18; leg2.position.y += 0.18; }
-      else if (p === "box-foot" || p === "box-feet") { const h = p === "box-foot" ? Math.max(0.2, sk.ankleA[1] * K) : 0.3; const m = new THREE.Mesh(new THREE.BoxGeometry(0.5, h, 0.5), matWood); add(m, sk.ankleA[0] + 18, 0); m.position.y = h / 2 + lift * 0; }
+      else if (p === "box-foot" || p === "box-feet") { const bx = S.box ?? { x: sk.ankleA[0], h: 30 }; const h = bx.h * K; const m = new THREE.Mesh(new THREE.BoxGeometry(0.5, h, 0.5), matWood); m.position.set(bx.x * K, h / 2, 0); S.props.add(m); }
       else if (p === "bar-hang") { const barY = (S.hangBar ?? 188); add(lat(1.1, 0.014, matMetal), sk.handA[0], barY); }
       else if (p === "wall") { const m = new THREE.Mesh(new THREE.BoxGeometry(0.06, 2, 1.2), matWood); add(m, sk.hip[0] - 62, 100); }
       else if (p === "band-hands" || p === "cable-hands") {
@@ -270,7 +283,7 @@ function create(canvas, options = {}) {
   }
 
   const api = {
-    setSolved, setTargets, setProps, frame, playClip, stopClip, setClipTime, hasClip: (n) => !!S.actions[n],
+    setSolved, setTargets, setProps, setBox, frame, playClip, stopClip, setClipTime, hasClip: (n) => !!S.actions[n],
     setAutoRotate(on) { S.autoYaw = !!on; },
     dispose() { S.disposed = true; cancelAnimationFrame(raf); ro.disconnect(); renderer.dispose(); },
   };
