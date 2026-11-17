@@ -17,7 +17,7 @@ export type Pose = {
   knee?: 1 | -1; elbow?: 1 | -1; head?: number;
 };
 
-export type Prop = "barbell-hands" | "barbell-back" | "barbell-front" | "barbell-hip" | "dumbbell" | "kettlebell" | "bench-back" | "bench-seat" | "box-foot" | "box-feet" | "bar-hang" | "band-hands" | "cable-hands" | "wall";
+export type Prop = "barbell-hands" | "barbell-back" | "barbell-front" | "barbell-hip" | "dumbbell" | "kettlebell" | "bench-back" | "bench-seat" | "box-foot" | "box-feet" | "bar-hang" | "band-hands" | "cable-hands" | "wall" | "seat";
 export type Template = { key: string; frames: readonly Pose[]; loop: "pingpong" | "cycle"; period: number; props: readonly Prop[]; targets: readonly string[]; hold?: boolean };
 
 export type Skeleton = {

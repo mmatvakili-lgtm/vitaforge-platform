@@ -7,17 +7,17 @@ import type { ExerciseSummary } from "../../../lib/api/generated.ts";
 import { LIBRARY_DIFFICULTY, LIBRARY_EQUIPMENT, LIBRARY_MUSCLES, NO_FILTERS, libraryQuery, pageCount, type Filters } from "../../../lib/exercises.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
-import { Select } from "../../../components/Select.tsx";
+import { Select as Choice } from "../../../components/Select.tsx";
 import { Body3D } from "../../../components/Body3D.tsx";
 
 function Select({ id, label, value, onChange, options, prefix }: { id: string; label: string; value: string; onChange: (v: string) => void; options: readonly string[]; prefix: string }) {
   const { t } = useT();
   return (
     <Field id={id} label={label}>
-      <Select id={id} value={value} onChange={(e) => onChange(e.target.value)}>
+      <Choice id={id} value={value} onChange={(e) => onChange(e.target.value)}>
         <option value="">{t("lib.any")}</option>
         {options.map((o) => <option key={o} value={o}>{t(`${prefix}.${o}`)}</option>)}
-      </Select>
+      </Choice>
     </Field>
   );
 }
