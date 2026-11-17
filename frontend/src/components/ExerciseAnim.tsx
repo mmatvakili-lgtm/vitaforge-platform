@@ -262,9 +262,12 @@ function PhotoRef({ code, height }: { code: string; height: number }) {
 export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
   const { t } = useT();
   const [hasPhoto, setHasPhoto] = useState(false);
-  const [view, setView] = useState<"3d" | "photo">("3d");
+  // A real reference photo is the default whenever one exists; the 3D mannequin is the second tab (and the only view otherwise).
+  const [chosen, setChosen] = useState<"3d" | "photo" | null>(null);
+  const view: "3d" | "photo" = chosen ?? (hasPhoto ? "photo" : "3d");
+  const setView = setChosen;
   useEffect(() => { let live = true; loadMedia().then((m) => { if (live) setHasPhoto(!!m[code]); }); return () => { live = false; }; }, [code]);
-  useEffect(() => setView("3d"), [code]);
+  useEffect(() => setChosen(null), [code]);
   return (
     <div className="an-wrap">
       {hasPhoto && (

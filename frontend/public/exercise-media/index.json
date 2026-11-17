@@ -446,5 +446,149 @@
  "standing_quad_stretch": {
   "src": "Quad_Stretch",
   "name": "Quad Stretch"
+ },
+ "band_woodchop": {
+  "src": "Standing_Cable_Wood_Chop",
+  "name": "Standing Cable Wood Chop"
+ },
+ "single_arm_farmer_carry": {
+  "src": "Farmers_Walk",
+  "name": "Farmer's Walk"
+ },
+ "hanging_knee_raise": {
+  "src": "Hanging_Leg_Raise",
+  "name": "Hanging Leg Raise"
+ },
+ "single_arm_cable_row": {
+  "src": "Seated_One-arm_Cable_Pulley_Rows",
+  "name": "Seated One-arm Cable Pulley Rows"
+ },
+ "machine_row": {
+  "src": "Leverage_Iso_Row",
+  "name": "Leverage Iso Row"
+ },
+ "pendlay_row": {
+  "src": "Bent_Over_Barbell_Row",
+  "name": "Bent Over Barbell Row"
+ },
+ "kettlebell_press": {
+  "src": "Two-Arm_Kettlebell_Military_Press",
+  "name": "Two-Arm Kettlebell Military Press"
+ },
+ "machine_hip_abduction": {
+  "src": "Thigh_Abductor",
+  "name": "Thigh Abductor"
+ },
+ "machine_hip_adduction": {
+  "src": "Thigh_Adductor",
+  "name": "Thigh Adductor"
+ },
+ "v_up": {
+  "src": "Jackknife_Sit-Up",
+  "name": "Jackknife Sit-Up"
+ },
+ "sit_to_stand": {
+  "src": "Chair_Squat",
+  "name": "Chair Squat"
+ },
+ "sumo_squat": {
+  "src": "Plie_Dumbbell_Squat",
+  "name": "Plie Dumbbell Squat"
+ },
+ "heel_elevated_goblet_squat": {
+  "src": "Goblet_Squat",
+  "name": "Goblet Squat"
+ },
+ "pause_back_squat": {
+  "src": "Barbell_Full_Squat",
+  "name": "Barbell Full Squat"
+ },
+ "band_squat": {
+  "src": "Squats_-_With_Bands",
+  "name": "Squats - With Bands"
+ },
+ "forward_lunge": {
+  "src": "Dumbbell_Lunges",
+  "name": "Dumbbell Lunges"
+ },
+ "dumbbell_walking_lunge": {
+  "src": "Dumbbell_Lunges",
+  "name": "Dumbbell Lunges"
+ },
+ "dumbbell_split_squat": {
+  "src": "Split_Squat_with_Dumbbells",
+  "name": "Split Squat with Dumbbells"
+ },
+ "barbell_reverse_lunge": {
+  "src": "Dumbbell_Rear_Lunge",
+  "name": "Dumbbell Rear Lunge"
+ },
+ "reverse_lunge": {
+  "src": "Dumbbell_Rear_Lunge",
+  "name": "Dumbbell Rear Lunge"
+ },
+ "side_lying_hip_abduction": {
+  "src": "Side_Leg_Raises",
+  "name": "Side Leg Raises"
+ },
+ "dumbbell_hip_thrust": {
+  "src": "Barbell_Hip_Thrust",
+  "name": "Barbell Hip Thrust"
+ },
+ "single_leg_romanian_deadlift": {
+  "src": "Kettlebell_One-Legged_Deadlift",
+  "name": "Kettlebell One-Legged Deadlift"
+ },
+ "dumbbell_romanian_deadlift": {
+  "src": "Romanian_Deadlift",
+  "name": "Romanian Deadlift"
+ },
+ "band_pull_through": {
+  "src": "Pull_Through",
+  "name": "Pull Through"
+ },
+ "nordic_hamstring_curl": {
+  "src": "Natural_Glute_Ham_Raise",
+  "name": "Natural Glute Ham Raise"
+ },
+ "band_lateral_raise": {
+  "src": "Lateral_Raise_-_With_Bands",
+  "name": "Lateral Raise - With Bands"
+ },
+ "dumbbell_chest_supported_row": {
+  "src": "Dumbbell_Incline_Row",
+  "name": "Dumbbell Incline Row"
+ },
+ "band_face_pull": {
+  "src": "Face_Pull",
+  "name": "Face Pull"
+ },
+ "straight_arm_pulldown_band": {
+  "src": "Straight-Arm_Pulldown",
+  "name": "Straight-Arm Pulldown"
+ },
+ "triceps_pushdown_band": {
+  "src": "Triceps_Pushdown",
+  "name": "Triceps Pushdown"
+ },
+ "dumbbell_overhead_press": {
+  "src": "Dumbbell_Shoulder_Press",
+  "name": "Dumbbell Shoulder Press"
+ },
+ "band_row": {
+  "src": "Seated_Cable_Rows",
+  "name": "Seated Cable Rows"
+ },
+ "band_pulldown": {
+  "src": "Wide-Grip_Lat_Pulldown",
+  "name": "Wide-Grip Lat Pulldown"
+ },
+ "step_up": {
+  "src": "Dumbbell_Step_Ups",
+  "name": "Dumbbell Step Ups"
+ },
+ "stair_climb": {
+  "src": "Step_Mill",
+  "name": "Step Mill"
  }
 }
