@@ -136,7 +136,7 @@ function ExerciseAnim2D({ code, pattern, muscles, height = 260 }: { code: string
 }
 
 type Fig = {
-  setSolved(sk: Skeleton): void; setTargets(r: readonly string[]): void; setProps(p: readonly string[]): void; setBox(b: { x: number; h: number } | null): void;
+  setSolved(sk: Skeleton): void; setTargets(r: readonly string[]): void; setProps(p: readonly string[]): void; setBox(b: null): void; calibrateBox(sk: Skeleton, feet: "both" | "higher"): void;
   frame(minX: number, maxX: number, minY: number, maxY: number, ground: boolean, hang: boolean, bar: number): void;
   playClip(n: string): boolean; stopClip(): void; setAutoRotate(on: boolean): void; dispose(): void;
 };
@@ -201,12 +201,7 @@ function ExerciseAnim3D({ code, pattern, muscles, height = 260 }: { code: string
     const bar = template.frames.find((f) => f.handA)?.handA?.[1] ?? 188;
     v.frame(b.minX, b.maxX, hang ? b.minY : Math.min(0, b.minY), b.maxY, true, hang, bar);
     v.setProps(clip ? [] : template.props);
-    if (!clip && template.props.some((p) => p === "box-foot" || p === "box-feet")) {
-      // A static box: its top sits at the highest ankle reached, so the foot rests on it instead of inside it.
-      let top = 0, at = 0;
-      for (const f of template.frames) { const sk = solve(f); for (const a of [sk.ankleA, sk.ankleB]) if (a[1] > top) { top = a[1]; at = a[0]; } }
-      v.setBox({ x: at, h: Math.max(10, top - L.ankle) });
-    } else v.setBox(null);
+    if (!clip && template.box) v.calibrateBox(solve(template.frames[template.box.frame]), template.box.feet); else v.setBox(null);
     v.setTargets(regions);
     if (clip && v.playClip(clip)) return;
     v.stopClip();

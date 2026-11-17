@@ -17,8 +17,8 @@ export type Pose = {
   knee?: 1 | -1; elbow?: 1 | -1; head?: number;
 };
 
-export type Prop = "barbell-hands" | "barbell-back" | "barbell-front" | "barbell-hip" | "dumbbell" | "kettlebell" | "bench-back" | "bench-seat" | "box-foot" | "box-feet" | "bar-hang" | "band-hands" | "cable-hands" | "wall" | "seat";
-export type Template = { key: string; frames: readonly Pose[]; loop: "pingpong" | "cycle"; period: number; props: readonly Prop[]; targets: readonly string[]; hold?: boolean };
+export type Prop = "barbell-hands" | "barbell-back" | "barbell-front" | "barbell-hip" | "dumbbell" | "kettlebell" | "bench-back" | "bench-seat" | "box-foot" | "box-feet" | "bar-hang" | "band-hands" | "cable-hands" | "wall" | "bench-shoulder" | "sled" | "seat";
+export type Template = { key: string; frames: readonly Pose[]; loop: "pingpong" | "cycle"; period: number; props: readonly Prop[]; targets: readonly string[]; hold?: boolean; box?: { frame: number; feet: "both" | "higher" } };
 
 export type Skeleton = {
   head: V; neck: V; shoulder: V; hip: V;
@@ -154,7 +154,7 @@ const ARMS_CHEST = { arms: [8, 150, 4, 148] as const };
 const SQ_BOT = F(-42, 62, 40, { footA: [0, L.ankle], footB: [-10, L.ankle] });
 
 function T(key: string, frames: readonly Pose[], o: Partial<Omit<Template, "key" | "frames">> & { targets: readonly string[] }): Template {
-  return { key, frames, loop: o.loop ?? "pingpong", period: o.period ?? 3.4, props: o.props ?? [], targets: o.targets, hold: o.hold };
+  return { key, frames, loop: o.loop ?? "pingpong", period: o.period ?? 3.4, props: o.props ?? [], targets: o.targets, hold: o.hold, box: o.box };
 }
 
 const PLANK_TOP: Pose = { mode: "rigid", ankle: [-113, L.ankle], legUp: 27, torsoUp: 20, handA: [58, 0], handB: [52, 0], elbow: -1 };
@@ -168,28 +168,28 @@ export const TEMPLATES: Record<string, Template> = {
   squat_back: T("squat_back", [{ ...STAND, arms: [-30, 170, -26, 168] }, { ...SQ_BOT, arms: [-30, 170, -26, 168] }], { props: ["barbell-back"], targets: ["quadriceps", "glutes", "lower back"] }),
   squat_front: T("squat_front", [{ ...STAND, arms: [60, 140, 56, 138] }, { ...F(-38, 62, 28, { arms: [60, 140, 56, 138] }) }], { props: ["barbell-front"], targets: ["quadriceps", "abdominals"] }),
   wall_sit: T("wall_sit", [{ ...F(-52, 62, 0, { footA: [0, L.ankle], footB: [-8, L.ankle], arms: [20, 70, 16, 68] }) }, { ...F(-52, 62, 0, { footA: [0, L.ankle], footB: [-8, L.ankle], arms: [20, 70, 16, 68] }) }], { hold: true, props: ["wall"], targets: ["quadriceps", "glutes"] }),
-  leg_press: T("leg_press", [{ ...F(-48, 70, -58, { footA: [28, 96], footB: [24, 92], arms: [30, 80, 30, 80] }), mode: "hip" }, { ...F(-50, 56, -58, { footA: [86, 30], footB: [82, 26], arms: [30, 80, 30, 80] }), mode: "hip" }], { targets: ["quadriceps", "glutes"] }),
-  pistol: T("pistol", [{ ...STAND, ...ARMS_FWD }, { ...F(-44, 54, 44, { footA: [0, L.ankle], footB: [66, 56], arms: [88, 90, 84, 88] }) }], { props: ["box-feet"], targets: ["quadriceps", "glutes"] }),
+  leg_press: T("leg_press", [{ ...F(-46, 62, -58, { footA: [28, 92], footB: [24, 88], arms: [30, 80, 30, 80] }), mode: "hip" }, { ...F(-46, 62, -58, { footA: [58, 44], footB: [54, 40], arms: [30, 80, 30, 80] }), mode: "hip" }], { props: ["sled"], targets: ["quadriceps", "glutes"] }),
+  pistol: T("pistol", [{ ...STAND, ...ARMS_FWD }, { ...F(-44, 54, 44, { footA: [0, L.ankle], footB: [66, 56], arms: [88, 90, 84, 88] }) }], { targets: ["quadriceps", "glutes"] }),
   jump: T("jump", [{ ...F(-30, 70, 30, { arms: [-30, -10, -30, -10] }) }, { ...F(0, 138, 0, { footA: [0, 30], footB: [-10, 26], arms: [150, 160, 146, 158] }) }], { loop: "pingpong", period: 1.5, targets: ["quadriceps", "glutes", "calves"] }),
-  box_jump: T("box_jump", [{ ...F(-34, 70, 34, { arms: [-30, -10, -30, -10] }) }, { ...F(10, 138, 6, { footA: [24, 40], footB: [16, 40], arms: [100, 100, 96, 98] }) }], { props: ["box-feet"], period: 1.8, targets: ["quadriceps", "glutes", "calves"] }),
+  box_jump: T("box_jump", [{ ...F(-52, 70, 34, { footA: [-16, L.ankle], footB: [-26, L.ankle], arms: [-30, -10, -30, -10] }) }, { ...F(-4, 150, 4, { footA: [6, 70], footB: [-2, 70], arms: [130, 130, 126, 128] }) }, { ...F(26, 138, 6, { footA: [40, 40], footB: [32, 40], arms: [100, 100, 96, 98] }) }], { props: ["box-feet"], box: { frame: 2, feet: "both" }, period: 1.8, targets: ["quadriceps", "glutes", "calves"] }),
   hinge: T("hinge", [{ ...STAND, ...ARMS_HANG }, { ...F(-52, 92, 70, { footA: [0, L.ankle], footB: [-10, L.ankle], ...ARMS_HANG }) }], { props: ["dumbbell"], targets: ["hamstrings", "glutes", "lower back"] }),
   hinge_bar: T("hinge_bar", [{ ...STAND, ...ARMS_HANG }, { ...F(-52, 92, 70, { ...ARMS_HANG }) }], { props: ["barbell-hands"], targets: ["hamstrings", "glutes", "lower back"] }),
   deadlift: T("deadlift", [{ ...F(-40, 58, 52, { ...ARMS_HANG }) }, { ...STAND, ...ARMS_HANG }], { props: ["barbell-hands"], targets: ["glutes", "hamstrings", "lower back", "quadriceps"] }),
   good_morning: T("good_morning", [{ ...STAND, arms: [-30, 170, -26, 168] }, { ...F(-54, 90, 72, { arms: [-30, 170, -26, 168] }) }], { props: ["barbell-back"], targets: ["hamstrings", "lower back", "glutes"] }),
   swing: T("swing", [{ ...F(-56, 94, 66, { arms: [30, 24, 28, 22] }) }, { ...F(2, 116, 4, { arms: [88, 90, 84, 88] }) }], { loop: "pingpong", period: 1.8, props: ["kettlebell"], targets: ["glutes", "hamstrings", "lower back"] }),
   bridge: T("bridge", [{ mode: "hip", hip: [0, 12], torso: -90, footA: [62, L.ankle], footB: [58, L.ankle], arms: [90, 90, 90, 90], knee: 1 }, { mode: "hip", hip: [0, 64], torso: -122, footA: [62, L.ankle], footB: [58, L.ankle], arms: [90, 90, 90, 90], knee: 1 }], { targets: ["glutes", "hamstrings"] }),
-  hip_thrust: T("hip_thrust", [{ mode: "hip", hip: [0, 30], torso: -90, footA: [62, L.ankle], footB: [58, L.ankle], arms: [60, 100, 58, 98] }, { mode: "hip", hip: [0, 76], torso: -104, footA: [62, L.ankle], footB: [58, L.ankle], arms: [60, 100, 58, 98] }], { props: ["bench-back", "barbell-hip"], targets: ["glutes", "hamstrings"] }),
+  hip_thrust: T("hip_thrust", [{ mode: "hip", hip: [0, 30], torso: -90, footA: [62, L.ankle], footB: [58, L.ankle], arms: [60, 100, 58, 98] }, { mode: "hip", hip: [0, 76], torso: -104, footA: [62, L.ankle], footB: [58, L.ankle], arms: [60, 100, 58, 98] }], { props: ["bench-shoulder", "barbell-hip"], targets: ["glutes", "hamstrings"] }),
   lunge: T("lunge", [{ ...F(0, 114, 0, { footA: [20, L.ankle], footB: [-20, L.ankle], ...ARMS_HANG }) }, { ...F(2, 66, 4, { footA: [34, L.ankle], footB: [-52, 22], ...ARMS_HANG }) }], { props: ["dumbbell"], targets: ["quadriceps", "glutes"] }),
-  step_up: T("step_up", [{ ...F(0, 112, 6, { footA: [26, 36], footB: [-14, L.ankle], ...ARMS_HANG }) }, { ...F(24, 146, 2, { footA: [26, 36], footB: [20, 62], ...ARMS_HANG }) }], { props: ["box-foot"], targets: ["quadriceps", "glutes"] }),
+  step_up: T("step_up", [{ ...F(6, 112, 6, { footA: [40, 36], footB: [-14, L.ankle], ...ARMS_HANG }) }, { ...F(14, 130, 4, { footA: [40, 36], footB: [-12, 54], ...ARMS_HANG }) }, { ...F(34, 146, 2, { footA: [40, 36], footB: [34, 62], ...ARMS_HANG }) }], { props: ["box-foot"], box: { frame: 0, feet: "higher" }, targets: ["quadriceps", "glutes"] }),
   side_lunge: T("side_lunge", [{ ...STAND, ...ARMS_CHEST }, { ...F(-30, 64, 24, { footA: [8, L.ankle], footB: [-26, L.ankle], ...ARMS_CHEST }) }], { targets: ["adductors", "quadriceps", "glutes"] }),
   pushup: T("pushup", [PLANK_TOP, PUSH_BOT], { targets: ["chest", "triceps", "shoulders"] }),
   pushup_knee: T("pushup_knee", [{ mode: "hip", hip: [-34, 42], torso: 66, footA: [-60, L.ankle], footB: [-64, L.ankle], handA: [58, 0], handB: [52, 0], elbow: -1, knee: -1 }, { mode: "hip", hip: [-30, 24], torso: 80, footA: [-60, L.ankle], footB: [-64, L.ankle], handA: [58, 0], handB: [52, 0], elbow: -1, knee: -1 }], { targets: ["chest", "triceps", "shoulders"] }),
   pushup_wall: T("pushup_wall", [{ mode: "rigid", ankle: [-70, L.ankle], legUp: 66, torsoUp: 70, handA: [60, 118], handB: [60, 112], elbow: -1 }, { mode: "rigid", ankle: [-70, L.ankle], legUp: 72, torsoUp: 76, handA: [60, 118], handB: [60, 112], elbow: -1 }], { props: ["wall"], targets: ["chest", "triceps", "shoulders"] }),
   plank: T("plank", [FOREARM_PLANK, { ...FOREARM_PLANK, torsoUp: 9 }], { hold: true, targets: ["abdominals", "shoulders", "glutes"] }),
-  press_floor: T("press_floor", [{ mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-72, 38], handB: [-74, 38], elbow: 1 }, { mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-70, 90], handB: [-72, 90], elbow: 1 }], { props: ["bench-back", "dumbbell"], targets: ["chest", "triceps", "shoulders"] }),
+  press_floor: T("press_floor", [{ mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-72, 38], handB: [-74, 38], elbow: 1 }, { mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-70, 90], handB: [-72, 90], elbow: 1 }], { props: ["dumbbell"], targets: ["chest", "triceps", "shoulders"] }),
   press_overhead: T("press_overhead", [{ ...STAND, arms: [10, 150, 8, 148] }, { ...STAND, handA: [4, 266], handB: [0, 266], elbow: 1 }], { props: ["dumbbell"], targets: ["shoulders", "triceps"] }),
   raise: T("raise", [{ ...STAND, ...ARMS_HANG }, { ...STAND, arms: [90, 92, 86, 88] }], { props: ["dumbbell"], targets: ["shoulders"] }),
-  fly: T("fly", [{ mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-70, 30], handB: [-72, 30], elbow: 1 }, { mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-70, 90], handB: [-72, 90], elbow: 1 }], { props: ["bench-back", "dumbbell"], targets: ["chest", "shoulders"] }),
+  fly: T("fly", [{ mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-70, 30], handB: [-72, 30], elbow: 1 }, { mode: "hip", hip: [-6, 14], torso: -90, footA: [60, L.ankle], footB: [56, L.ankle], handA: [-70, 90], handB: [-72, 90], elbow: 1 }], { props: ["dumbbell"], targets: ["chest", "shoulders"] }),
   dip: T("dip", [{ mode: "shoulder", shoulder: [0, 144], torso: 180, handA: [-12, 62], handB: [-12, 62], elbow: -1, footA: [60, 8], footB: [64, 8] }, { mode: "shoulder", shoulder: [0, 102], torso: 180, handA: [-12, 62], handB: [-12, 62], elbow: -1, footA: [60, 8], footB: [64, 8] }], { props: ["bench-seat"], targets: ["triceps", "chest", "shoulders"] }),
   row_bent: T("row_bent", [{ ...LEG_ROW, arms: [0, 0, -2, -2] }, { ...LEG_ROW, handA: [-14, 86], handB: [-14, 84], elbow: -1 }], { props: ["barbell-hands"], targets: ["lats", "middle back", "biceps"] }),
   row_cable: T("row_cable", [{ mode: "hip", hip: [-44, 38], torso: 14, footA: [10, 46], footB: [6, 42], arms: [88, 90, 84, 88], knee: 1 }, { mode: "hip", hip: [-44, 38], torso: -6, footA: [10, 46], footB: [6, 42], handA: [-20, 86], handB: [-22, 84], elbow: -1 }], { props: ["cable-hands"], targets: ["middle back", "lats", "biceps"] }),
