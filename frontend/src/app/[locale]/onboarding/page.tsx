@@ -11,6 +11,7 @@ import {
 import { permitsPlan } from "../../../lib/plan-view.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 
 const STAGES: WizardStage[] = ["basics", "goal", "schedule", "equipment", "consent", "screening", "finish"];
@@ -134,10 +135,10 @@ function Wizard() {
       {stage === "goal" && (
         <form noValidate onSubmit={(e) => { e.preventDefault(); const g = { goal, level, ...(priority.length ? { priority_muscles: priority } : {}) }; saveStep("goal", g, validateGoal(g), "schedule"); }}>
           <Field id="goal" label={t("onb.goal")} error={fe("goal")}>
-            <select id="goal" value={goal} onChange={(e) => setGoal(e.target.value)}><option value="" />{GOALS.map((g) => <option key={g} value={g}>{t(`goal.${g}`)}</option>)}</select>
+            <Select id="goal" value={goal} onChange={(e) => setGoal(e.target.value)}><option value="" />{GOALS.map((g) => <option key={g} value={g}>{t(`goal.${g}`)}</option>)}</Select>
           </Field>
           <Field id="level" label={t("onb.level")} error={fe("level")}>
-            <select id="level" value={level} onChange={(e) => setLevel(e.target.value)}><option value="" />{LEVELS.map((g) => <option key={g} value={g}>{t(`level.${g}`)}</option>)}</select>
+            <Select id="level" value={level} onChange={(e) => setLevel(e.target.value)}><option value="" />{LEVELS.map((g) => <option key={g} value={g}>{t(`level.${g}`)}</option>)}</Select>
           </Field>
           <fieldset><legend>{t("onb.priority")}</legend><p className="hint">{t("onb.priority.hint")}</p>
             <div className="checks">{PRIORITY_MUSCLES.map((m) => (
@@ -164,7 +165,7 @@ function Wizard() {
       {stage === "equipment" && (
         <form noValidate onSubmit={(e) => { e.preventDefault(); const eq = { equipment, ...(environment ? { environment } : {}) }; saveStep("equipment", eq, validateEquipment(eq), "consent"); }}>
           <Field id="environment" label={t("onb.environment")}>
-            <select id="environment" value={environment} onChange={(e) => setEnvironment(e.target.value)}><option value="">{t("env.unset")}</option>{ENVIRONMENTS.map((v) => <option key={v} value={v}>{t(`env.${v}`)}</option>)}</select>
+            <Select id="environment" value={environment} onChange={(e) => setEnvironment(e.target.value)}><option value="">{t("env.unset")}</option>{ENVIRONMENTS.map((v) => <option key={v} value={v}>{t(`env.${v}`)}</option>)}</Select>
           </Field>
           <fieldset><legend>{t("onb.equipment")}</legend><p className="hint">{t("onb.equipment.hint")}</p>
             <div className="checks">{EQUIPMENT.map((q) => (

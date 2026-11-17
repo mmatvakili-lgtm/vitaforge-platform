@@ -333,3 +333,26 @@ fieldset { border: 1px solid color-mix(in srgb, var(--line) 80%, transparent); b
 .an-photo .an3-stage { background: #111; }
 .an-photo img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain; opacity: 0; transition: opacity .6s ease; }
 .an-photo img.on { opacity: 1; }
+
+/* Choice controls (components/Select.tsx): segmented chips for short lists, listbox / bottom sheet for long ones */
+.choice { display: flex; flex-wrap: wrap; gap: .4rem; }
+.choice button { min-block-size: 44px; padding: .35rem 1rem; border-radius: 99px; border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 80%, transparent); color: var(--fg); box-shadow: none; background-image: none; font-weight: 500; transition: border-color .15s, background .15s, transform .15s; }
+.choice button:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-1px); }
+.choice button.on { color: var(--accent-fg); border-color: transparent; background-image: linear-gradient(145deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--info))); box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent); }
+.sel { position: relative; }
+.sel-btn { inline-size: 100%; min-block-size: 48px; display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .45rem .9rem; text-align: start; font-weight: 500; color: var(--fg); background: var(--bg); background-image: none; border: 1px solid var(--line); border-radius: calc(var(--radius) + .25rem); box-shadow: none; }
+.sel-btn[aria-expanded=true] { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); }
+.sel-btn svg { flex: none; transition: transform .2s; } .sel-btn[aria-expanded=true] svg { transform: rotate(180deg); }
+.sel-list { position: absolute; z-index: 60; inset-inline: 0; inset-block-start: calc(100% + .35rem); max-block-size: 18rem; overflow: auto; margin: 0; padding: .35rem; list-style: none; border-radius: 1rem; border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 94%, var(--bg)); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
+.sel-list li { display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-block-size: 44px; padding: .4rem .75rem; border-radius: .7rem; cursor: pointer; }
+.sel-list li.act { background: color-mix(in srgb, var(--accent) 14%, transparent); } .sel-list li.on { color: var(--accent); font-weight: 600; }
+.sel-scrim { display: none; }
+@media (max-width: 720px) {
+  .sel-scrim { display: block; position: fixed; inset: 0; z-index: 59; background: rgba(0,0,0,.45); }
+  .sel-list { position: fixed; z-index: 60; inset-inline: 0; inset-block: auto 0; max-block-size: 60dvh; border-radius: 1.25rem 1.25rem 0 0; padding: .6rem .6rem calc(.6rem + env(safe-area-inset-bottom)); animation: selUp .22s ease-out; }
+  .sel-list li { min-block-size: 52px; font-size: 1.05rem; }
+}
+@keyframes selUp { from { transform: translateY(40%); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .sel-list { animation: none; } .choice button { transition: none; } }
+.an-video { justify-self: start; display: inline-flex; align-items: center; gap: .4rem; min-block-size: 40px; padding: .2rem .9rem; border-radius: 99px; border: 1px solid var(--line); color: var(--accent); text-decoration: none; font-weight: 500; }
+.an-video:hover { border-color: var(--accent); }

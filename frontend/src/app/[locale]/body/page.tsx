@@ -6,6 +6,7 @@ import type { BodyOverview } from "../../../lib/api/generated.ts";
 import { BODY_METRICS, BODY_METRIC_KEYS, parseMeasurement, type BodyMetric } from "../../../lib/body.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 
 export default function BodyPage() {
   const { locale, t, n } = useT();
@@ -61,18 +62,18 @@ export default function BodyPage() {
           {(ov.bmi || ov.whtr) && <p className="muted">{t("body.screeningNote")}</p>}
           <form onSubmit={submit} noValidate>
             <Field id="metric" label={t("body.metric")}>
-              <select id="metric" value={metric} onChange={(e) => { setMetric(e.target.value as BodyMetric); setFieldErr(""); }}>
+              <Select id="metric" value={metric} onChange={(e) => { setMetric(e.target.value as BodyMetric); setFieldErr(""); }}>
                 {BODY_METRIC_KEYS.map((k) => <option key={k} value={k}>{t(`body.metric.${k}`)} ({BODY_METRICS[k].unit})</option>)}
-              </select>
+              </Select>
             </Field>
             <Field id="value" label={t("body.value")} error={fieldErr}>
               <input id="value" inputMode="decimal" dir="ltr" autoComplete="off" value={value} onChange={(e) => setValue(e.target.value)} aria-invalid={!!fieldErr} />
             </Field>
             <Field id="source" label={t("body.source")}>
-              <select id="source" value={source} onChange={(e) => setSource(e.target.value as "measured" | "estimated")}>
+              <Select id="source" value={source} onChange={(e) => setSource(e.target.value as "measured" | "estimated")}>
                 <option value="measured">{t("body.source.measured")}</option>
                 <option value="estimated">{t("body.source.estimated")}</option>
-              </select>
+              </Select>
             </Field>
             <Button type="submit" busy={busy}>{t("body.save")}</Button>
             {saved && <Alert kind="success">{t("body.saved")}</Alert>}

@@ -273,6 +273,9 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
         </div>
       )}
       {view === "photo" && hasPhoto ? <PhotoRef code={code} height={height} /> : <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />}
+      <a className="an-video" href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${code.replace(/_/g, " ")} exercise proper form`)}`} target="_blank" rel="noopener noreferrer">
+        ▶ {t("motion.video")}
+      </a>
     </div>
   );
 }

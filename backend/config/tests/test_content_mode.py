@@ -42,3 +42,11 @@ def test_advisory_defaults_on_with_demo_content_and_is_refused_in_production():
     assert load_config({**base, "DJANGO_DEBUG": "true", "VITAFORGE_ADVISORY": "false"})["advisory"] is False
     with pytest.raises(ConfigError):
         load_config({**base, "VITAFORGE_ADVISORY": "true"})
+
+
+def test_sqlite_is_tuned_for_concurrent_requests_and_postgres_untouched():
+    from config.env import tune_database
+    lite = tune_database({"ENGINE": "django.db.backends.sqlite3", "NAME": "x"})
+    assert lite["OPTIONS"]["transaction_mode"] == "IMMEDIATE" and lite["OPTIONS"]["timeout"] >= 20 and "WAL" in lite["OPTIONS"]["init_command"]
+    pg = {"ENGINE": "django.db.backends.postgresql", "NAME": "x"}
+    assert tune_database(pg) == pg

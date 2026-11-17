@@ -7,6 +7,7 @@ import { permitsPlan } from "../../../lib/plan-view.ts";
 import { PAIN_REGIONS } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 
 const PROBLEMS = ["pain", "limited_motion", "diagnosed_injury", "surgery_history", "other"] as const;
@@ -70,13 +71,13 @@ export default function HealthPage() {
           <h2>{t("health.logPain")}</h2>
           <form onSubmit={logPain} noValidate>
             <Field id="region" label={t("wk.painRegion")}>
-              <select id="region" value={region} onChange={(e) => setRegion(e.target.value)}>{PAIN_REGIONS.map((r) => <option key={r} value={r}>{t(`region.${r}`)}</option>)}</select>
+              <Select id="region" value={region} onChange={(e) => setRegion(e.target.value)}>{PAIN_REGIONS.map((r) => <option key={r} value={r}>{t(`region.${r}`)}</option>)}</Select>
             </Field>
             <Field id="intensity" label={t("health.intensity")} hint={t("health.intensityHint")}>
-              <select id="intensity" value={intensity} onChange={(e) => setIntensity(e.target.value)}>{Array.from({ length: 11 }, (_, i) => <option key={i} value={i}>{n(i)}</option>)}</select>
+              <Select id="intensity" value={intensity} onChange={(e) => setIntensity(e.target.value)}>{Array.from({ length: 11 }, (_, i) => <option key={i} value={i}>{n(i)}</option>)}</Select>
             </Field>
             <Field id="timing" label={t("health.timing")}>
-              <select id="timing" value={timing} onChange={(e) => setTiming(e.target.value as (typeof TIMING)[number])}>{TIMING.map((x) => <option key={x} value={x}>{t(`health.timing.${x}`)}</option>)}</select>
+              <Select id="timing" value={timing} onChange={(e) => setTiming(e.target.value as (typeof TIMING)[number])}>{TIMING.map((x) => <option key={x} value={x}>{t(`health.timing.${x}`)}</option>)}</Select>
             </Field>
             <Button type="submit" busy={busy}>{t("health.save")}</Button>
           </form>
@@ -86,7 +87,7 @@ export default function HealthPage() {
           <h2>{t("health.addCondition")}</h2>
           <form onSubmit={addCondition} noValidate>
             <Field id="problem" label={t("health.problem")}>
-              <select id="problem" value={problem} onChange={(e) => setProblem(e.target.value as (typeof PROBLEMS)[number])}>{PROBLEMS.map((x) => <option key={x} value={x}>{t(`health.problem.${x}`)}</option>)}</select>
+              <Select id="problem" value={problem} onChange={(e) => setProblem(e.target.value as (typeof PROBLEMS)[number])}>{PROBLEMS.map((x) => <option key={x} value={x}>{t(`health.problem.${x}`)}</option>)}</Select>
             </Field>
             <p className="hint">{t("health.regionShared")}</p>
             <Button type="submit" busy={busy}>{t("health.save")}</Button>

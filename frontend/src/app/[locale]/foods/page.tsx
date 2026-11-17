@@ -6,6 +6,7 @@ import type { FoodDetail, FoodSummary, RecipeDetail, RecipeSummary } from "../..
 import { DIET_TAGS, nutrientLines } from "../../../lib/nutrition.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Select } from "../../../components/Select.tsx";
 
 type Tab = "foods" | "recipes";
 type Diet = (typeof DIET_TAGS)[number];
@@ -87,7 +88,7 @@ export default function FoodsPage() {
       <form onSubmit={submit} role="search">
         <Field id="fq" label={t("lib.search")}><input id="fq" type="search" value={draft.q} onChange={(e) => setDraft({ ...draft, q: e.target.value })} /></Field>
         <Field id="fdiet" label={t("nut.diet")}>
-          <select id="fdiet" value={draft.diet} onChange={(e) => setDraft({ ...draft, diet: e.target.value as "" | Diet })}><option value="">{t("lib.any")}</option>{DIET_TAGS.map((d) => <option key={d} value={d}>{t(`diet.${d}`)}</option>)}</select>
+          <Select id="fdiet" value={draft.diet} onChange={(e) => setDraft({ ...draft, diet: e.target.value as "" | Diet })}><option value="">{t("lib.any")}</option>{DIET_TAGS.map((d) => <option key={d} value={d}>{t(`diet.${d}`)}</option>)}</Select>
         </Field>
         <Button type="submit">{t("lib.search")}</Button>
       </form>

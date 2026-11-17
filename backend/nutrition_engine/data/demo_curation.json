@@ -1,0 +1,689 @@
+{
+ "fdc_2512381": {
+  "key": "rice_white",
+  "name_fa": "برنج سفید (خام)",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2512380": {
+  "key": "rice_brown",
+  "name_fa": "برنج قهوه‌ای (خام)",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346396": {
+  "key": "oats",
+  "name_fa": "جو دوسر پرک",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "lactose_free"
+  ]
+ },
+ "fdc_335240": {
+  "key": "bread_wholewheat",
+  "name_fa": "نان سبوس‌دار",
+  "allergens": [
+   "wheat",
+   "soy",
+   "milk"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal"
+  ]
+ },
+ "fdc_2644282": {
+  "key": "chickpeas_dry",
+  "name_fa": "نخود (خشک)",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2644283": {
+  "key": "lentils_dry",
+  "name_fa": "عدس (خشک)",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2644288": {
+  "key": "chickpeas_canned",
+  "name_fa": "نخود کنسروی (آبکش‌شده)",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_321358": {
+  "key": "hummus",
+  "name_fa": "حمص",
+  "allergens": [
+   "sesame"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "lactose_free"
+  ]
+ },
+ "fdc_2646170": {
+  "key": "chicken_breast",
+  "name_fa": "سینه مرغ (خام)",
+  "allergens": [],
+  "diet_tags": [
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2646171": {
+  "key": "chicken_thigh",
+  "name_fa": "ران مرغ بدون پوست (خام)",
+  "allergens": [],
+  "diet_tags": [
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2514743": {
+  "key": "beef_ground",
+  "name_fa": "گوشت چرخ‌کرده گاو ۹۰٪ (خام)",
+  "allergens": [],
+  "diet_tags": [
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2646173": {
+  "key": "beef_round",
+  "name_fa": "گوشت ران گاو (خام)",
+  "allergens": [],
+  "diet_tags": [
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2684441": {
+  "key": "salmon",
+  "name_fa": "ماهی سالمون (خام)",
+  "allergens": [
+   "fish"
+  ],
+  "diet_tags": [
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2684442": {
+  "key": "tilapia",
+  "name_fa": "ماهی تیلاپیا (خام)",
+  "allergens": [
+   "fish"
+  ],
+  "diet_tags": [
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_334194": {
+  "key": "tuna_canned",
+  "name_fa": "تن ماهی در آب (آبکش‌شده)",
+  "allergens": [
+   "fish"
+  ],
+  "diet_tags": [
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2684443": {
+  "key": "shrimp",
+  "name_fa": "میگو (خام)",
+  "allergens": [
+   "shellfish"
+  ],
+  "diet_tags": [
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_748967": {
+  "key": "egg",
+  "name_fa": "تخم‌مرغ",
+  "allergens": [
+   "egg"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2259793": {
+  "key": "yogurt_whole",
+  "name_fa": "ماست کامل چرب",
+  "allergens": [
+   "milk"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal",
+   "gluten_free"
+  ]
+ },
+ "fdc_330137": {
+  "key": "yogurt_greek_nonfat",
+  "name_fa": "ماست یونانی بدون چربی",
+  "allergens": [
+   "milk"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal",
+   "gluten_free"
+  ]
+ },
+ "fdc_746782": {
+  "key": "milk_whole",
+  "name_fa": "شیر کامل چرب",
+  "allergens": [
+   "milk"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal",
+   "gluten_free"
+  ]
+ },
+ "fdc_746772": {
+  "key": "milk_lowfat",
+  "name_fa": "شیر کم‌چرب ۱٪",
+  "allergens": [
+   "milk"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal",
+   "gluten_free"
+  ]
+ },
+ "fdc_2259796": {
+  "key": "feta",
+  "name_fa": "پنیر فتا",
+  "allergens": [
+   "milk"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal",
+   "gluten_free"
+  ]
+ },
+ "fdc_2346384": {
+  "key": "cottage",
+  "name_fa": "پنیر لور (کاتیج)",
+  "allergens": [
+   "milk"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "halal",
+   "gluten_free"
+  ]
+ },
+ "fdc_1999630": {
+  "key": "soy_milk",
+  "name_fa": "شیر سویا ساده",
+  "allergens": [
+   "soy"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346393": {
+  "key": "almonds",
+  "name_fa": "بادام خام",
+  "allergens": [
+   "tree_nut"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346394": {
+  "key": "walnuts",
+  "name_fa": "گردو",
+  "allergens": [
+   "tree_nut"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2515379": {
+  "key": "pistachio",
+  "name_fa": "پسته خام",
+  "allergens": [
+   "tree_nut"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2262072": {
+  "key": "peanut_butter",
+  "name_fa": "کره بادام‌زمینی",
+  "allergens": [
+   "peanut"
+  ],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2515380": {
+  "key": "pumpkin_seeds",
+  "name_fa": "تخمه کدو خام",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2262075": {
+  "key": "flaxseed",
+  "name_fa": "بذر کتان آسیاب‌شده",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_1105314": {
+  "key": "banana",
+  "name_fa": "موز",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_1750340": {
+  "key": "apple",
+  "name_fa": "سیب",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346409": {
+  "key": "strawberry",
+  "name_fa": "توت‌فرنگی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_325430": {
+  "key": "peach",
+  "name_fa": "هلو",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_746771": {
+  "key": "orange",
+  "name_fa": "پرتقال",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_746773": {
+  "key": "pear",
+  "name_fa": "گلابی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_746770": {
+  "key": "cantaloupe",
+  "name_fa": "خربزه",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_327046": {
+  "key": "kiwi",
+  "name_fa": "کیوی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_746768": {
+  "key": "figs_dried",
+  "name_fa": "انجیر خشک",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346406": {
+  "key": "cucumber",
+  "name_fa": "خیار",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_1999634": {
+  "key": "tomato",
+  "name_fa": "گوجه‌فرنگی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2685573": {
+  "key": "cauliflower",
+  "name_fa": "گل‌کلم",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_747447": {
+  "key": "broccoli",
+  "name_fa": "کلم بروکلی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2685570": {
+  "key": "butternut",
+  "name_fa": "کدو حلوایی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2644285": {
+  "key": "black_beans_canned",
+  "name_fa": "لوبیا سیاه کنسروی (آبکش‌شده)",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2685577": {
+  "key": "eggplant",
+  "name_fa": "بادمجان",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2258586": {
+  "key": "carrot",
+  "name_fa": "هویج",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2258590": {
+  "key": "bell_pepper_red",
+  "name_fa": "فلفل دلمه‌ای قرمز",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_790646": {
+  "key": "onion",
+  "name_fa": "پیاز",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_1104647": {
+  "key": "garlic",
+  "name_fa": "سیر",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_1999632": {
+  "key": "spinach",
+  "name_fa": "اسفناج",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346401": {
+  "key": "potato",
+  "name_fa": "سیب‌زمینی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346404": {
+  "key": "sweet_potato",
+  "name_fa": "سیب‌زمینی شیرین",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346407": {
+  "key": "cabbage",
+  "name_fa": "کلم سبز",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2346389": {
+  "key": "lettuce",
+  "name_fa": "کاهو رومی",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_1999629": {
+  "key": "mushroom",
+  "name_fa": "قارچ دکمه‌ای",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ },
+ "fdc_2685580": {
+  "key": "tomato_paste",
+  "name_fa": "رب گوجه‌فرنگی (بدون نمک)",
+  "allergens": [],
+  "diet_tags": [
+   "vegetarian",
+   "vegan",
+   "halal",
+   "gluten_free",
+   "lactose_free"
+  ]
+ }
+}

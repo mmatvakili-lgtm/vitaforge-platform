@@ -16,7 +16,8 @@ INSTALLED_APPS = ["apps.core"]
 MIDDLEWARE = ["django.middleware.security.SecurityMiddleware", "django.middleware.common.CommonMiddleware"]
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
-DATABASES = {"default": __import__("dj_database_url").parse(CFG["database_url"], conn_max_age=60)}
+from .env import tune_database
+DATABASES = {"default": tune_database(__import__("dj_database_url").parse(CFG["database_url"], conn_max_age=60))}
 USE_TZ = True
 TIME_ZONE = "UTC"
 LANGUAGE_CODE = "fa"

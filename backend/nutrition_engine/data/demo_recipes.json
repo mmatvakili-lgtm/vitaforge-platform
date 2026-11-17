@@ -1,0 +1,1115 @@
+[
+ {
+  "id": "demo_oatmeal_banana_walnut",
+  "name_en": "Oatmeal with banana and walnuts",
+  "name_fa": "فرنی جو دوسر با موز و گردو",
+  "slots": [
+   "breakfast"
+  ],
+  "ingredients": [
+   [
+    "fdc_2346396",
+    50
+   ],
+   [
+    "fdc_746782",
+    200
+   ],
+   [
+    "fdc_1105314",
+    100
+   ],
+   [
+    "fdc_2346394",
+    15
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 10,
+  "steps": [
+   "شیر را روی حرارت ملایم گرم کنید.",
+   "جو دوسر را اضافه کنید و ۵ دقیقه هم بزنید تا غلیظ شود.",
+   "موز خرد‌شده و گردو را روی آن بریزید."
+  ]
+ },
+ {
+  "id": "demo_oatmeal_soy_banana",
+  "name_en": "Vegan oatmeal with soy milk and banana",
+  "name_fa": "فرنی جو دوسر با شیر سویا و موز",
+  "slots": [
+   "breakfast"
+  ],
+  "ingredients": [
+   [
+    "fdc_2346396",
+    50
+   ],
+   [
+    "fdc_1999630",
+    250
+   ],
+   [
+    "fdc_1105314",
+    100
+   ],
+   [
+    "fdc_2515380",
+    15
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 10,
+  "steps": [
+   "شیر سویا را گرم کنید.",
+   "جو دوسر را اضافه کنید و ۵ دقیقه بپزید.",
+   "موز و تخمه کدو را روی آن بریزید."
+  ]
+ },
+ {
+  "id": "demo_veg_omelette",
+  "name_en": "Vegetable omelette",
+  "name_fa": "املت سبزیجات",
+  "slots": [
+   "breakfast",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_748967",
+    150
+   ],
+   [
+    "fdc_1999634",
+    100
+   ],
+   [
+    "fdc_790646",
+    40
+   ],
+   [
+    "fdc_1999632",
+    40
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 15,
+  "steps": [
+   "پیاز را خرد کنید و با کمی روغن سرخ کنید.",
+   "گوجه و اسفناج خرد‌شده را اضافه کنید و ۳ دقیقه تفت دهید.",
+   "تخم‌مرغ‌ها را بشکنید، روی سبزیجات بریزید و بپزید تا جا بیفتد."
+  ]
+ },
+ {
+  "id": "demo_yogurt_berry_bowl",
+  "name_en": "Greek yogurt bowl with strawberries and almonds",
+  "name_fa": "کاسه ماست یونانی با توت‌فرنگی و بادام",
+  "slots": [
+   "breakfast",
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_330137",
+    200
+   ],
+   [
+    "fdc_2346409",
+    100
+   ],
+   [
+    "fdc_2346393",
+    15
+   ],
+   [
+    "fdc_2346396",
+    20
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 5,
+  "steps": [
+   "ماست را در کاسه بریزید.",
+   "توت‌فرنگی‌های برش‌خورده، بادام و جو دوسر را روی آن بپاشید."
+  ]
+ },
+ {
+  "id": "demo_cottage_toast",
+  "name_en": "Cottage cheese toast with cucumber and tomato",
+  "name_fa": "نان و پنیر لور با خیار و گوجه",
+  "slots": [
+   "breakfast",
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_335240",
+    60
+   ],
+   [
+    "fdc_2346384",
+    100
+   ],
+   [
+    "fdc_2346406",
+    80
+   ],
+   [
+    "fdc_1999634",
+    80
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 5,
+  "steps": [
+   "نان را برشته کنید.",
+   "پنیر لور را رویش بمالید.",
+   "خیار و گوجه‌ی ورقه‌شده را اضافه کنید."
+  ]
+ },
+ {
+  "id": "demo_egg_toast",
+  "name_en": "Scrambled eggs with bread and cucumber",
+  "name_fa": "نیمرو/املت ساده با نان و خیار",
+  "slots": [
+   "breakfast"
+  ],
+  "ingredients": [
+   [
+    "fdc_748967",
+    150
+   ],
+   [
+    "fdc_335240",
+    60
+   ],
+   [
+    "fdc_2346406",
+    80
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 10,
+  "steps": [
+   "کمی روغن را در ماهیتابه گرم کنید.",
+   "تخم‌مرغ‌ها را بشکنید و هم بزنید تا بپزد.",
+   "با نان و خیار سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_pb_banana_toast",
+  "name_en": "Peanut butter banana toast",
+  "name_fa": "نان با کره بادام‌زمینی و موز",
+  "slots": [
+   "breakfast",
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_335240",
+    60
+   ],
+   [
+    "fdc_2262072",
+    20
+   ],
+   [
+    "fdc_1105314",
+    100
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 5,
+  "steps": [
+   "نان را برشته کنید.",
+   "کره بادام‌زمینی را بمالید و موز ورقه‌شده را روی آن بچینید."
+  ]
+ },
+ {
+  "id": "demo_bread_cheese_walnut",
+  "name_en": "Bread, feta and walnut breakfast",
+  "name_fa": "صبحانه‌ی نان، پنیر و گردو",
+  "slots": [
+   "breakfast"
+  ],
+  "ingredients": [
+   [
+    "fdc_335240",
+    80
+   ],
+   [
+    "fdc_2259796",
+    40
+   ],
+   [
+    "fdc_2346394",
+    20
+   ],
+   [
+    "fdc_2346406",
+    80
+   ],
+   [
+    "fdc_1999634",
+    80
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 5,
+  "steps": [
+   "نان، پنیر و گردو را در بشقاب بگذارید.",
+   "خیار و گوجه را برش بزنید و کنارش سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_chicken_rice_veg",
+  "name_en": "Chicken and rice with vegetables",
+  "name_fa": "مرغ و برنج با سبزیجات",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2646170",
+    300
+   ],
+   [
+    "fdc_2512381",
+    160
+   ],
+   [
+    "fdc_2258586",
+    120
+   ],
+   [
+    "fdc_2685570",
+    200
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 40,
+  "steps": [
+   "برنج را بشویید و آبکش کنید یا با دو برابر آب بپزید (۱۵–۲۰ دقیقه).",
+   "سینه مرغ را قطعه کنید و با کمی روغن تفت دهید تا کاملاً پخته شود (دمای مرکز ۷۴ درجه).",
+   "هویج و کدو را اضافه کنید و ۸ دقیقه بپزید.",
+   "همه را با برنج سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_lentil_soup",
+  "name_en": "Lentil soup",
+  "name_fa": "سوپ عدس",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2644283",
+    150
+   ],
+   [
+    "fdc_790646",
+    100
+   ],
+   [
+    "fdc_2258586",
+    100
+   ],
+   [
+    "fdc_2346401",
+    150
+   ],
+   [
+    "fdc_2685580",
+    30
+   ],
+   [
+    "fdc_1104647",
+    10
+   ]
+  ],
+  "servings": 3,
+  "cook_minutes": 45,
+  "steps": [
+   "پیاز و سیر را با کمی روغن سرخ کنید.",
+   "رب را اضافه کنید و ۱ دقیقه تفت دهید.",
+   "عدس شسته، هویج و سیب‌زمینی خرد‌شده و ۱ لیتر آب بریزید.",
+   "۳۰ تا ۳۵ دقیقه بپزید تا نرم شود و در صورت دلخواه با گوشت‌کوب له کنید."
+  ]
+ },
+ {
+  "id": "demo_chickpea_stew",
+  "name_en": "Chickpea and spinach stew",
+  "name_fa": "خوراک نخود و اسفناج",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2644282",
+    150
+   ],
+   [
+    "fdc_790646",
+    100
+   ],
+   [
+    "fdc_1999634",
+    200
+   ],
+   [
+    "fdc_1999632",
+    100
+   ]
+  ],
+  "servings": 3,
+  "cook_minutes": 60,
+  "steps": [
+   "نخود را شب قبل خیس کنید و ۴۵ دقیقه بپزید تا نرم شود.",
+   "پیاز را با کمی روغن سرخ کنید و گوجه خرد‌شده اضافه کنید.",
+   "نخود پخته و اسفناج را بریزید و ۱۰ دقیقه بپزید."
+  ]
+ },
+ {
+  "id": "demo_salmon_potato_broccoli",
+  "name_en": "Baked salmon with potatoes and broccoli",
+  "name_fa": "سالمون کباب‌شده با سیب‌زمینی و بروکلی",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2684441",
+    300
+   ],
+   [
+    "fdc_2346401",
+    300
+   ],
+   [
+    "fdc_747447",
+    200
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 35,
+  "steps": [
+   "فر را روی ۲۰۰ درجه گرم کنید.",
+   "سیب‌زمینی‌های قطعه‌شده را با کمی روغن ۱۵ دقیقه بپزید.",
+   "سالمون و بروکلی را اضافه کنید و ۱۵ دقیقه دیگر بپزید تا ماهی کاملاً پخته شود (دمای مرکز ۶۳ درجه)."
+  ]
+ },
+ {
+  "id": "demo_beef_eggplant",
+  "name_en": "Ground beef and eggplant skillet",
+  "name_fa": "تابه‌ی گوشت چرخ‌کرده و بادمجان",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2514743",
+    250
+   ],
+   [
+    "fdc_2685577",
+    400
+   ],
+   [
+    "fdc_1999634",
+    200
+   ],
+   [
+    "fdc_790646",
+    100
+   ]
+  ],
+  "servings": 3,
+  "cook_minutes": 40,
+  "steps": [
+   "بادمجان را حلقه کنید و با کمی روغن تفت دهید تا نرم شود و کنار بگذارید.",
+   "پیاز و گوشت را سرخ کنید تا کاملاً پخته شود.",
+   "گوجه و بادمجان را اضافه کنید و ۱۰ دقیقه با حرارت ملایم بپزید."
+  ]
+ },
+ {
+  "id": "demo_tuna_chickpea_salad",
+  "name_en": "Tuna and chickpea salad",
+  "name_fa": "سالاد تن ماهی و نخود",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_334194",
+    160
+   ],
+   [
+    "fdc_2644288",
+    200
+   ],
+   [
+    "fdc_2346406",
+    150
+   ],
+   [
+    "fdc_1999634",
+    150
+   ],
+   [
+    "fdc_2346389",
+    100
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 10,
+  "steps": [
+   "سبزیجات را خرد کنید.",
+   "تن ماهی و نخود آبکش‌شده را اضافه کنید.",
+   "کمی روغن زیتون اضافه کنید و مخلوط کنید."
+  ]
+ },
+ {
+  "id": "demo_chicken_potato_tray",
+  "name_en": "Chicken thigh and potato tray bake",
+  "name_fa": "ران مرغ و سیب‌زمینی در فر",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2646171",
+    300
+   ],
+   [
+    "fdc_2346401",
+    400
+   ],
+   [
+    "fdc_2258590",
+    150
+   ],
+   [
+    "fdc_790646",
+    100
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 50,
+  "steps": [
+   "فر را روی ۲۰۰ درجه گرم کنید.",
+   "همه‌ی مواد را با روغن در سینی بریزید.",
+   "۴۰ دقیقه بپزید تا مرغ کاملاً پخته شود (دمای مرکز ۷۴ درجه)."
+  ]
+ },
+ {
+  "id": "demo_lentil_rice_yogurt",
+  "name_en": "Lentil rice with yogurt",
+  "name_fa": "عدس‌پلوی ساده با ماست",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2512381",
+    150
+   ],
+   [
+    "fdc_2644283",
+    100
+   ],
+   [
+    "fdc_790646",
+    100
+   ],
+   [
+    "fdc_2259793",
+    200
+   ]
+  ],
+  "servings": 3,
+  "cook_minutes": 45,
+  "steps": [
+   "عدس را ۱۵ دقیقه جداگانه بپزید.",
+   "پیاز را سرخ کنید.",
+   "برنج و عدس را با دو برابر آب بپزید تا آب جذب شود.",
+   "پیاز را روی آن بریزید و با ماست سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_shrimp_veg_rice",
+  "name_en": "Shrimp and vegetable rice",
+  "name_fa": "برنج با میگو و سبزیجات",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2684443",
+    250
+   ],
+   [
+    "fdc_2512381",
+    150
+   ],
+   [
+    "fdc_2258590",
+    150
+   ],
+   [
+    "fdc_2685570",
+    150
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 35,
+  "steps": [
+   "برنج را بپزید.",
+   "سبزیجات را با کمی روغن تفت دهید.",
+   "میگو را اضافه کنید و ۳–۴ دقیقه بپزید تا کاملاً صورتی شود.",
+   "با برنج مخلوط و سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_blackbean_sweetpotato",
+  "name_en": "Black bean and sweet potato bowl",
+  "name_fa": "کاسه‌ی لوبیا سیاه و سیب‌زمینی شیرین",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2644285",
+    250
+   ],
+   [
+    "fdc_2346404",
+    300
+   ],
+   [
+    "fdc_2258590",
+    100
+   ],
+   [
+    "fdc_790646",
+    60
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 35,
+  "steps": [
+   "لوبیای آبکش‌شده را آماده کنید.",
+   "سیب‌زمینی شیرین مکعبی را در فر ۲۰۰ درجه ۲۵ دقیقه بپزید.",
+   "پیاز و فلفل را تفت دهید و همه را در کاسه مخلوط کنید."
+  ]
+ },
+ {
+  "id": "demo_mushroom_spinach_omelette",
+  "name_en": "Mushroom, spinach and feta omelette",
+  "name_fa": "املت قارچ، اسفناج و پنیر",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_748967",
+    200
+   ],
+   [
+    "fdc_1999629",
+    150
+   ],
+   [
+    "fdc_1999632",
+    80
+   ],
+   [
+    "fdc_2259796",
+    40
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 20,
+  "steps": [
+   "قارچ را با کمی روغن تفت دهید تا آبش کشیده شود.",
+   "اسفناج را اضافه کنید تا خشک شود.",
+   "تخم‌مرغ را بریزید، پنیر را پخش کنید و بپزید تا جا بیفتد."
+  ]
+ },
+ {
+  "id": "demo_cauliflower_chickpea_curry",
+  "name_en": "Cauliflower and chickpea curry",
+  "name_fa": "خوراک گل‌کلم و نخود",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2685573",
+    300
+   ],
+   [
+    "fdc_2644288",
+    200
+   ],
+   [
+    "fdc_1999634",
+    200
+   ],
+   [
+    "fdc_790646",
+    100
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 30,
+  "steps": [
+   "پیاز را با کمی روغن سرخ کنید.",
+   "گوجه خرد‌شده را اضافه کنید و ۵ دقیقه بپزید.",
+   "گل‌کلم و نخود را بریزید و با ۱ لیوان آب ۱۵ دقیقه بپزید."
+  ]
+ },
+ {
+  "id": "demo_beef_broccoli_rice",
+  "name_en": "Beef and broccoli stir-fry with rice",
+  "name_fa": "گوشت و بروکلی تفت‌داده با برنج",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2646173",
+    200
+   ],
+   [
+    "fdc_2512381",
+    120
+   ],
+   [
+    "fdc_747447",
+    200
+   ],
+   [
+    "fdc_2258586",
+    100
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 35,
+  "steps": [
+   "برنج را بپزید.",
+   "گوشت را نازک برش بزنید و با کمی روغن داغ تفت دهید تا کاملاً پخته شود.",
+   "هویج و بروکلی را اضافه کنید و ۵ دقیقه بپزید.",
+   "با برنج سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_tilapia_cabbage",
+  "name_en": "Tilapia with cabbage and rice",
+  "name_fa": "ماهی تیلاپیا با کلم و برنج",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2684442",
+    300
+   ],
+   [
+    "fdc_2346407",
+    250
+   ],
+   [
+    "fdc_2512380",
+    120
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 35,
+  "steps": [
+   "برنج قهوه‌ای را بپزید (۲۵–۳۰ دقیقه).",
+   "کلم را با کمی روغن تفت دهید.",
+   "ماهی را در ماهیتابه ۴ دقیقه هر طرف بپزید تا کاملاً پخته شود."
+  ]
+ },
+ {
+  "id": "demo_lentil_rice_vegan",
+  "name_en": "Lentil rice (vegan)",
+  "name_fa": "عدس‌پلو گیاهی",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2512381",
+    200
+   ],
+   [
+    "fdc_2644283",
+    120
+   ],
+   [
+    "fdc_790646",
+    100
+   ],
+   [
+    "fdc_2258586",
+    100
+   ],
+   [
+    "fdc_2685580",
+    20
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 45,
+  "steps": [
+   "عدس را ۱۵ دقیقه بپزید.",
+   "پیاز و هویج را با کمی روغن تفت دهید و رب را اضافه کنید.",
+   "برنج و عدس را با دو برابر آب بپزید تا آب جذب شود و با تفت مخلوط کنید."
+  ]
+ },
+ {
+  "id": "demo_chickpea_potato_stew",
+  "name_en": "Chickpea and potato stew",
+  "name_fa": "خوراک نخود و سیب‌زمینی",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2644282",
+    150
+   ],
+   [
+    "fdc_2346401",
+    400
+   ],
+   [
+    "fdc_790646",
+    100
+   ],
+   [
+    "fdc_1999634",
+    200
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 60,
+  "steps": [
+   "نخود را شب قبل خیس کنید و ۴۵ دقیقه بپزید.",
+   "پیاز را تفت دهید، گوجه و سیب‌زمینی قطعه‌شده را اضافه کنید.",
+   "نخود و ۲ لیوان آب بریزید و ۲۰ دقیقه بپزید."
+  ]
+ },
+ {
+  "id": "demo_rice_beans_bowl",
+  "name_en": "Rice and beans bowl",
+  "name_fa": "کاسه‌ی برنج و لوبیا",
+  "slots": [
+   "lunch",
+   "dinner"
+  ],
+  "ingredients": [
+   [
+    "fdc_2512381",
+    160
+   ],
+   [
+    "fdc_2644285",
+    300
+   ],
+   [
+    "fdc_2258590",
+    100
+   ],
+   [
+    "fdc_790646",
+    60
+   ]
+  ],
+  "servings": 2,
+  "cook_minutes": 30,
+  "steps": [
+   "برنج را بپزید.",
+   "پیاز و فلفل را با کمی روغن تفت دهید.",
+   "لوبیای آبکش‌شده را اضافه کنید و ۵ دقیقه گرم کنید و با برنج سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_big_vegan_oats",
+  "name_en": "Big vegan oat bowl",
+  "name_fa": "کاسه‌ی بزرگ جو دوسر گیاهی",
+  "slots": [
+   "breakfast"
+  ],
+  "ingredients": [
+   [
+    "fdc_2346396",
+    80
+   ],
+   [
+    "fdc_1999630",
+    300
+   ],
+   [
+    "fdc_1105314",
+    120
+   ],
+   [
+    "fdc_2346394",
+    30
+   ],
+   [
+    "fdc_2262075",
+    10
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 10,
+  "steps": [
+   "شیر سویا را گرم کنید و جو دوسر را ۵ دقیقه بپزید.",
+   "موز، گردو و بذر کتان را روی آن بریزید."
+  ]
+ },
+ {
+  "id": "demo_hummus_veg_plate",
+  "name_en": "Hummus and vegetable plate",
+  "name_fa": "بشقاب حمص و سبزیجات",
+  "slots": [
+   "snack",
+   "lunch"
+  ],
+  "ingredients": [
+   [
+    "fdc_321358",
+    80
+   ],
+   [
+    "fdc_2258586",
+    80
+   ],
+   [
+    "fdc_2346406",
+    80
+   ],
+   [
+    "fdc_335240",
+    40
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 5,
+  "steps": [
+   "سبزیجات را به شکل چوب برش بزنید.",
+   "با حمص و نان سرو کنید."
+  ]
+ },
+ {
+  "id": "demo_apple_almonds",
+  "name_en": "Apple with almonds",
+  "name_fa": "سیب و بادام",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_1750340",
+    150
+   ],
+   [
+    "fdc_2346393",
+    20
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 2,
+  "steps": [
+   "سیب را برش بزنید و با بادام بخورید."
+  ]
+ },
+ {
+  "id": "demo_yogurt_walnut",
+  "name_en": "Yogurt with walnuts",
+  "name_fa": "ماست و گردو",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_2259793",
+    150
+   ],
+   [
+    "fdc_2346394",
+    15
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 2,
+  "steps": [
+   "گردو را خرد کنید و روی ماست بریزید."
+  ]
+ },
+ {
+  "id": "demo_banana_pb",
+  "name_en": "Banana with peanut butter",
+  "name_fa": "موز و کره بادام‌زمینی",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_1105314",
+    120
+   ],
+   [
+    "fdc_2262072",
+    20
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 2,
+  "steps": [
+   "موز را برش بزنید و با کره بادام‌زمینی بخورید."
+  ]
+ },
+ {
+  "id": "demo_orange_pistachio",
+  "name_en": "Orange with pistachios",
+  "name_fa": "پرتقال و پسته",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_746771",
+    150
+   ],
+   [
+    "fdc_2515379",
+    20
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 2,
+  "steps": [
+   "پرتقال را پوست بگیرید و با پسته بخورید."
+  ]
+ },
+ {
+  "id": "demo_boiled_eggs_tomato",
+  "name_en": "Boiled eggs with tomato",
+  "name_fa": "تخم‌مرغ آب‌پز و گوجه",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_748967",
+    100
+   ],
+   [
+    "fdc_1999634",
+    100
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 12,
+  "steps": [
+   "تخم‌مرغ‌ها را ۹–۱۰ دقیقه بجوشانید و با گوجه بخورید."
+  ]
+ },
+ {
+  "id": "demo_pear_walnut",
+  "name_en": "Pear with walnuts",
+  "name_fa": "گلابی و گردو",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_746773",
+    150
+   ],
+   [
+    "fdc_2346394",
+    15
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 2,
+  "steps": [
+   "گلابی را برش بزنید و با گردو بخورید."
+  ]
+ },
+ {
+  "id": "demo_cottage_cucumber",
+  "name_en": "Cottage cheese with cucumber",
+  "name_fa": "پنیر لور و خیار",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_2346384",
+    120
+   ],
+   [
+    "fdc_2346406",
+    100
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 3,
+  "steps": [
+   "خیار را خرد کنید و با پنیر لور مخلوط کنید."
+  ]
+ },
+ {
+  "id": "demo_fruit_plate",
+  "name_en": "Fruit plate with figs and almonds",
+  "name_fa": "بشقاب میوه با انجیر و بادام",
+  "slots": [
+   "snack"
+  ],
+  "ingredients": [
+   [
+    "fdc_327046",
+    100
+   ],
+   [
+    "fdc_325430",
+    120
+   ],
+   [
+    "fdc_746768",
+    30
+   ],
+   [
+    "fdc_2346393",
+    15
+   ]
+  ],
+  "servings": 1,
+  "cook_minutes": 3,
+  "steps": [
+   "میوه‌ها را برش بزنید و با انجیر و بادام سرو کنید."
+  ]
+ }
+]

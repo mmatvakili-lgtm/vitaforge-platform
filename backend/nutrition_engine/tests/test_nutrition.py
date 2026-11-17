@@ -97,3 +97,27 @@ def test_logbook():
             n.add_meal("u", **bad)
     with pytest.raises(ValidationFailed):
         n.add_water("u", 5)
+
+
+def test_fdc_negative_carbs_by_difference_is_clamped_and_noted():
+    from nutrition_engine.fdc_import import import_fdc
+    row = {"fdcId": 1, "description": "Chicken x", "foodNutrients": [
+        {"nutrient": {"number": "203", "unitName": "G", "name": "Protein"}, "amount": 22.5},
+        {"nutrient": {"number": "205", "unitName": "G", "name": "Carbohydrate, by difference"}, "amount": -0.368},
+        {"nutrient": {"number": "957", "unitName": "KCAL", "name": "Energy (Atwater General Factors)"}, "amount": 106}]}
+    rep = import_fdc([row], "t")
+    assert not rep.rejected and rep.accepted[0].per_100g["carbs_g"] == 0.0
+    assert any("by difference" in n for n in rep.accepted[0].notes)
+    row["foodNutrients"][1]["amount"] = -5                                   # a real negative is still rejected
+    assert import_fdc([row], "t").rejected
+
+
+def test_fdc_missing_energy_is_derived_only_on_request_and_marked():
+    from nutrition_engine.fdc_import import import_fdc
+    row = {"fdcId": 2, "description": "Oil x", "foodNutrients": [
+        {"nutrient": {"number": "203", "unitName": "G", "name": "Protein"}, "amount": 0},
+        {"nutrient": {"number": "204", "unitName": "G", "name": "Total lipid (fat)"}, "amount": 100},
+        {"nutrient": {"number": "205", "unitName": "G", "name": "Carbohydrate, by difference"}, "amount": 0}]}
+    assert "kcal" not in import_fdc([row], "t").accepted[0].per_100g
+    f = import_fdc([row], "t", derive_missing_energy=True).accepted[0]
+    assert f.per_100g["kcal"] == 900 and f.nutrient_refs["kcal"]["id"] == "derived" and any("derived" in n for n in f.notes)

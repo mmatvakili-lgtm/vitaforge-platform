@@ -8,6 +8,7 @@ import { barPct, lastDates } from "../../../../lib/trends.ts";
 import { rangeText } from "../../../../lib/nutrition.ts";
 import { useApi, useT } from "../../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../../components/ui.tsx";
+import { Select } from "../../../../components/Select.tsx";
 
 const today = () => new Date().toISOString().slice(0, 10);
 type Kind = "food" | "recipe" | "manual";
@@ -152,16 +153,16 @@ export default function LogPage() {
 
       <Card title={t("nut.log.add")}>
         <form onSubmit={add} noValidate>
-          <Field id="slot" label={t("nut.log.slot")}><select id="slot" value={slot} onChange={(e) => setSlot(e.target.value as Slot)}>{MEAL_SLOTS.map((s) => <option key={s} value={s}>{t(`nut.slot.${s}`)}</option>)}</select></Field>
+          <Field id="slot" label={t("nut.log.slot")}><Select id="slot" value={slot} onChange={(e) => setSlot(e.target.value as Slot)}>{MEAL_SLOTS.map((s) => <option key={s} value={s}>{t(`nut.slot.${s}`)}</option>)}</Select></Field>
           <Field id="kind" label={t("nut.log.source")}>
-            <select id="kind" value={kind} onChange={(e) => { setKind(e.target.value as Kind); setPick(""); setAmount(""); }}>
+            <Select id="kind" value={kind} onChange={(e) => { setKind(e.target.value as Kind); setPick(""); setAmount(""); }}>
               <option value="food">{t("foods.tab.foods")}</option><option value="recipe">{t("foods.tab.recipes")}</option><option value="manual">{t("nut.log.manual")}</option>
-            </select>
+            </Select>
           </Field>
           {kind !== "manual" ? (
             <>
               <Field id="pick" label={t(kind === "food" ? "foods.tab.foods" : "foods.tab.recipes")}>
-                <select id="pick" value={pick} onChange={(e) => setPick(e.target.value)}><option value="" />{options.map((x) => <option key={x.id} value={x.id}>{label(x)}{x.review_status !== "reviewed" ? ` (${t("lib.unreviewed")})` : ""}</option>)}</select>
+                <Select id="pick" value={pick} onChange={(e) => setPick(e.target.value)}><option value="" />{options.map((x) => <option key={x.id} value={x.id}>{label(x)}{x.review_status !== "reviewed" ? ` (${t("lib.unreviewed")})` : ""}</option>)}</Select>
               </Field>
               {options.length === 0 && <p className="muted">{t("foods.empty.body")}</p>}
               <Field id="amt" label={t(kind === "food" ? "nut.log.grams" : "nut.log.servings")}><input id="amt" inputMode="decimal" dir="ltr" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder={kind === "recipe" ? "1" : ""} /></Field>

@@ -52,7 +52,7 @@ def rows_from_json(data) -> list:
     raise ValueError("unrecognised FDC JSON shape (expected a list, FoundationFoods or SRLegacyFoods)")
 
 
-def import_fdc(data, retrieved: str, dataset: str = "usda_fdc") -> FdcReport:
+def import_fdc(data, retrieved: str, dataset: str = "usda_fdc", derive_missing_energy: bool = False) -> FdcReport:
     rep = FdcReport()
     seen = set()
     by_desc: Dict[str, str] = {}
@@ -62,6 +62,8 @@ def import_fdc(data, retrieved: str, dataset: str = "usda_fdc") -> FdcReport:
             name = str(row["description"]).strip()
             per: Dict[str, float] = {}
             refs: Dict[str, Dict[str, str]] = {}
+            clamped = None
+            derived_note = None
             for fn in row.get("foodNutrients", ()):
                 nut = fn.get("nutrient") or {}
                 num, amt = str(nut.get("number", "")), fn.get("amount")
@@ -70,10 +72,23 @@ def import_fdc(data, retrieved: str, dataset: str = "usda_fdc") -> FdcReport:
                 for key, (nums, unit, frag) in NUTRIENT_MAP.items():
                     if num in nums and key not in per:
                         if str(nut.get("unitName", "")).upper() == unit and frag in str(nut.get("name", "")).lower():
-                            per[key] = float(amt)
+                            val = float(amt)
+                            if key == "carbs_g" and -1.0 <= val < 0:
+                                # FDC "carbohydrate, by difference" is computed by subtraction and can be slightly negative for meat/fish;
+                                # that is a rounding artefact, stored as 0 and recorded in the record notes (never silently).
+                                val, clamped = 0.0, f"carbohydrate by difference was {amt} in FDC; stored as 0"
+                            per[key] = val
                             refs[key] = {"id": num, "unit": str(nut.get("unitName", "")).upper(), "name": str(nut.get("name", ""))}
                         else:
                             rep.nutrient_mismatches += 1
+            if derive_missing_energy and "kcal" not in per and all(x in per for x in ("protein_g", "fat_g", "carbs_g")):
+                # Some Foundation rows carry no energy value. Atwater general factors (4/4/9 kcal per g) are the method FDC itself uses
+                # for nutrient 957; the result is marked as DERIVED in the nutrient reference and in the notes.
+                per["kcal"] = round(4 * per["protein_g"] + 4 * per["carbs_g"] + 9 * per["fat_g"], 1)
+                refs["kcal"] = {"id": "derived", "unit": "KCAL", "name": "Energy (derived: Atwater general factors 4/4/9)"}
+                derived_note = "energy derived from protein/fat/carbohydrate with Atwater general factors (not in the FDC row)"
+            else:
+                derived_note = None
             servings = {}
             for p in row.get("foodPortions", ()) or ():
                 gw = p.get("gramWeight")
@@ -87,7 +102,7 @@ def import_fdc(data, retrieved: str, dataset: str = "usda_fdc") -> FdcReport:
                 id=fid, name_en=name, category=((row.get("foodCategory") or {}).get("description") if isinstance(row.get("foodCategory"), Mapping) else str(row.get("foodCategory") or "")),
                 per_100g=per, serving_g=servings, nutrient_refs=refs, basis="per_100g", allergens_known=False,
                 source=FoodSource(dataset, fdc_id, "CC0-1.0 (declared by FDC; not re-verified)", False, str(row.get("publicationDate") or "") or None, retrieved),
-                status="pending_review", notes=("allergen status unknown", "no diet tags asserted", "no Persian name"))
+                status="pending_review", notes=("allergen status unknown", "no diet tags asserted", "no Persian name") + ((clamped,) if clamped else ()) + ((derived_note,) if derived_note else ()))
             issues = validate_food(rec)
             if issues:
                 rep.rejected.append({"id": fid, "issues": issues}); continue
