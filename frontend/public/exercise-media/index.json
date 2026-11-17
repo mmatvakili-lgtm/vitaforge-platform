@@ -590,5 +590,29 @@
  "stair_climb": {
   "src": "Step_Mill",
   "name": "Step Mill"
+ },
+ "kettlebell_swing": {
+  "src": "One-Arm_Kettlebell_Swings",
+  "name": "One-Arm Kettlebell Swings"
+ },
+ "cable_chest_fly": {
+  "src": "Flat_Bench_Cable_Flyes",
+  "name": "Flat Bench Cable Flyes"
+ },
+ "dumbbell_z_press": {
+  "src": "Seated_Dumbbell_Press",
+  "name": "Seated Dumbbell Press"
+ },
+ "wall_push_up": {
+  "src": "Incline_Push-Up",
+  "name": "Incline Push-Up"
+ },
+ "couch_stretch": {
+  "src": "Intermediate_Hip_Flexor_and_Quad_Stretch",
+  "name": "Intermediate Hip Flexor and Quad Stretch"
+ },
+ "doorway_pec_stretch": {
+  "src": "Chest_And_Front_Of_Shoulder_Stretch",
+  "name": "Chest And Front Of Shoulder Stretch"
  }
 }
