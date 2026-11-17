@@ -195,9 +195,15 @@ function create(canvas, options = {}) {
     // keep the lowest support point on the floor
     let lift = 0;
     if (S.ground && !S.hang) {
-      let low = Infinity;
-      for (const nm of ["ball_l", "ball_r", "foot_l", "foot_r", "hand_l", "hand_r", "calf_l", "calf_r"]) low = Math.min(low, bn(nm).getWorldPosition(new THREE.Vector3()).y - (/ball|foot/.test(nm) ? 0.02 : 0.045));
-      lift = -low;
+      // lowest support point rests on whatever is under it: the floor, or the box top where a foot is over the box
+      let need = -Infinity; const v3 = new THREE.Vector3();
+      for (const nm of ["ball_l", "ball_r", "ball_leaf_l", "ball_leaf_r", "foot_l", "foot_r", "hand_l", "hand_r", "calf_l", "calf_r"]) {
+        bn(nm).getWorldPosition(v3);
+        const under = S.box && /ball|foot/.test(nm) && Math.abs(v3.x - S.box.x * K) < (S.box.w ?? 0.5) / 2 + 0.02 ? S.box.h * K : 0;
+        need = Math.max(need, under - (v3.y - (/ball|foot/.test(nm) ? 0.02 : 0.045)));
+      }
+      const lift0 = need;
+      lift = S.box ? Math.max(0, lift0) : lift0;
       if (Math.abs(lift) < 0.25) { S.model.position.y = lift; S.model.updateMatrixWorld(true); }
     } else S.model.position.y = 0;
     S.pose = sk; updateProps(sk, lift);
@@ -213,28 +219,77 @@ function create(canvas, options = {}) {
   function lat(len, r, mat) { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 20), mat); m.rotation.x = Math.PI / 2; return m; }
   function plate(r, w, z) { const m = lat(w, r, matPlate); m.position.z = z; return m; }
   const GRIP_SIGN = 1;
+  // Test hook: names of body bones that sit inside a solid prop (box, seat, bench, wall); skin tolerance keeps resting contact legal.
+  function collisions() {
+    S.model.updateMatrixWorld(true); S.props.updateMatrixWorld(true);
+    const out = [], v = new THREE.Vector3();
+    const rad = (nm) => /spine|pelvis|neck|head|thigh|upperarm|clavicle/.test(nm) ? (/spine|pelvis/.test(nm) ? 0.085 : /neck|upperarm|clavicle/.test(nm) ? 0.03 : 0.05) : /finger|index|middle|ring|pinky|thumb|leaf/.test(nm) ? 0.01 : 0.035;
+    for (const o of S.props.children) {
+      if (!o.geometry || o.geometry.type !== "BoxGeometry" || o.userData.noCheck) continue;
+      const base = new THREE.Box3().setFromObject(o);
+      for (const [nm, b] of Object.entries(S.bones)) {
+        if (/^(root|ik_)|index|middle|ring|pinky|thumb/.test(nm)) continue;
+        b.getWorldPosition(v); const r = rad(nm) - 0.012;
+        const bx = base.clone().expandByScalar(r);
+        if (bx.containsPoint(v) && Math.min(bx.max.y - v.y, v.y - bx.min.y, v.x - bx.min.x, bx.max.x - v.x) > 0.012) out.push(nm + ":dy" + Math.round((bx.max.y - v.y) * 100) + "/dx" + Math.round(Math.min(v.x - bx.min.x, bx.max.x - v.x) * 100));
+      }
+    }
+    return out;
+  }
+  // Place the box from the rig itself (not the stick skeleton): at the given solved frame its top meets the sole of the supporting
+  // foot/feet and it spans heel..toe, so the feet stand on it instead of inside it.
+  function calibrateBox(sk, feet) {
+    const g = S.ground; S.ground = false; S.box = null; setSolved(sk); S.ground = g;
+    const P = (n) => bn(n).getWorldPosition(new THREE.Vector3());
+    const sides = ["l", "r"].map((d) => ({ heel: P(`foot_${d}`), ball: P(`ball_${d}`), toe: P(`ball_leaf_${d}`) }));
+    const use = feet === "both" ? sides : [sides.sort((a, b) => b.ball.y - a.ball.y)[0]];
+    const x0 = Math.min(...use.map((s2) => Math.min(s2.heel.x, s2.toe.x))) - 0.05, x1 = Math.max(...use.map((s2) => Math.max(s2.heel.x, s2.toe.x))) + 0.05;
+    const top = Math.min(...use.map((s2) => Math.min(s2.ball.y, s2.toe.y))) - 0.02;
+    S.box = { x: (x0 + x1) / 2 / K, w: x1 - x0, h: Math.max(0.1, top) / K };
+  }
   function setBox(b) { S.box = b || null; }
   function setProps(list) { S.propList = list || []; clearProps(); S.grip = S.propList.some((p) => /^(dumbbell|kettlebell|barbell|bar-hang|band-hands|cable-hands)/.test(p)) ? 1 : 0.3; }
   function updateProps(sk, lift) {
     clearProps();
     const add = (o, x, y, z = 0) => { o.position.set(x * K, y * K + lift, z); S.props.add(o); return o; };
     const hand = sk.handA;
+    // centre of the closed fist in world space (already includes the floor lift): props are placed here so the grip really holds them
+    const fist = (sd) => { const a = bn(`hand_${sd}`).getWorldPosition(new THREE.Vector3()), b = bn(`middle_02_${sd}`).getWorldPosition(new THREE.Vector3()); return a.add(b).multiplyScalar(0.5); };
+    const fA = fist("l"), fB = fist("r");
     for (const p of S.propList || []) {
-      if (p === "dumbbell") for (const h of [sk.handA, sk.handB]) { const g = new THREE.Group(); g.add(lat(0.16, 0.012, matMetal)); g.add(plate(0.05, 0.03, 0.07)); g.add(plate(0.05, 0.03, -0.07)); add(g, h[0], h[1], h === sk.handA ? 0.1 : -0.1); }
-      else if (p === "kettlebell") { const g = new THREE.Group(); g.add(new THREE.Mesh(new THREE.SphereGeometry(0.09, 24, 16), matPlate)); const t = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.012, 8, 20, Math.PI), matMetal); t.position.y = 0.08; g.add(t); add(g, hand[0], hand[1] - 9); }
+      if (p === "dumbbell") for (const f of [fA, fB]) { const g = new THREE.Group(); g.add(lat(0.16, 0.012, matMetal)); g.add(plate(0.05, 0.03, 0.07)); g.add(plate(0.05, 0.03, -0.07)); g.position.copy(f); S.props.add(g); }
+      else if (p === "kettlebell") { const g = new THREE.Group(); g.add(new THREE.Mesh(new THREE.SphereGeometry(0.09, 24, 16), matPlate)); const t = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.012, 8, 20, Math.PI), matMetal); t.position.y = 0.08; g.add(t); const f = fA.clone().lerp(fB, 0.5); g.position.set(f.x, f.y - 0.14, f.z); S.props.add(g); }
       else if (/^barbell/.test(p)) {
         const g = new THREE.Group(); g.add(lat(1.7, 0.014, matMetal)); for (const s of [-1, 1]) { g.add(plate(0.14, 0.035, s * 0.52)); }
-        const at = p === "barbell-back" ? [sk.shoulder[0] - 6, sk.shoulder[1] + 2] : p === "barbell-front" ? [sk.shoulder[0] + 8, sk.shoulder[1] - 2] : p === "barbell-hip" ? [sk.hip[0], sk.hip[1] + 10] : [hand[0], hand[1]];
-        add(g, at[0], at[1]);
+        const at = p === "barbell-back" ? [sk.shoulder[0] - 6, sk.shoulder[1] + 2] : p === "barbell-front" ? [sk.shoulder[0] + 8, sk.shoulder[1] - 2] : p === "barbell-hip" ? [sk.hip[0], sk.hip[1] + 10] : null;
+        if (at) add(g, at[0], at[1]); else { const f = fA.clone().lerp(fB, 0.5); g.position.set(f.x, f.y, 0); S.props.add(g); }
       }
-      else if (p === "seat") { const m = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.07, 0.36), matWood); add(m, sk.hip[0], sk.hip[1] - 11); const post = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.07), matWood); post.position.set(m.position.x, m.position.y - 0.19, 0); S.props.add(post); }
-      else if (p === "bench-back" || p === "bench-seat") { const m = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.08, 0.34), matWood); const x = p === "bench-back" ? (sk.shoulder[0] + sk.hip[0]) / 2 : sk.handA[0] - 20; const y = p === "bench-back" ? Math.min(sk.shoulder[1], sk.hip[1]) - 13 : sk.handA[1] - 6; add(m, x, y); m.position.y -= 0.18; const leg = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3, 0.3), matWood); leg.position.set(m.position.x - 0.35, m.position.y - 0.19, 0); S.props.add(leg); const leg2 = leg.clone(); leg2.position.x = m.position.x + 0.35; S.props.add(leg2); m.position.y += 0.18; leg.position.y += 0.18; leg2.position.y += 0.18; }
-      else if (p === "box-foot" || p === "box-feet") { const bx = S.box ?? { x: sk.ankleA[0], h: 30 }; const h = bx.h * K; const m = new THREE.Mesh(new THREE.BoxGeometry(0.5, h, 0.5), matWood); m.position.set(bx.x * K, h / 2, 0); S.props.add(m); }
-      else if (p === "bar-hang") { const barY = (S.hangBar ?? 188); add(lat(1.1, 0.014, matMetal), sk.handA[0], barY); }
+      else if (p === "seat" || p === "bench-back" || p === "bench-shoulder" || p === "bench-seat") {
+        const P = (n) => bn(n).getWorldPosition(new THREE.Vector3());
+        const R = { spine: 0.085, pelvis: 0.085 };
+        let top, cx, len;
+        if (p === "seat") { const pv = P("pelvis"); top = pv.y - R.pelvis - 0.012; cx = pv.x; len = 0.55; }
+        else if (p === "bench-seat") { const hy = Math.min(P("hand_l").y, P("hand_r").y), hx = (P("hand_l").x + P("hand_r").x) / 2; top = hy - 0.03; cx = hx - 0.18; len = 0.5; }
+        else { const ns = p === "bench-back" ? ["spine_01", "spine_02", "spine_03", "pelvis"] : ["spine_03", "spine_02"]; const ps = ns.map(P); top = Math.min(...ps.map((q) => q.y)) - R.spine - 0.012; cx = (Math.min(...ps.map((q) => q.x)) + Math.max(...ps.map((q) => q.x))) / 2; len = p === "bench-back" ? 0.95 : 0.4; }
+        const th = 0.07, m = new THREE.Mesh(new THREE.BoxGeometry(len, th, 0.34), matWood); m.position.set(cx, top - th / 2, 0); S.props.add(m);
+        for (const sx of [-1, 1]) { const h = top - th; const leg = new THREE.Mesh(new THREE.BoxGeometry(0.06, Math.max(0.02, h), 0.28), matWood); leg.position.set(cx + sx * (len / 2 - 0.05), h / 2, 0); S.props.add(leg); }
+      }
+      else if (p === "sled") {
+        // leg-press seat: a reclined pad resting against the back/hips and a foot platform that rides with the feet
+        const P = (n) => bn(n).getWorldPosition(new THREE.Vector3());
+        const a = P("pelvis"), b = P("spine_03"), ang = Math.atan2(b.y - a.y, b.x - a.x), ct = Math.cos(ang), st = Math.sin(ang);
+        const mid = a.clone().lerp(b, 0.5), off = 0.085 + 0.012 + 0.03; let nx = st, ny = -ct; if (ny > 0) { nx = -nx; ny = -ny; }
+        const pad = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.06, 0.4), matWood); pad.rotation.z = ang; pad.position.set(mid.x + nx * off, mid.y + ny * off, 0); pad.userData.noCheck = true; S.props.add(pad);
+        const t1 = P("ball_leaf_l"), t2 = P("ball_leaf_r"), fx = Math.max(t1.x, t2.x) + 0.05, fy = (t1.y + t2.y) / 2;
+        const top = fy + 0.25, plate2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, top, 0.5), matMetal); plate2.position.set(fx + 0.02, top / 2, 0); S.props.add(plate2);
+        for (const e of [-1, 1]) { const ex = mid.x + nx * off + e * 0.475 * ct, ey = mid.y + ny * off + e * 0.475 * st; const post = new THREE.Mesh(new THREE.BoxGeometry(0.05, Math.max(0.02, ey), 0.4), matWood); post.position.set(ex, Math.max(0.02, ey) / 2, 0); post.userData.noCheck = true; S.props.add(post); }
+      }
+      else if (p === "box-foot" || p === "box-feet") { const bx = S.box ?? { x: sk.ankleA[0], h: 30, w: 0.5 }; const h = bx.h * K; const m = new THREE.Mesh(new THREE.BoxGeometry(bx.w ?? 0.5, h, 0.5), matWood); m.position.set(bx.x * K, h / 2, 0); S.props.add(m); }
+      else if (p === "bar-hang") { const barY = (S.hangBar ?? 188); { const f = fA.clone().lerp(fB, 0.5); const m = lat(1.1, 0.014, matMetal); m.position.set(f.x, f.y, 0); S.props.add(m); } }
       else if (p === "wall") { const m = new THREE.Mesh(new THREE.BoxGeometry(0.06, 2, 1.2), matWood); add(m, sk.hip[0] - 62, 100); }
       else if (p === "band-hands" || p === "cable-hands") {
         const a = p === "band-hands" ? new THREE.Vector3(-0.9, hand[1] * K + lift, 0) : new THREE.Vector3(1.0, Math.max(hand[1] * K, 0.2) + lift, 0);
-        const b = new THREE.Vector3(hand[0] * K, hand[1] * K + lift, 0.0);
+        const b = fA.clone().lerp(fB, 0.5);
         S.props.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), matBand));
       }
     }
@@ -283,7 +338,7 @@ function create(canvas, options = {}) {
   }
 
   const api = {
-    setSolved, setTargets, setProps, setBox, frame, playClip, stopClip, setClipTime, hasClip: (n) => !!S.actions[n],
+    setSolved, setTargets, setProps, setBox, calibrateBox, collisions, frame, playClip, stopClip, setClipTime, hasClip: (n) => !!S.actions[n],
     setAutoRotate(on) { S.autoYaw = !!on; },
     dispose() { S.disposed = true; cancelAnimationFrame(raf); ro.disconnect(); renderer.dispose(); },
   };
