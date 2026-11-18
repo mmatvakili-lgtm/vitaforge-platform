@@ -1,0 +1,32 @@
+# Push-to-deploy of the API to a free Hugging Face Space (Docker; no credit card). Runs on every push to main, but ONLY when the repo
+# variable HF_SPACE (e.g. "myuser/vitaforge-api") is set. The write token is the repo secret HF_TOKEN; it is never printed or committed.
+name: deploy-hf
+on:
+  push:
+    branches: [main]
+    paths: ["backend/**", "docs/02-architecture/07-OPENAPI-SPECIFICATION.yaml", "deploy/hf/**", ".github/workflows/deploy-hf.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    if: ${{ vars.HF_SPACE != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage the Space tree
+        run: |
+          mkdir -p /tmp/space/docs/02-architecture
+          cp -r backend /tmp/space/backend
+          cp docs/02-architecture/07-OPENAPI-SPECIFICATION.yaml /tmp/space/docs/02-architecture/
+          cp deploy/hf/Dockerfile deploy/hf/README.md /tmp/space/
+      - name: Push to the Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ vars.HF_SPACE }}
+        run: |
+          cd /tmp/space
+          git init -q -b main
+          git config user.name "deploy-bot" && git config user.email "deploy@users.noreply.github.com"
+          git add -A && git commit -qm "deploy ${GITHUB_SHA}"
+          git push -q --force "https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE}" main

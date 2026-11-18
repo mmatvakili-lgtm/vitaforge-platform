@@ -35,4 +35,21 @@
 - Render رایگان ممکن است هر لحظه ری‌استارت شود؛ داده‌ها در Neon می‌مانند.
 - بک‌آپ خودکار نداریم؛ `manage.py backup_db` را دستی اجرا کن.
 
+## جایگزین Render بدون کارت بانکی: `Hugging Face Space`
+
+اگر Render کارت بانکی خواست، بک‌اند را روی یک Space داکری رایگان Hugging Face بگذار (بدون کارت). Neon و Vercel بدون تغییر می‌مانند. هر push به `main` که `backend/` را عوض کند خودکار دیپلوی می‌شود (`.github/workflows/deploy-hf.yml`).
+
+۱. در huggingface.co ثبت‌نام کن. **New Space**: نام مثلاً `vitaforge-api`، SDK = **Docker** (Blank)، Hardware = CPU basic (رایگان)، Visibility = Public.
+۲. در Settings ← Access Tokens یک توکن **Write** بساز و کپی کن (جایی منتشرش نکن).
+۳. در GitHub مخزن: Settings ← `Secrets and variables` ← Actions:
+   - تب Secrets: `HF_TOKEN` = توکن مرحله‌ی ۲.
+   - تب Variables: `HF_SPACE` = `<نام‌کاربری>/vitaforge-api`.
+۴. در Space: Settings ← `Variables and secrets.` این‌ها را به‌عنوان **Secret** اضافه کن: `DATABASE_URL`، `TELEGRAM_BOT_TOKEN`، `TELEGRAM_BOT_USERNAME`، `TELEGRAM_WEBHOOK_SECRET`، `DJANGO_SECRET_KEY` (یک رشته‌ی تصادفی بلند). و به‌عنوان **Variable**: `DJANGO_DEBUG=false`، `REDIS_URL=redis://unused.invalid:6379/0`، `VITAFORGE_CONTENT_MODE=ai_curated_demo`، `VITAFORGE_ACK_AI_CURATED_CONTENT=yes`، `AI_EXTERNAL_HEALTH_DATA=false`، `ALLOWED_HOSTS=<نام‌کاربری>-vitaforge-api.hf.space`، `FRONTEND_BASE_URL=https://<آدرس Vercel>`.
+۵. در GitHub: Actions ← deploy-hf ← Run workflow (یا یک commit به `main`). بعد از چند دقیقه Space سبز (Running) می‌شود.
+۶. در Vercel مقدار `BACKEND_URL` را `https://<نام‌کاربری>-vitaforge-api.hf.space` بگذار و Redeploy کن.
+۷. وب‌هوک تلگرام را از سیستم خودت (PowerShell) با همان متغیرها اجرا کن: `python manage.py telegram_set_webhook --url https://<نام‌کاربری>-vitaforge-api.hf.space`
+۸. بررسی: `https://<نام‌کاربری>-vitaforge-api.hf.space/api/v1/health/ready`.
+
+نکته‌ها: Space رایگان بعد از مدتی بی‌کاری می‌خوابد و با اولین درخواست بیدار می‌شود؛ دیسک موقت است و داده‌ها در Neon می‌مانند. این مسیر از داخل این محیط اجرا یا آزمایش نشده و دسترسی به Hugging Face از ایران تأیید نشده است؛ اگر باز نشد، فیلترشکن یا گزینه‌ی SnapDeploy (بدون کارت، ۱۰۰ ساعت در ماه) را امتحان کن.
+
 </div>
