@@ -291,15 +291,22 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
   const { t } = useT();
   const [hasPhoto, setHasPhoto] = useState(false);
   const [video, setVideo] = useState<VideoRef | null>(null);
-  // Real media first: a reference photo if one exists, otherwise a tutorial video; the 3D mannequin is always one tab away.
-  type View = "3d" | "photo" | "video";
+  const [ready, setReady] = useState(false);
+  // Only real reference media is shown (photos from free-exercise-db, tutorial videos). The generated 3D mannequin is not offered:
+  // it was judged unreliable by the product owner. It stays in the code base as the last resort for a code without any media.
+  type View = "photo" | "video" | "3d";
   const [chosen, setChosen] = useState<View | null>(null);
   const view: View = chosen ?? (hasPhoto ? "photo" : video ? "video" : "3d");
-  useEffect(() => { let live = true; loadMedia().then((m) => { if (live) setHasPhoto(!!m[code]); }); loadVideos().then((m) => { if (live) setVideo(m[code] ?? null); }); return () => { live = false; }; }, [code]);
+  useEffect(() => {
+    let live = true; setReady(false);
+    Promise.all([loadMedia(), loadVideos()]).then(([m, v]) => { if (!live) return; setHasPhoto(!!m[code]); setVideo(v[code] ?? null); setReady(true); });
+    return () => { live = false; };
+  }, [code]);
   useEffect(() => setChosen(null), [code]);
-  const tabs: [View, string][] = [["3d", t("motion.tab3d")]];
-  if (hasPhoto) tabs.unshift(["photo", t("motion.tabPhoto")]);
+  const tabs: [View, string][] = [];
+  if (hasPhoto) tabs.push(["photo", t("motion.tabPhoto")]);
   if (video) tabs.push(["video", t("motion.tabVideo")]);
+  const noMedia = ready && !hasPhoto && !video;
   return (
     <div className="an-wrap">
       {tabs.length > 1 && (
@@ -307,8 +314,11 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
           {tabs.map(([k, label]) => <button key={k} type="button" role="tab" aria-selected={view === k} className={view === k ? "on" : ""} onClick={() => setChosen(k)}>{label}</button>)}
         </div>
       )}
-      {view === "photo" && hasPhoto ? <PhotoRef code={code} height={height} /> : view === "video" && video ? <VideoRefView video={video} height={height} /> : <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />}
-      {!video && (
+      {!ready ? <div className="an an-loading" style={{ blockSize: height }} aria-hidden="true" />
+        : view === "photo" && hasPhoto ? <PhotoRef code={code} height={height} />
+        : view === "video" && video ? <VideoRefView video={video} height={height} />
+        : <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />}
+      {(noMedia || (!video && ready)) && (
         <a className="an-video" href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${code.replace(/_/g, " ")} exercise proper form`)}`} target="_blank" rel="noopener noreferrer">
           ▶ {t("motion.video")}
         </a>
@@ -316,7 +326,6 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
     </div>
   );
 }
-
 
 /** Loads the exercise (to learn its stable code) and shows its animation. Used where only the opaque id is known (plan). */
 const cache = new Map<string, { code: string; pattern?: string }>();
