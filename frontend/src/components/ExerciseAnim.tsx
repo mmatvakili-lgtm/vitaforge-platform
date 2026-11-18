@@ -292,8 +292,7 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
   const [hasPhoto, setHasPhoto] = useState(false);
   const [video, setVideo] = useState<VideoRef | null>(null);
   const [ready, setReady] = useState(false);
-  // Only real reference media is shown (photos from free-exercise-db, tutorial videos). The generated 3D mannequin is not offered:
-  // it was judged unreliable by the product owner. It stays in the code base as the last resort for a code without any media.
+  // Default view is real reference media (photo, then video); the 3D animation stays available as a tab.
   type View = "photo" | "video" | "3d";
   const [chosen, setChosen] = useState<View | null>(null);
   const view: View = chosen ?? (hasPhoto ? "photo" : video ? "video" : "3d");
@@ -306,6 +305,7 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
   const tabs: [View, string][] = [];
   if (hasPhoto) tabs.push(["photo", t("motion.tabPhoto")]);
   if (video) tabs.push(["video", t("motion.tabVideo")]);
+  tabs.push(["3d", t("motion.tab3d")]); // kept as an opt-in tab; the planned admin panel decides per exercise whether it is offered
   const noMedia = ready && !hasPhoto && !video;
   return (
     <div className="an-wrap">
