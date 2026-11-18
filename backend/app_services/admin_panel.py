@@ -58,6 +58,17 @@ class AdminPanel:
         self.s.audit.append({"kind": "admin_action", "at": int(self.clock()), "actor": actor, "action": action, "target": target,
                              "before": before, "after": after})
 
+    def claim_owner(self, uid: str, bootstrap_email: Optional[str]) -> str:
+        """Owner bootstrap for hosts without a shell: the VERIFIED account whose email equals ADMIN_BOOTSTRAP_EMAIL becomes the owner,
+        but only while no owner exists (so it can never take over later). Returns the user's role."""
+        u = self.s.users[uid]
+        be = (bootstrap_email or "").strip().lower()
+        if be and u.get("verified") and (u.get("email") or "").lower() == be and u["role"] == "user" \
+                and not any(x["role"] == OWNER for x in self.s.users.values()):
+            u["role"] = OWNER
+            self._log(uid, "owner.bootstrap", uid, "user", OWNER)
+        return u["role"]
+
     # ------------------------------------------------------------------ media overrides
     def public_overrides(self) -> dict:
         return {"overrides": {c: {k: o.get(k) for k in PUBLIC_KEYS if o.get(k) is not None} for c, o in sorted(self.s.media_overrides.items())}}

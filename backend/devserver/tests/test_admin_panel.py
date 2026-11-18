@@ -119,3 +119,24 @@ def test_audit_trail_owner_only_and_complete(env):
 def test_admin_me_reports_role(env):
     h, o, a, u = env
     assert call(h, "GET", "/admin/me", o).body["role"] == "super_admin" and call(h, "GET", "/admin/me", u).body["role"] == "user"
+
+
+def test_owner_bootstrap_by_verified_email_only_once(monkeypatch):
+    h = Harness()
+    monkeypatch.setenv("ADMIN_BOOTSTRAP_EMAIL", "Boss@Ex.com")
+    other = h.login("someone@ex.com")
+    assert call(h, "GET", "/admin/me", other).body["role"] == "user"                      # a different email never gets it
+    boss = h.login("boss@ex.com")
+    assert call(h, "GET", "/admin/me", boss).body["role"] == "super_admin"
+    assert call(h, "GET", "/admin/staff", boss).status == 200
+    assert [r["action"] for r in call(h, "GET", "/admin/audit", boss).body["entries"]] == ["owner.bootstrap"]
+
+
+def test_owner_bootstrap_never_when_owner_exists_or_unset(monkeypatch):
+    h = Harness()
+    h.login("owner@ex.com", role="super_admin")
+    monkeypatch.setenv("ADMIN_BOOTSTRAP_EMAIL", "late@ex.com")
+    assert call(h, "GET", "/admin/me", h.login("late@ex.com")).body["role"] == "user"      # an owner already exists
+    monkeypatch.delenv("ADMIN_BOOTSTRAP_EMAIL")
+    h2 = Harness()
+    assert call(h2, "GET", "/admin/me", h2.login("late@ex.com")).body["role"] == "user"    # not configured
