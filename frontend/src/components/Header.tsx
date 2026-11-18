@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { MORE_NAV, PRIMARY_NAV } from "../lib/journey.ts";
 import { otherLocale } from "../lib/i18n.ts";
 import { useApi, useT } from "../lib/react/context.tsx";
+import { adminCall } from "../lib/admin.ts";
 import { ThemeSwitcher } from "./ThemeSwitcher.tsx";
 
 const ICONS: Record<string, string> = {
@@ -26,6 +27,7 @@ export function Header() {
   const other = otherLocale(locale);
   const switched = pathname.replace(new RegExp(`^/${locale}`), `/${other}`);
   const [authed, setAuthed] = useState<boolean | null>(null);
+  const [staff, setStaff] = useState(false);
 
   // Asking the server is the only truthful way to know whether the session cookie is valid; re-check on navigation (login/logout change it).
   useEffect(() => {
@@ -33,6 +35,13 @@ export function Header() {
     api.call("API-PRO-001").then((r) => { if (live) setAuthed(r.ok); });
     return () => { live = false; };
   }, [api, pathname]);
+
+  useEffect(() => {
+    let live = true;
+    if (!authed) { setStaff(false); return; }
+    adminCall<{ role: string }>("GET", "/admin/me").then((r) => { if (live) setStaff(r.ok && (r.data.role === "admin" || r.data.role === "super_admin")); });
+    return () => { live = false; };
+  }, [authed, pathname]);
 
   async function logout() {
     await api.call("API-AUTH-004");            // clears cookies server-side; ignore result: user lands on login either way
@@ -59,6 +68,7 @@ export function Header() {
               <summary className="tab"><Icon name="more" /><span>{t("nav.more")}</span></summary>
               <div className="more-panel">
                 {MORE_NAV.map((k) => <Link key={k} href={href(k)} aria-current={active(k) ? "page" : undefined}>{t(`nav.${k}`)}</Link>)}
+                {staff && <Link href={href("admin")} aria-current={active("admin") ? "page" : undefined}>{t("nav.admin")}</Link>}
                 <div className="more-tools">{tools}</div>
                 <button type="button" className="linklike" onClick={logout}>{t("nav.logout")}</button>
               </div>
