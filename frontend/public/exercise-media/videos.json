@@ -1,0 +1,302 @@
+{
+ "incline_plank": {
+  "id": "fqPJPR2aoTs",
+  "title": "Inclined (Elevated) High Plank"
+ },
+ "plank_shoulder_tap": {
+  "id": "QOCn3_iOAro",
+  "title": "Plank w/shoulder taps"
+ },
+ "hollow_hold": {
+  "id": "TNHSgs_orU0",
+  "title": "How to do a Hollow Hold"
+ },
+ "bicycle_crunch": {
+  "id": "1we3bh9uhqY",
+  "title": "How to do a Bicycle Crunch"
+ },
+ "side_plank_hip_dip": {
+  "id": "V4A0wIh5HNk",
+  "title": "How to do a Side Plank with Hip Lift - Hip Dip"
+ },
+ "copenhagen_plank": {
+  "id": "5cTh21BfXzI",
+  "title": "Copenhagen Plank (Exercise Library)"
+ },
+ "bear_plank_hold": {
+  "id": "ouIxFZSTBhc",
+  "title": "Bear Planks (hold)"
+ },
+ "suitcase_carry": {
+  "id": "V97zH30eO1g",
+  "title": "Exercise: Suitcase Carry"
+ },
+ "kettlebell_rack_carry": {
+  "id": "0OzaglIheOc",
+  "title": "Front Rack Kettlebell Carry"
+ },
+ "open_book_rotation": {
+  "id": "rDviWORCWEw",
+  "title": "Open Books (Sidelying Thoracic Rotation)"
+ },
+ "thread_the_needle": {
+  "id": "MfUx9FCOb1E",
+  "title": "Threading the needle - a thoracic spine stretch"
+ },
+ "hip_90_90_switch": {
+  "id": "HUZimFZJZWU",
+  "title": "How to Do the 90/90 Switch for Hip Mobility"
+ },
+ "figure_four_stretch": {
+  "id": "VgjgTGnBkx0",
+  "title": "How To Do Figure 4 Stretch"
+ },
+ "frog_stretch": {
+  "id": "ZWqCfEqXipA",
+  "title": "Frog (Adductor) Stretch"
+ },
+ "ankle_dorsiflexion_rock": {
+  "id": "jG2R5N8FeI0",
+  "title": "Ankle Dorsiflexion Rock"
+ },
+ "wall_slide": {
+  "id": "9ZBOvVO9JFs",
+  "title": "Wall Slide Tutorial"
+ },
+ "band_shoulder_pass_through": {
+  "id": "DzNCBJuhq10",
+  "title": "Banded Shoulder Pass Throughs"
+ },
+ "jumping_jacks": {
+  "id": "Q4QnlZs9PqI",
+  "title": "How To Do A Jumping Jack"
+ },
+ "marching_in_place": {
+  "id": "u1gmWFvEluM",
+  "title": "Marching in Place Demonstrated by a Physical Therapist"
+ },
+ "high_knees": {
+  "id": "WofWmk-4qU4",
+  "title": "HIIT Exercises: How to do High Knees"
+ },
+ "skater_hop": {
+  "id": "gS4F_YrwZVs",
+  "title": "Lateral Skater Hops (Plyometric)"
+ },
+ "burpee": {
+  "id": "G2hv_NYhM-A",
+  "title": "How To Do Burpees With Proper Form"
+ },
+ "shadow_boxing": {
+  "id": "J4j3AOVWuHE",
+  "title": "Quick Shadow Boxing Tutorial by Olympian"
+ },
+ "towel_door_row": {
+  "id": "orSy9wcO2RY",
+  "title": "How To Do An INCLINE TOWEL ROW"
+ },
+ "neutral_grip_pull_up": {
+  "id": "cd_38C6LuvY",
+  "title": "Neutral Grip Pull-Up"
+ },
+ "good_morning_bodyweight": {
+  "id": "61zbhuRiwQg",
+  "title": "Bodyweight Good Mornings (Exercise Library)"
+ },
+ "box_step_down": {
+  "id": "f8KEaHxsXKw",
+  "title": "Box Step Down"
+ },
+ "reverse_nordic": {
+  "id": "zl1m3DoiAec",
+  "title": "How To: Reverse Nordic"
+ },
+ "tibialis_wall_raise": {
+  "id": "UBTQmsuSWCk",
+  "title": "Tibialis Wall Raises Exercise"
+ },
+ "kettlebell_goblet_reverse_lunge": {
+  "id": "SXXoO-OTYmg",
+  "title": "Kettlebell Goblet Reverse Lunge"
+ },
+ "plank_reach": {
+  "id": "rFwsard85T8",
+  "title": "How to do a Plank with Arm Reach"
+ },
+ "waiter_carry": {
+  "id": "BOiPn_WHytg",
+  "title": "How To Do A Waiter's Carry"
+ },
+ "goblet_carry": {
+  "id": "MVvPCtj8en4",
+  "title": "Goblet Carry"
+ },
+ "overhead_dumbbell_carry": {
+  "id": "u2zEzUeOI-o",
+  "title": "Dumbbell Overhead Carry"
+ },
+ "landmine_rotation": {
+  "id": "Y7rSyxF_bUY",
+  "title": "Landmine Rotation — Form, Muscles Worked & Sets/Reps"
+ },
+ "cable_low_to_high_chop": {
+  "id": "73uA2xwI2VQ",
+  "title": "Cable Low-to-High Chop"
+ },
+ "bear_crawl": {
+  "id": "lRolga8vTyc",
+  "title": "Bear Crawl"
+ },
+ "shoulder_cars": {
+  "id": "QRmjqjGlIGI",
+  "title": "Shoulder CARs (controlled articular rotations)"
+ },
+ "hip_cars": {
+  "id": "vybS-uVNrqA",
+  "title": "Standing Hip CARs (Controlled Articular Rotations)"
+ },
+ "deep_squat_hold": {
+  "id": "0wzrgyAurT8",
+  "title": "How to Deep Squat Hold"
+ },
+ "quadruped_t_spine_rotation": {
+  "id": "z2zv526I7M8",
+  "title": "Quadruped Thoracic Spine Rotation"
+ },
+ "wall_sit": {
+  "id": "JaZNYM3zAP0",
+  "title": "How To Do a Wall Sit"
+ },
+ "dumbbell_front_squat": {
+  "id": "YF3FAHS2j1M",
+  "title": "Dumbbell Front Squat (2 DB's): Proper Form"
+ },
+ "cossack_squat": {
+  "id": "6JKXuqmAYRI",
+  "title": "Cossack Squat - Bodyweight Exercise Demo"
+ },
+ "box_pistol_squat": {
+  "id": "b8-P4g5Px_4",
+  "title": "Box Squat Pistol Progression"
+ },
+ "bulgarian_split_squat": {
+  "id": "dYw66M3gxSw",
+  "title": "How to do a Bulgarian split squat!"
+ },
+ "dumbbell_bulgarian_split_squat": {
+  "id": "JXhNbz4QCMU",
+  "title": "DUMBBELL BULGARIAN SPLIT SQUAT"
+ },
+ "lateral_lunge": {
+  "id": "2O0MCU_4STY",
+  "title": "How to Perform a Lateral Lunge"
+ },
+ "curtsy_lunge": {
+  "id": "6GCLb9JurOU",
+  "title": "How to Do a Curtsy Lunge Correctly"
+ },
+ "lateral_step_up": {
+  "id": "Pk7ngkIQ6n0",
+  "title": "Lateral Step-Up"
+ },
+ "jumping_lunge": {
+  "id": "hqCO8W4OD_Y",
+  "title": "Exercise Tutorial: Jumping Lunge"
+ },
+ "clamshell": {
+  "id": "kc-K2l-nzcM",
+  "title": "Clam Shells: How to"
+ },
+ "fire_hydrant": {
+  "id": "hjMEwbXhya4",
+  "title": "Fire Hydrant Exercise (Glute Medius Muscle)"
+ },
+ "wall_hip_hinge": {
+  "id": "CXEKOSj7n04",
+  "title": "Hip Hinge Against Wall"
+ },
+ "bodyweight_hip_thrust": {
+  "id": "oQg-lJkQYKI",
+  "title": "Bodyweight Hip Thrust"
+ },
+ "kettlebell_deadlift": {
+  "id": "LDfnyt0Rmaw",
+  "title": "Kettlebell DEADLIFT"
+ },
+ "dumbbell_deadlift": {
+  "id": "G6s6rUAlnyo",
+  "title": "Dumbbell Deadlift"
+ },
+ "dumbbell_single_leg_rdl": {
+  "id": "Nzo2CW7NJc4",
+  "title": "Dumbbell Single Leg Romanian Deadlift"
+ },
+ "single_leg_calf_raise": {
+  "id": "QZj4RDj119E",
+  "title": "Single Leg Calf Raise"
+ },
+ "knee_push_up": {
+  "id": "8XQ-okb5NWE",
+  "title": "Knee Push Up"
+ },
+ "pseudo_planche_push_up": {
+  "id": "9PPzcbe-h-4",
+  "title": "Pseudo Planche Push-up"
+ },
+ "band_chest_press": {
+  "id": "G5pLMDmelQk",
+  "title": "Banded Chest Press"
+ },
+ "landmine_press": {
+  "id": "7eb_ziZFduE",
+  "title": "Landmine Press Technique"
+ },
+ "pike_push_up_elevated": {
+  "id": "8URA3YSur2M",
+  "title": "PIKE PUSH UP FEET ELEVATED"
+ },
+ "pike_hold": {
+  "id": "GPvKuwSas9w",
+  "title": "Pike Hold"
+ },
+ "single_arm_band_row": {
+  "id": "vwf_-q-r1EA",
+  "title": "Single Arm Banded Row - OPEX Exercise Library"
+ },
+ "dead_hang": {
+  "id": "3CEmHJXbNpc",
+  "title": "How to dead hang"
+ },
+ "pull_up_negative": {
+  "id": "bn76WhQQMlI",
+  "title": "Negative (Eccentric) Pull Up (Technique)"
+ },
+ "band_biceps_curl": {
+  "id": "SdkLJPrwrHc",
+  "title": "Bicep curl ft. Resistance band"
+ },
+ "prone_y_raise": {
+  "id": "w1AWGKubE5U",
+  "title": "Prone Y Raise"
+ },
+ "prone_t_raise": {
+  "id": "3GJoiYUYwr0",
+  "title": "Prone T Raise"
+ },
+ "prone_w_raise": {
+  "id": "1OHYQOZTNww",
+  "title": "Prone W Raises"
+ },
+ "reverse_snow_angel": {
+  "id": "IOz1KiBFnI8",
+  "title": "How to do Reverse Snow Angels"
+ },
+ "pike_push_up": {
+  "id": "x7_I5SUAd00",
+  "title": "Pike Pushup"
+ },
+ "bird_dog": {
+  "id": "k2azbhhuKuM",
+  "title": "Bird Dog Exercise"
+ }
+}

@@ -12,6 +12,7 @@ const csp = [
   `connect-src 'self'${dev ? " ws: wss:" : ""}`,
   "manifest-src 'self'",
   "worker-src 'self' blob:",
+  "frame-src https://www.youtube-nocookie.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

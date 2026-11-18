@@ -245,6 +245,32 @@ let mediaIdx: Promise<Record<string, { name: string }>> | null = null;
 const loadMedia = (): Promise<Record<string, { name: string }>> =>
   (mediaIdx ??= fetch("/exercise-media/index.json").then((r) => (r.ok ? (r.json() as Promise<Record<string, { name: string }>>) : {})).catch(() => ({})));
 
+type VideoRef = { id: string; title: string };
+let videoIdx: Promise<Record<string, VideoRef>> | null = null;
+const loadVideos = (): Promise<Record<string, VideoRef>> =>
+  (videoIdx ??= fetch("/exercise-media/videos.json").then((r) => (r.ok ? (r.json() as Promise<Record<string, VideoRef>>) : {})).catch(() => ({})));
+
+/** A real tutorial video: nothing is requested from YouTube until the person presses play (privacy-friendly, no tracking cookies). */
+function VideoRefView({ video, height }: { video: VideoRef; height: number }) {
+  const { t } = useT();
+  const [on, setOn] = useState(false);
+  useEffect(() => setOn(false), [video.id]);
+  return (
+    <figure className="an an-photo" aria-label={t("motion.videoAria")}>
+      <div className="an3-stage an-vstage" style={{ blockSize: height }}>
+        {on ? (
+          <iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?rel=0&modestbranding=1&autoplay=1`} title={video.title} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
+        ) : (
+          <button type="button" className="an-play" onClick={() => setOn(true)}><span aria-hidden="true">▶</span> {t("motion.videoPlay")}</button>
+        )}
+      </div>
+      <figcaption>
+        <span className="an-cue muted"><bdi dir="ltr">{video.title}</bdi> — {t("motion.videoCredit")} · <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">{t("motion.videoOpen")}</a></span>
+      </figcaption>
+    </figure>
+  );
+}
+
 /** Reference photos (start / end position) from free-exercise-db, shown as a gentle crossfade. */
 function PhotoRef({ code, height }: { code: string; height: number }) {
   const { t } = useT();
@@ -264,27 +290,33 @@ function PhotoRef({ code, height }: { code: string; height: number }) {
 export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
   const { t } = useT();
   const [hasPhoto, setHasPhoto] = useState(false);
-  // A real reference photo is the default whenever one exists; the 3D mannequin is the second tab (and the only view otherwise).
-  const [chosen, setChosen] = useState<"3d" | "photo" | null>(null);
-  const view: "3d" | "photo" = chosen ?? (hasPhoto ? "photo" : "3d");
-  const setView = setChosen;
-  useEffect(() => { let live = true; loadMedia().then((m) => { if (live) setHasPhoto(!!m[code]); }); return () => { live = false; }; }, [code]);
+  const [video, setVideo] = useState<VideoRef | null>(null);
+  // Real media first: a reference photo if one exists, otherwise a tutorial video; the 3D mannequin is always one tab away.
+  type View = "3d" | "photo" | "video";
+  const [chosen, setChosen] = useState<View | null>(null);
+  const view: View = chosen ?? (hasPhoto ? "photo" : video ? "video" : "3d");
+  useEffect(() => { let live = true; loadMedia().then((m) => { if (live) setHasPhoto(!!m[code]); }); loadVideos().then((m) => { if (live) setVideo(m[code] ?? null); }); return () => { live = false; }; }, [code]);
   useEffect(() => setChosen(null), [code]);
+  const tabs: [View, string][] = [["3d", t("motion.tab3d")]];
+  if (hasPhoto) tabs.unshift(["photo", t("motion.tabPhoto")]);
+  if (video) tabs.push(["video", t("motion.tabVideo")]);
   return (
     <div className="an-wrap">
-      {hasPhoto && (
+      {tabs.length > 1 && (
         <div className="an-tabs" role="tablist" aria-label={t("motion.title")}>
-          <button type="button" role="tab" aria-selected={view === "3d"} className={view === "3d" ? "on" : ""} onClick={() => setView("3d")}>{t("motion.tab3d")}</button>
-          <button type="button" role="tab" aria-selected={view === "photo"} className={view === "photo" ? "on" : ""} onClick={() => setView("photo")}>{t("motion.tabPhoto")}</button>
+          {tabs.map(([k, label]) => <button key={k} type="button" role="tab" aria-selected={view === k} className={view === k ? "on" : ""} onClick={() => setChosen(k)}>{label}</button>)}
         </div>
       )}
-      {view === "photo" && hasPhoto ? <PhotoRef code={code} height={height} /> : <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />}
-      <a className="an-video" href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${code.replace(/_/g, " ")} exercise proper form`)}`} target="_blank" rel="noopener noreferrer">
-        ▶ {t("motion.video")}
-      </a>
+      {view === "photo" && hasPhoto ? <PhotoRef code={code} height={height} /> : view === "video" && video ? <VideoRefView video={video} height={height} /> : <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />}
+      {!video && (
+        <a className="an-video" href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${code.replace(/_/g, " ")} exercise proper form`)}`} target="_blank" rel="noopener noreferrer">
+          ▶ {t("motion.video")}
+        </a>
+      )}
     </div>
   );
 }
+
 
 /** Loads the exercise (to learn its stable code) and shows its animation. Used where only the opaque id is known (plan). */
 const cache = new Map<string, { code: string; pattern?: string }>();
