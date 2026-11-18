@@ -11,6 +11,7 @@ import dataclasses
 import hmac
 import json
 import pathlib
+import os
 import re
 import secrets
 import time
@@ -157,7 +158,7 @@ class App:
         # admin panel (not in OpenAPI; role-checked in AdminPanel; every change is audited)
         self.routes.append(("GET", re.compile("^/api/v1/media/overrides$"), lambda c: self.adm.public_overrides(), False, None))
         self.routes.append(("GET", re.compile(r"^/api/v1/media/files/(?P<fid>[^/]+)$"), self._media_file, False, None))
-        R("GET", "/admin/me", lambda c: {"role": self._raw_role(c)})
+        R("GET", "/admin/me", lambda c: {"role": self.adm.claim_owner(c["uid"], os.environ.get("ADMIN_BOOTSTRAP_EMAIL"))})
         R("PUT", r"/admin/media/(?P<code>[^/]+)", lambda c: self.adm.put_override(self._role(c), c["uid"], c["code"], c["body"]))
         R("DELETE", r"/admin/media/(?P<code>[^/]+)", lambda c: self.adm.reset_override(self._role(c), c["uid"], c["code"]))
         R("POST", "/admin/media-bulk", lambda c: self.adm.bulk(self._role(c), c["uid"], c["body"]))

@@ -22,6 +22,7 @@ services:
       - { key: VITAFORGE_CONTENT_MODE, value: ai_curated_demo }
       - { key: VITAFORGE_ACK_AI_CURATED_CONTENT, value: "yes" }
       - { key: AI_EXTERNAL_HEALTH_DATA, value: "false" }
+      - { key: ADMIN_BOOTSTRAP_EMAIL, sync: false }  # your own email: the verified account with it becomes the owner (only while none exists)
       - { key: TELEGRAM_BOT_TOKEN, sync: false }
       - { key: TELEGRAM_BOT_USERNAME, sync: false }
       - { key: TELEGRAM_WEBHOOK_SECRET, sync: false }

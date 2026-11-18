@@ -44,12 +44,15 @@
 ۳. در GitHub مخزن: Settings ← `Secrets and variables` ← Actions:
    - تب Secrets: `HF_TOKEN` = توکن مرحله‌ی ۲.
    - تب Variables: `HF_SPACE` = `<نام‌کاربری>/vitaforge-api`.
-۴. در Space: Settings ← `Variables and secrets.` این‌ها را به‌عنوان **Secret** اضافه کن: `DATABASE_URL`، `TELEGRAM_BOT_TOKEN`، `TELEGRAM_BOT_USERNAME`، `TELEGRAM_WEBHOOK_SECRET`، `DJANGO_SECRET_KEY` (یک رشته‌ی تصادفی بلند). و به‌عنوان **Variable**: `DJANGO_DEBUG=false`، `REDIS_URL=redis://unused.invalid:6379/0`، `VITAFORGE_CONTENT_MODE=ai_curated_demo`، `VITAFORGE_ACK_AI_CURATED_CONTENT=yes`، `AI_EXTERNAL_HEALTH_DATA=false`، `ALLOWED_HOSTS=<نام‌کاربری>-vitaforge-api.hf.space`، `FRONTEND_BASE_URL=https://<آدرس Vercel>`.
+۴. در Space: Settings ← `Variables and secrets.` این‌ها را به‌عنوان **Secret** اضافه کن: `DATABASE_URL`، `TELEGRAM_BOT_TOKEN`، `TELEGRAM_BOT_USERNAME`، `TELEGRAM_WEBHOOK_SECRET`، `DJANGO_SECRET_KEY` (یک رشته‌ی تصادفی بلند)، `ADMIN_BOOTSTRAP_EMAIL` (ایمیل خودت). و به‌عنوان **Variable**: `DJANGO_DEBUG=false`، `REDIS_URL=redis://unused.invalid:6379/0`، `VITAFORGE_CONTENT_MODE=ai_curated_demo`، `VITAFORGE_ACK_AI_CURATED_CONTENT=yes`، `AI_EXTERNAL_HEALTH_DATA=false`، `ALLOWED_HOSTS=<نام‌کاربری>-vitaforge-api.hf.space`، `FRONTEND_BASE_URL=https://<آدرس Vercel>`.
 ۵. در GitHub: Actions ← deploy-hf ← Run workflow (یا یک commit به `main`). بعد از چند دقیقه Space سبز (Running) می‌شود.
 ۶. در Vercel مقدار `BACKEND_URL` را `https://<نام‌کاربری>-vitaforge-api.hf.space` بگذار و Redeploy کن.
 ۷. وب‌هوک تلگرام را از سیستم خودت (PowerShell) با همان متغیرها اجرا کن: `python manage.py telegram_set_webhook --url https://<نام‌کاربری>-vitaforge-api.hf.space`
 ۸. بررسی: `https://<نام‌کاربری>-vitaforge-api.hf.space/api/v1/health/ready`.
 
 نکته‌ها: Space رایگان بعد از مدتی بی‌کاری می‌خوابد و با اولین درخواست بیدار می‌شود؛ دیسک موقت است و داده‌ها در Neon می‌مانند. این مسیر از داخل این محیط اجرا یا آزمایش نشده و دسترسی به Hugging Face از ایران تأیید نشده است؛ اگر باز نشد، فیلترشکن یا گزینه‌ی SnapDeploy (بدون کارت، ۱۰۰ ساعت در ماه) را امتحان کن.
+
+### حساب مدیریت بدون شل
+Space شل ندارد. برای ساخت حساب «مدیریت»: متغیر `ADMIN_BOOTSTRAP_EMAIL` را (روی Render یا Space) برابر ایمیل خودت بگذار، با همان ایمیل در برنامه ثبت‌نام و تأیید کن، وارد شو و `/fa/admin` را باز کن. حسابِ **تأییدشده** با همین ایمیل فقط وقتی هنوز مدیریتی وجود ندارد مدیریت می‌شود؛ بعد از آن این متغیر هیچ اثری ندارد. روش دیگر (سیستم خودت): `create_staff --role super_admin`.
 
 </div>
