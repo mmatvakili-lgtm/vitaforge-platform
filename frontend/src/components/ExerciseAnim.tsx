@@ -316,3 +316,23 @@ export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: s
     </div>
   );
 }
+
+
+/** Loads the exercise (to learn its stable code) and shows its animation. Used where only the opaque id is known (plan). */
+const cache = new Map<string, { code: string; pattern?: string }>();
+export function ExerciseAnimById({ exerciseId, muscles, height }: { exerciseId: string; muscles?: readonly string[]; height?: number }) {
+  const api = useApi();
+  const [info, setInfo] = useState<{ code: string; pattern?: string } | null>(cache.get(exerciseId) ?? null);
+  useEffect(() => {
+    if (cache.has(exerciseId)) { setInfo(cache.get(exerciseId)!); return; }
+    let live = true;
+    api.call("API-EX-002", { path: { exercise_id: exerciseId } }).then((r) => {
+      if (!live || !r.ok || !r.data.code) return;
+      const v = { code: r.data.code };
+      cache.set(exerciseId, v); setInfo(v);
+    });
+    return () => { live = false; };
+  }, [api, exerciseId]);
+  if (!info) return <div className="an an-loading" style={{ blockSize: height ?? 260 }} aria-hidden="true" />;
+  return <ExerciseAnim code={info.code} pattern={info.pattern} muscles={muscles} height={height} />;
+}
