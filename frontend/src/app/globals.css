@@ -364,3 +364,7 @@ fieldset { border: 1px solid color-mix(in srgb, var(--line) 80%, transparent); b
 /* Secondary buttons: the global gradient rule above is more specific, so force a readable outlined look. */
 button.btn-secondary, a.btn.btn-secondary { background: color-mix(in srgb, var(--accent) 10%, transparent) !important; background-image: none !important; color: var(--fg) !important; border: 1px solid var(--accent) !important; box-shadow: none !important; }
 button.btn-secondary:hover:not(:disabled), a.btn.btn-secondary:hover { background: color-mix(in srgb, var(--accent) 22%, transparent) !important; }
+
+.an-vstage { display: grid; place-items: center; }
+.an-vstage iframe { inline-size: 100%; block-size: 100%; border: 0; border-radius: .6rem; }
+.an-play { padding: .8rem 1.4rem; font-size: 1.05rem; }
