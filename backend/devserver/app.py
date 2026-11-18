@@ -20,6 +20,7 @@ from http.cookies import SimpleCookie
 from typing import Callable, Dict, List, Optional, Tuple
 from urllib.parse import parse_qs
 
+from app_services.admin_panel import AdminPanel
 from app_services.catalog import CatalogService
 from app_services.errors import (ServiceUnavailable, AppError, AuthFailed, BadRequest, Conflict, ConsentRequired, FeatureUnavailable, Forbidden, Gone,
                                  NeedsContent, NotFound, PaymentRequired, PreconditionRequired, SafetyBlocked, ValidationFailed)
@@ -99,6 +100,7 @@ class App:
         self.rule_set = rule_set
         self.w = WorkoutService(store, self.h, SafetyCore(rule_set), day, clock_s=self.sec)
         self.cat = CatalogService(store)
+        self.adm = AdminPanel(store, self.sec)
         self.sub = SubscriptionService(store, DisabledPaymentProvider())
         self.store = store
         self.x = ExtrasService(store, self.h, self.w, day)
@@ -152,12 +154,33 @@ class App:
             self.routes.append(("POST", re.compile("^/api/v1/dev/telegram/simulate-start$"), self._dev_tg_simulate, False, None))
             self.routes.append(("GET", re.compile("^/api/v1/dev/telegram/outbox$"), self._dev_tg_outbox, False, None))
         R("GET", "/safety/explain", self._explain)
+        # admin panel (not in OpenAPI; role-checked in AdminPanel; every change is audited)
+        self.routes.append(("GET", re.compile("^/api/v1/media/overrides$"), lambda c: self.adm.public_overrides(), False, None))
+        self.routes.append(("GET", re.compile(r"^/api/v1/media/files/(?P<fid>[^/]+)$"), self._media_file, False, None))
+        R("GET", "/admin/me", lambda c: {"role": self._raw_role(c)})
+        R("PUT", r"/admin/media/(?P<code>[^/]+)", lambda c: self.adm.put_override(self._role(c), c["uid"], c["code"], c["body"]))
+        R("DELETE", r"/admin/media/(?P<code>[^/]+)", lambda c: self.adm.reset_override(self._role(c), c["uid"], c["code"]))
+        R("POST", "/admin/media-bulk", lambda c: self.adm.bulk(self._role(c), c["uid"], c["body"]))
+        R("POST", "/admin/media-files", lambda c: self.adm.upload(self._role(c), c["uid"], c["body"]))
+        R("GET", "/admin/media-files", lambda c: self.adm.list_files(self._role(c)))
+        R("DELETE", r"/admin/media-files/(?P<fid>[^/]+)", lambda c: self.adm.delete_file(self._role(c), c["uid"], c["fid"]))
+        R("GET", "/admin/staff", lambda c: self.adm.list_staff(self._raw_role(c)))
+        R("POST", "/admin/staff", lambda c: self.adm.add_admin(self._raw_role(c), c["uid"], (c["body"] or {}).get("email")))
+        R("DELETE", r"/admin/staff/(?P<uid2>[^/]+)", lambda c: self.adm.remove_admin(self._raw_role(c), c["uid"], c["uid2"]))
+        R("GET", "/admin/audit", lambda c: self.adm.audit(self._raw_role(c)))
         R("POST", "/health/access-grants", lambda c: self.m.grant_health_access(c["uid"], c["body"].get("professional_id")))
 
     # ------------------------------------------------------------------ helpers
     def _role(self, c):
         r = self.store.users[c["uid"]]["role"]
         return "admin" if r == "super_admin" else r
+
+    def _raw_role(self, c):
+        return self.store.users[c["uid"]]["role"]            # keeps `super_admin` (the owner) distinct from `admin`
+
+    def _media_file(self, c):
+        mime, data = self.adm.file(c["fid"])
+        return Reply(data, headers=[("Content-Type", mime), ("Cache-Control", "public, max-age=300")])
 
     def _need_consent(self, uid):
         if not self.h.has_consent(uid, CONSENT_HEALTH):
@@ -1282,7 +1305,7 @@ class App:
 
     def _dispatch(self, environ, start_response, method, path):
         n = int(environ.get("CONTENT_LENGTH") or 0)
-        if n > 100_000:
+        if n > (500_000 if path == "/api/v1/admin/media-files" else 100_000):
             return self._err(start_response, 413, "too_large")
         raw = environ["wsgi.input"].read(n) if n else b""
         path_matched = False
@@ -1316,6 +1339,12 @@ class App:
                         return self._err(start_response, self._pick(op, 400, 422), "validation_failed", {"fields": [{"path": p, "rule": r} for p, r in v]})
                 out = fn(ctx)
                 rep = out if isinstance(out, Reply) else Reply(out)
+                if isinstance(rep.body, bytes):
+                    ctype = next((v for k, v in rep.headers if k == "Content-Type"), "application/octet-stream")
+                    hdrs = [(k, v) for k, v in rep.headers if k not in ("Content-Type", "Cache-Control")]
+                    start_response("200 OK", [("Content-Type", ctype), ("Content-Length", str(len(rep.body))), ("Cache-Control", "public, max-age=300"),
+                                              ("X-Content-Type-Options", "nosniff"), ("Content-Security-Policy", "default-src 'none'")] + hdrs)
+                    return [rep.body]
                 return self._send(start_response, rep.status or (op.success_status if op else 200), rep.body, rep.headers)
             except SafetyBlocked as e:                          # non-contract routes only
                 return self._err(start_response, e.http, e.code, {"status": e.status, "reasons": list(e.reasons)})

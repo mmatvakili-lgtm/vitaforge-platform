@@ -1,10 +1,10 @@
-"""python manage.py create_staff --email a@b.co --password '...' --role admin|content_admin|exercise_reviewer|nutrition_reviewer|clinical_safety_reviewer
+"""python manage.py create_staff --email a@b.co --password '...' --role super_admin(owner, only one)|admin|content_admin|exercise_reviewer|nutrition_reviewer|clinical_safety_reviewer
 Creates a verified staff account through the same IdentityService the API uses (no separate password path). NEEDS LOCAL VERIFICATION."""
 import time
 
 from django.core.management.base import BaseCommand, CommandError
 
-ROLES = ("admin", "content_admin", "exercise_reviewer", "nutrition_reviewer", "clinical_safety_reviewer", "professional")
+ROLES = ("super_admin", "admin", "content_admin", "exercise_reviewer", "nutrition_reviewer", "clinical_safety_reviewer", "professional")
 
 
 class Command(BaseCommand):
@@ -23,6 +23,8 @@ class Command(BaseCommand):
         store = PersistentStore(DjangoBackend())
         try:
             with store.transaction():
+                if role == "super_admin" and any(u.get("role") == "super_admin" for u in store.users.values()):
+                    raise CommandError("an owner (super_admin) already exists; there can be only one")
                 ids = IdentityService(store, lambda: int(time.time()))
                 uid = ids.register(email, password)
                 ids.verify_email(uid)

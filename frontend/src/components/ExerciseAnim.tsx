@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { L, bounds, motionFor, poseAt, solve, variantFor, type Pose, type Prop, type Skeleton, type V } from "../lib/motion.ts";
 import { muscleRegion } from "../lib/body3d.ts";
 import { useApi, useT } from "../lib/react/context.tsx";
+import { fileUrl, loadOverrides, resolveMedia, type MediaOverride, type View } from "../lib/admin.ts";
 
 const P = (v: V) => `${v[0].toFixed(1)},${(-v[1]).toFixed(1)}`;
 const mix = (a: V, b: V, t: number): V => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
@@ -272,16 +273,17 @@ function VideoRefView({ video, height }: { video: VideoRef; height: number }) {
 }
 
 /** Reference photos (start / end position) from free-exercise-db, shown as a gentle crossfade. */
-function PhotoRef({ code, height }: { code: string; height: number }) {
+function PhotoRef({ code, height, file }: { code: string; height: number; file?: string | null }) {
   const { t } = useT();
   const [i, setI] = useState(0);
-  useEffect(() => { const id = setInterval(() => setI((x) => 1 - x), 1400); return () => clearInterval(id); }, []);
+  useEffect(() => { if (file) return; const id = setInterval(() => setI((x) => 1 - x), 1400); return () => clearInterval(id); }, [file]);
   return (
     <figure className="an an-photo" aria-label={t("motion.photoAria")}>
       <div className="an3-stage" style={{ blockSize: height }}>
-        {[0, 1].map((k) => <img key={k} src={`/exercise-media/${code}/${k}.webp`} alt={k === 0 ? t("motion.photoStart") : t("motion.photoEnd")} loading="lazy" decoding="async" className={i === k ? "on" : ""} />)}
+        {file ? <img src={fileUrl(file)} alt={t("motion.photoStart")} loading="lazy" decoding="async" className="on" />
+          : [0, 1].map((k) => <img key={k} src={`/exercise-media/${code}/${k}.webp`} alt={k === 0 ? t("motion.photoStart") : t("motion.photoEnd")} loading="lazy" decoding="async" className={i === k ? "on" : ""} />)}
       </div>
-      <figcaption><span className="an-cue muted">{t("motion.photoCredit")}</span></figcaption>
+      {!file && <figcaption><span className="an-cue muted">{t("motion.photoCredit")}</span></figcaption>}
     </figure>
   );
 }
@@ -289,36 +291,33 @@ function PhotoRef({ code, height }: { code: string; height: number }) {
 /** Animation card: 3D mannequin by default; a second tab shows real reference photos when the exercise has them. */
 export function ExerciseAnim({ code, pattern, muscles, height = 260 }: { code: string; pattern?: string; muscles?: readonly string[]; height?: number }) {
   const { t } = useT();
-  const [hasPhoto, setHasPhoto] = useState(false);
-  const [video, setVideo] = useState<VideoRef | null>(null);
+  const [base, setBase] = useState<{ hasPhoto: boolean; video: VideoRef | null }>({ hasPhoto: false, video: null });
+  const [ov, setOv] = useState<MediaOverride | undefined>(undefined);
   const [ready, setReady] = useState(false);
-  // Default view is real reference media (photo, then video); the 3D animation stays available as a tab.
-  type View = "photo" | "video" | "3d";
   const [chosen, setChosen] = useState<View | null>(null);
-  const view: View = chosen ?? (hasPhoto ? "photo" : video ? "video" : "3d");
   useEffect(() => {
     let live = true; setReady(false);
-    Promise.all([loadMedia(), loadVideos()]).then(([m, v]) => { if (!live) return; setHasPhoto(!!m[code]); setVideo(v[code] ?? null); setReady(true); });
+    Promise.all([loadMedia(), loadVideos(), loadOverrides()]).then(([m, v, o]) => { if (!live) return; setBase({ hasPhoto: !!m[code], video: v[code] ?? null }); setOv(o[code]); setReady(true); });
     return () => { live = false; };
   }, [code]);
   useEffect(() => setChosen(null), [code]);
-  const tabs: [View, string][] = [];
-  if (hasPhoto) tabs.push(["photo", t("motion.tabPhoto")]);
-  if (video) tabs.push(["video", t("motion.tabVideo")]);
-  tabs.push(["3d", t("motion.tab3d")]); // kept as an opt-in tab; the planned admin panel decides per exercise whether it is offered
-  const noMedia = ready && !hasPhoto && !video;
+  // Bundled real media (photos, videos) adjusted by what the admin panel switched on/off or replaced (lib/admin.ts).
+  const r = resolveMedia(base, ov);
+  const view: View | null = chosen && r.views.includes(chosen) ? chosen : r.initial;
+  const labels: Record<View, string> = { photo: t("motion.tabPhoto"), video: t("motion.tabVideo"), "3d": t("motion.tab3d") };
   return (
     <div className="an-wrap">
-      {tabs.length > 1 && (
+      {r.views.length > 1 && (
         <div className="an-tabs" role="tablist" aria-label={t("motion.title")}>
-          {tabs.map(([k, label]) => <button key={k} type="button" role="tab" aria-selected={view === k} className={view === k ? "on" : ""} onClick={() => setChosen(k)}>{label}</button>)}
+          {r.views.map((k) => <button key={k} type="button" role="tab" aria-selected={view === k} className={view === k ? "on" : ""} onClick={() => setChosen(k)}>{labels[k]}</button>)}
         </div>
       )}
       {!ready ? <div className="an an-loading" style={{ blockSize: height }} aria-hidden="true" />
-        : view === "photo" && hasPhoto ? <PhotoRef code={code} height={height} />
-        : view === "video" && video ? <VideoRefView video={video} height={height} />
-        : <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />}
-      {(noMedia || (!video && ready)) && (
+        : view === "photo" ? <PhotoRef code={code} height={height} file={r.photoFile} />
+        : view === "video" && r.video ? <VideoRefView video={r.video} height={height} />
+        : view === "3d" ? <ExerciseAnim3D code={code} pattern={pattern} muscles={muscles} height={height} />
+        : null}
+      {ready && !r.video && (
         <a className="an-video" href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${code.replace(/_/g, " ")} exercise proper form`)}`} target="_blank" rel="noopener noreferrer">
           ▶ {t("motion.video")}
         </a>
