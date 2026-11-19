@@ -40,7 +40,7 @@ def _sniff(data: bytes) -> Optional[str]:
 class AdminPanel:
     def __init__(self, store, clock):
         self.s, self.clock = store, clock
-        for n in ("media_overrides", "media_files"):
+        for n in ("media_overrides", "media_files", "site_settings"):
             self.s.__dict__.setdefault(n, {})
 
     # ------------------------------------------------------------------ access
@@ -199,6 +199,47 @@ class AdminPanel:
         del self.s.media_files[fid]
         self._log(actor, "media.file_delete", fid)
         return {"message": "deleted"}
+
+    # ------------------------------------------------------------------ site announcement
+    def public_announcement(self) -> dict:
+        a = self.s.site_settings.get("announcement")
+        if not a or not a.get("enabled") or (a.get("expires_at") and int(self.clock()) >= a["expires_at"]):
+            return {"announcement": None}
+        return {"announcement": {k: a.get(k) for k in ("text_fa", "text_en", "level")}}
+
+    def get_announcement(self, role: str) -> dict:
+        self.need_content(role)
+        a = self.s.site_settings.get("announcement") or {"enabled": False, "text_fa": "", "text_en": "", "level": "info", "expires_at": None}
+        return {k: a.get(k) for k in ("enabled", "text_fa", "text_en", "level", "expires_at")}
+
+    def put_announcement(self, role: str, actor: str, body: dict):
+        self.need_content(role)
+        if not isinstance(body, dict) or set(body) - {"enabled", "text_fa", "text_en", "level", "expires_at"}:
+            raise ValidationFailed("unknown_field")
+        new = {"enabled": body.get("enabled"), "level": body.get("level", "info"), "expires_at": body.get("expires_at")}
+        if not isinstance(new["enabled"], bool) or new["level"] not in ("info", "warning"):
+            raise ValidationFailed("announcement")
+        if new["expires_at"] is not None and not (isinstance(new["expires_at"], int) and not isinstance(new["expires_at"], bool) and new["expires_at"] > 0):
+            raise ValidationFailed("expires_at")
+        for k in ("text_fa", "text_en"):
+            v = body.get(k, "")
+            if not isinstance(v, str) or len(v) > 300 or "<" in v or ">" in v:
+                raise ValidationFailed(k)
+            new[k] = v.strip()
+        if new["enabled"] and not (new["text_fa"] or new["text_en"]):
+            raise ValidationFailed("text_required")
+        before = self.get_announcement(role)
+        self.s.site_settings["announcement"] = new
+        self._log(actor, "announcement.update", "announcement", before, {k: new[k] for k in before})
+        return self.get_announcement(role)
+
+    # ------------------------------------------------------------------ users overview (owner only, masked)
+    def list_users(self, role: str):
+        self.need_owner(role)
+        def mask(e: str) -> str:
+            n, _, d = (e or "").partition("@")
+            return f"{n[:1]}***@{d}" if d else "***"
+        return {"users": [{"id": u["id"], "email": mask(u.get("email", "")), "role": u["role"], "verified": bool(u.get("verified"))} for u in self.s.users.values()]}
 
     # ------------------------------------------------------------------ staff (owner only)
     def list_staff(self, role: str):

@@ -16,6 +16,8 @@ export default function AdminHome() {
       <div className="row">
         <ButtonLink href={`/${locale}/admin/media`}>{t("admin.hub.media")}</ButtonLink>
         <ButtonLink href={`/${locale}/admin/review`} secondary>{t("admin.hub.review")}</ButtonLink>
+        <ButtonLink href={`/${locale}/admin/announcement`} secondary>{t("admin.hub.announce")}</ButtonLink>
+        {role === "super_admin" && <ButtonLink href={`/${locale}/admin/users`} secondary>{t("admin.hub.users")}</ButtonLink>}
         {role === "super_admin" && <ButtonLink href={`/${locale}/admin/staff`} secondary>{t("admin.hub.staff")}</ButtonLink>}
       </div>
     </Card>

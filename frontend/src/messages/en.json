@@ -1057,5 +1057,21 @@
  "admin.staff.notFound": "No verified account with this email.",
  "admin.staff.conflict": "This account has another role and cannot be changed here.",
  "admin.audit.title": "Audit log",
- "admin.audit.empty": "No changes logged yet."
+ "admin.audit.empty": "No changes logged yet.",
+ "admin.hub.announce": "Site announcement",
+ "admin.hub.users": "Accounts",
+ "admin.announce.title": "Site announcement",
+ "admin.announce.intro": "A short message shown above every page to all users (text only). Untick to switch it off.",
+ "admin.announce.enabled": "Show announcement",
+ "admin.announce.fa": "Persian text",
+ "admin.announce.en": "English text",
+ "admin.announce.level": "Type",
+ "admin.announce.info": "Info",
+ "admin.announce.warning": "Warning",
+ "admin.announce.days": "Hide automatically after (days, optional)",
+ "admin.announce.save": "Save",
+ "admin.announce.dismiss": "Dismiss announcement",
+ "admin.users.title": "Accounts",
+ "admin.users.intro": "{n} accounts. Emails are deliberately masked and no health data is shown here.",
+ "admin.users.unverified": "unverified"
 }

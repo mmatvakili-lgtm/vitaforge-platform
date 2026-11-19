@@ -1057,5 +1057,21 @@
  "admin.staff.notFound": "حساب تأییدشده‌ای با این ایمیل پیدا نشد.",
  "admin.staff.conflict": "این حساب نقش دیگری دارد و از اینجا تغییر نمی‌کند.",
  "admin.audit.title": "گزارش تغییرات",
- "admin.audit.empty": "هنوز تغییری ثبت نشده."
+ "admin.audit.empty": "هنوز تغییری ثبت نشده.",
+ "admin.hub.announce": "اطلاعیه‌ی سایت",
+ "admin.hub.users": "حساب‌ها",
+ "admin.announce.title": "اطلاعیه‌ی سایت",
+ "admin.announce.intro": "یک پیام کوتاه که بالای همه‌ی صفحه‌ها برای کاربران نشان داده می‌شود (فقط متن). برای خاموش‌کردن، تیک را بردار.",
+ "admin.announce.enabled": "نمایش اطلاعیه",
+ "admin.announce.fa": "متن فارسی",
+ "admin.announce.en": "متن انگلیسی",
+ "admin.announce.level": "نوع",
+ "admin.announce.info": "اطلاع‌رسانی",
+ "admin.announce.warning": "هشدار",
+ "admin.announce.days": "خودکار پنهان شود بعد از (روز، اختیاری)",
+ "admin.announce.save": "ذخیره",
+ "admin.announce.dismiss": "بستن اطلاعیه",
+ "admin.users.title": "حساب‌ها",
+ "admin.users.intro": "{n} حساب. ایمیل‌ها عمداً ناقص نمایش داده می‌شوند و داده‌ی سلامت اینجا نیست.",
+ "admin.users.unverified": "تأییدنشده"
 }

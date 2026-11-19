@@ -140,3 +140,34 @@ def test_owner_bootstrap_never_when_owner_exists_or_unset(monkeypatch):
     monkeypatch.delenv("ADMIN_BOOTSTRAP_EMAIL")
     h2 = Harness()
     assert call(h2, "GET", "/admin/me", h2.login("late@ex.com")).body["role"] == "user"    # not configured
+
+
+def test_announcement_lifecycle(env):
+    h, o, a, u = env
+    assert call(h, "GET", "/site/announcement").body == {"announcement": None}
+    assert call(h, "PUT", "/admin/announcement", u, {"enabled": True, "text_fa": "x"}).status == 403
+    bad = [{"enabled": True}, {"enabled": "y", "text_fa": "x"}, {"enabled": True, "text_fa": "<b>x</b>"}, {"enabled": True, "text_fa": "x", "level": "boom"},
+           {"enabled": True, "text_fa": "x", "expires_at": -5}, {"enabled": True, "text_fa": "x" * 301}, {"enabled": True, "text_fa": "x", "evil": 1}]
+    for b in bad:
+        assert call(h, "PUT", "/admin/announcement", a, b).status in (400, 422), b
+    assert call(h, "PUT", "/admin/announcement", a, {"enabled": True, "text_fa": "نگهداری", "text_en": "Maintenance", "level": "warning"}).status == 200
+    assert call(h, "GET", "/site/announcement").body["announcement"] == {"text_fa": "نگهداری", "text_en": "Maintenance", "level": "warning"}
+    assert call(h, "PUT", "/admin/announcement", a, {"enabled": False, "text_fa": "نگهداری"}).status == 200
+    assert call(h, "GET", "/site/announcement").body == {"announcement": None}
+    assert any(r["action"] == "announcement.update" for r in call(h, "GET", "/admin/audit", o).body["entries"])
+
+
+def test_announcement_expires(env):
+    h, o, a, u = env
+    now = int(h.app.sec())
+    call(h, "PUT", "/admin/announcement", a, {"enabled": True, "text_en": "soon gone", "expires_at": now + 3600})
+    assert call(h, "GET", "/site/announcement").body["announcement"] is not None
+    call(h, "PUT", "/admin/announcement", a, {"enabled": True, "text_en": "gone", "expires_at": 1})
+    assert call(h, "GET", "/site/announcement").body == {"announcement": None}
+
+
+def test_users_overview_owner_only_and_masked(env):
+    h, o, a, u = env
+    assert call(h, "GET", "/admin/accounts", a).status == 403
+    rows = call(h, "GET", "/admin/accounts", o).body["users"]
+    assert {r["email"] for r in rows} == {"o***@ex.com", "a***@ex.com", "u***@ex.com"}
