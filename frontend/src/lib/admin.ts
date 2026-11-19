@@ -85,3 +85,15 @@ export function parseYouTubeId(s: string): string | null {
     return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
   } catch { return null; }
 }
+
+export interface Announcement { text_fa?: string; text_en?: string; level?: "info" | "warning" }
+/** The text to show for a locale (falls back to the other language), or null when nothing is announced. */
+export function announcementText(a: Announcement | null | undefined, locale: string): string | null {
+  if (!a) return null;
+  const t = (locale === "fa" ? a.text_fa || a.text_en : a.text_en || a.text_fa) ?? "";
+  return t.trim() ? t.trim() : null;
+}
+export function loadAnnouncement(): Promise<Announcement | null> {
+  return fetch("/api/v1/site/announcement", { cache: "no-store" }).then((r) => (r.ok ? r.json() : { announcement: null }))
+    .then((j: { announcement?: Announcement | null }) => j.announcement ?? null).catch(() => null);
+}

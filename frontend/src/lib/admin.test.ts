@@ -31,3 +31,10 @@ test("youtube id parsing", () => {
   assert.equal(parseYouTubeId("https://evil.com/watch?v=dQw4w9WgXcQ"), null);
   assert.equal(parseYouTubeId("nope"), null);
 });
+import { announcementText } from "./admin.ts";
+test("announcement text falls back across languages and hides when empty", () => {
+  assert.equal(announcementText({ text_fa: "سلام", text_en: "Hi" }, "fa"), "سلام");
+  assert.equal(announcementText({ text_en: "Hi" }, "fa"), "Hi");
+  assert.equal(announcementText({ text_fa: "  " }, "en"), null);
+  assert.equal(announcementText(null, "en"), null);
+});
