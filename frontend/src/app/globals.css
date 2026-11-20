@@ -767,3 +767,9 @@ html { scroll-behavior: smooth; } @media (prefers-reduced-motion: reduce) { html
 .lp-scene-bar { inline-size: min(34rem, 100%); block-size: 3px; border-radius: 3px; background: color-mix(in srgb, #fff 10%, transparent); overflow: hidden; margin-block-start: .6rem; }
 .lp-scene-bar i { display: block; block-size: 100%; transform-origin: var(--origin, left); background: linear-gradient(90deg, var(--heat-1), var(--heat-2), var(--heat-3)); } [dir="rtl"] .lp-scene-bar i { --origin: right; }
 @media (prefers-reduced-motion: reduce) { .lp-scene { block-size: auto; } .lp-scene-pin { position: static; block-size: auto; } .lp-scene-stage .body3d-wrap { block-size: 420px !important; } .lp-scene-caps { min-block-size: 0; gap: .8rem; margin-block-start: 1rem; } .lp-scene-caps li { grid-area: auto; opacity: 1; transform: none; } .lp-scene-bar { display: none; } }
+
+/* ---- Auth stage (3D body that reacts to the form) ---- */
+.auth-art { align-content: start; } @media (min-width: 801px) { .auth-art { min-block-size: 36rem; } }
+.auth-stage { position: absolute; inset: 0; z-index: 0; display: grid; } .auth-stage .body3d-wrap { block-size: 100% !important; }
+.auth-line { align-self: start; pointer-events: none; text-shadow: 0 .2rem 2rem var(--bg); }
+.auth-art .lp-anvil { z-index: 1; }

@@ -15,6 +15,8 @@ type Viewer = {
   setAutoRotate(v: boolean): void;
   setBones(v: boolean): void;
   setScroll(p: number): void;
+  setGaze(x: number): void;
+  shake(): void;
   zoom(f: number): void;
   dispose(): void;
 };
@@ -47,7 +49,7 @@ function readPalette(el: HTMLElement): Record<string, string> {
 
 /** Anatomical 3D body (real muscle model, 17 selectable groups). Drag to turn, tap a muscle to select, buttons for front/back/skeleton.
  *  Falls back to the procedural canvas body when WebGL or the model is unavailable. */
-export function Body3D({ status, label, onPick, selected, height = 360, controls = true, faceFocus = true, scroll }: {
+export function Body3D({ status, label, onPick, selected, height = 360, controls = true, faceFocus = true, scroll, gaze, shakeKey }: {
   status: Readonly<Record<string, RegionStatus>>;
   label: string;
   onPick?: (region: string | null) => void;
@@ -57,6 +59,10 @@ export function Body3D({ status, label, onPick, selected, height = 360, controls
   faceFocus?: boolean;
   /** 0..1 scroll progress: hands the camera to the page (full turn, dolly, skeleton at the end). */
   scroll?: number;
+  /** -1..1: small turn toward the pointer side; 2 turns the back (login screen). */
+  gaze?: number;
+  /** Change this value to play a refusal shake. */
+  shakeKey?: number;
 }) {
   const { t } = useT();
   const wrap = useRef<HTMLDivElement>(null);
@@ -98,6 +104,8 @@ export function Body3D({ status, label, onPick, selected, height = 360, controls
   }, [key, phase, faceFocus]);
   useEffect(() => { if (phase === "ready") viewer.current?.setSelected(selected ?? null); }, [selected, phase]);
   useEffect(() => { if (phase === "ready" && scroll !== undefined) viewer.current?.setScroll(scroll); }, [scroll, phase]);
+  useEffect(() => { if (phase === "ready" && gaze !== undefined) viewer.current?.setGaze(gaze); }, [gaze, phase]);
+  useEffect(() => { if (phase === "ready" && shakeKey) viewer.current?.shake(); }, [shakeKey, phase]);
 
   const toggleSpin = useCallback(() => setSpin((s) => { viewer.current?.setAutoRotate(!s); return !s; }), []);
   const toggleBones = useCallback(() => setBones((b) => { viewer.current?.setBones(!b); return !b; }), []);
