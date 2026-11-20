@@ -5,6 +5,7 @@ import { LocaleProvider } from "../../lib/react/context.tsx";
 import { AnnouncementBanner } from "../../components/AnnouncementBanner.tsx";
 import { ContentModeBanner } from "../../components/ContentModeBanner.tsx";
 import { Header, Notice } from "../../components/Header.tsx";
+import { Life } from "../../components/Life.tsx";
 import { RegisterSW } from "../../components/RegisterSW.tsx";
 import localFont from "next/font/local";
 import "../globals.css";
@@ -33,6 +34,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       <body>
         <RegisterSW />
         <LocaleProvider locale={locale}>
+          <Life />
           <Header />
           <AnnouncementBanner />
           <ContentModeBanner />

@@ -694,3 +694,20 @@ html[lang="en"] .lp-band-row { font-family: var(--font-display), sans-serif; tex
 .lp-cell-lang .lp-cell-art span { font-size: 2.4rem; font-weight: 900; padding-inline: .7rem; border-radius: 1rem; border: 1px solid var(--edge); } .lp-cell-lang .lp-cell-art span:last-child { font-family: var(--font-display), sans-serif; color: var(--accent); }
 @media (max-width: 860px) { .lp-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-cell-lib, .lp-cell-safe { grid-column: span 2; } .lp-cell-lib { grid-row: auto; min-block-size: 16rem; } .lp-cell-food, .lp-cell-prog, .lp-cell-lang { grid-column: span 1; } .lp-cell-lang { grid-column: span 2; } .lp-cell { transform: none !important; } }
 @media (prefers-reduced-motion: reduce) { .lp-band-row, .lp-h2 { animation: none !important; } .lp-cell { transition: none; } }
+
+/* ---- Life: embers, pointer spotlight, parallax, press feedback, route entrance ---- */
+.life-embers { position: fixed; inset: 0; inline-size: 100vw; block-size: 100dvh; z-index: 0; pointer-events: none; opacity: .9; }
+.site-header, main.container, footer.container { position: relative; z-index: 1; }
+.ex-tile, .lp-cell, .stat, .today-list li { position: relative; isolation: isolate; }
+.ex-tile::before, .lp-cell::before, .stat::before, .today-list li::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .25s;
+  background: radial-gradient(18rem circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%); }
+@media (hover: hover) { .ex-tile:hover::before, .lp-cell:hover::before, .stat:hover::before, .today-list li:hover::before { opacity: 1; } }
+.lp-hero-stage { transform: translate3d(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -6px), 0); transition: transform .25s ease-out; }
+.lp-forge { translate: calc(var(--px, 0) * 18px) calc(var(--py, 0) * 12px); }
+button:active:not(:disabled), .btn:active, .tab:active { transform: scale(.96); }
+.btn, button { transition: transform .12s, filter .15s, box-shadow .2s, background .2s; }
+@keyframes pg-in { from { opacity: 0; filter: blur(6px); } }
+main.container { animation: pg-in .45s ease-out both; }
+@supports (animation-timeline: scroll()) { .lp-hero-copy { animation: lp-parallax linear both; animation-timeline: scroll(root); animation-range: 0 60vh; } @keyframes lp-parallax { to { transform: translateY(4rem); opacity: .2; } } }
+@media (prefers-reduced-motion: reduce) { .life-embers { display: none; } main.container { animation: none; } .lp-hero-stage, .lp-forge { transform: none; translate: none; } }
+body:has(.adm) main.container { animation: none; }
