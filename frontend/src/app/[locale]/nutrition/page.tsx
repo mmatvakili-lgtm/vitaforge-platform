@@ -30,8 +30,15 @@ function EstimateCard({ e }: { e: NutritionEstimate }) {
       <Labels labels={e.labels ?? []} />
       {(e.reasons ?? []).includes("NUT-ADVISORY") && <Alert kind="warning"><p>{t("nut.reason.NUT-ADVISORY")}</p></Alert>}
       {tdee && <p><strong>{t("nut.estimate.tdee")}:</strong> {t("nut.estimate.range", { low: n(tdee[0]), high: n(tdee[2]) })} <span className="muted">({n(tdee[1])})</span></p>}
-      {Object.keys(macros).length > 0 && (<><h2>{t("nut.estimate.macros")}</h2><ul className="plain">{Object.entries(macros).map(([k, [a, b]]) => (
-        <li key={k}>{t(`nutrient.${k}`)}: {n(a)}–{n(b)}</li>))}</ul></>)}
+      {Object.keys(macros).length > 0 && (<><h2>{t("nut.estimate.macros")}</h2><ul className="rbars">{Object.entries(macros).map(([k, [a, b]]) => {
+        const top = Math.max(b, 1) * 1.25;   // each bar is scaled to its own range: it shows the spread of the estimate, not a comparison between nutrients
+        return (
+          <li key={k}>
+            <span className="rb-l">{t(`nutrient.${k}`)}</span>
+            <span className="rb-track" aria-hidden="true"><i style={{ insetInlineStart: `${(a / top) * 100}%`, inlineSize: `${Math.max(((b - a) / top) * 100, 2)}%` }} /></span>
+            <span className="rb-v num">{n(a)}–{n(b)}</span>
+          </li>);
+      })}</ul></>)}
       {e.water_ml && <p>{t("nut.estimate.water")}: {n(e.water_ml[0])}–{n(e.water_ml[1])}</p>}
       {e.uncertainty && <p className="muted">{t("nut.estimate.uncertainty", { u: t(`nut.unc.${e.uncertainty}`) })}</p>}
       {e.goal_adjustment && e.goal_adjustment !== "enabled" && <p className="muted">{t("nut.estimate.goalNote")}</p>}
