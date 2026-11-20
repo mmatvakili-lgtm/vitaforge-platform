@@ -59,3 +59,17 @@ export function Loading() {
 export function ButtonLink({ href, children, secondary }: { href: string; children: ReactNode; secondary?: boolean }) {
   return <Link href={href} className={secondary ? "btn btn-secondary" : "btn"}>{children}</Link>;
 }
+
+/** Auth screens: the form card beside a forge panel (brand line + heated anvil edge). Decorative panel hides on phones. */
+export function AuthCard({ title, children }: { title?: string; children: ReactNode }) {
+  const { t } = useT();
+  return (
+    <div className="auth">
+      <aside className="auth-art" aria-hidden="true">
+        <p className="auth-line"><span>{t("landing.h1a")}</span><span>{t("landing.h1b")}</span></p>
+        <div className="auth-glow" /><div className="lp-anvil" />
+      </aside>
+      <Card title={title}>{children}</Card>
+    </div>
+  );
+}

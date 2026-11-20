@@ -3,7 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import { normalizeDigits } from "../../../lib/i18n.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { Alert, ApiErrorView, Button, ButtonLink, Card, Field } from "../../../components/ui.tsx";
+import { Alert, ApiErrorView, Button, ButtonLink, AuthCard as Card, Field } from "../../../components/ui.tsx";
 
 export default function VerifyPage() {
   const { locale, t } = useT();

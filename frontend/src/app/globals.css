@@ -670,7 +670,6 @@ label { font-weight: 600; }
 }
 
 /* Auth pages: narrow centred card with a forge glow behind it */
-body:has(form[aria-labelledby], form#login, form#register) main.container { max-inline-size: 30rem; }
 
 /* ---- Landing v2: kinetic type band, bento, scroll-weight headings (ideas: oversized bleeding type, variable-font axes, bento grids, CSS scroll-driven motion) ---- */
 .lp-band { overflow: hidden; margin-block: clamp(2rem, 6vw, 4rem); }
@@ -711,3 +710,14 @@ main.container { animation: pg-in .45s ease-out both; }
 @supports (animation-timeline: scroll()) { .lp-hero-copy { animation: lp-parallax linear both; animation-timeline: scroll(root); animation-range: 0 60vh; } @keyframes lp-parallax { to { transform: translateY(4rem); opacity: .2; } } }
 @media (prefers-reduced-motion: reduce) { .life-embers { display: none; } main.container { animation: none; } .lp-hero-stage, .lp-forge { transform: none; translate: none; } }
 body:has(.adm) main.container { animation: none; }
+
+/* ---- Auth split ---- */
+.auth { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); gap: clamp(1rem, 4vw, 3rem); align-items: center; max-inline-size: 60rem; margin-inline: auto; min-block-size: 60dvh; }
+.auth > .card { margin: 0; }
+.auth-art { position: relative; min-block-size: 22rem; display: grid; align-content: center; padding-inline: 1rem; }
+.auth-line { margin: 0; display: grid; font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 900; line-height: 1.15; letter-spacing: -.03em; position: relative; z-index: 1; }
+html[lang="en"] .auth-line { font-family: var(--font-display), sans-serif; text-transform: uppercase; font-weight: 700; line-height: 1; }
+.auth-line span:last-child { color: var(--accent); text-shadow: 0 0 3rem color-mix(in srgb, var(--accent) 50%, transparent); }
+.auth-glow { position: absolute; inset: 5% 0; border-radius: 50%; filter: blur(36px); background: radial-gradient(closest-side, color-mix(in srgb, var(--heat-2) 30%, transparent), color-mix(in srgb, var(--heat-1) 18%, transparent) 60%, transparent); animation: lp-breathe 5.5s ease-in-out infinite; }
+.auth-art .lp-anvil { inset-block-end: 12%; }
+@media (max-width: 800px) { .auth { grid-template-columns: 1fr; } .auth-art { min-block-size: 0; padding-block: .5rem; } .auth-line { font-size: 2.2rem; grid-auto-flow: column; justify-content: start; gap: .5rem; } .auth-art .lp-anvil, .auth-glow { display: none; } }
