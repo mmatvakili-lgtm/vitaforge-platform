@@ -1150,5 +1150,20 @@
  "admin.users.col.email": "ایمیل (ناقص)",
  "admin.users.col.role": "نقش",
  "admin.users.col.status": "وضعیت",
- "admin.users.verified": "تأییدشده"
+ "admin.users.verified": "تأییدشده",
+ "landing.band.0": "قدرت",
+ "landing.band.1": "تعادل",
+ "landing.band.2": "ریکاوری",
+ "landing.bento.title": "همه‌چیز در یک جا، با حساب و کتاب",
+ "landing.bento.lib.t": "کتابخانه‌ی حرکت‌ها",
+ "landing.bento.lib.b": "عکس مرجع، ویدیو و مدل سه‌بعدی برای هر حرکت؛ با فیلتر عضله و تجهیزات.",
+ "landing.bento.safe.t": "موتور ایمنی",
+ "landing.bento.safe.b": "قاعده‌محور و قابل توضیح؛ هر حرکت مناسب، با احتیاط یا نامناسب برچسب می‌خورد.",
+ "landing.bento.food.t": "تغذیه",
+ "landing.bento.food.b": "ثبت وعده و آب، لیست خرید و برآورد درشت‌مغذی‌ها (برآورد است، نه نسخه).",
+ "landing.bento.prog.t": "پیشرفت",
+ "landing.bento.prog.b": "حجم تمرین، رکوردها و نقشه‌ی عضلات روی بدن سه‌بعدی.",
+ "landing.bento.lang.t": "فارسی و انگلیسی",
+ "landing.bento.lang.b": "راست‌به‌چپ کامل، اعداد فارسی، و قابل نصب روی گوشی.",
+ "landing.bento.sample": "تصویرهای کارت‌ها نمادین‌اند و داده‌ی واقعی کسی نیستند."
 }
