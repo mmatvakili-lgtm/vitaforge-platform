@@ -171,3 +171,14 @@ def test_users_overview_owner_only_and_masked(env):
     assert call(h, "GET", "/admin/accounts", a).status == 403
     rows = call(h, "GET", "/admin/accounts", o).body["users"]
     assert {r["email"] for r in rows} == {"o***@ex.com", "a***@ex.com", "u***@ex.com"}
+
+
+def test_stats_are_aggregates_for_staff_only(env):
+    h, o, a, u = env
+    assert call(h, "GET", "/admin/overview", u).status == 403
+    call(h, "PUT", "/admin/media/bird_dog", a, {"anim3d": False})
+    s = call(h, "GET", "/admin/overview", a).body
+    assert s["users"]["total"] == 3 and s["users"]["verified"] == 3 and s["users"]["roles"] == {"super_admin": 1, "admin": 1, "user": 1}
+    assert len(s["users"]["joined_per_day"]) == 14 and sum(d["count"] for d in s["users"]["joined_per_day"]) == 3
+    assert s["content"]["media_overrides"] == 1 and sum(d["count"] for d in s["admin_actions_per_day"]) == 1
+    assert "@" not in str(s)                                                              # no emails anywhere in the payload

@@ -162,6 +162,7 @@ class App:
         R("GET", "/admin/announcement", lambda c: self.adm.get_announcement(self._role(c)))
         R("PUT", "/admin/announcement", lambda c: self.adm.put_announcement(self._role(c), c["uid"], c["body"]))
         R("GET", "/admin/accounts", lambda c: self.adm.list_users(self._raw_role(c)))
+        R("GET", "/admin/overview", lambda c: self.adm.stats(self._role(c)))
         R("GET", "/admin/me", lambda c: {"role": self.adm.claim_owner(c["uid"], os.environ.get("ADMIN_BOOTSTRAP_EMAIL"))})
         R("PUT", r"/admin/media/(?P<code>[^/]+)", lambda c: self.adm.put_override(self._role(c), c["uid"], c["code"], c["body"]))
         R("DELETE", r"/admin/media/(?P<code>[^/]+)", lambda c: self.adm.reset_override(self._role(c), c["uid"], c["code"]))

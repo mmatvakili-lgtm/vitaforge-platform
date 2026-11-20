@@ -6,7 +6,6 @@ import { MORE_NAV, PRIMARY_NAV } from "../lib/journey.ts";
 import { otherLocale } from "../lib/i18n.ts";
 import { useApi, useT } from "../lib/react/context.tsx";
 import { adminCall } from "../lib/admin.ts";
-import { ThemeSwitcher } from "./ThemeSwitcher.tsx";
 
 const ICONS: Record<string, string> = {
   dashboard: "M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z",
@@ -43,6 +42,8 @@ export function Header() {
     return () => { live = false; };
   }, [authed, pathname]);
 
+  if (/^\/[a-z]{2}\/admin(\/|$)/.test(pathname)) return null;   // the admin console has its own shell
+
   async function logout() {
     await api.call("API-AUTH-004");            // clears cookies server-side; ignore result: user lands on login either way
     setAuthed(false);
@@ -52,7 +53,6 @@ export function Header() {
   const active = (k: string) => pathname === href(k) || pathname.startsWith(`${href(k)}/`);
   const tools = (
     <>
-      <ThemeSwitcher />
       <a href={switched} hrefLang={other} lang={other} onClick={() => { document.cookie = `vf_locale=${other}; Path=/; Max-Age=31536000; SameSite=Lax`; }}>{t("nav.language")}</a>
     </>
   );
