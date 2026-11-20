@@ -11,6 +11,7 @@ const ICONS: Record<string, string> = {
   dashboard: "M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z",
   plan: "M5 4h14a1 1 0 011 1v15a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1zm1 5v10h12V9zm2 2h3v3H8z",
   exercises: "M3 9h2V7h2v10H5v-2H3zm18 0h-2V7h-2v10h2v-2h2zM8 11h8v2H8z",
+  nutrition: "M7 2v8a3 3 0 002 2.8V22h2v-9.2A3 3 0 0013 10V2h-2v6h-1V2H8v6H7V2zm9 0c-1.7 1.2-3 3.600-3 7 0 2 .9 3.300 2 3.800V22h2z",
   analytics: "M4 20V10h3v10zm6 0V4h3v16zm6 0v-7h3v7z",
   more: "M5 10.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm7 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm7 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3z",
 };

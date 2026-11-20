@@ -22,6 +22,13 @@ function Select({ id, label, value, onChange, options, prefix }: { id: string; l
   );
 }
 
+/** Reference photo when the exercise has one (otherwise a quiet placeholder; never a broken image). */
+function ExThumb({ code }: { code?: string }) {
+  const [bad, setBad] = useState(false);
+  if (!code || bad) return <span className="ex-none" aria-hidden="true" />;
+  return <img src={`/exercise-media/${code}/0.webp`} alt="" loading="lazy" decoding="async" onError={() => setBad(true)} />;
+}
+
 export default function LibraryPage() {
   const { locale, t, n } = useT();
   const api = useApi();
@@ -83,18 +90,21 @@ export default function LibraryPage() {
       {rows && rows.length > 0 && (
         <>
           <p className="muted" aria-live="polite">{t("lib.count", { n: n(count) })}</p>
-          <ul className="plain" aria-label={t("lib.title")}>
+          <ul className="ex-grid" aria-label={t("lib.title")}>
             {rows.map((r) => {
               const name = (locale === "fa" ? r.name : r.name_en) || r.name || r.name_en || r.code;
+              const meta = [
+                (r.muscles ?? []).slice(0, 2).map((m) => t(`muscle.${m}`) === `muscle.${m}` ? m : t(`muscle.${m}`)).join("، "),
+                r.difficulty ? (t(`level.${r.difficulty}`) === `level.${r.difficulty}` ? r.difficulty : t(`level.${r.difficulty}`)) : "",
+              ].filter(Boolean).join(" · ");
               return (
-                <li key={r.id} className="doc">
-                  <strong><Link href={`/${locale}/exercises/${r.id}`}>{name}</Link></strong>{" "}
-                  {r.review_status === "published" ? <span className="tag">{t("lib.reviewed")}</span> : <span className="tag">{t("lib.unreviewed")}</span>}
-                  <div className="muted">
-                    {(r.muscles ?? []).map((m) => t(`muscle.${m}`) === `muscle.${m}` ? m : t(`muscle.${m}`)).join("، ")}
-                    {r.difficulty && <> · {t(`level.${r.difficulty}`) === `level.${r.difficulty}` ? r.difficulty : t(`level.${r.difficulty}`)}</>}
-                    {(r.equipment ?? []).length > 0 && <> · {(r.equipment ?? []).map((e) => t(`equip.${e}`) === `equip.${e}` ? e : t(`equip.${e}`)).join("، ")}</>}
-                  </div>
+                <li key={r.id}>
+                  <Link href={`/${locale}/exercises/${r.id}`} className="ex-tile">
+                    <span className="ex-photo"><ExThumb code={r.code} /></span>
+                    <span className="ex-name">{name}</span>
+                    <span className="ex-meta">{meta}</span>
+                    {r.review_status !== "published" && <span className="ex-flag">{t("lib.unreviewed")}</span>}
+                  </Link>
                 </li>
               );
             })}
