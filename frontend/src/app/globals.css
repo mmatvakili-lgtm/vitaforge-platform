@@ -671,3 +671,26 @@ label { font-weight: 600; }
 
 /* Auth pages: narrow centred card with a forge glow behind it */
 body:has(form[aria-labelledby], form#login, form#register) main.container { max-inline-size: 30rem; }
+
+/* ---- Landing v2: kinetic type band, bento, scroll-weight headings (ideas: oversized bleeding type, variable-font axes, bento grids, CSS scroll-driven motion) ---- */
+.lp-band { overflow: hidden; margin-block: clamp(2rem, 6vw, 4rem); }
+.lp-band-row { display: flex; gap: clamp(1.5rem, 5vw, 4rem); inline-size: max-content; font-size: clamp(4rem, 15vw, 11rem); font-weight: 900; line-height: 1; white-space: nowrap; color: transparent; -webkit-text-stroke: 2px color-mix(in srgb, var(--fg) 35%, transparent); }
+html[lang="en"] .lp-band-row { font-family: var(--font-display), sans-serif; text-transform: uppercase; font-weight: 700; }
+.lp-band-row .solid { color: var(--accent); -webkit-text-stroke: 0; text-shadow: 0 0 3rem color-mix(in srgb, var(--accent) 45%, transparent); }
+@supports (animation-timeline: view()) { .lp-band-row { animation: lp-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; } @keyframes lp-drift { from { transform: translateX(8%); } to { transform: translateX(-38%); } } [dir="rtl"] .lp-band-row { animation-name: lp-drift-rtl; } @keyframes lp-drift-rtl { from { transform: translateX(-8%); } to { transform: translateX(38%); } } }
+@supports (animation-timeline: view()) { .lp-h2 { animation: lp-weight linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; } @keyframes lp-weight { from { font-weight: 300; letter-spacing: .04em; opacity: .5; } to { font-weight: 800; letter-spacing: -.01em; opacity: 1; } } }
+
+.lp-bento { list-style: none; margin: 1.5rem 0 .5rem; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: minmax(13rem, auto); gap: .9rem; }
+.lp-cell { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: .25rem; padding: 1.2rem; border-radius: 1.4rem; overflow: hidden; border: 1px solid var(--edge); background: linear-gradient(160deg, var(--surface-2), var(--surface-1)); transition: transform .25s, border-color .25s; transform: perspective(900px) rotateX(0) rotateY(0); }
+.lp-cell:hover { border-color: var(--edge-hot); transform: perspective(900px) rotateX(2deg) rotateY(-3deg) translateY(-3px); }
+[dir="rtl"] .lp-cell:hover { transform: perspective(900px) rotateX(2deg) rotateY(3deg) translateY(-3px); }
+.lp-cell h3 { margin: 0; font-size: 1.3rem; position: relative; } .lp-cell p { margin: 0; color: var(--muted); font-size: .92rem; position: relative; max-inline-size: 24rem; }
+.lp-cell-lib { grid-column: span 3; grid-row: span 2; } .lp-cell-safe { grid-column: span 3; } .lp-cell-food { grid-column: span 2; } .lp-cell-prog { grid-column: span 2; } .lp-cell-lang { grid-column: span 2; }
+.lp-cell-art { position: absolute; inset: 0 0 45% 0; display: flex; align-items: center; justify-content: center; gap: .6rem; padding: 1rem; pointer-events: none; }
+.lp-cell-lib .lp-cell-art { inset-block-end: 35%; } .lp-cell-lib .lp-cell-art i { flex: 1; block-size: 85%; border-radius: 1rem; background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--heat-2) 55%, transparent), transparent 60%), repeating-linear-gradient(45deg, var(--surface-1), var(--surface-1) 8px, var(--surface-2) 8px, var(--surface-2) 16px); } .lp-cell-lib .lp-cell-art i:nth-child(2) { transform: translateY(-.8rem) scale(1.06); } .lp-cell-lib .lp-cell-art i:nth-child(3) { transform: translateY(.5rem); }
+.lp-cell-safe .lp-cell-art b { inline-size: 3.6rem; block-size: 3.6rem; border-radius: 50%; background: currentColor; opacity: .9; box-shadow: 0 0 2rem currentColor; } .lp-cell-safe .ok { color: var(--ok); } .lp-cell-safe .caution { color: var(--warn); } .lp-cell-safe .blocked { color: var(--err); }
+.lp-macro { inline-size: 6rem; block-size: 6rem; border-radius: 50%; background: conic-gradient(var(--heat-2) 0 38%, var(--heat-3) 0 62%, var(--steel) 0 100%); -webkit-mask: radial-gradient(circle, transparent 52%, #000 54%); mask: radial-gradient(circle, transparent 52%, #000 54%); }
+.lp-cell-prog .lp-cell-art { align-items: flex-end; gap: .35rem; padding-block-end: 0; } .lp-cell-prog em { flex: 1; max-inline-size: 1.6rem; border-radius: 4px 4px 0 0; background: linear-gradient(to top, var(--heat-1), var(--heat-2)); }
+.lp-cell-lang .lp-cell-art span { font-size: 2.4rem; font-weight: 900; padding-inline: .7rem; border-radius: 1rem; border: 1px solid var(--edge); } .lp-cell-lang .lp-cell-art span:last-child { font-family: var(--font-display), sans-serif; color: var(--accent); }
+@media (max-width: 860px) { .lp-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-cell-lib, .lp-cell-safe { grid-column: span 2; } .lp-cell-lib { grid-row: auto; min-block-size: 16rem; } .lp-cell-food, .lp-cell-prog, .lp-cell-lang { grid-column: span 1; } .lp-cell-lang { grid-column: span 2; } .lp-cell { transform: none !important; } }
+@media (prefers-reduced-motion: reduce) { .lp-band-row, .lp-h2 { animation: none !important; } .lp-cell { transition: none; } }

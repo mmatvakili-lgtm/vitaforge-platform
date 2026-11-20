@@ -1150,5 +1150,20 @@
  "admin.users.col.email": "Email (masked)",
  "admin.users.col.role": "Role",
  "admin.users.col.status": "Status",
- "admin.users.verified": "Verified"
+ "admin.users.verified": "Verified",
+ "landing.band.0": "Strength",
+ "landing.band.1": "Balance",
+ "landing.band.2": "Recovery",
+ "landing.bento.title": "Everything in one place, with receipts",
+ "landing.bento.lib.t": "Exercise library",
+ "landing.bento.lib.b": "Reference photos, video and a 3D model per move; filter by muscle and equipment.",
+ "landing.bento.safe.t": "Safety engine",
+ "landing.bento.safe.b": "Rule-based and explainable; every move is labelled suitable, caution or unsuitable.",
+ "landing.bento.food.t": "Nutrition",
+ "landing.bento.food.b": "Meal and water logging, shopping list and macro estimates (estimates, not prescriptions).",
+ "landing.bento.prog.t": "Progress",
+ "landing.bento.prog.b": "Training volume, records and a muscle map on the 3D body.",
+ "landing.bento.lang.t": "Persian and English",
+ "landing.bento.lang.b": "Full right-to-left, Persian numerals, installable on your phone.",
+ "landing.bento.sample": "Card illustrations are symbolic and not anyone's real data."
 }

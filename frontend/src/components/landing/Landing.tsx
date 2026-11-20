@@ -150,6 +150,43 @@ function Numbers() {
   );
 }
 
+/** Oversized outline words that drift sideways with scroll (CSS scroll-driven; static where unsupported). */
+function Band() {
+  const { t } = useT();
+  const words = [t("landing.band.0"), t("landing.band.1"), t("landing.band.2")];
+  return (
+    <div className="lp-band bleed" aria-hidden="true">
+      <div className="lp-band-row">{[...words, ...words].map((w, i) => <span key={i} className={i % 3 === 1 ? "solid" : ""}>{w}</span>)}</div>
+    </div>
+  );
+}
+
+const BENTO = ["lib", "safe", "food", "prog", "lang"] as const;
+function Bento() {
+  const { t } = useT();
+  return (
+    <section className="lp-bento-sec" aria-labelledby="lp-bento-h">
+      <h2 id="lp-bento-h" className="lp-h2">{t("landing.bento.title")}</h2>
+      <ul className="lp-bento">
+        {BENTO.map((k) => (
+          <li key={k} className={`lp-cell lp-cell-${k}`}>
+            <div className="lp-cell-art" aria-hidden="true">
+              {k === "lib" && <><i /><i /><i /></>}
+              {k === "safe" && <><b className="ok" /><b className="caution" /><b className="blocked" /></>}
+              {k === "food" && <span className="lp-macro" />}
+              {k === "prog" && <>{[40, 65, 30, 85, 55, 95, 70].map((h, i) => <em key={i} style={{ blockSize: `${h}%` }} />)}</>}
+              {k === "lang" && <><span>فا</span><span>EN</span></>}
+            </div>
+            <h3>{t(`landing.bento.${k}.t`)}</h3>
+            <p>{t(`landing.bento.${k}.b`)}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="muted lp-sample">{t("landing.bento.sample")}</p>
+    </section>
+  );
+}
+
 function Steps() {
   const { t } = useT();
   return (
@@ -182,6 +219,8 @@ export function Landing() {
       <Hero state={state} />
       <PhotoStrip />
       <MuscleStory />
+      <Band />
+      <Bento />
       <Safety />
       <Steps />
       <Numbers />
