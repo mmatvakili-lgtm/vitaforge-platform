@@ -1,6 +1,6 @@
 // Offline shell for static assets ONLY. Health data must never be cached by the service worker:
 // anything under /api/ and every non-GET request goes straight to the network and is never stored.
-const CACHE = "vitaforge-static-v4";
+const CACHE = "vitaforge-static-v5";
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(
   caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())));

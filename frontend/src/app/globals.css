@@ -753,3 +753,17 @@ html { scroll-behavior: smooth; } @media (prefers-reduced-motion: reduce) { html
 .rb-track { position: relative; block-size: .7rem; border-radius: 99px; background: color-mix(in srgb, #fff 8%, transparent); }
 .rb-track i { position: absolute; inset-block: 0; border-radius: 99px; background: linear-gradient(90deg, var(--heat-1), var(--heat-2), var(--heat-3)); box-shadow: 0 0 1rem -.2rem var(--accent); }
 @media (max-width: 520px) { .rbars li { grid-template-columns: 5rem minmax(0, 1fr); } .rb-v { grid-column: 2; } }
+
+/* ---- Pinned scroll scene ---- */
+.lp-scene { block-size: 420vh; margin-block: clamp(2rem, 6vw, 4rem); position: relative; }
+.lp-scene-pin { position: sticky; inset-block-start: 0; block-size: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; justify-items: center; padding: 4.5rem 1rem 1.2rem; overflow: hidden; }
+.lp-scene-h { text-align: center; margin: 0; font-size: clamp(1.5rem, 4vw, 2.6rem); }
+.lp-scene-stage { inline-size: min(34rem, 100%); min-block-size: 0; display: grid; align-items: stretch; }
+.lp-scene-stage .body3d-wrap { block-size: 100% !important; min-block-size: 0; }
+.lp-scene-caps { list-style: none; margin: 0; padding: 0; display: grid; inline-size: min(34rem, 100%); min-block-size: 5.6rem; text-align: center; }
+.lp-scene-caps li { grid-area: 1 / 1; opacity: 0; transform: translateY(.6rem); transition: opacity .4s, transform .4s; pointer-events: none; display: grid; gap: .2rem; }
+.lp-scene-caps li.on { opacity: 1; transform: none; }
+.lp-scene-caps b { font-size: 1.4rem; color: var(--accent); } .lp-scene-caps span { color: var(--muted); }
+.lp-scene-bar { inline-size: min(34rem, 100%); block-size: 3px; border-radius: 3px; background: color-mix(in srgb, #fff 10%, transparent); overflow: hidden; margin-block-start: .6rem; }
+.lp-scene-bar i { display: block; block-size: 100%; transform-origin: var(--origin, left); background: linear-gradient(90deg, var(--heat-1), var(--heat-2), var(--heat-3)); } [dir="rtl"] .lp-scene-bar i { --origin: right; }
+@media (prefers-reduced-motion: reduce) { .lp-scene { block-size: auto; } .lp-scene-pin { position: static; block-size: auto; } .lp-scene-stage .body3d-wrap { block-size: 420px !important; } .lp-scene-caps { min-block-size: 0; gap: .8rem; margin-block-start: 1rem; } .lp-scene-caps li { grid-area: auto; opacity: 1; transform: none; } .lp-scene-bar { display: none; } }
