@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { ApiErrorView, Button, Card, Field } from "../../../components/ui.tsx";
+import { ApiErrorView, Button, AuthCard as Card, Field } from "../../../components/ui.tsx";
 import { TelegramVerify } from "../../../components/TelegramVerify.tsx";
 
 export default function LoginPage() {
