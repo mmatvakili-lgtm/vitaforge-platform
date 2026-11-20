@@ -1165,5 +1165,14 @@
  "landing.bento.prog.b": "Training volume, records and a muscle map on the 3D body.",
  "landing.bento.lang.t": "Persian and English",
  "landing.bento.lang.b": "Full right-to-left, Persian numerals, installable on your phone.",
- "landing.bento.sample": "Card illustrations are symbolic and not anyone's real data."
+ "landing.bento.sample": "Card illustrations are symbolic and not anyone's real data.",
+ "landing.scene.title": "Turn the body, just by scrolling",
+ "landing.scene.front.t": "From the front",
+ "landing.scene.front.b": "Chest, shoulders and abs: the muscles behind pushing and trunk work.",
+ "landing.scene.side.t": "From the side",
+ "landing.scene.side.b": "Quads and arms: the base of leg work, pulling and pressing.",
+ "landing.scene.back.t": "From behind",
+ "landing.scene.back.b": "Lats, traps, glutes and hamstrings: the posterior chain that gets overlooked.",
+ "landing.scene.inside.t": "From inside",
+ "landing.scene.inside.b": "The skeleton under the muscle; the anatomy model is openly licensed (see NOTICE)."
 }

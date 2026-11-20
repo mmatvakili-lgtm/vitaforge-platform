@@ -100,6 +100,50 @@ function MuscleStory() {
   );
 }
 
+/** Pinned scroll scene: the body stays put and turns as you scroll (front → side → back → skeleton); captions follow the phase. */
+const SCENE: { groups: string[]; key: string }[] = [
+  { groups: ["chest", "shoulders", "abdominals"], key: "front" },
+  { groups: ["quadriceps", "biceps", "triceps"], key: "side" },
+  { groups: ["lats", "traps", "glutes", "hamstrings"], key: "back" },
+  { groups: [], key: "inside" },
+];
+function ScrollScene() {
+  const { t } = useT();
+  const box = useRef<HTMLElement>(null);
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    if (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const calc = () => {
+      raf = 0;
+      const el = box.current; if (!el) return;
+      const r = el.getBoundingClientRect();
+      const span = Math.max(1, r.height - innerHeight);
+      setP(Math.min(1, Math.max(0, -r.top / span)));
+    };
+    const on = () => { if (!raf) raf = requestAnimationFrame(calc); };
+    calc(); addEventListener("scroll", on, { passive: true }); addEventListener("resize", on);
+    return () => { removeEventListener("scroll", on); removeEventListener("resize", on); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+  const phase = Math.min(SCENE.length - 1, Math.floor(p * SCENE.length));
+  const focus: Record<string, "focus"> = {};
+  for (const g of SCENE[phase].groups) focus[g] = "focus";
+  return (
+    <section ref={box} className="lp-scene bleed" aria-labelledby="lp-scene-h">
+      <div className="lp-scene-pin">
+        <h2 id="lp-scene-h" className="lp-h2 lp-scene-h">{t("landing.scene.title")}</h2>
+        <div className="lp-scene-stage"><Body3D height={640} status={focus} faceFocus={false} controls={false} scroll={p} label={t("home.bodyAria")} /></div>
+        <ol className="lp-scene-caps">
+          {SCENE.map((s, i) => (
+            <li key={s.key} className={i === phase ? "on" : ""}><b>{t(`landing.scene.${s.key}.t`)}</b><span>{t(`landing.scene.${s.key}.b`)}</span></li>
+          ))}
+        </ol>
+        <div className="lp-scene-bar" aria-hidden="true"><i style={{ transform: `scaleX(${p})` }} /></div>
+      </div>
+    </section>
+  );
+}
+
 function Safety() {
   const { t } = useT();
   return (
@@ -219,6 +263,7 @@ export function Landing() {
       <Hero state={state} />
       <PhotoStrip />
       <MuscleStory />
+      <ScrollScene />
       <Band />
       <Bento />
       <Safety />

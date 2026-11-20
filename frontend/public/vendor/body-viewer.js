@@ -268,6 +268,17 @@ function create(canvas, options = {}) {
     },
     setAutoRotate(v) { state.auto = !!v && !reduce; },
     setBones(v) { state.bones = !!v; rig.traverse((o) => { if (o.userData?.isBone) o.visible = state.bones; }); },
+    /** Scroll-driven camera: p in [0,1] turns the body one full revolution, dollies in and back out, tilts a little, and reveals the skeleton at the end. */
+    setScroll(p) {
+      if (reduce) return;
+      p = clamp(+p || 0, 0, 1);
+      state.auto = false; state.vyaw = 0;
+      state.targetYaw = p * Math.PI * 2;
+      const arc = Math.sin(p * Math.PI);
+      state.targetDist = 3.4 * (1 - 0.3 * arc);
+      state.pitch = 0.06 + 0.22 * arc;
+      const b = p > 0.78; if (b !== state.bones) api.setBones(b);
+    },
     zoom(f) { state.targetDist = clamp(state.targetDist * f, 1.5, 4.8); },
     groupsPresent() { return [...groups.keys()]; },
     resize,
