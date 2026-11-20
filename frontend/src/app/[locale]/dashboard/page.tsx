@@ -11,6 +11,24 @@ import { Body3D, type RegionStatus } from "../../../components/Body3D.tsx";
 import { muscleRegion } from "../../../lib/body3d.ts";
 import { journey, pickTodayDay } from "../../../lib/journey.ts";
 
+/** Weekly sessions as a progress ring; with no planned target it shows the count alone. */
+function Ring({ value, total, label }: { value: number; total: number; label: string }) {
+  const { n } = useT();
+  const R = 42, C = 2 * Math.PI * R;
+  const f = total > 0 ? Math.min(1, value / total) : value > 0 ? 1 : 0;
+  return (
+    <div className="ring" role="img" aria-label={`${label}: ${value}${total ? ` / ${total}` : ""}`}>
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <defs><linearGradient id="ringg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="var(--heat-1)" /><stop offset=".6" stopColor="var(--heat-2)" /><stop offset="1" stopColor="var(--heat-3)" /></linearGradient></defs>
+        <circle cx="50" cy="50" r={R} className="ring-bg" />
+        <circle cx="50" cy="50" r={R} className="ring-fg" strokeDasharray={C} strokeDashoffset={C * (1 - f)} transform="rotate(-90 50 50)" />
+      </svg>
+      <span className="ring-n num">{n(value)}{total > 0 && <small>/{n(total)}</small>}</span>
+      <span className="ring-l">{label}</span>
+    </div>
+  );
+}
+
 export default function TodayPage() {
   const { locale, t, n } = useT();
   const api = useApi();
@@ -66,8 +84,11 @@ export default function TodayPage() {
       {d && (
         <>
           <header className="today-head">
-            <p className="kicker">{t("today.title")}</p>
-            <h1>{name ? t("today.greet", { name }) : t("today.greetAnon")}</h1>
+            <div>
+              <p className="today-date">{new Intl.DateTimeFormat(locale, { weekday: "long", day: "numeric", month: "long" }).format(new Date())}</p>
+              <h1>{name ? t("today.greet", { name }) : t("today.greetAnon")}</h1>
+            </div>
+            <Ring value={w.sessions ?? 0} total={week?.planned_sessions ?? 0} label={t("dash.sessions")} />
           </header>
 
           {(d.alerts ?? []).length > 0 && (<section className="card">{d.alerts!.map((a, i) => <DecisionPanel key={i} decision={a} />)}</section>)}
