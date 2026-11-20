@@ -50,7 +50,7 @@ class IdentityService:
             raise Conflict("email")                   # NOTE: API layer must answer generically to avoid enumeration
         uid = self.s.new_id("usr")
         self.s.users[uid] = {"id": uid, "email": email, "pw": hash_password(password), "locale": locale,
-                             "verified": False, "dob": dob, "fails": 0, "locked_until": 0, "role": "user", "plan": "free"}
+                             "verified": False, "dob": dob, "fails": 0, "locked_until": 0, "role": "user", "plan": "free", "created": int(self.clock())}
         self.s.by_email[email] = uid
         return uid
 

@@ -200,6 +200,42 @@ class AdminPanel:
         self._log(actor, "media.file_delete", fid)
         return {"message": "deleted"}
 
+    # ------------------------------------------------------------------ dashboard statistics (aggregates only: no emails, no health data)
+    def stats(self, role: str, days: int = 14) -> dict:
+        self.need_content(role)
+        now = int(self.clock())
+        day = 86400
+        today = now // day
+        users = list(self.s.users.values())
+        joined = {today - i: 0 for i in range(days)}
+        for u in users:
+            d = (u.get("created") or 0) // day
+            if d in joined:
+                joined[d] += 1
+        acts = {today - i: 0 for i in range(days)}
+        for a in self.s.audit:
+            if a.get("kind") == "admin_action" and (a.get("at") or 0) // day in acts:
+                acts[a["at"] // day] += 1
+        roles: dict = {}
+        for u in users:
+            roles[u["role"]] = roles.get(u["role"], 0) + 1
+        ex: dict = {}
+        for m in getattr(self.s, "exercise_meta", {}).values():
+            ex[m["status"]] = ex.get(m["status"], 0) + 1
+        ann = self.s.site_settings.get("announcement") or {}
+        return {
+            "generated_at": now,
+            "users": {"total": len(users), "verified": sum(1 for u in users if u.get("verified")), "roles": roles,
+                      "locales": {k: sum(1 for u in users if u.get("locale") == k) for k in ("fa", "en")},
+                      "joined_per_day": [{"day": d * day, "count": c} for d, c in sorted(joined.items())]},
+            "activity": {"assessments": len(getattr(self.s, "assessments", {})), "plans": len(getattr(self.s, "plans", {})), "workout_sessions": len(getattr(self.s, "workout_sessions", {})),
+                         "pain_logs": len(getattr(self.s, "pain_logs", {}))},
+            "content": {"exercises_by_status": ex, "media_overrides": len(self.s.media_overrides), "uploaded_files": len(self.s.media_files),
+                        "uploaded_bytes": sum(f.get("size", 0) for f in self.s.media_files.values()),
+                        "announcement_active": bool(ann.get("enabled"))},
+            "admin_actions_per_day": [{"day": d * day, "count": c} for d, c in sorted(acts.items())],
+        }
+
     # ------------------------------------------------------------------ site announcement
     def public_announcement(self) -> dict:
         a = self.s.site_settings.get("announcement")

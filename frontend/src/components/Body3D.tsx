@@ -84,16 +84,6 @@ export function Body3D({ status, label, onPick, selected, height = 360, controls
     return () => { dead = true; viewer.current = null; v?.dispose(); };
   }, []);
 
-  // follow theme changes (data-theme attribute or the OS colour scheme)
-  useEffect(() => {
-    const apply = () => viewer.current?.setPalette(readPalette(wrap.current ?? document.documentElement));
-    const mo = new MutationObserver(apply);
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    const mq = typeof matchMedia === "function" ? matchMedia("(prefers-color-scheme: dark)") : null;
-    mq?.addEventListener("change", apply);
-    return () => { mo.disconnect(); mq?.removeEventListener("change", apply); };
-  }, []);
-
   const key = JSON.stringify(status);
   useEffect(() => {
     const v = viewer.current;

@@ -13,7 +13,6 @@ import "../globals.css";
 const fa = localFont({ src: "../../fonts/Vazirmatn.ttf", weight: "100 900", variable: "--font-fa", display: "swap" });
 const display = localFont({ src: [{ path: "../../fonts/BarlowCondensed-SemiBold.ttf", weight: "600" }, { path: "../../fonts/BarlowCondensed-Bold.ttf", weight: "700" }], variable: "--font-display", display: "swap" });
 const mono = localFont({ src: [{ path: "../../fonts/IBMPlexMono-Regular.woff2", weight: "400" }, { path: "../../fonts/IBMPlexMono-Medium.woff2", weight: "500" }], variable: "--font-mono", display: "swap" });
-const THEME_INIT = `(function(){try{var t=localStorage.getItem("vf_theme");if(t==="forge"||t==="lab"||t==="track")document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`;
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -31,7 +30,6 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   if (!isLocale(locale)) notFound();
   return (
     <html lang={locale} dir={dirOf(locale)} className={`${fa.variable} ${display.variable} ${mono.variable}`} suppressHydrationWarning>
-      <head><script dangerouslySetInnerHTML={{ __html: THEME_INIT }} /></head>
       <body>
         <RegisterSW />
         <LocaleProvider locale={locale}>
