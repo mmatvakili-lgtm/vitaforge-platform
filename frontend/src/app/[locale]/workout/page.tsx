@@ -6,7 +6,7 @@ import type { ApiError } from "../../../lib/api/client.ts";
 import type { SessionSummary, WorkoutDay, WorkoutSession } from "../../../lib/api/generated.ts";
 import { PAIN_REGIONS, buildSetLog, finishRequest, isLogged, newUuid, nextSet, plannedSets, progress, skipSetLog, type PlannedSet, type SetDraft } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading, Celebrate } from "../../../components/ui.tsx";
 import { Select } from "../../../components/Select.tsx";
 import { Progression } from "../../../components/Progression.tsx";
 import { RestTimer } from "../../../components/RestTimer.tsx";
@@ -105,9 +105,10 @@ export default function WorkoutPage() {
     const s = summary;
     return (
       <Card title={t("wk.summary")}>
+        {session?.aborted_reason !== "pain" && !s?.safety_followup && <Celebrate />}
         {session?.aborted_reason === "pain" && <Alert kind="warning">{t("wk.painWarn")}</Alert>}
         {s?.safety_followup && <Alert kind="warning">{t(`wk.${s.safety_followup.message_key}`)}</Alert>}
-        <p>{t("wk.sets", { n: n(s?.sets_done ?? session?.sets_done ?? 0) })} · {t("wk.volume", { kg: n(s?.volume_kg ?? session?.volume_kg ?? 0) })}{(s?.duration_min ?? session?.duration_min) !== undefined && <> · {t("wk.minutes", { n: n((s?.duration_min ?? session?.duration_min) as number) })}</>}</p>
+        <p className="wk-sum">{t("wk.sets", { n: n(s?.sets_done ?? session?.sets_done ?? 0) })} · {t("wk.volume", { kg: n(s?.volume_kg ?? session?.volume_kg ?? 0) })}{(s?.duration_min ?? session?.duration_min) !== undefined && <> · {t("wk.minutes", { n: n((s?.duration_min ?? session?.duration_min) as number) })}</>}</p>
         <div className="row"><ButtonLink href={`/${locale}/history`}>{t("wk.toHistory")}</ButtonLink><ButtonLink href={`/${locale}/plan`} secondary>{t("nav.plan")}</ButtonLink></div>
       </Card>
     );

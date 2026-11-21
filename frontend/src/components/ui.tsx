@@ -114,3 +114,26 @@ export function AuthCard({ title, children }: { title?: string; children: ReactN
     </div>
   );
 }
+
+/** One-time ember burst for a finished workout. Decorative (aria-hidden); fixed pseudo-random spread so server and client markup match. */
+export function Celebrate() {
+  const sparks = Array.from({ length: 32 }, (_, i) => {
+    const a = (i / 32) * Math.PI * 2 + (i % 3) * 0.2, d = 90 + ((i * 37) % 120);
+    return { x: Math.cos(a) * d, y: Math.sin(a) * d - 40, s: 4 + (i % 4) * 2, h: i % 3, dl: (i % 8) * 0.03 };
+  });
+  return (
+    <div className="burst" aria-hidden="true">
+      {sparks.map((p, i) => <i key={i} data-h={p.h} style={{ "--x": `${p.x}px`, "--y": `${p.y}px`, inlineSize: p.s, blockSize: p.s, animationDelay: `${p.dl}s` } as React.CSSProperties} />)}
+    </div>
+  );
+}
+
+/** Small flame for streaks: flickers slowly. */
+export function Flame() {
+  return (
+    <svg className="flame" viewBox="0 0 24 32" width="22" height="28" aria-hidden="true" focusable="false">
+      <path d="M12 1c1 6 8 8 8 17a8 8 0 01-16 0c0-4 2-6 4-8 0 3 1 4 2 4 0-5-1-8 2-13z" fill="url(#flameg)" />
+      <defs><linearGradient id="flameg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="var(--heat-1)" /><stop offset=".55" stopColor="var(--heat-2)" /><stop offset="1" stopColor="var(--heat-3)" /></linearGradient></defs>
+    </svg>
+  );
+}

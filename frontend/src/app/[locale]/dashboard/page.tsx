@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import type { Analytics, AssessmentResult, Dashboard, NutritionDaySummary, Profile, ProgressReport, WorkoutPlan, WorkoutSession } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { ApiErrorView, ButtonLink, Loading, CountUp } from "../../../components/ui.tsx";
+import { ApiErrorView, ButtonLink, Loading, CountUp, Flame } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 import { Body3D, type RegionStatus } from "../../../components/Body3D.tsx";
 import { muscleRegion } from "../../../lib/body3d.ts";
@@ -139,7 +139,7 @@ export default function TodayPage() {
           <h2 className="sec">{t("today.week")}</h2>
           <div className="stat-grid">
             <div className="stat"><span className="num"><CountUp value={w.sessions ?? 0} />{week?.planned_sessions ? <small> / {n(week.planned_sessions)}</small> : null}</span><small>{t("dash.sessions")}</small></div>
-            <div className="stat"><span className="num"><CountUp value={an?.streak_weeks ?? 0} /></span><small>{t("today.streak")}</small></div>
+            <div className="stat"><span className="num">{(an?.streak_weeks ?? 0) > 0 && <Flame />}<CountUp value={an?.streak_weeks ?? 0} /></span><small>{t("today.streak")}</small></div>
             <div className="stat"><span className="num"><CountUp value={an?.records_4w ?? 0} /></span><small>{t("today.records")}</small></div>
             {an?.days_since_last != null && <div className="stat"><span className="num">{n(an.days_since_last)}</span><small>{t("today.daysSince")}</small></div>}
           </div>
