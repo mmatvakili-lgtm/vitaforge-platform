@@ -269,3 +269,29 @@ def test_dev_simulate_route_still_needs_a_real_token_and_is_dev_only():
     assert h.call("GET", "/dev/telegram/outbox").body["delivered"] is False
     prod = Harness(dev=False)
     assert prod.call("POST", "/dev/telegram/simulate-start", {"telegram_id": TG, "token": "z" * 32}).status == 404
+
+
+def test_logged_in_user_can_connect_telegram_without_changing_verification():
+    h = Harness(dev=True)
+    h.register("lk@ex.com"); h.verify_by_mail("lk@ex.com")
+    tok = h.login("lk@ex.com")
+    assert h.call("GET", "/telegram/status", token=tok).body == {"linked": False, "notifications": False}
+    r = h.call("POST", "/telegram/link", token=tok)
+    assert r.status == 200 and "start=" in r.body["deep_link"]
+    assert h.tg_start(710001, r.body["deep_link"].split("start=")[1]).status == 200
+    assert h.call("GET", "/telegram/status", token=tok).body["linked"] is True
+    assert h.call("POST", "/telegram/link", token=tok).status == 409           # already linked
+    assert h.call("POST", "/telegram/link").status == 401                       # needs a session
+
+
+def test_link_token_for_connect_cannot_be_reused_or_used_by_unverified_flow():
+    h = Harness(dev=True)
+    h.register("lk2@ex.com"); h.verify_by_mail("lk2@ex.com")
+    tok = h.login("lk2@ex.com")
+    t = h.call("POST", "/telegram/link", token=tok).body["deep_link"].split("start=")[1]
+    assert h.tg_start(710002, t).status == 200
+    h.register("lk3@ex.com"); h.verify_by_mail("lk3@ex.com")
+    tok3 = h.login("lk3@ex.com")
+    assert h.call("GET", "/telegram/status", token=tok3).body["linked"] is False
+    h.tg_start(710003, t)                                                      # reused token: silently refused
+    assert h.call("GET", "/telegram/status", token=tok3).body["linked"] is False

@@ -14,6 +14,7 @@ EP=[
 ("API-AUTH-010","post","/auth/telegram/link","auth","دریافت لینک تأیید تلگرام (اثبات مالکیت با رمز)",PUB,"","TelegramLinkRequest","TelegramLink","200",["400","401","409","423","429","503"]),
 ("API-TG-001","post","/telegram/webhook","telegram","وب‌هوک بات تلگرام (فقط با secret header)",PUB,"","TelegramUpdate","TelegramOk","200",["400","401","503"]),
 ("API-TG-002","get","/telegram/status","telegram","وضعیت اتصال تلگرام",U,"",None,"TelegramStatus","200",["401"]),
+("API-TG-004","post","/telegram/link","telegram","ساخت لینک اتصال تلگرام برای کاربر واردشده",U,"",None,"TelegramLink","200",["401","409","429","503"]),
 ("API-TG-003","put","/telegram/notifications","telegram","رضایت صریح برای اعلان‌های آینده",U,"","TelegramNotificationsRequest","TelegramStatus","200",["400","401","409","422"]),
 ("API-PRO-001","get","/profile","profile","دریافت پروفایل",U,"",None,"Profile","200",["401"]),
 ("API-PRO-002","patch","/profile","profile","به‌روزرسانی پروفایل/تنظیمات i18n",U,"","ProfileUpdate","Profile","200",["400","401","422"]),

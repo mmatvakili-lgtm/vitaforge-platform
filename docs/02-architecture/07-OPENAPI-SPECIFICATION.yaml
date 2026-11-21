@@ -3180,6 +3180,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /telegram/link:
+    post:
+      operationId: api_tg_004
+      tags:
+      - telegram
+      summary: ساخت لینک اتصال تلگرام برای کاربر واردشده
+      x-id: API-TG-004
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramLink'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: تعارض وضعیت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: محدودیت نرخ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: سرویس در دسترس نیست
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /telegram/notifications:
     put:
       operationId: api_tg_003

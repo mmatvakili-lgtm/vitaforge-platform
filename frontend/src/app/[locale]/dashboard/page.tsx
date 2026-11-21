@@ -43,6 +43,8 @@ export default function TodayPage() {
   const [assess, setAssess] = useState<AssessmentResult | null>(null);
   const [plan, setPlan] = useState<WorkoutPlan | null>(null);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
+  const [tgLinked, setTgLinked] = useState<boolean | null>(null);
+  const [nudgeOff, setNudgeOff] = useState(true);
   const [nut, setNut] = useState<NutritionDaySummary | null>(null);
   const [an, setAn] = useState<Analytics | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
@@ -61,6 +63,8 @@ export default function TodayPage() {
     });
     api.call("API-ANALYTICS-001").then((r) => { if (live && r.ok) setAn(r.data); });   // decorative: the hub works without it
     api.call("API-NUT-008").then((r) => { if (live && r.ok) setNut(r.data); });
+    api.call("API-TG-002").then((r) => { if (live && r.ok) setTgLinked(r.data.linked); });
+    try { setNudgeOff(localStorage.getItem("vf-tg-nudge") === "off"); } catch { setNudgeOff(false); }
     return () => { live = false; };
   }, [api, router, locale]);
 
@@ -105,6 +109,14 @@ export default function TodayPage() {
           </header>
 
           {(d.alerts ?? []).length > 0 && (<section className="card">{d.alerts!.map((a, i) => <DecisionPanel key={i} decision={a} />)}</section>)}
+
+          {tgLinked === false && !nudgeOff && (
+            <aside className="nudge">
+              <div><strong>{t("tg.nudge.title")}</strong><p className="muted">{t("tg.nudge.body")}</p></div>
+              <Link href={`/${locale}/profile#telegram`} className="btn">{t("tg.nudge.cta")}</Link>
+              <button type="button" className="x" onClick={() => { setNudgeOff(true); try { localStorage.setItem("vf-tg-nudge", "off"); } catch { /* optional */ } }}>{t("tg.nudge.later")}</button>
+            </aside>
+          )}
 
           <ol className="journey" aria-label={t("today.journey")}>
             {j.steps.map((s) => (
