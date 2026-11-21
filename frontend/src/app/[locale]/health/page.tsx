@@ -65,11 +65,11 @@ export default function HealthPage() {
         <>
           <h2>{t("health.conditions")}</h2>
           {(hp.conditions ?? []).length === 0 ? <p className="muted">{t("health.none")}</p> : (
-            <ul className="plain">{hp.conditions!.map((c, i) => <li key={c.id ?? i}>{t(`region.${c.region}`)} — {t(`health.problem.${c.problem_type}`)}{c.self_severity !== undefined && ` (${n(c.self_severity)}/10)`}</li>)}</ul>)}
+            <ul className="plain chips">{hp.conditions!.map((c, i) => <li key={c.id ?? i}>{t(`region.${c.region}`)} — {t(`health.problem.${c.problem_type}`)}{c.self_severity !== undefined && ` (${n(c.self_severity)}/10)`}</li>)}</ul>)}
           {hp.latest_decision && !permitsPlan(hp.latest_decision.status) && !decision && <DecisionPanel decision={hp.latest_decision} />}
 
           <h2>{t("health.logPain")}</h2>
-          <form onSubmit={logPain} noValidate>
+          <form onSubmit={logPain} noValidate className="formgrid">
             <Field id="region" label={t("wk.painRegion")}>
               <Select id="region" value={region} onChange={(e) => setRegion(e.target.value)}>{PAIN_REGIONS.map((r) => <option key={r} value={r}>{t(`region.${r}`)}</option>)}</Select>
             </Field>
@@ -85,7 +85,7 @@ export default function HealthPage() {
           {decision && !permitsPlan(decision.status) && <DecisionPanel decision={decision} />}
 
           <h2>{t("health.addCondition")}</h2>
-          <form onSubmit={addCondition} noValidate>
+          <form onSubmit={addCondition} noValidate className="formgrid">
             <Field id="problem" label={t("health.problem")}>
               <Select id="problem" value={problem} onChange={(e) => setProblem(e.target.value as (typeof PROBLEMS)[number])}>{PROBLEMS.map((x) => <option key={x} value={x}>{t(`health.problem.${x}`)}</option>)}</Select>
             </Field>

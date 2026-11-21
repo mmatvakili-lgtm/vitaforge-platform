@@ -46,7 +46,7 @@ export default function HistoryPage() {
             <p className="muted">{t("hist.trend.hint")}</p>
           </section>);
       })()}
-      <ul className="plain">
+      <ul className="plain tl">
         {(rows ?? []).map((s) => (
           <li key={s.id} className="doc">
             <strong>{s.day_title || t("wk.title")}</strong> <span className="tag">{t(`hist.status.${s.status}`)}</span>
