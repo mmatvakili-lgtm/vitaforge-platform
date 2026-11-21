@@ -60,7 +60,7 @@ function create(canvas, options = {}) {
   const palette = { base: "#8f3d33", low: "#4f8fd6", ok: "#3fae7a", high: "#e0a23a", focus: "#ff5a1f", bone: "#e7dfcf", glow: "#ff5a1f" };
   const state = {
     yaw: 0.5, pitch: 0.06, vyaw: 0, targetYaw: null, dist: 3.4, targetDist: 3.4, auto: !reduce, drag: false, moved: 0, lastX: 0, lastY: 0,
-    status: {}, selected: null, hover: null, bones: false, ready: false, alive: true, visible: true, t0: performance.now(), scan: 0,
+    shake: 0, status: {}, selected: null, hover: null, bones: false, ready: false, alive: true, visible: true, t0: performance.now(), scan: 0,
   };
   const groups = new Map();                  // group -> { mats: Material, meshes: Mesh[], center: Vector3, color: Color, target: Color, glow: number }
   const meshes = [];
@@ -227,7 +227,8 @@ function create(canvas, options = {}) {
     state.dist += (state.targetDist - state.dist) * Math.min(1, dt * 7);
     const hgt = (state.top ?? 1.85) + 0.06, fit = (0.5 * hgt * 1.1) / Math.tan((camera.fov * Math.PI) / 360);
     const dist = Math.max(fit * (camera.aspect < 0.5 ? 0.5 / camera.aspect : 1), 1.2) * (state.dist / 3.4);
-    rig.rotation.y = state.yaw;
+    if (state.shake > 0.01) state.shake *= Math.pow(0.02, dt);   // ~1s decay
+    rig.rotation.y = state.yaw + Math.sin(now * 0.05) * state.shake * 0.22;
     const cy = (state.top ?? 1.85) / 2;
     camera.position.set(0, cy + 0.12 + Math.sin(state.pitch) * dist * 0.5, Math.cos(state.pitch) * dist);
     camera.lookAt(0, cy, 0);
@@ -279,6 +280,10 @@ function create(canvas, options = {}) {
       state.pitch = 0.06 + 0.22 * arc;
       const b = p > 0.78; if (b !== state.bones) api.setBones(b);
     },
+    /** Gaze: a small turn toward x in [-1,1] (pointer side). Ignored while the user drags or a view was set explicitly. */
+    setGaze(x) { if (reduce || state.drag) return; state.auto = false; state.vyaw = 0; const v = clamp(+x || 0, -2, 2); state.targetYaw = v >= 2 ? Math.PI : v * 0.6; },   // 2 = turn the back (looking away)
+    /** Brief refusal shake (wrong password). */
+    shake() { if (!reduce) state.shake = 1; },
     zoom(f) { state.targetDist = clamp(state.targetDist * f, 1.5, 4.8); },
     groupsPresent() { return [...groups.keys()]; },
     resize,

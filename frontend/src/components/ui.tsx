@@ -4,6 +4,7 @@ import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 
 import type { ApiError } from "../lib/api/client.ts";
 import { invalidFields } from "../lib/api/client.ts";
 import { useT } from "../lib/react/context.tsx";
+import { AuthStage } from "./AuthStage.tsx";
 
 export function Alert({ kind = "error", children }: { kind?: "error" | "info" | "success" | "warning"; children: ReactNode }) {
   return <div className={`alert alert-${kind}`} role={kind === "error" ? "alert" : "status"}>{children}</div>;
@@ -67,7 +68,7 @@ export function AuthCard({ title, children }: { title?: string; children: ReactN
     <div className="auth">
       <aside className="auth-art" aria-hidden="true">
         <p className="auth-line"><span>{t("landing.h1a")}</span><span>{t("landing.h1b")}</span></p>
-        <div className="auth-glow" /><div className="lp-anvil" />
+        <div className="auth-glow" /><AuthStage /><div className="lp-anvil" />
       </aside>
       <Card title={title}>{children}</Card>
     </div>
