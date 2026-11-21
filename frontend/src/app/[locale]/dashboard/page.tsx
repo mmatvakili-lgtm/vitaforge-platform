@@ -78,6 +78,15 @@ export default function TodayPage() {
   const hasFocus = Object.keys(focus).length > 0;
   const nextHref = j.next === "train" && today?.day_id ? `/${locale}/workout?day=${today.day_id}` : `/${locale}/${j.steps.find((s) => s.key === j.next)!.href}`;
   const name = profile?.display_name;
+  const last7 = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale, { weekday: "narrow" });
+    const days = new Set(sessions.map((x) => (x.started_at ?? "").slice(0, 10)));
+    return Array.from({ length: 7 }, (_, i) => {
+      const dt = new Date(); dt.setDate(dt.getDate() - (6 - i));
+      const key = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+      return { key, label: fmt.format(dt), done: days.has(key), today: i === 6 };
+    });
+  }, [sessions, locale]);
 
   return (
     <div className="today">
@@ -137,6 +146,14 @@ export default function TodayPage() {
           )}
 
           <h2 className="sec">{t("today.week")}</h2>
+          <ol className="wstrip" aria-hidden="true">
+            {last7.map((x) => (
+              <li key={x.key} className={`${x.done ? "done" : ""} ${x.today ? "today" : ""}`}>
+                <i />
+                <small>{x.label}</small>
+              </li>
+            ))}
+          </ol>
           <div className="stat-grid">
             <div className="stat"><span className="num"><CountUp value={w.sessions ?? 0} />{week?.planned_sessions ? <small> / {n(week.planned_sessions)}</small> : null}</span><small>{t("dash.sessions")}</small></div>
             <div className="stat"><span className="num">{(an?.streak_weeks ?? 0) > 0 && <Flame />}<CountUp value={an?.streak_weeks ?? 0} /></span><small>{t("today.streak")}</small></div>

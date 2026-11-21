@@ -903,3 +903,35 @@ progress::-moz-progress-bar { background: linear-gradient(90deg, var(--heat-1), 
 @keyframes spin-in { from { transform: rotate(-120deg) scale(.6); opacity: 0; } }
 .pa .blink { animation: blink 2.4s ease-in-out infinite; } @keyframes blink { 50% { opacity: .25; } }
 @media (prefers-reduced-motion: reduce) { .pa .dr, .pa .up, .pa .ring, .pa .blink { animation: none; stroke-dashoffset: 0; } }
+
+/* =====================================================================================================================
+   Pages v10: cinematic Today hero, week strip, nutrition/health/history/plan upgrades.
+   ===================================================================================================================== */
+.card.next { position: relative; overflow: hidden; isolation: isolate; min-block-size: 15rem; padding: clamp(1.4rem, 4vw, 2.4rem);
+  background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--heat-2) 30%, transparent), transparent 60%), radial-gradient(90% 90% at 0% 100%, color-mix(in srgb, var(--heat-1) 70%, transparent), transparent 65%), var(--surface-1); }
+.card.next::after { content: ""; position: absolute; inset: auto -20% -60% -20%; block-size: 70%; z-index: -1; background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--heat-3) 35%, transparent), transparent 70%); animation: nxt-breathe 5s ease-in-out infinite; }
+@keyframes nxt-breathe { 50% { opacity: .45; transform: scale(1.06); } }
+.card.next h2 { font-size: clamp(2rem, 6.5vw, 3.8rem); line-height: 1.02; letter-spacing: -.01em; margin-block: .2rem .6rem; }
+.card.next .lede { max-inline-size: 34ch; }
+.card.next .btn.cta { font-size: 1.1rem; padding: .9rem 1.8rem; border-radius: 999px; box-shadow: 0 .6rem 2rem -.4rem color-mix(in srgb, var(--heat-2) 70%, transparent); transition: transform .3s var(--ease-ui), box-shadow .3s; }
+.card.next .btn.cta:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 1rem 2.6rem -.4rem color-mix(in srgb, var(--heat-2) 85%, transparent); }
+.card.next .btn.cta:active { transform: scale(.96); }
+
+.wstrip { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; }
+.wstrip li { display: grid; justify-items: center; gap: .35rem; }
+.wstrip i { inline-size: 100%; max-inline-size: 3rem; aspect-ratio: 1; border-radius: 50%; border: 1.5px solid var(--edge); background: var(--surface-1); display: block; transition: transform .3s var(--ease-ui); }
+.wstrip .done i { background: radial-gradient(circle at 35% 30%, var(--heat-3), var(--heat-2) 60%, var(--heat-1)); border-color: transparent; box-shadow: 0 0 1.2rem -.2rem var(--heat-2); animation: pop-in .5s var(--ease-ui) both; }
+.wstrip .today i { outline: 2px solid var(--heat-2); outline-offset: 3px; }
+.wstrip small { color: var(--muted, #9a948c); font-size: .72rem; }
+.wstrip li:nth-child(2) i { animation-delay: .05s; } .wstrip li:nth-child(3) i { animation-delay: .1s; } .wstrip li:nth-child(4) i { animation-delay: .15s; } .wstrip li:nth-child(5) i { animation-delay: .2s; } .wstrip li:nth-child(6) i { animation-delay: .25s; } .wstrip li:nth-child(7) i { animation-delay: .3s; }
+@keyframes pop-in { from { transform: scale(.2); opacity: 0; } 70% { transform: scale(1.15); } }
+
+/* card sections get a hot left edge + hover lift so pages read as layered, not flat */
+.card { transition: transform .3s var(--ease-ui), border-color .3s; }
+@media (hover: hover) { main .card:not(.next):hover { transform: translateY(-2px); border-color: var(--edge-hot); } }
+main .card h2 { display: flex; align-items: center; gap: .6rem; }
+main .card h2::before { content: ""; inline-size: .35rem; block-size: 1.1em; border-radius: 9px; background: linear-gradient(var(--heat-3), var(--heat-2)); flex: none; }
+.today-list li { transition: transform .25s var(--ease-ui), background .25s; }
+@media (hover: hover) { .today-list li:hover { transform: translateX(4px); } [dir="rtl"] .today-list li:hover { transform: translateX(-4px); } }
+@media (prefers-reduced-motion: reduce) { .card.next::after, .wstrip .done i { animation: none; } .card, .today-list li { transition: none; } }
+.card.next h2::before { display: none; }
