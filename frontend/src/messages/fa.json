@@ -1174,5 +1174,10 @@
  "landing.scene.back.t": "از پشت",
  "landing.scene.back.b": "لت، ذوزنقه، باسن و همسترینگ؛ زنجیره‌ی پشتی که بیشتر نادیده می‌ماند.",
  "landing.scene.inside.t": "از درون",
- "landing.scene.inside.b": "اسکلت زیر عضلات؛ مدل آناتومی در پروژه با مجوز باز است."
+ "landing.scene.inside.b": "اسکلت زیر عضلات؛ مدل آناتومی در پروژه با مجوز باز است.",
+ "auth.show": "نمایش",
+ "auth.hide": "پنهان",
+ "auth.rule.len": "حداقل ۱۰ نویسه",
+ "auth.rule.upper": "یک حرف بزرگ انگلیسی",
+ "auth.rule.digit": "یک رقم"
 }

@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
-import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
+import { cloneElement, isValidElement, useState, type ReactElement, type ReactNode } from "react";
 import type { ApiError } from "../lib/api/client.ts";
 import { invalidFields } from "../lib/api/client.ts";
+import { passwordChecks } from "../lib/password.ts";
 import { useT } from "../lib/react/context.tsx";
+import { useCountUp, useInViewOnce } from "../lib/react/useInView.ts";
 import { AuthStage } from "./AuthStage.tsx";
 
 export function Alert({ kind = "error", children }: { kind?: "error" | "info" | "success" | "warning"; children: ReactNode }) {
@@ -52,9 +54,47 @@ export function Card({ title, children }: { title?: string; children: ReactNode 
   return <section className="card">{title && <h1>{title}</h1>}{children}</section>;
 }
 
+/** Skeleton instead of a bare "loading" line: a heated bar sweeps over placeholder blocks; the text stays for screen readers. */
 export function Loading() {
   const { t } = useT();
-  return <p role="status" className="muted">{t("common.loading")}</p>;
+  return (
+    <div role="status" className="sk" aria-live="polite">
+      <span className="sr-only">{t("common.loading")}</span>
+      <span className="sk-bar sk-w60" /><span className="sk-bar" /><span className="sk-bar sk-w80" /><span className="sk-heat" aria-hidden="true" />
+    </div>
+  );
+}
+
+/** Number that counts up from 0 when it scrolls into view (jumps straight to the value for reduced motion). */
+export function CountUp({ value }: { value: number }) {
+  const { n } = useT();
+  const [ref, seen] = useInViewOnce<HTMLSpanElement>();
+  const v = useCountUp(value, seen);
+  return <span ref={ref}>{n(seen ? v : 0)}</span>;
+}
+
+/** Password field with a show/hide toggle and (optionally) the policy as live checks; it never reads the value anywhere else. */
+export function PasswordInput({ meter, ...rest }: { meter?: boolean } & React.InputHTMLAttributes<HTMLInputElement>) {
+  const { t } = useT();
+  const [show, setShow] = useState(false);
+  const c = passwordChecks(String(rest.value ?? ""));
+  return (
+    <div className="pw">
+      <div className="pw-row">
+        <input {...rest} type={show ? "text" : "password"} />
+        <button type="button" className="pw-toggle" aria-pressed={show} onClick={() => setShow(!show)}>{show ? t("auth.hide") : t("auth.show")}</button>
+      </div>
+      {meter && (
+        <div className="pw-meter" data-score={c.score} aria-live="polite">
+          <span className="pw-bar" aria-hidden="true"><i /><i /><i /></span>
+          <ul>
+            <li className={c.len ? "ok" : ""}>{t("auth.rule.len")}</li>
+            <li className={c.upper ? "ok" : ""}>{t("auth.rule.upper")}</li>
+            <li className={c.digit ? "ok" : ""}>{t("auth.rule.digit")}</li>
+          </ul>
+        </div>)}
+    </div>
+  );
 }
 
 export function ButtonLink({ href, children, secondary }: { href: string; children: ReactNode; secondary?: boolean }) {

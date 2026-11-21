@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import type { Analytics, AssessmentResult, Dashboard, NutritionDaySummary, Profile, ProgressReport, WorkoutPlan, WorkoutSession } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { ApiErrorView, ButtonLink, Loading } from "../../../components/ui.tsx";
+import { ApiErrorView, ButtonLink, Loading, CountUp } from "../../../components/ui.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 import { Body3D, type RegionStatus } from "../../../components/Body3D.tsx";
 import { muscleRegion } from "../../../lib/body3d.ts";
@@ -15,15 +15,17 @@ import { journey, pickTodayDay } from "../../../lib/journey.ts";
 function Ring({ value, total, label }: { value: number; total: number; label: string }) {
   const { n } = useT();
   const R = 42, C = 2 * Math.PI * R;
+  const [armed, setArmed] = useState(false);
+  useEffect(() => { const id = requestAnimationFrame(() => setArmed(true)); return () => cancelAnimationFrame(id); }, []);
   const f = total > 0 ? Math.min(1, value / total) : value > 0 ? 1 : 0;
   return (
     <div className="ring" role="img" aria-label={`${label}: ${value}${total ? ` / ${total}` : ""}`}>
       <svg viewBox="0 0 100 100" aria-hidden="true">
         <defs><linearGradient id="ringg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="var(--heat-1)" /><stop offset=".6" stopColor="var(--heat-2)" /><stop offset="1" stopColor="var(--heat-3)" /></linearGradient></defs>
         <circle cx="50" cy="50" r={R} className="ring-bg" />
-        <circle cx="50" cy="50" r={R} className="ring-fg" strokeDasharray={C} strokeDashoffset={C * (1 - f)} transform="rotate(-90 50 50)" />
+        <circle cx="50" cy="50" r={R} className="ring-fg" strokeDasharray={C} strokeDashoffset={C * (1 - (armed ? f : 0))} transform="rotate(-90 50 50)" />
       </svg>
-      <span className="ring-n num">{n(value)}{total > 0 && <small>/{n(total)}</small>}</span>
+      <span className="ring-n num"><CountUp value={value} />{total > 0 && <small>/{n(total)}</small>}</span>
       <span className="ring-l">{label}</span>
     </div>
   );
@@ -136,9 +138,9 @@ export default function TodayPage() {
 
           <h2 className="sec">{t("today.week")}</h2>
           <div className="stat-grid">
-            <div className="stat"><span className="num">{n(w.sessions ?? 0)}{week?.planned_sessions ? <small> / {n(week.planned_sessions)}</small> : null}</span><small>{t("dash.sessions")}</small></div>
-            <div className="stat"><span className="num">{n(an?.streak_weeks ?? 0)}</span><small>{t("today.streak")}</small></div>
-            <div className="stat"><span className="num">{n(an?.records_4w ?? 0)}</span><small>{t("today.records")}</small></div>
+            <div className="stat"><span className="num"><CountUp value={w.sessions ?? 0} />{week?.planned_sessions ? <small> / {n(week.planned_sessions)}</small> : null}</span><small>{t("dash.sessions")}</small></div>
+            <div className="stat"><span className="num"><CountUp value={an?.streak_weeks ?? 0} /></span><small>{t("today.streak")}</small></div>
+            <div className="stat"><span className="num"><CountUp value={an?.records_4w ?? 0} /></span><small>{t("today.records")}</small></div>
             {an?.days_since_last != null && <div className="stat"><span className="num">{n(an.days_since_last)}</span><small>{t("today.daysSince")}</small></div>}
           </div>
 
@@ -159,9 +161,9 @@ export default function TodayPage() {
             <section className="card">
               <h2>{t("dash.nutrition")}</h2>
               <div className="stat-grid">
-                <div className="stat"><span className="num">{n(Math.round(nut.kcal))}</span><small>{t("nutrient.kcal")}</small></div>
+                <div className="stat"><span className="num"><CountUp value={Math.round(nut.kcal)} /></span><small>{t("nutrient.kcal")}</small></div>
                 <div className="stat"><span className="num">{n(nut.water_ml)}</span><small>{t("nut.log.water")} (ml)</small></div>
-                <div className="stat"><span className="num">{n(nut.meals)}</span><small>{t("today.meals")}</small></div>
+                <div className="stat"><span className="num"><CountUp value={nut.meals} /></span><small>{t("today.meals")}</small></div>
               </div>
               <p className="muted">{t("nut.label.estimate")}</p>
               <ButtonLink href={`/${locale}/nutrition`} secondary>{t("nav.nutrition")}</ButtonLink>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { Alert, ApiErrorView, Button, ButtonLink, AuthCard as Card, Field } from "../../../components/ui.tsx";
+import { Alert, ApiErrorView, Button, ButtonLink, AuthCard as Card, Field, PasswordInput } from "../../../components/ui.tsx";
 import { TelegramVerify } from "../../../components/TelegramVerify.tsx";
 
 const PW = /^(?=.*[A-Z])(?=.*\d).{10,}$/;
@@ -48,7 +48,7 @@ export default function RegisterPage() {
     <Card title={t("auth.register.title")}>
       <form onSubmit={submit} noValidate>
         <Field id="email" label={t("auth.email")} error={local.email}><input id="email" type="email" inputMode="email" autoComplete="email" dir="ltr" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
-        <Field id="password" label={t("auth.password")} hint={t("auth.passwordHint")} error={local.password}><input id="password" type="password" autoComplete="new-password" dir="ltr" required value={password} onChange={(e) => setPassword(e.target.value)} aria-describedby="password-hint" /></Field>
+        <Field id="password" label={t("auth.password")} hint={t("auth.passwordHint")} error={local.password}><PasswordInput meter id="password" autoComplete="new-password" dir="ltr" required value={password} onChange={(e) => setPassword(e.target.value)} aria-describedby="password-hint" /></Field>
         <Field id="dob" label={t("auth.dob")} hint={t("auth.adultsOnly")} error={local.dob}><input id="dob" type="date" dir="ltr" required value={dob} onChange={(e) => setDob(e.target.value)} /></Field>
         <ApiErrorView error={error} />
         <Button type="submit" busy={busy}>{t("auth.register.submit")}</Button>

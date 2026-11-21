@@ -1174,5 +1174,10 @@
  "landing.scene.back.t": "From behind",
  "landing.scene.back.b": "Lats, traps, glutes and hamstrings: the posterior chain that gets overlooked.",
  "landing.scene.inside.t": "From inside",
- "landing.scene.inside.b": "The skeleton under the muscle; the anatomy model is openly licensed (see NOTICE)."
+ "landing.scene.inside.b": "The skeleton under the muscle; the anatomy model is openly licensed (see NOTICE).",
+ "auth.show": "Show",
+ "auth.hide": "Hide",
+ "auth.rule.len": "At least 10 characters",
+ "auth.rule.upper": "One uppercase letter",
+ "auth.rule.digit": "One digit"
 }
