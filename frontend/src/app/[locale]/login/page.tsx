@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { ApiErrorView, Button, AuthCard as Card, Field } from "../../../components/ui.tsx";
+import { ApiErrorView, Button, AuthCard as Card, Field, PasswordInput } from "../../../components/ui.tsx";
 import { TelegramVerify } from "../../../components/TelegramVerify.tsx";
 
 export default function LoginPage() {
@@ -30,7 +30,7 @@ export default function LoginPage() {
     <Card title={t("auth.login.title")}>
       <form onSubmit={submit} noValidate>
         <Field id="identifier" label={t("auth.email")}><input id="identifier" type="email" inputMode="email" autoComplete="username" dir="ltr" required value={identifier} onChange={(e) => setIdentifier(e.target.value)} /></Field>
-        <Field id="password" label={t("auth.password")}><input id="password" type="password" autoComplete="current-password" dir="ltr" required value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+        <Field id="password" label={t("auth.password")}><PasswordInput id="password" autoComplete="current-password" dir="ltr" required value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
         <ApiErrorView error={error} />
         <Button type="submit" busy={busy}>{t("auth.login.submit")}</Button>
       </form>

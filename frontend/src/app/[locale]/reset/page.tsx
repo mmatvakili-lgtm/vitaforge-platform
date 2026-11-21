@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { Alert, ApiErrorView, Button, ButtonLink, AuthCard as Card, Field } from "../../../components/ui.tsx";
+import { Alert, ApiErrorView, Button, ButtonLink, AuthCard as Card, Field, PasswordInput } from "../../../components/ui.tsx";
 
 export default function ResetPage() {
   const { locale, t } = useT();
@@ -35,8 +35,8 @@ export default function ResetPage() {
   return (
     <Card title={t("auth.reset.title")}>
       <form onSubmit={submit} noValidate>
-        <Field id="password" label={t("auth.reset.newPassword")} hint={t("auth.passwordHint")}><input id="password" type="password" autoComplete="new-password" dir="ltr" required value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
-        <Field id="again" label={t("auth.reset.confirm")} error={mismatch ? t("auth.reset.mismatch") : undefined}><input id="again" type="password" autoComplete="new-password" dir="ltr" required value={again} onChange={(e) => setAgain(e.target.value)} /></Field>
+        <Field id="password" label={t("auth.reset.newPassword")} hint={t("auth.passwordHint")}><PasswordInput meter id="password" autoComplete="new-password" dir="ltr" required value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+        <Field id="again" label={t("auth.reset.confirm")} error={mismatch ? t("auth.reset.mismatch") : undefined}><PasswordInput id="again" autoComplete="new-password" dir="ltr" required value={again} onChange={(e) => setAgain(e.target.value)} /></Field>
         <ApiErrorView error={error} />
         <Button type="submit" busy={busy}>{t("auth.reset.submit")}</Button>
       </form>

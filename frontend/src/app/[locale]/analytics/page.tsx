@@ -6,7 +6,7 @@ import type { Analytics } from "../../../lib/api/generated.ts";
 import { insightMessageKey, insightParams, sparkRuns } from "../../../lib/analytics.ts";
 import { barPct } from "../../../lib/trends.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { ApiErrorView, Card, Loading } from "../../../components/ui.tsx";
+import { ApiErrorView, Card, Loading, CountUp } from "../../../components/ui.tsx";
 import { Body3D, type RegionStatus } from "../../../components/Body3D.tsx";
 
 export default function AnalyticsPage() {
@@ -64,8 +64,8 @@ export default function AnalyticsPage() {
           <section aria-label={t("analytics.consistency")}>
             <h2>{t("analytics.consistency")}</h2>
             <div className="stat-grid">
-              <div className="stat"><span className="num">{n(data.streak_weeks)}</span><small>{t("analytics.streakLabel")}</small></div>
-              <div className="stat"><span className="num">{n(data.records_4w)}</span><small>{t("analytics.recordsLabel")}</small></div>
+              <div className="stat"><span className="num"><CountUp value={data.streak_weeks} /></span><small>{t("analytics.streakLabel")}</small></div>
+              <div className="stat"><span className="num"><CountUp value={data.records_4w} /></span><small>{t("analytics.recordsLabel")}</small></div>
               {data.days_since_last !== null && <div className="stat"><span className="num">{n(data.days_since_last)}</span><small>{t("analytics.lastLabel")}</small></div>}
             </div>
           </section>

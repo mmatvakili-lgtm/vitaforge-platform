@@ -6,6 +6,7 @@ import { AnnouncementBanner } from "../../components/AnnouncementBanner.tsx";
 import { ContentModeBanner } from "../../components/ContentModeBanner.tsx";
 import { Header, Notice } from "../../components/Header.tsx";
 import { Life } from "../../components/Life.tsx";
+import { PageTransition } from "../../components/PageTransition.tsx";
 import { RegisterSW } from "../../components/RegisterSW.tsx";
 import localFont from "next/font/local";
 import "../globals.css";
@@ -38,7 +39,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Header />
           <AnnouncementBanner />
           <ContentModeBanner />
-          <main className="container">{children}</main>
+          <main className="container"><PageTransition>{children}</PageTransition></main>
           <footer className="container"><Notice /><p className="credits">{t(locale, "credits.anatomy")} · <a href="/vendor/NOTICE.txt">NOTICE</a></p></footer>
         </LocaleProvider>
       </body>

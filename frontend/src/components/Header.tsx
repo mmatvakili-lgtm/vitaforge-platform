@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MORE_NAV, PRIMARY_NAV } from "../lib/journey.ts";
 import { otherLocale } from "../lib/i18n.ts";
 import { useApi, useT } from "../lib/react/context.tsx";
@@ -43,6 +43,20 @@ export function Header() {
     return () => { live = false; };
   }, [authed, pathname]);
 
+  // Sliding indicator: one pill that glides to the active tab (measured, so it works for any label length and in RTL).
+  const nav = useRef<HTMLElement>(null);
+  const [ind, setInd] = useState<{ x: number; y: number; w: number; h: number; ready: boolean } | null>(null);
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = nav.current?.querySelector<HTMLElement>("a.tab.on");
+      if (!el) return setInd(null);
+      setInd((p) => ({ x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight, ready: p !== null }));
+    };
+    measure(); addEventListener("resize", measure);
+    document.fonts?.ready.then(measure);
+    return () => removeEventListener("resize", measure);
+  }, [pathname, authed, locale]);
+
   if (/^\/[a-z]{2}\/admin(\/|$)/.test(pathname)) return null;   // the admin console has its own shell
 
   async function logout() {
@@ -63,7 +77,8 @@ export function Header() {
       <Link href={authed ? href("dashboard") : `/${locale}`} className="brand">{t("app.name")}</Link>
       {authed ? (
         <>
-          <nav aria-label="main" className="nav-main">
+          <nav aria-label="main" className="nav-main" ref={nav}>
+            <span className={ind?.ready ? "nav-ind ready" : "nav-ind"} aria-hidden="true" style={ind ? { transform: `translate(${ind.x}px, ${ind.y}px)`, width: ind.w, height: ind.h, opacity: 1 } : { opacity: 0 }} />
             {PRIMARY_NAV.map((k) => <Link key={k} href={href(k)} aria-current={active(k) ? "page" : undefined} className={active(k) ? "tab on" : "tab"}><Icon name={k} /><span>{t(`nav.${k}`)}</span></Link>)}
             <details className="more" key={pathname}>
               <summary className="tab"><Icon name="more" /><span>{t("nav.more")}</span></summary>
