@@ -1016,16 +1016,15 @@ main .card h2:not(:first-child) { margin-block-start: 1.8rem; }
 @media (prefers-reduced-motion: reduce) { .stat::after, .day-tabs button { transition: none; } }
 
 /* =====================================================================================================================
-   UX v14: depth page transition, popup layering, neutral selects, route-in no longer pins a transform
+   UX v14: fast directional page entrance + progress bar, popup layering, neutral selects, route-in no longer pins a transform
    ===================================================================================================================== */
-.site-header { view-transition-name: vt-header; } .life-embers { view-transition-name: vt-embers; }
-::view-transition-group(vt-header), ::view-transition-group(vt-embers) { animation-duration: 0s; }
-::view-transition-old(root) { animation: vt-out .3s var(--ease-ui) both; transform-origin: 50% 40%; }
-::view-transition-new(root) { animation: vt-in .45s var(--ease-ui) both; }
-:root[data-vt="r"] { --vt-x: 7vw; } :root[data-vt="l"] { --vt-x: -7vw; }
-@keyframes vt-out { to { opacity: 0; transform: scale(.955); filter: blur(10px) brightness(.7); } }
-@keyframes vt-in { from { opacity: 0; transform: translateX(var(--vt-x, 5vw)) scale(1.015); filter: blur(6px); } }
-@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
+:root[data-side="r"] { --slide: 5vw; } :root[data-side="l"] { --slide: -5vw; }
+.route-in { animation: route-slide .32s var(--ease-ui) backwards; }
+@keyframes route-slide { from { opacity: 0; transform: translateX(var(--slide, 0)); } }
+:root[data-nav="loading"]::before { content: ""; position: fixed; z-index: 100; inset-block-start: 0; inset-inline: 0; block-size: 3px; transform-origin: var(--origin, left); background: linear-gradient(90deg, var(--heat-1), var(--heat-2), var(--heat-3)); box-shadow: 0 0 .8rem var(--heat-2); animation: navbar 6s cubic-bezier(.1, .7, .2, 1) forwards; }
+[dir="rtl"] :root[data-nav="loading"]::before, :root[dir="rtl"][data-nav="loading"]::before { --origin: right; }
+@keyframes navbar { from { transform: scaleX(0); } to { transform: scaleX(.92); } }
+@media (prefers-reduced-motion: reduce) { .route-in { animation: none; } :root[data-nav="loading"]::before { animation: none; transform: scaleX(.5); } }
 
 /* the generic orange button recipe must not leak into selects, choice chips, tabs or the password toggle */
 .sel-btn, .choice button:not(.on), .pw-toggle, .tabs .tab, .day-tabs button { background-image: none !important; box-shadow: none; }
@@ -1036,7 +1035,7 @@ main .card h2:not(:first-child) { margin-block-start: 1.8rem; }
 .choice button.on { background-image: linear-gradient(145deg, var(--heat-2), var(--heat-1)) !important; border-color: transparent !important; color: #fff !important; box-shadow: 0 .4rem 1.2rem -.4rem var(--heat-2); }
 .formgrid > button[type=submit] { justify-self: start; inline-size: auto; min-inline-size: 10rem; justify-content: center; }
 /* an open dropdown lifts every ancestor above later siblings */
-main :has(.sel-list) { position: relative; z-index: 50; }
+main .card:focus-within, main .formgrid:focus-within { position: relative; z-index: 20; }
 /* keep entrance stagger from leaving a transform behind (it would trap fixed bottom sheets) */
 .route-in > *, .route-in > .card > *, .route-in .today > *, .route-in .stat-grid > *, .route-in .ex-grid > *, .route-in .exercises > *, .route-in .today-list > *, .route-in .day-tabs > * { animation-fill-mode: backwards; }
 

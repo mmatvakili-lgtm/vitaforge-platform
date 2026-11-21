@@ -13,7 +13,7 @@ export function Life() {
     if (off || typeof matchMedia !== "function" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const fine = matchMedia("(pointer: fine)").matches;
     const root = document.documentElement;
-    let raf = 0, px = 0, py = 0, pending = false, el: Element | null = null;
+    let raf = 0, px = 0, py = 0, lx = 9, ly = 9, pending = false, el: Element | null = null;
 
     // Pointer: spotlight position on the hovered surface + page-level parallax in [-1, 1].
     const SURF = ".ex-tile, .lp-cell, .stat, .today-list li";
@@ -22,8 +22,9 @@ export function Life() {
       if (pending) return; pending = true;
       requestAnimationFrame(() => {
         pending = false;
-        root.style.setProperty("--px", ((px / innerWidth) * 2 - 1).toFixed(3));
-        root.style.setProperty("--py", ((py / innerHeight) * 2 - 1).toFixed(3));
+        const nx = Math.round(((px / innerWidth) * 2 - 1) * 50) / 50, ny = Math.round(((py / innerHeight) * 2 - 1) * 50) / 50;   // 2% steps: far fewer document-wide style recalcs
+        if (nx !== lx) { root.style.setProperty("--px", String(nx)); lx = nx; }
+        if (ny !== ly) { root.style.setProperty("--py", String(ny)); ly = ny; }
         if (el) { const r = el.getBoundingClientRect(); (el as HTMLElement).style.setProperty("--mx", `${px - r.left}px`); (el as HTMLElement).style.setProperty("--my", `${py - r.top}px`); }
       });
     };
@@ -36,6 +37,9 @@ export function Life() {
     const P = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), r: 0.6 + Math.random() * 1.8, v: 0.02 + Math.random() * 0.05, s: Math.random() * 6.28, a: 0.25 + Math.random() * 0.5 }));
     const size = () => { if (!c) return; c.width = innerWidth * dpr; c.height = innerHeight * dpr; };
     size(); addEventListener("resize", size);
+    const sprite = document.createElement("canvas"); sprite.width = sprite.height = 32;
+    const sg = sprite.getContext("2d");
+    if (sg) { const g = sg.createRadialGradient(16, 16, 0, 16, 16, 16); g.addColorStop(0, "rgba(255,190,90,1)"); g.addColorStop(.35, "rgba(255,110,40,.55)"); g.addColorStop(1, "rgba(255,90,31,0)"); sg.fillStyle = g; sg.fillRect(0, 0, 32, 32); }
     let last = performance.now();
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
@@ -46,10 +50,11 @@ export function Life() {
         p.y -= p.v * dt * 4; p.s += dt; p.x += Math.sin(p.s) * 0.0004;
         if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
         const fade = Math.min(1, p.y * 2.2, (1.05 - p.y) * 4);
-        ctx.beginPath(); ctx.arc(p.x * c.width, p.y * c.height, p.r * dpr, 0, 6.283);
-        ctx.fillStyle = `rgba(255,${120 + Math.round(p.a * 100)},40,${(p.a * fade * 0.55).toFixed(3)})`;
-        ctx.shadowColor = "rgba(255,90,31,.8)"; ctx.shadowBlur = 8 * dpr; ctx.fill();
+        const d = p.r * dpr * 7;                                              // sprite is pre-rendered once: no per-frame shadowBlur (it dominated the frame cost)
+        ctx.globalAlpha = Math.max(0, p.a * fade * 0.8);
+        ctx.drawImage(sprite, p.x * c.width - d / 2, p.y * c.height - d / 2, d, d);
       }
+      ctx.globalAlpha = 1;
     };
     raf = requestAnimationFrame(frame);
     return () => { cancelAnimationFrame(raf); removeEventListener("pointermove", move); removeEventListener("resize", size); root.style.removeProperty("--px"); root.style.removeProperty("--py"); };
