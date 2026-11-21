@@ -982,3 +982,23 @@ main .card h2::before { content: ""; inline-size: .35rem; block-size: 1.1em; bor
 .tabs .tab small { opacity: .7; }
 .tabs .tab.active { background: linear-gradient(160deg, var(--heat-2), var(--heat-1)) !important; border-color: transparent !important; transform: translateY(-2px) scale(1.05); box-shadow: 0 .6rem 1.4rem -.5rem var(--heat-2) !important; }
 @media (prefers-reduced-motion: reduce) { .dr-val { animation: none; } .meal, .tabs .tab { transition: none; } }
+
+/* =====================================================================================================================
+   Pages v12: history timeline, health chips + form grid, section rhythm
+   ===================================================================================================================== */
+ul.tl { position: relative; margin-block: 1.2rem; padding-inline-start: 1.6rem; }
+ul.tl::before { content: ""; position: absolute; inset-block: .6rem; inset-inline-start: .5rem; inline-size: 2px; background: linear-gradient(var(--heat-2), var(--heat-1) 70%, transparent); border-radius: 2px; }
+ul.tl > li { position: relative; margin-block: 0 .9rem; padding: .9rem 1.1rem; border-radius: 1rem; border: 1px solid var(--edge); background: var(--surface-1); transition: transform .3s var(--ease-ui), border-color .3s; }
+ul.tl > li::before { content: ""; position: absolute; inset-inline-start: -1.37rem; inset-block-start: 1.2rem; inline-size: .8rem; block-size: .8rem; border-radius: 50%; background: var(--heat-2); box-shadow: 0 0 0 4px var(--bg), 0 0 1rem var(--heat-2); }
+@media (hover: hover) { ul.tl > li:hover { transform: translateX(4px); border-color: var(--edge-hot); } [dir="rtl"] ul.tl > li:hover { transform: translateX(-4px); } }
+@supports (animation-timeline: view()) { ul.tl > li { animation: tl-in linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; } @keyframes tl-in { from { opacity: 0; transform: translateY(1.5rem) scale(.97); } } }
+
+ul.chips { display: flex; flex-wrap: wrap; gap: .6rem; margin-block: .6rem 1.4rem; }
+ul.chips > li { padding: .5rem 1rem; border-radius: 999px; border: 1px solid var(--edge-hot); background: color-mix(in srgb, var(--heat-2) 12%, transparent); }
+
+.formgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .9rem 1.2rem; align-items: end; margin-block: .8rem 1.4rem; padding: 1.1rem; border-radius: 1.2rem; border: 1px solid var(--edge); background: var(--surface-1); }
+.formgrid > .hint, .formgrid > button, .formgrid > .btn { grid-column: 1 / -1; }
+
+/* every card section heading breathes */
+main .card h2:not(:first-child) { margin-block-start: 1.8rem; }
+@media (prefers-reduced-motion: reduce) { ul.tl > li { animation: none; transition: none; } }
