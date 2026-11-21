@@ -1002,3 +1002,22 @@ ul.chips > li { padding: .5rem 1rem; border-radius: 999px; border: 1px solid var
 /* every card section heading breathes */
 main .card h2:not(:first-child) { margin-block-start: 1.8rem; }
 @media (prefers-reduced-motion: reduce) { ul.tl > li { animation: none; transition: none; } }
+
+/* =====================================================================================================================
+   Pages v13: body metric tiles, plan meta + day tabs
+   ===================================================================================================================== */
+.stat-grid + .stat-grid { margin-block-start: .8rem; }
+.stat .num small { font-size: .5em; color: var(--muted); font-weight: 500; }
+.stat { position: relative; overflow: hidden; }
+.stat::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 3px; background: linear-gradient(90deg, var(--heat-2), transparent); transform: scaleX(.25); transform-origin: left; transition: transform .5s var(--ease-ui); }
+[dir="rtl"] .stat::after { transform-origin: right; }
+@media (hover: hover) { .stat:hover::after { transform: scaleX(1); } }
+
+.plan-meta { display: block; padding: .55rem 1rem; border-radius: 999px; border: 1px solid var(--edge); background: var(--surface-1); inline-size: fit-content; max-inline-size: 100%; font-size: .85rem; }
+.day-tabs { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; padding-block: .3rem; }
+.day-tabs::-webkit-scrollbar { display: none; }
+.day-tabs button { flex: none; border-radius: 1rem; gap: .5rem; background: var(--surface-1) !important; background-image: none !important; color: var(--fg) !important; border: 1px solid var(--edge) !important; box-shadow: none !important; transition: transform .25s var(--ease-ui), background .25s; }
+.day-tabs button .num { display: grid; place-items: center; inline-size: 1.6rem; block-size: 1.6rem; border-radius: 50%; background: color-mix(in srgb, #fff 10%, transparent); font-size: .85rem; }
+.day-tabs button.on { background: linear-gradient(160deg, var(--heat-2), var(--heat-1)) !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 .6rem 1.4rem -.5rem var(--heat-2) !important; }
+.day-tabs button.on .num { background: rgba(0,0,0,.25); }
+@media (prefers-reduced-motion: reduce) { .stat::after, .day-tabs button { transition: none; } }

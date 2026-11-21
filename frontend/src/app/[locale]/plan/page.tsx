@@ -28,7 +28,7 @@ function PlanBody({ plan, modified, onSubstitute }: { plan: WorkoutPlan; modifie
   else for (const m of dayMuscles) bodyStatus[m] = "focus";
   return (
     <div>
-      <p className="muted">
+      <p className="muted plan-meta">
         {t("plan.version", { n: plan.version_no })}
         {plan.goal && <> · {t("plan.goal")}: {t(`goal.${plan.goal}`) === `goal.${plan.goal}` ? plan.goal : t(`goal.${plan.goal}`)}</>}
         {plan.structure && <> · {t("plan.structure")}: {t(`plan.structure.${plan.structure}`) === `plan.structure.${plan.structure}` ? plan.structure : t(`plan.structure.${plan.structure}`)}</>}
