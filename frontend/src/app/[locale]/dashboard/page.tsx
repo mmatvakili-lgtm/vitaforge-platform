@@ -25,11 +25,13 @@ function Ring({ value, total, label }: { value: number; total: number; label: st
         <circle cx="50" cy="50" r={R} className="ring-bg" />
         <circle cx="50" cy="50" r={R} className="ring-fg" strokeDasharray={C} strokeDashoffset={C * (1 - (armed ? f : 0))} transform="rotate(-90 50 50)" />
       </svg>
-      <span className="ring-n num"><CountUp value={value} />{total > 0 && <small>/{n(total)}</small>}</span>
+      <span className="ring-n num"><Cu v={value} />{total > 0 && <small>/{n(total)}</small>}</span>
       <span className="ring-l">{label}</span>
     </div>
   );
 }
+
+function Cu({ v }: { v: number }) { return v === 0 ? <span className="zero">—</span> : <CountUp value={v} />; }
 
 export default function TodayPage() {
   const { locale, t, n } = useT();
@@ -155,9 +157,9 @@ export default function TodayPage() {
             ))}
           </ol>
           <div className="stat-grid">
-            <div className="stat"><span className="num"><CountUp value={w.sessions ?? 0} />{week?.planned_sessions ? <small> / {n(week.planned_sessions)}</small> : null}</span><small>{t("dash.sessions")}</small></div>
-            <div className="stat"><span className="num">{(an?.streak_weeks ?? 0) > 0 && <Flame />}<CountUp value={an?.streak_weeks ?? 0} /></span><small>{t("today.streak")}</small></div>
-            <div className="stat"><span className="num"><CountUp value={an?.records_4w ?? 0} /></span><small>{t("today.records")}</small></div>
+            <div className="stat"><span className="num"><Cu v={w.sessions ?? 0} />{week?.planned_sessions ? <small> / {n(week.planned_sessions)}</small> : null}</span><small>{t("dash.sessions")}</small></div>
+            <div className="stat"><span className="num">{(an?.streak_weeks ?? 0) > 0 && <Flame />}<Cu v={an?.streak_weeks ?? 0} /></span><small>{t("today.streak")}</small></div>
+            <div className="stat"><span className="num"><Cu v={an?.records_4w ?? 0} /></span><small>{t("today.records")}</small></div>
             {an?.days_since_last != null && <div className="stat"><span className="num">{n(an.days_since_last)}</span><small>{t("today.daysSince")}</small></div>}
           </div>
 
@@ -178,9 +180,9 @@ export default function TodayPage() {
             <section className="card">
               <h2>{t("dash.nutrition")}</h2>
               <div className="stat-grid">
-                <div className="stat"><span className="num"><CountUp value={Math.round(nut.kcal)} /></span><small>{t("nutrient.kcal")}</small></div>
+                <div className="stat"><span className="num"><Cu v={Math.round(nut.kcal)} /></span><small>{t("nutrient.kcal")}</small></div>
                 <div className="stat"><span className="num">{n(nut.water_ml)}</span><small>{t("nut.log.water")} (ml)</small></div>
-                <div className="stat"><span className="num"><CountUp value={nut.meals} /></span><small>{t("today.meals")}</small></div>
+                <div className="stat"><span className="num"><Cu v={nut.meals} /></span><small>{t("today.meals")}</small></div>
               </div>
               <p className="muted">{t("nut.label.estimate")}</p>
               <ButtonLink href={`/${locale}/nutrition`} secondary>{t("nav.nutrition")}</ButtonLink>
