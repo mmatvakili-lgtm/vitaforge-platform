@@ -99,8 +99,24 @@ function PlanView({ res, wantedBudget }: { res: MealPlanResponse; wantedBudget: 
       {day && (
         <section role="tabpanel">
           {SLOTS.flatMap((s) => (day.meals ?? []).filter((m) => m.slot === s)).map((m, i) => <MealCard key={`${m.slot}-${m.recipe_id}-${i}`} m={m} />)}
-          <p><strong>{t("nut.day.total")}:</strong> {n(day.kcal ?? 0)} {t("nutrient.kcal.unit")} · {t("nutrient.protein_g")} {n(day.protein_g ?? 0)} {t("nutrient.protein_g.unit")}</p>
-          {res.target_kcal != null && <p className="muted">{t("nut.day.target", { n: Math.round(res.target_kcal) })}</p>}
+          {(() => {
+            const kcal = day.kcal ?? 0, target = res.target_kcal ?? 0;
+            const f = target > 0 ? Math.min(kcal / target, 1.25) : 0;
+            return (
+              <div className="dayring">
+                <svg viewBox="0 0 120 120" className="dr-svg" aria-hidden="true">
+                  <circle cx="60" cy="60" r="50" className="dr-track" />
+                  <circle cx="60" cy="60" r="50" className="dr-val" pathLength={100} style={{ strokeDasharray: `${Math.round(Math.min(f, 1) * 100)} 100` }} />
+                </svg>
+                <div className="dr-mid"><b className="num">{n(Math.round(kcal))}</b><small>{t("nutrient.kcal.unit")}</small></div>
+                <div className="dr-side">
+                  <p><strong>{t("nut.day.total")}</strong></p>
+                  <p className="muted">{t("nutrient.protein_g")} {n(day.protein_g ?? 0)} {t("nutrient.protein_g.unit")}</p>
+                  {target > 0 && <p className="muted">{t("nut.day.target", { n: Math.round(target) })}</p>}
+                </div>
+              </div>
+            );
+          })()}
         </section>
       )}
       {tab === "shop" && (
