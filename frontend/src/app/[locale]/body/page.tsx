@@ -51,16 +51,16 @@ export default function BodyPage() {
       {ov && (
         <>
           {Object.keys(latest).length === 0 ? <p className="muted">{t("body.empty")}</p> : (
-            <ul className="plain">
-              {BODY_METRIC_KEYS.filter((k) => latest[k] !== undefined).map((k) => <li key={k}>{t(`body.metric.${k}`)}: {n(latest[k])} {BODY_METRICS[k].unit}</li>)}
-            </ul>)}
+            <div className="stat-grid">
+              {BODY_METRIC_KEYS.filter((k) => latest[k] !== undefined).map((k) => <div className="stat" key={k}><span className="num">{n(latest[k])}<small> {BODY_METRICS[k].unit}</small></span><small>{t(`body.metric.${k}`)}</small></div>)}
+            </div>)}
           {(ov.bmi || ov.whtr) && (
-            <ul className="plain">
-              {ov.bmi?.value !== undefined && <li>{t("body.bmi")}: {n(ov.bmi.value)}</li>}
-              {ov.whtr?.value !== undefined && <li>{t("body.whtr")}: {n(ov.whtr.value)}</li>}
-            </ul>)}
+            <div className="stat-grid">
+              {ov.bmi?.value !== undefined && <div className="stat"><span className="num">{n(ov.bmi.value)}</span><small>{t("body.bmi")}</small></div>}
+              {ov.whtr?.value !== undefined && <div className="stat"><span className="num">{n(ov.whtr.value)}</span><small>{t("body.whtr")}</small></div>}
+            </div>)}
           {(ov.bmi || ov.whtr) && <p className="muted">{t("body.screeningNote")}</p>}
-          <form onSubmit={submit} noValidate>
+          <form onSubmit={submit} noValidate className="formgrid">
             <Field id="metric" label={t("body.metric")}>
               <Select id="metric" value={metric} onChange={(e) => { setMetric(e.target.value as BodyMetric); setFieldErr(""); }}>
                 {BODY_METRIC_KEYS.map((k) => <option key={k} value={k}>{t(`body.metric.${k}`)} ({BODY_METRICS[k].unit})</option>)}
