@@ -89,7 +89,7 @@ export default function AnalyticsPage() {
                     <strong>{r.name ?? r.code}</strong>: {n(r.latest)} kg
                     {r.change_pct !== null && r.change_pct !== undefined && <span> ({r.change_pct > 0 ? "+" : ""}{n(r.change_pct)}%)</span>}
                     <svg viewBox="0 0 100 20" width="100" height="20" aria-hidden="true" style={{ marginInlineStart: 8 }}>
-                      {sparkRuns(r.series, 100, 20).map((pts, i) => <polyline key={i} points={pts} fill="none" stroke="currentColor" strokeWidth="1.5" />)}
+                      {sparkRuns(r.series, 100, 20).map((pts, i) => <polyline key={i} points={pts} pathLength={1} className="spark" fill="none" stroke="currentColor" strokeWidth="1.5" />)}
                     </svg>
                   </li>))}
               </ul>)}

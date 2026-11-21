@@ -840,3 +840,31 @@ button[aria-busy="true"] { position: relative; overflow: hidden; } button[aria-b
 
 /* fields: focus line draws in */
 .field { position: relative; }
+
+/* ---- v8: celebration, streak flame, charts that draw themselves, shine, success pop ---- */
+.burst { position: relative; block-size: 0; z-index: 5; pointer-events: none; }
+.burst i { position: absolute; inset-block-start: 3rem; inset-inline-start: 50%; border-radius: 50%; background: var(--heat-2); box-shadow: 0 0 .8rem var(--heat-2); animation: burst 1.3s cubic-bezier(.1,.7,.3,1) both; }
+.burst i[data-h="1"] { background: var(--heat-3); box-shadow: 0 0 .8rem var(--heat-3); } .burst i[data-h="2"] { background: #fff; box-shadow: 0 0 .6rem #fff; }
+@keyframes burst { 0% { transform: translate(0, 0) scale(.3); opacity: 1; } 70% { opacity: 1; } 100% { transform: translate(var(--x), calc(var(--y) + 120px)) scale(1); opacity: 0; } }
+.wk-sum { font-size: 1.3rem; font-weight: 700; }
+progress { appearance: none; inline-size: 100%; block-size: .7rem; border: 0; border-radius: 99px; overflow: hidden; background: color-mix(in srgb, #fff 9%, transparent); }
+progress::-webkit-progress-bar { background: transparent; } progress::-webkit-progress-value { background: linear-gradient(90deg, var(--heat-1), var(--heat-2), var(--heat-3)); border-radius: 99px; transition: inline-size .6s cubic-bezier(.2,.8,.2,1); box-shadow: 0 0 1rem var(--accent); }
+progress::-moz-progress-bar { background: linear-gradient(90deg, var(--heat-1), var(--heat-2), var(--heat-3)); border-radius: 99px; }
+.flame { display: inline-block; vertical-align: -.12em; margin-inline-end: .25rem; transform-origin: 50% 100%; animation: flicker 2.2s ease-in-out infinite; filter: drop-shadow(0 0 .5rem var(--heat-2)); }
+@keyframes flicker { 0%, 100% { transform: scale(1) rotate(-2deg); } 30% { transform: scale(1.06, .96) rotate(2deg); } 60% { transform: scale(.97, 1.05) rotate(-1deg); } }
+.bars .bar { transform-origin: bottom; animation: grow .9s cubic-bezier(.2,.9,.3,1) both; background: linear-gradient(to top, var(--heat-1), var(--heat-2)) !important; border-radius: 4px 4px 0 0; }
+.bars li:nth-child(2) .bar { animation-delay: .05s; } .bars li:nth-child(3) .bar { animation-delay: .1s; } .bars li:nth-child(4) .bar { animation-delay: .15s; } .bars li:nth-child(5) .bar { animation-delay: .2s; } .bars li:nth-child(6) .bar { animation-delay: .25s; } .bars li:nth-child(7) .bar { animation-delay: .3s; } .bars li:nth-child(n+8) .bar { animation-delay: .35s; }
+@keyframes grow { from { transform: scaleY(0); } }
+.spark { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.2s .3s ease-out forwards; color: var(--heat-3); }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.btn, button[type=submit] { position: relative; overflow: hidden; }
+.btn:not(.btn-secondary)::after, button[type=submit]:not(.btn-secondary)::before { content: ""; position: absolute; inset-block: 0; inline-size: 40%; inset-inline-start: -60%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent); transform: skewX(-20deg); pointer-events: none; }
+@media (hover: hover) { .btn:not(.btn-secondary):hover::after, button[type=submit]:not(.btn-secondary):hover::before { animation: shine .7s ease; } }
+@keyframes shine { to { inset-inline-start: 130%; } }
+.next .cta { position: relative; font-size: 1.15rem; padding-inline: 2rem; min-block-size: 56px; }
+.next .cta::before { content: ""; position: absolute; inset: -4px; border-radius: inherit; border: 2px solid var(--accent); opacity: 0; animation: ping 2.4s ease-out infinite; pointer-events: none; }
+@keyframes ping { 0% { transform: scale(.96); opacity: .7; } 100% { transform: scale(1.18); opacity: 0; } }
+.alert-success { animation: pop .5s cubic-bezier(.3,1.6,.5,1) both; border-color: var(--ok); box-shadow: 0 0 2rem -1rem var(--ok); }
+@keyframes pop { from { transform: scale(.94); opacity: 0; } }
+.body-stage { position: relative; border-radius: 1.2rem; background: radial-gradient(ellipse 60% 45% at 50% 100%, color-mix(in srgb, var(--heat-2) 22%, transparent), transparent 70%); }
+@media (prefers-reduced-motion: reduce) { .burst, .flame, .bars .bar, .next .cta::before, .alert-success { animation: none !important; } .spark { animation: none; stroke-dashoffset: 0; } }
