@@ -1,4 +1,5 @@
 "use client";
+import { PageArt } from "./PageArt.tsx";
 import Link from "next/link";
 import { cloneElement, isValidElement, useState, type ReactElement, type ReactNode } from "react";
 import type { ApiError } from "../lib/api/client.ts";
@@ -51,7 +52,7 @@ export function Button({ busy, children, ...rest }: { busy?: boolean; children: 
 }
 
 export function Card({ title, children }: { title?: string; children: ReactNode }) {
-  return <section className="card">{title && <h1>{title}</h1>}{children}</section>;
+  return <section className="card">{title && <div className="phead"><h1>{title}</h1><PageArt /></div>}{children}</section>;
 }
 
 /** Skeleton instead of a bare "loading" line: a heated bar sweeps over placeholder blocks; the text stays for screen readers. */

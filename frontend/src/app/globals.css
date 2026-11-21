@@ -790,7 +790,7 @@ html { scroll-behavior: smooth; } @media (prefers-reduced-motion: reduce) { html
 .nav-main .tab.on, .nav-main .tab.on:hover { background: none !important; box-shadow: none !important; color: var(--accent-fg) !important; }
 @media (max-width: 720px) { .nav-ind { border-radius: 1.1rem; } }
 .nav-main .tab svg { transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
-@media (hover: hover) { .nav-main .tab:not(.on):hover svg { transform: translateY(-2px) rotate(-8deg) scale(1.12); } .nav-main .tab:not(.on):hover { color: var(--fg); } }
+@media (hover: hover) { .nav-main .tab:not(.on):hover svg { } .nav-main .tab:not(.on):hover { color: var(--fg); } }
 .nav-main .tab.on svg { animation: tab-pop .5s cubic-bezier(.3,1.7,.5,1); }
 @keyframes tab-pop { 0% { transform: scale(.7) rotate(-14deg); } 100% { transform: scale(1.12); } }
 .more[open] > summary svg { transform: rotate(90deg); }
@@ -868,3 +868,38 @@ progress::-moz-progress-bar { background: linear-gradient(90deg, var(--heat-1), 
 @keyframes pop { from { transform: scale(.94); opacity: 0; } }
 .body-stage { position: relative; border-radius: 1.2rem; background: radial-gradient(ellipse 60% 45% at 50% 100%, color-mix(in srgb, var(--heat-2) 22%, transparent), transparent 70%); }
 @media (prefers-reduced-motion: reduce) { .burst, .flame, .bars .bar, .next .cta::before, .alert-success { animation: none !important; } .spark { animation: none; stroke-dashoffset: 0; } }
+
+/* =====================================================================================================================
+   Shell v9: dock-style nav (magnify + bloom ring), iris page transition, page identity art.
+   Curve = One UI default path [0.22, 0.25, 0, 1]; every motion 100–500 ms.
+   ===================================================================================================================== */
+:root { --ease-ui: cubic-bezier(.22, .25, 0, 1); }
+.nav-main .tab svg { transform: translateY(calc((var(--m, 1) - 1) * -9px)) scale(var(--m, 1)); transition: transform .22s var(--ease-ui); }
+.nav-main .tab::before { content: ""; position: absolute; inset: -5px; border-radius: 999px; border: 1.5px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%); opacity: 0; transform: scale(.55); transition: transform .35s var(--ease-ui), opacity .25s; pointer-events: none; z-index: -1; }
+@media (hover: hover) { .nav-main .tab:not(.on):hover::before { opacity: 1; transform: scale(1); } }
+.nav-main .tab:active::before { opacity: 1; transform: scale(1.25); transition-duration: .12s; }
+.nav-main .tab span { transition: letter-spacing .3s var(--ease-ui), color .2s; } .nav-main .tab:hover span { letter-spacing: .02em; }
+@media (max-width: 720px) { .nav-main .tab::before { border-radius: 1.2rem; inset: 2px; } }
+
+/* iris wipe */
+.wipe { position: fixed; z-index: 90; inset-block-start: 0; left: 0; inline-size: var(--d, 0); block-size: var(--d, 0); margin-inline-start: calc(var(--d, 0px) / -2); margin-block-start: calc(var(--d, 0px) / -2); translate: var(--x, 50vw) var(--y, 50vh);
+  border-radius: 50%; pointer-events: none; transform: scale(0); background: radial-gradient(circle at 50% 50%, var(--bg) 0 90%, color-mix(in srgb, var(--heat-2) 40%, var(--bg)) 100%); box-shadow: 0 0 0 3px var(--heat-2), 0 0 3rem 1rem color-mix(in srgb, var(--heat-2) 55%, transparent); visibility: hidden; }
+.wipe-cover { visibility: visible; transform: scale(1); pointer-events: all; transition: transform .33s var(--ease-ui); }
+.wipe-reveal { visibility: visible; transform: scale(0); transition: transform .45s var(--ease-ui); }
+@media (prefers-reduced-motion: reduce) { .wipe { display: none; } }
+
+/* page identity: every section gets its own header art */
+.phead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-block-end: .4rem; }
+.phead h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.6rem); line-height: 1.08; }
+.pa { flex: none; inline-size: clamp(5.5rem, 18vw, 9rem); block-size: clamp(4rem, 12vw, 6rem); color: var(--heat-2); overflow: visible; }
+.pa * { stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.pa .fill { fill: currentColor; stroke: none; opacity: .85; }
+.pa .dr { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.4s var(--ease-ui) .15s forwards; }
+.pa .pulse { stroke: var(--heat-3); filter: drop-shadow(0 0 4px var(--heat-2)); }
+.pa .up { transform-origin: bottom; transform-box: fill-box; animation: grow .9s var(--ease-ui) both; }
+.pa .up:nth-child(2) { animation-delay: .08s; } .pa .up:nth-child(3) { animation-delay: .16s; } .pa .up:nth-child(4) { animation-delay: .24s; } .pa .up:nth-child(5) { animation-delay: .32s; }
+.pa .ring { transform-origin: 50% 50%; transform-box: fill-box; animation: spin-in 1.2s var(--ease-ui) both; } .pa .ring:nth-child(2) { animation-delay: .12s; } .pa .ring:nth-child(3) { animation-delay: .24s; }
+@keyframes spin-in { from { transform: rotate(-120deg) scale(.6); opacity: 0; } }
+.pa .blink { animation: blink 2.4s ease-in-out infinite; } @keyframes blink { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .pa .dr, .pa .up, .pa .ring, .pa .blink { animation: none; stroke-dashoffset: 0; } }

@@ -57,6 +57,16 @@ export function Header() {
     return () => removeEventListener("resize", measure);
   }, [pathname, authed, locale]);
 
+  // Dock magnification (Apple-style fisheye): icons near the pointer grow, neighbours ramp down smoothly. Mouse + wide screens only.
+  function magnify(e: React.PointerEvent<HTMLElement>) {
+    if (e.pointerType !== "mouse" || !nav.current) return;
+    for (const tab of nav.current.querySelectorAll<HTMLElement>(".tab")) {
+      const r = tab.getBoundingClientRect(), d = Math.abs(e.clientX - (r.left + r.width / 2));
+      tab.style.setProperty("--m", (1 + 0.55 * Math.exp(-((d / 70) ** 2))).toFixed(3));
+    }
+  }
+  function unmagnify() { nav.current?.querySelectorAll<HTMLElement>(".tab").forEach((t) => t.style.removeProperty("--m")); }
+
   if (/^\/[a-z]{2}\/admin(\/|$)/.test(pathname)) return null;   // the admin console has its own shell
 
   async function logout() {
@@ -77,7 +87,7 @@ export function Header() {
       <Link href={authed ? href("dashboard") : `/${locale}`} className="brand">{t("app.name")}</Link>
       {authed ? (
         <>
-          <nav aria-label="main" className="nav-main" ref={nav}>
+          <nav aria-label="main" className="nav-main" ref={nav} onPointerMove={magnify} onPointerLeave={unmagnify}>
             <span className={ind?.ready ? "nav-ind ready" : "nav-ind"} aria-hidden="true" style={ind ? { transform: `translate(${ind.x}px, ${ind.y}px)`, width: ind.w, height: ind.h, opacity: 1 } : { opacity: 0 }} />
             {PRIMARY_NAV.map((k) => <Link key={k} href={href(k)} aria-current={active(k) ? "page" : undefined} className={active(k) ? "tab on" : "tab"}><Icon name={k} /><span>{t(`nav.${k}`)}</span></Link>)}
             <details className="more" key={pathname}>

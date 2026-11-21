@@ -6,6 +6,7 @@ import { AnnouncementBanner } from "../../components/AnnouncementBanner.tsx";
 import { ContentModeBanner } from "../../components/ContentModeBanner.tsx";
 import { Header, Notice } from "../../components/Header.tsx";
 import { Life } from "../../components/Life.tsx";
+import { RouteWipe } from "../../components/RouteWipe.tsx";
 import { PageTransition } from "../../components/PageTransition.tsx";
 import { RegisterSW } from "../../components/RegisterSW.tsx";
 import localFont from "next/font/local";
@@ -36,6 +37,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <RegisterSW />
         <LocaleProvider locale={locale}>
           <Life />
+          <RouteWipe />
           <Header />
           <AnnouncementBanner />
           <ContentModeBanner />
