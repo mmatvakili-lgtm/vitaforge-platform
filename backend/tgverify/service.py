@@ -26,7 +26,7 @@ class TelegramVerification:
             store.__dict__.setdefault(k, {})
 
     # ---- issuing (requires proof of the pending account's password, checked by the caller)
-    def issue(self, uid: str) -> tuple[str, int]:
+    def issue(self, uid: str, purpose: str = "verify") -> tuple[str, int]:
         now = self.clock()
         rec = self.s.tg_limits.get("issue:" + uid) or {"t": []}
         recent = [t for t in rec["t"] if now - t < 3600]
@@ -37,7 +37,7 @@ class TelegramVerification:
             self.s.tg_tokens.pop(h, None)                                   # a new link invalidates every earlier one
         token = secrets.token_urlsafe(24)
         exp = now + TOKEN_TTL_S
-        self.s.tg_tokens[digest(token)] = {"user": uid, "exp": exp}
+        self.s.tg_tokens[digest(token)] = {"user": uid, "exp": exp, "purpose": purpose}
         return token, exp
 
     # ---- consuming (called by the bot webhook). Returns True/False only; the reason is never exposed.
@@ -66,7 +66,8 @@ class TelegramVerification:
             return False
         uid = rec["user"]
         u = self.s.users.get(uid)
-        if not u or u.get("verified"):
+        purpose = rec.get("purpose", "verify")
+        if not u or (purpose == "verify" and u.get("verified")) or (purpose == "link" and u.get("telegram")):
             self.s.tg_tokens.pop(h, None)
             return False
         owner = self.s.tg_links.get(str(tg_id))
@@ -75,6 +76,9 @@ class TelegramVerification:
         self.s.tg_tokens.pop(h, None)                                        # single use
         self.s.tg_links[str(tg_id)] = {"user": uid, "linked_at": now}
         u["telegram"] = {"id": tg_id, "linked_at": now, "notifications": False}   # notifications need a separate, explicit opt-in
+        if purpose == "link":                                                # already-verified account: connect only, never change verification
+            self.s.audit.append({"kind": "telegram_linked", "user": uid, "at": now})
+            return True
         u["verified"] = True
         self.s.__dict__.get("verification", {}).pop(uid, None)               # any pending e-mail code is void now
         self.s.audit.append({"kind": "telegram_verified", "user": uid, "at": now})

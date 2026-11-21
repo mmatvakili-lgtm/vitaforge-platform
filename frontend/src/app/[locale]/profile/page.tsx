@@ -1,13 +1,95 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import type { ApiError } from "../../../lib/api/client.ts";
 import type { ConsentDocumentList, DataRequest, Profile, SessionList, ProfileUpdate, TelegramStatus } from "../../../lib/api/generated.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
 import { Alert, ApiErrorView, Button, Card, Field, Loading } from "../../../components/ui.tsx";
 import { Select } from "../../../components/Select.tsx";
+import { POLL_MS, clock, safeDeepLink, secondsLeft } from "../../../lib/telegram.ts";
 
 type Doc = NonNullable<ConsentDocumentList[number]>;
+
+function device(ua: string | undefined, fallback: string): string {
+  const u = ua ?? "";
+  const br = /Edg\//.test(u) ? "Edge" : /OPR\//.test(u) ? "Opera" : /Chrome\//.test(u) ? "Chrome" : /Firefox\//.test(u) ? "Firefox" : /Safari\//.test(u) ? "Safari" : "";
+  const os = /Windows/.test(u) ? "Windows" : /Android/.test(u) ? "Android" : /iPhone|iPad|iOS/.test(u) ? "iOS" : /Mac OS/.test(u) ? "macOS" : /Linux/.test(u) ? "Linux" : "";
+  return [br, os].filter(Boolean).join(" · ") || fallback;
+}
+
+/** Connect Telegram for a logged-in account: one button, then a guided wait that detects completion by itself. */
+function TelegramCard({ tg, setTg }: { tg: TelegramStatus | null; setTg: (s: TelegramStatus) => void }) {
+  const { t } = useT();
+  const api = useApi();
+  const [phase, setPhase] = useState<"idle" | "requesting" | "pending" | "expired" | "unavailable" | "error">("idle");
+  const [msg, setMsg] = useState("");
+  const [link, setLink] = useState<string | null>(null);
+  const [expires, setExpires] = useState("");
+  const [left, setLeft] = useState(0);
+  const [justLinked, setJustLinked] = useState(false);
+  const alive = useRef(true);
+  useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
+
+  const request = useCallback(async () => {
+    setPhase("requesting"); setMsg("");
+    const r = await api.call("API-TG-004");
+    if (!alive.current) return;
+    if (!r.ok) {
+      if (r.status === 409) { const s = await api.call("API-TG-002"); if (s.ok) setTg(s.data); return setPhase("idle"); }
+      if (r.status === 503) return setPhase("unavailable");
+      setMsg(r.status === 429 ? "telegram.rateLimited" : "telegram.linkFailed"); return setPhase("error");
+    }
+    const url = safeDeepLink(r.data.deep_link);
+    if (!url) { setMsg("telegram.linkFailed"); return setPhase("error"); }
+    setLink(url); setExpires(r.data.expires_at); setLeft(secondsLeft(r.data.expires_at, Date.now())); setPhase("pending");
+  }, [api, setTg]);
+
+  useEffect(() => {
+    if (phase !== "pending") return;
+    const tick = setInterval(() => { const s = secondsLeft(expires, Date.now()); setLeft(s); if (s <= 0) setPhase("expired"); }, 1000);
+    let stop = false; let timer: ReturnType<typeof setTimeout>;
+    const poll = async () => {
+      if (stop) return;
+      const r = await api.call("API-TG-002");
+      if (stop || !alive.current) return;
+      if (r.ok && r.data.linked) { setTg(r.data); setJustLinked(true); setPhase("idle"); return; }
+      timer = setTimeout(poll, POLL_MS / 2);
+    };
+    timer = setTimeout(poll, 2000);
+    return () => { stop = true; clearInterval(tick); clearTimeout(timer); };
+  }, [phase, expires, api, setTg]);
+
+  if (tg?.linked) {
+    return (
+      <div className={`tg-ok ${justLinked ? "fresh" : ""}`}>
+        <span className="tg-badge" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M20 4 3 11l5 2 2 6 3-4 5 4z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg></span>
+        <div><strong>{justLinked ? t("tg.done") : t("tg.connected.title")}</strong><p className="hint">{t("telegram.settings.linked")}</p></div>
+      </div>
+    );
+  }
+  return (
+    <div className="tg">
+      <ol className="tg-steps" aria-label={t("telegram.settings.title")}>
+        {[1, 2, 3].map((k) => (<li key={k} className={phase === "pending" && k === 2 ? "now" : phase === "pending" && k === 1 ? "done" : k === 1 && phase === "idle" ? "now" : ""}><i aria-hidden="true">{k}</i><span>{t(`tg.step.${k}`)}</span></li>))}
+      </ol>
+      {phase === "unavailable" && <Alert kind="warning">{t("telegram.unavailable")}</Alert>}
+      {phase === "error" && <Alert kind="error">{t(msg)}</Alert>}
+      {phase === "expired" && <Alert kind="warning">{t("telegram.expired")}</Alert>}
+      {phase === "pending" && link ? (
+        <div className="tg-wait" aria-live="polite">
+          <a className="btn cta" href={link} target="_blank" rel="noopener noreferrer">{t("telegram.open")}</a>
+          <p className="muted"><span className="tg-dot" aria-hidden="true" /> {t("tg.waiting")} <bdi dir="ltr">{clock(left)}</bdi></p>
+        </div>
+      ) : (
+        <Button type="button" busy={phase === "requesting"} onClick={request}>{phase === "expired" || phase === "error" ? t("tg.retry") : t("tg.connect")}</Button>
+      )}
+      <div className="tg-why">
+        <strong>{t("tg.why.title")}</strong>
+        <ul>{[1, 2, 3].map((k) => <li key={k}>{t(`tg.why.${k}`)}</li>)}</ul>
+      </div>
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const { locale, t } = useT();
@@ -95,11 +177,24 @@ export default function ProfilePage() {
 
   if (!p) return <Card title={t("profile.title")}>{error ? <ApiErrorView error={error} /> : <Loading />}</Card>;
   const set = <K extends keyof Profile>(k: K, v: Profile[K]) => { setSaved(false); setP({ ...p, [k]: v }); };
+  const initials = (p.display_name ?? "").trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase() || "V";
+  const sec = [["account", "pf.nav.account"], ["telegram", "pf.nav.telegram"], ["privacy", "pf.nav.privacy"], ["sessions", "pf.nav.sessions"], ["data", "pf.nav.data"]] as const;
   return (
-    <>
-      <Card title={t("profile.title")}>
-        <ApiErrorView error={error} />
-        <form onSubmit={save} noValidate>
+    <div className="pf">
+      <header className="pf-hero card">
+        <span className="pf-avatar" aria-hidden="true"><b>{initials}</b></span>
+        <div>
+          <h1>{p.display_name || t("profile.title")}</h1>
+          <p className="muted">{t("pf.hero.hint")}</p>
+          <p className="pf-chips"><span>{t(`language.${p.language ?? "fa"}`)}</span><span>{t(`profile.units.${p.unit_system ?? "metric"}`)}</span><span className={tg?.linked ? "ok" : "off"}>{tg?.linked ? t("tg.connected.title") : t("telegram.settings.notLinked")}</span></p>
+        </div>
+      </header>
+      <ApiErrorView error={error} />
+      <nav className="pf-nav" aria-label={t("profile.title")}>{sec.map(([id, k]) => <a key={id} href={`#${id}`}>{t(k)}</a>)}</nav>
+
+      <section className="card pf-sec" id="account">
+        <h2>{t("pf.account.title")}</h2>
+        <form onSubmit={save} noValidate className="formgrid">
           <Field id="dn" label={t("profile.displayName")}><input id="dn" maxLength={60} value={p.display_name ?? ""} onChange={(e) => set("display_name", e.target.value)} /></Field>
           <Field id="pl" label={t("profile.language")}><Select id="pl" value={p.language ?? "fa"} onChange={(e) => set("language", e.target.value as Profile["language"])}><option value="fa">{t("language.fa")}</option><option value="en">{t("language.en")}</option></Select></Field>
           <Field id="pu" label={t("profile.units")}><Select id="pu" value={p.unit_system ?? "metric"} onChange={(e) => set("unit_system", e.target.value as Profile["unit_system"])}><option value="metric">{t("profile.units.metric")}</option><option value="imperial">{t("profile.units.imperial")}</option></Select></Field>
@@ -109,57 +204,63 @@ export default function ProfilePage() {
           <Button type="submit" busy={busy}>{t("profile.save")}</Button>
           {saved && <Alert kind="success">{t("profile.saved")}</Alert>}
         </form>
-      </Card>
+      </section>
 
-      <Card title={t("profile.consents")}>
+      <section className="card pf-sec" id="telegram">
+        <h2>{t("telegram.settings.title")}</h2>
+        <TelegramCard tg={tg} setTg={setTg} />
+        {tg?.linked && (
+          <div className="pf-switch">
+            <div><strong>{t("tg.notify.title")}</strong><p className="hint">{t("telegram.settings.notifyHint")}</p></div>
+            <label className="switch"><input type="checkbox" role="switch" checked={tg.notifications} onChange={(e) => notifications(e.target.checked)} aria-label={t("telegram.settings.notify")} /><i aria-hidden="true" /></label>
+          </div>
+        )}
+      </section>
+
+      <section className="card pf-sec" id="privacy">
+        <h2>{t("profile.consents")}</h2>
         <p className="hint">{t("profile.consents.hint")}</p>
         {docs.length === 0 && <p className="muted">{t("consent.noDoc")}</p>}
-        <ul className="plain">
+        <ul className="plain pf-list">
           {docs.map((d) => (
             <li key={d.id}>
-              <strong>{d.type}</strong> <span className="muted">{t("consent.docVersion", { n: d.version ?? 0 })}</span>
-              {d.id && state[d.id] !== undefined && <span> — {state[d.id] ? t("profile.consent.granted") : t("profile.consent.withdrawn")}</span>}
-              <div className="row"><Button type="button" onClick={() => consent(d, true)}>{t("profile.consent.grant")}</Button>{d.type !== "terms" && <Button type="button" onClick={() => consent(d, false)}>{t("profile.consent.withdraw")}</Button>}</div>
+              <div><strong>{d.type}</strong> <span className="muted">{t("consent.docVersion", { n: d.version ?? 0 })}</span>
+                {d.id && state[d.id] !== undefined && <span className={state[d.id] ? "pf-tag ok" : "pf-tag"}>{state[d.id] ? t("profile.consent.granted") : t("profile.consent.withdrawn")}</span>}</div>
+              <div className="row"><Button type="button" onClick={() => consent(d, true)}>{t("profile.consent.grant")}</Button>{d.type !== "terms" && <Button type="button" className="btn-secondary" onClick={() => consent(d, false)}>{t("profile.consent.withdraw")}</Button>}</div>
             </li>))}
         </ul>
-      </Card>
+      </section>
 
-      <Card title={t("telegram.settings.title")}>
-        {tg?.linked ? (
-          <>
-            <Alert kind="success">{t("telegram.settings.linked")}</Alert>
-            <label className="check"><input type="checkbox" checked={tg.notifications} onChange={(e) => notifications(e.target.checked)} />{t("telegram.settings.notify")}</label>
-            <p className="hint">{t("telegram.settings.notifyHint")}</p>
-          </>
-        ) : <p className="muted">{t("telegram.settings.notLinked")}</p>}
-      </Card>
-
-      <Card title={t("profile.sessions.title")}>
+      <section className="card pf-sec" id="sessions">
+        <h2>{t("profile.sessions.title")}</h2>
         <p className="hint">{t("profile.sessions.hint")}</p>
-        <ul className="plain">
+        <ul className="plain pf-list">
           {sessions.map((x) => (
             <li key={x.id}>
-              <bdi dir="ltr">{(x.user_agent ?? "").slice(0, 80) || "—"}</bdi> <span className="muted"><bdi dir="ltr">{x.last_seen_at ?? ""}</bdi></span>
-              {x.current ? <strong> — {t("profile.sessions.current")}</strong> : x.id && <div className="row"><Button type="button" onClick={() => endSession(x.id!)}>{t("profile.sessions.end")}</Button></div>}
+              <div><strong>{device(x.user_agent, t("pf.device.unknown"))}</strong>{x.current && <span className="pf-tag ok">{t("profile.sessions.current")}</span>}
+                <p className="muted"><bdi dir="ltr">{x.last_seen_at ?? ""}</bdi></p></div>
+              {!x.current && x.id && <div className="row"><Button type="button" className="btn-secondary" onClick={() => endSession(x.id!)}>{t("profile.sessions.end")}</Button></div>}
             </li>))}
         </ul>
-      </Card>
+      </section>
 
-      <Card title={t("profile.data")}>
+      <section className="card pf-sec" id="data">
+        <h2>{t("profile.data")}</h2>
         <Button type="button" busy={busy} onClick={requestExport}>{t("profile.export")}</Button>
         {exp && <Alert kind="info">{t("profile.export.status", { status: t(`profile.status.${exp.status ?? "requested"}`) })}</Alert>}
         {exp?.status === "completed" && <><p className="hint">{t("profile.export.hint")}</p><Button type="button" onClick={download}>{t("profile.export.download")}</Button></>}
         {exp?.status === "failed" && <Alert kind="warning">{t("profile.export.expired")}</Alert>}
-      </Card>
-
-      <Card title={t("profile.delete.title")}>
-        <Alert kind="warning">{t("profile.delete.body")}</Alert>
-        <form onSubmit={del} noValidate>
-          <Field id="dpw" label={t("auth.password")}><input id="dpw" type="password" autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
-          <label className="check"><input type="checkbox" checked={sure} onChange={(e) => setSure(e.target.checked)} />{t("profile.delete.confirm")}</label>
-          <Button type="submit" busy={deleting} disabled={!sure || !pw}>{t("profile.delete.submit")}</Button>
-        </form>
-      </Card>
-    </>
+        <details className="pf-danger">
+          <summary>{t("pf.danger")}</summary>
+          <h3>{t("profile.delete.title")}</h3>
+          <Alert kind="warning">{t("profile.delete.body")}</Alert>
+          <form onSubmit={del} noValidate>
+            <Field id="dpw" label={t("auth.password")}><input id="dpw" type="password" autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
+            <label className="check"><input type="checkbox" checked={sure} onChange={(e) => setSure(e.target.checked)} />{t("profile.delete.confirm")}</label>
+            <Button type="submit" busy={deleting} disabled={!sure || !pw}>{t("profile.delete.submit")}</Button>
+          </form>
+        </details>
+      </section>
+    </div>
   );
 }
