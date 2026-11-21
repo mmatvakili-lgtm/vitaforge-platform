@@ -954,3 +954,31 @@ main .card h2::before { content: ""; inline-size: .35rem; block-size: 1.1em; bor
 /* banner: inset from the screen edge, calm */
 .alert-warning[role="note"] { margin-inline: clamp(.75rem, 3vw, 2rem); border-radius: .9rem; }
 .stat .num .zero { opacity: .5; }
+
+/* =====================================================================================================================
+   Pages v11: nutrition day ring + meal timeline, day tabs as pills, health/history/body polish
+   ===================================================================================================================== */
+.dayring { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 1.2rem; margin-block: 1.2rem; padding: 1.2rem; border-radius: 1.4rem; border: 1px solid var(--edge);
+  background: radial-gradient(100% 120% at 0% 0%, color-mix(in srgb, var(--heat-1) 55%, transparent), transparent 70%), var(--surface-1); position: relative; }
+.dr-svg { grid-area: 1/1; inline-size: clamp(7.5rem, 28vw, 10rem); transform: rotate(-90deg); overflow: visible; }
+.dr-svg circle { fill: none; stroke-width: 9; stroke-linecap: round; }
+.dr-track { stroke: color-mix(in srgb, #fff 9%, transparent); }
+.dr-val { stroke: var(--heat-2); filter: drop-shadow(0 0 6px var(--heat-2)); animation: dr-in 1.2s var(--ease-ui) both; }
+@keyframes dr-in { from { stroke-dasharray: 0 100 !important; } }
+.dr-mid { grid-area: 1/1; display: grid; place-items: center; align-content: center; text-align: center; pointer-events: none; }
+.dr-mid b { font-size: clamp(1.6rem, 6vw, 2.4rem); line-height: 1; } .dr-mid small { color: var(--muted); }
+.dr-side { grid-area: 1/2; } .dr-side p { margin: .15rem 0; }
+
+.meal { position: relative; padding: 1rem 1.2rem 1rem 1.2rem; margin-block: .9rem; border-radius: 1.1rem; border: 1px solid var(--edge); background: var(--surface-1); transition: transform .3s var(--ease-ui), border-color .3s; }
+.meal::before { content: ""; position: absolute; inset-block: .9rem; inset-inline-start: 0; inline-size: 4px; border-radius: 4px; background: linear-gradient(var(--heat-3), var(--heat-2) 60%, var(--heat-1)); }
+@media (hover: hover) { .meal:hover { transform: translateY(-2px); border-color: var(--edge-hot); } }
+.meal h3 { margin: 0 0 .3rem; font-size: 1.15rem; }
+.meal .macros { display: inline-block; padding: .25rem .7rem; border-radius: 999px; background: color-mix(in srgb, var(--heat-2) 14%, transparent); color: var(--heat-3); font-size: .85rem; }
+
+/* day tabs: pills with a hot active state */
+.tabs { display: flex; gap: .5rem; overflow-x: auto; padding-block: .4rem; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs .tab { flex: none; min-inline-size: 3.4rem; flex-direction: column; justify-content: center; gap: 0; border-radius: 1rem; background: var(--surface-1) !important; background-image: none !important; color: var(--fg) !important; border: 1px solid var(--edge) !important; box-shadow: none !important; transition: transform .25s var(--ease-ui), background .25s; }
+.tabs .tab small { opacity: .7; }
+.tabs .tab.active { background: linear-gradient(160deg, var(--heat-2), var(--heat-1)) !important; border-color: transparent !important; transform: translateY(-2px) scale(1.05); box-shadow: 0 .6rem 1.4rem -.5rem var(--heat-2) !important; }
+@media (prefers-reduced-motion: reduce) { .dr-val { animation: none; } .meal, .tabs .tab { transition: none; } }
