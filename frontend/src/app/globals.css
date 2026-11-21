@@ -935,3 +935,22 @@ main .card h2::before { content: ""; inline-size: .35rem; block-size: 1.1em; bor
 @media (hover: hover) { .today-list li:hover { transform: translateX(4px); } [dir="rtl"] .today-list li:hover { transform: translateX(-4px); } }
 @media (prefers-reduced-motion: reduce) { .card.next::after, .wstrip .done i { animation: none; } .card, .today-list li { transition: none; } }
 .card.next h2::before { display: none; }
+
+/* =====================================================================================================================
+   Fixes from the first real-browser screenshots (v10.1)
+   ===================================================================================================================== */
+/* header buttons were inheriting `.site-header a` (accent text, no padding) -> invisible circle */
+.site-header a.btn { padding: .45rem 1.2rem; min-block-size: 40px; color: var(--accent-fg, #1a0a02); background-color: var(--heat-2); font-weight: 700; }
+.site-header a.btn:hover { color: var(--accent-fg, #1a0a02); }
+/* sticky header must hide what scrolls beneath it */
+.site-header::before { background: color-mix(in srgb, var(--bg) 88%, transparent); }
+/* password toggle: physical placement so it never collides with the dots (input is LTR text) */
+.pw-row input { direction: ltr; text-align: left; padding-inline: .9rem 5.4rem; padding-left: .9rem; padding-right: 5.4rem; }
+.pw-toggle { inset-inline-end: auto; inset-block: .35rem; right: .35rem; left: auto; min-inline-size: 4.2rem; justify-content: center; padding: 0 .7rem; border-radius: .6rem !important; color: var(--fg) !important; }
+/* auth links: no browser-default purple/underline */
+.auth a:not(.btn) { color: var(--heat-3); text-decoration: none; min-block-size: 0; }
+.auth a:not(.btn):hover { text-decoration: underline; text-underline-offset: 4px; }
+.auth .card > a, .auth .card > p > a { display: inline-block; margin-block: .25rem; }
+/* banner: inset from the screen edge, calm */
+.alert-warning[role="note"] { margin-inline: clamp(.75rem, 3vw, 2rem); border-radius: .9rem; }
+.stat .num .zero { opacity: .5; }
