@@ -1180,3 +1180,15 @@ html[lang="en"] .auth-line { letter-spacing: .08em; }
 
 @media (max-width: 800px) { .auth-line { position: static; justify-content: center; } .gate-tilt { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .gate-tilt { transform: none !important; transition: none; } .auth-stage .scan, .auth-stage.fire::after, .gate.forged .barbell { animation: none; } .gate-pane, .barbell .pl { transition: none; } }
+
+/* =====================================================================================================================
+   Principles pass (WCAG AA contrast, Apple HIG targets/motion, Laws of UX): skip link, accessible active states, non-colour cues
+   ===================================================================================================================== */
+.skip { position: fixed; inset-block-start: .5rem; inset-inline-start: .5rem; z-index: 200; padding: .7rem 1.1rem; border-radius: .7rem; background: var(--accent); color: var(--accent-fg); font-weight: 700; text-decoration: none; transform: translateY(-300%); transition: transform .2s var(--ease-ui); }
+.skip:focus { transform: none; }
+/* white / light text on the orange failed AA (3.1:1). Active states now use the dark button ink (6.2:1) on solid ember. */
+.choice button.on, .nchips button.on, .tabs .tab.active, .day-tabs button.on { background-image: none !important; background-color: var(--heat-2) !important; color: var(--accent-fg) !important; }
+.tabs .tab.active small, .day-tabs button.on .num { opacity: 1; color: var(--accent-fg); } .day-tabs button.on .num { background: rgba(0, 0, 0, .18); }
+.wstrip .done i { display: grid; place-items: center; color: #1a0a02; font-style: normal; font-weight: 800; }
+.nudge.resume { border-color: var(--heat-2); }
+main { scroll-margin-block-start: 5rem; } main:focus { outline: none; }

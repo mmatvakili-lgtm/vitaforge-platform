@@ -38,10 +38,11 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <LocaleProvider locale={locale}>
           <Life />
           <RouteFx />
+          <a className="skip" href="#main">{t(locale, "a11y.skip")}</a>
           <Header />
           <AnnouncementBanner />
           <ContentModeBanner />
-          <main className="container"><PageTransition>{children}</PageTransition></main>
+          <main className="container" id="main" tabIndex={-1}><PageTransition>{children}</PageTransition></main>
           <footer className="container"><Notice /><p className="credits">{t(locale, "credits.anatomy")} · <a href="/vendor/NOTICE.txt">NOTICE</a></p></footer>
         </LocaleProvider>
       </body>

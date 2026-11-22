@@ -1229,5 +1229,8 @@
  "g.step": "Step {a} of {b}",
  "g.ready": "You're in",
  "g.ready.sub": "The forge is lit",
- "g.mail.invalid": "Enter a valid e-mail"
+ "g.mail.invalid": "Enter a valid e-mail",
+ "a11y.skip": "Skip to content",
+ "today.resume": "You have an unfinished workout",
+ "today.resume.cta": "Resume"
 }
