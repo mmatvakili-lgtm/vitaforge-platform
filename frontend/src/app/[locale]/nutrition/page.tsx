@@ -9,6 +9,7 @@ import {
   validateMealRequest, validateProfile, type FieldErrors,
 } from "../../../lib/nutrition.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
+import { toggleChecked } from "../../../lib/nutrition-log.ts";
 import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
 import { Select } from "../../../components/Select.tsx";
 
@@ -75,6 +76,8 @@ function MealCard({ m }: { m: MealPlanMeal }) {
 function PlanView({ res, wantedBudget }: { res: MealPlanResponse; wantedBudget: boolean }) {
   const { locale, t, n } = useT();
   const [tab, setTab] = useState<number | "shop">(0);
+  const [ticked, setTicked] = useState<string[]>(() => { try { return JSON.parse(localStorage.getItem("vf-shop-ticks") ?? "[]"); } catch { return []; } });
+  const tick = (id: string) => setTicked((cur) => { const nx = toggleChecked(cur, id); try { localStorage.setItem("vf-shop-ticks", JSON.stringify(nx)); } catch { /* ignore */ } return nx; });
   const bs = budgetState(res, wantedBudget);
   const day = typeof tab === "number" ? res.days[tab] : undefined;
   return (
@@ -123,12 +126,15 @@ function PlanView({ res, wantedBudget }: { res: MealPlanResponse; wantedBudget: 
         <section role="tabpanel">
           <h2>{t("nut.shop.title")}</h2>
           {res.shopping.length === 0 ? <p className="muted">{t("nut.shop.empty")}</p> : (
+            <>
+            <p className="muted">{t("nut.shop.progress", { a: n(res.shopping.filter((x) => ticked.includes(String(x.food_id))).length), b: n(res.shopping.length) })}</p>
             <ul className="shopping">{res.shopping.map((s) => (
-              <li key={s.food_id}>
+              <li key={s.food_id} className={ticked.includes(String(s.food_id)) ? "got" : ""}>
+                <input type="checkbox" className="sh-tick" checked={ticked.includes(String(s.food_id))} onChange={() => tick(String(s.food_id))} aria-label={(locale === "fa" ? s.name_fa : null) ?? s.name_en ?? ""} />
                 <span className="sh-name">{(locale === "fa" ? s.name_fa : null) ?? <bdi dir="ltr">{s.name_en}</bdi>}</span>
                 <span className="sh-qty">{t("nut.shop.grams", { n: n(s.grams ?? 0) })}</span>
                 {s.in_pantry ? <span className="tag">{t("nut.shop.pantry")}</span> : <span className="sh-cost muted">{s.cost != null ? t("nut.shop.cost", { n: s.cost }) : t("nut.shop.noPrice")}</span>}
-              </li>))}</ul>
+              </li>))}</ul></>
           )}
         </section>
       )}
