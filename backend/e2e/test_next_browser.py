@@ -93,6 +93,7 @@ def test_login_error_states_are_shown_and_the_form_recovers(stack, mode):
         pg.goto(f"http://127.0.0.1:{web_port}/fa/login")
         _hydrated(pg)
         pg.fill("#identifier", "nobody@ex.com")
+        pg.click("button[type=submit]")                                 # login is a two-step conversation now: e-mail -> Continue -> password
         pg.fill("#password", "Str0ng-Passw0rd")
         pg.click("button[type=submit]")
         pg.locator(".alert[role=alert]").first.wait_for()
