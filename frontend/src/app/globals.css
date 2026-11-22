@@ -1254,3 +1254,16 @@ main, .card, .formgrid, .row { min-inline-size: 0; }
   .card, .auth, .pf, .next { animation-duration: .01ms !important; }
   img, svg, canvas, video { max-inline-size: 100%; }
 }
+
+/* Mobile fixes v23 (from real-phone screenshots): solid header, landing tiles never overlap their text */
+@media (pointer: coarse), (max-width: 720px) {
+  .site-header::before { background: color-mix(in srgb, var(--bg) 97%, var(--card)) !important; }
+}
+@media (max-width: 860px) {
+  .lp-bento { grid-auto-rows: auto; }
+  .lp-cell { justify-content: flex-start; min-block-size: 0; }
+  .lp-cell-food .lp-cell-art, .lp-cell-prog .lp-cell-art, .lp-cell-lang .lp-cell-art, .lp-cell-safe .lp-cell-art { position: static; inset: auto; block-size: 6.5rem; padding: 0 0 .6rem; margin-block-end: .3rem; }
+  .lp-cell-lib .lp-cell-art { position: static; inset: auto; block-size: 9rem; padding: 0 0 .6rem; }
+  .lp-cell-prog .lp-cell-art { overflow: hidden; }
+  .lp-cell-food .lp-cell-art svg, .lp-cell-food .lp-cell-art > * { max-block-size: 100%; }
+}
