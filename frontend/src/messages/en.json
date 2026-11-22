@@ -1233,5 +1233,6 @@
  "a11y.skip": "Skip to content",
  "today.resume": "You have an unfinished workout",
  "today.resume.cta": "Resume",
- "onb.eta": "About {m} steps left until your plan"
+ "onb.eta": "About {m} steps left until your plan",
+ "nut.shop.progress": "{a} of {b} bought"
 }

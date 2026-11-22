@@ -1234,3 +1234,8 @@ ul.mmeters { display: grid; gap: .9rem; }
 .as-val { font-size: .85rem; color: var(--muted); }
 .as-overall { font-size: 1.25rem; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .as-bar i { animation: none; } }
+
+/* Shopping v19 */
+.shopping li.got { opacity: .55; }
+.shopping li.got .sh-name { text-decoration: line-through; }
+.sh-tick { inline-size: 1.4rem; block-size: 1.4rem; accent-color: var(--accent); flex: none; }
