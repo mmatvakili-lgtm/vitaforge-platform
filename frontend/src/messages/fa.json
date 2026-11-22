@@ -1207,5 +1207,11 @@
  "tg.nudge.cta": "اتصال",
  "tg.nudge.later": "بعداً",
  "common.increase": "افزایش",
- "common.decrease": "کاهش"
+ "common.decrease": "کاهش",
+ "nav.group.train": "تمرین",
+ "nav.group.body": "بدن و سلامت",
+ "nav.group.food": "تغذیه",
+ "nav.group.account": "حساب",
+ "auth.login.unverifiedHelp": "اگر تازه ثبت‌نام کرده‌ای، شاید حسابت هنوز تأیید نشده باشد.",
+ "auth.login.verifyNow": "تأیید حساب"
 }

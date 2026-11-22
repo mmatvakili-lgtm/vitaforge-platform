@@ -1207,5 +1207,11 @@
  "tg.nudge.cta": "Connect",
  "tg.nudge.later": "Later",
  "common.increase": "Increase",
- "common.decrease": "Decrease"
+ "common.decrease": "Decrease",
+ "nav.group.train": "Training",
+ "nav.group.body": "Body and health",
+ "nav.group.food": "Nutrition",
+ "nav.group.account": "Account",
+ "auth.login.unverifiedHelp": "If you just signed up, your account may not be verified yet.",
+ "auth.login.verifyNow": "Verify account"
 }

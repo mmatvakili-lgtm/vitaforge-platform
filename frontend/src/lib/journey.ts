@@ -42,4 +42,10 @@ export function pickTodayDay<T extends { title?: string }>(days: T[], lastDayTit
 
 /** Which header items are primary (tab bar) vs. under "More". Kept here so the test pins the information architecture. */
 export const PRIMARY_NAV = ["dashboard", "plan", "nutrition", "analytics"] as const;
+export const MORE_GROUPS = [
+  { key: "train", items: ["exercises", "history", "assessment"] },
+  { key: "body", items: ["body", "health"] },
+  { key: "food", items: ["foods"] },
+  { key: "account", items: ["profile", "onboarding"] },
+] as const;
 export const MORE_NAV = ["exercises", "history", "body", "assessment", "health", "foods", "profile", "onboarding"] as const;

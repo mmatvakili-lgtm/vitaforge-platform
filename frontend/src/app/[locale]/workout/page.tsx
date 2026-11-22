@@ -164,7 +164,7 @@ export default function WorkoutPage() {
           {!finishing && <Button type="button" onClick={() => setFinishing(true)}>{t("wk.finish")}</Button>}
           {finishing && (
             <form onSubmit={finish} noValidate>
-              <Field id="difficulty" label={t("wk.difficulty")}><input id="difficulty" inputMode="numeric" dir="ltr" value={difficulty} onChange={(e) => setDifficulty(e.target.value)} /></Field>
+              <Field id="difficulty" label={t("wk.difficulty")}><NumberChips id="difficulty" from={1} to={10} label={t("wk.difficulty")} value={difficulty} onChange={setDifficulty} /></Field>
               <Field id="notes" label={t("wk.notes")}><textarea id="notes" maxLength={1000} value={notes} onChange={(e) => setNotes(e.target.value)} /></Field>
               <label className="check"><input type="checkbox" checked={pain} onChange={(e) => setPain(e.target.checked)} /> {t("wk.pain")}</label>
               {pain && (
