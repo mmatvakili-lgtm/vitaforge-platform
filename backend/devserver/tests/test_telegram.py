@@ -295,3 +295,22 @@ def test_link_token_for_connect_cannot_be_reused_or_used_by_unverified_flow():
     assert h.call("GET", "/telegram/status", token=tok3).body["linked"] is False
     h.tg_start(710003, t)                                                      # reused token: silently refused
     assert h.call("GET", "/telegram/status", token=tok3).body["linked"] is False
+
+
+def test_disconnect_cuts_telegram_access_but_keeps_account_verified():
+    h = Harness(dev=True)
+    h.register("un@ex.com"); h.verify_by_mail("un@ex.com")
+    tok = h.login("un@ex.com")
+    link = h.call("POST", "/telegram/link", token=tok).body["deep_link"].split("start=")[1]
+    h.tg_start(720001, link)
+    assert h.call("GET", "/telegram/status", token=tok).body["linked"] is True
+    r = h.call("DELETE", "/telegram", token=tok)
+    assert r.status == 200 and r.body == {"linked": False, "notifications": False}
+    assert h.call("GET", "/telegram/status", token=tok).body["linked"] is False
+    assert h.login("un@ex.com")                                   # still verified: password login keeps working
+    assert h.call("DELETE", "/telegram", token=tok).status == 200  # idempotent
+    assert h.call("DELETE", "/telegram").status == 401
+    # the old chat can be reused by a fresh link, and the old chat id is no longer bound to the account
+    link2 = h.call("POST", "/telegram/link", token=tok).body["deep_link"].split("start=")[1]
+    h.tg_start(720001, link2)
+    assert h.call("GET", "/telegram/status", token=tok).body["linked"] is True

@@ -1213,5 +1213,9 @@
  "nav.group.food": "تغذیه",
  "nav.group.account": "حساب",
  "auth.login.unverifiedHelp": "اگر تازه ثبت‌نام کرده‌ای، شاید حسابت هنوز تأیید نشده باشد.",
- "auth.login.verifyNow": "تأیید حساب"
+ "auth.login.verifyNow": "تأیید حساب",
+ "tg.disconnect": "قطع اتصال",
+ "tg.disconnect.title": "تلگرام قطع شود؟",
+ "tg.disconnect.body": "بعد از قطع اتصال، تلگرام هیچ پیامی از سایت نمی‌گیرد و دیگر نمی‌تواند حسابت را ببیند یا کنترل کند. وضعیت تأیید حسابت تغییری نمی‌کند و هر وقت بخواهی دوباره وصلش می‌کنی.",
+ "tg.disconnect.yes": "بله، قطع کن"
 }

@@ -3220,6 +3220,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /telegram:
+    delete:
+      operationId: api_tg_005
+      tags:
+      - telegram
+      summary: قطع اتصال تلگرام (وضعیت تأیید حساب تغییر نمی‌کند)
+      x-id: API-TG-005
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: موفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelegramStatus'
+        '401':
+          description: احراز هویت لازم
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /telegram/notifications:
     put:
       operationId: api_tg_003

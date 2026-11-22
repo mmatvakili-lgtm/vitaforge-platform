@@ -1213,5 +1213,9 @@
  "nav.group.food": "Nutrition",
  "nav.group.account": "Account",
  "auth.login.unverifiedHelp": "If you just signed up, your account may not be verified yet.",
- "auth.login.verifyNow": "Verify account"
+ "auth.login.verifyNow": "Verify account",
+ "tg.disconnect": "Disconnect",
+ "tg.disconnect.title": "Disconnect Telegram?",
+ "tg.disconnect.body": "After disconnecting, Telegram gets no messages from the site and can no longer see or control your account. Your account verification is unchanged and you can reconnect any time.",
+ "tg.disconnect.yes": "Yes, disconnect"
 }

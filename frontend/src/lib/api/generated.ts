@@ -126,6 +126,7 @@ export interface OpTypes {
   "API-TG-001": { body: TelegramUpdate; res: TelegramOk; path: Record<string, never>; query: Record<string, never> };
   "API-TG-002": { body: undefined; res: TelegramStatus; path: Record<string, never>; query: Record<string, never> };
   "API-TG-004": { body: undefined; res: TelegramLink; path: Record<string, never>; query: Record<string, never> };
+  "API-TG-005": { body: undefined; res: TelegramStatus; path: Record<string, never>; query: Record<string, never> };
   "API-TG-003": { body: TelegramNotificationsRequest; res: TelegramStatus; path: Record<string, never>; query: Record<string, never> };
   "API-PRO-001": { body: undefined; res: Profile; path: Record<string, never>; query: Record<string, never> };
   "API-PRO-002": { body: ProfileUpdate; res: Profile; path: Record<string, never>; query: Record<string, never> };
@@ -341,6 +342,15 @@ export const OPERATIONS: Record<OpId, { method: string; path: string; secured: b
       409,
       429,
       503
+    ]
+  },
+  "API-TG-005": {
+    "method": "DELETE",
+    "path": "/telegram",
+    "secured": true,
+    "success": 200,
+    "errors": [
+      401
     ]
   },
   "API-TG-003": {
