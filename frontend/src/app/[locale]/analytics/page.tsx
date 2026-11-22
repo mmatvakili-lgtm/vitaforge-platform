@@ -53,11 +53,11 @@ export default function AnalyticsPage() {
           </section>
           <section aria-label={t("analytics.insights")}>
             <h2>{t("analytics.insights")}</h2>
-            <ul className="plain">
+            <ul className="plain insights">
               {data.insights.map((i, idx) => {
                 const p = insightParams(i.params ?? {});
                 if (typeof p.muscle === "string") p.muscle = label(p.muscle, p.muscle);
-                return <li key={idx}>{t(insightMessageKey(i.key), p)}</li>;
+                return <li key={idx}><i aria-hidden="true">✦</i><span>{t(insightMessageKey(i.key), p)}</span></li>;
               })}
             </ul>
           </section>
@@ -83,12 +83,13 @@ export default function AnalyticsPage() {
             <h2>{t("analytics.e1rm")}</h2>
             <p className="muted">{t("analytics.e1rmNote")}</p>
             {data.e1rm.length === 0 ? <p className="muted">{t("analytics.empty")}</p> : (
-              <ul className="plain">
+              <ul className="plain e1">
                 {data.e1rm.map((r) => (
                   <li key={r.code}>
-                    <strong>{r.name ?? r.code}</strong>: {n(r.latest)} kg
-                    {r.change_pct !== null && r.change_pct !== undefined && <span> ({r.change_pct > 0 ? "+" : ""}{n(r.change_pct)}%)</span>}
-                    <svg viewBox="0 0 100 20" width="100" height="20" aria-hidden="true" style={{ marginInlineStart: 8 }}>
+                    <strong>{r.name ?? r.code}</strong>
+                    <span className="e1-val"><b className="num">{n(r.latest)}</b> kg</span>
+                    {r.change_pct !== null && r.change_pct !== undefined && <span className={r.change_pct > 0 ? "chg up" : r.change_pct < 0 ? "chg down" : "chg"}>{r.change_pct > 0 ? "▲ +" : r.change_pct < 0 ? "▼ " : "● "}{n(r.change_pct)}%</span>}
+                    <svg viewBox="0 0 100 20" width="100%" height="36" preserveAspectRatio="none" aria-hidden="true">
                       {sparkRuns(r.series, 100, 20).map((pts, i) => <polyline key={i} points={pts} pathLength={1} className="spark" fill="none" stroke="currentColor" strokeWidth="1.5" />)}
                     </svg>
                   </li>))}
@@ -97,8 +98,13 @@ export default function AnalyticsPage() {
           <section aria-label={t("analytics.muscles")}>
             <h2>{t("analytics.muscles")}</h2>
             {data.muscles.length === 0 ? <p className="muted">{t("analytics.empty")}</p> : (
-              <ul className="plain">
-                {data.muscles.map((m) => <li key={m.muscle}>{label(m.muscle, m.muscle)}: {n(m.avg_weekly_sets_4w)} {t("analytics.setsPerWeek")} — {t(`analytics.status.${m.status}`)}</li>)}
+              <ul className="plain mmeters">
+                {data.muscles.map((m) => (
+                  <li key={m.muscle} data-status={m.status}>
+                    <div className="mm-head"><strong>{label(m.muscle, m.muscle)}</strong><span>{n(m.avg_weekly_sets_4w)} {t("analytics.setsPerWeek")}</span></div>
+                    <div className="mm-track" aria-hidden="true"><i style={{ inlineSize: `${Math.min(100, (m.avg_weekly_sets_4w / 20) * 100)}%` }} /></div>
+                    <small className="mm-tag">{m.status === "low" ? "▼ " : m.status === "high" ? "▲ " : "● "}{t(`analytics.status.${m.status}`)}</small>
+                  </li>))}
               </ul>)}
           </section>
         </>)}
