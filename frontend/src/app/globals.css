@@ -1192,3 +1192,25 @@ html[lang="en"] .auth-line { letter-spacing: .08em; }
 .wstrip .done i { display: grid; place-items: center; color: #1a0a02; font-style: normal; font-weight: 800; }
 .nudge.resume { border-color: var(--heat-2); }
 main { scroll-margin-block-start: 5rem; } main:focus { outline: none; }
+
+/* =====================================================================================================================
+   Analytics v16: insight cards, e1RM tiles, muscle meters
+   ===================================================================================================================== */
+ul.insights { display: grid; gap: .6rem; }
+ul.insights > li { display: flex; gap: .8rem; align-items: flex-start; padding: .9rem 1.1rem; border-radius: 1rem; border: 1px solid var(--edge); background: linear-gradient(100deg, color-mix(in srgb, var(--heat-2) 12%, transparent), transparent 60%), var(--surface-1); }
+ul.insights > li i { font-style: normal; color: var(--heat-3); line-height: 1.9; }
+ul.e1 { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: .8rem; }
+ul.e1 > li { display: grid; gap: .2rem; padding: 1rem; border-radius: 1.1rem; border: 1px solid var(--edge); background: var(--surface-1); }
+.e1-val b { font-size: 2rem; line-height: 1; } .e1-val { color: var(--muted); }
+.chg { justify-self: start; padding: .1rem .6rem; border-radius: 999px; font-size: .8rem; border: 1px solid var(--edge); }
+.chg.up { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 55%, transparent); } .chg.down { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 55%, transparent); }
+ul.e1 svg { color: var(--heat-2); margin-block-start: .3rem; }
+ul.mmeters { display: grid; gap: .9rem; }
+.mm-head { display: flex; justify-content: space-between; gap: 1rem; } .mm-head span { color: var(--muted); }
+.mm-track { block-size: .6rem; border-radius: 999px; background: color-mix(in srgb, #fff 8%, transparent); overflow: hidden; margin-block: .3rem; }
+.mm-track i { display: block; block-size: 100%; border-radius: inherit; background: var(--body-ok); transform-origin: left; animation: grow-x .8s var(--ease-ui) both; }
+[dir="rtl"] .mm-track i { transform-origin: right; }
+[data-status="low"] .mm-track i { background: var(--body-low); } [data-status="high"] .mm-track i { background: var(--body-high); }
+.mm-tag { color: var(--muted); }
+@keyframes grow-x { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .mm-track i { animation: none; } }
