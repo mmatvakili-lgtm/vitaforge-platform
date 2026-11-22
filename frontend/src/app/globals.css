@@ -1225,3 +1225,12 @@ ul.mmeters { display: grid; gap: .9rem; }
 .onb-steps span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 640px) { .onb-steps li:not(.cur) span { display: none; } }
 .onb-eta { margin: 0 0 .6rem; }
+
+/* Assessment v18 */
+.as-list li { display: grid; gap: .3rem; padding-block: .5rem; border-block-end: 1px solid var(--edge); }
+.as-bar { display: block; block-size: .6rem; border-radius: 999px; background: color-mix(in srgb, #fff 8%, transparent); overflow: hidden; }
+.as-bar i { display: block; block-size: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--heat-2), var(--heat-3)); animation: grow-x .8s var(--ease-ui) backwards; transform-origin: left; }
+[dir="rtl"] .as-bar i { transform-origin: right; }
+.as-val { font-size: .85rem; color: var(--muted); }
+.as-overall { font-size: 1.25rem; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .as-bar i { animation: none; } }

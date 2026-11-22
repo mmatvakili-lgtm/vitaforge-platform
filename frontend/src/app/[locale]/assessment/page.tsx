@@ -74,8 +74,8 @@ export default function AssessmentPage() {
     return (
       <Card title={t("assess.resultTitle")}>
         <Alert kind="info">{t("assess.aiLabel")}</Alert>
-        {profile.overall_level && <p>{t("assess.overall", { level: t(`assess.level.${profile.overall_level}`) })}</p>}
-        <ul className="plain">
+        {profile.overall_level && <p className="as-overall">{t("assess.overall", { level: t(`assess.level.${profile.overall_level}`) })}</p>}
+        <ul className="plain as-list">
           {DOMAIN_ORDER.map((d) => {
             const x = profile.domains[d];
             return (
@@ -83,7 +83,8 @@ export default function AssessmentPage() {
                 <strong>{t(`assess.domain.${d}`)}</strong>{" "}
                 {x?.score == null ? <span className="muted">{t("assess.untested")}</span> : (
                   <>
-                    <meter min={0} max={100} value={x.score} aria-label={t(`assess.domain.${d}`)} /> {n(x.score)}/{n(100)} — {t(`assess.band.${x.band}`)}
+                    <span className="as-bar" role="img" aria-label={`${t(`assess.domain.${d}`)}: ${n(x.score)}/${n(100)}`}><i style={{ inlineSize: `${Math.max(2, Math.min(100, x.score))}%` }} /></span>
+                    <span className="as-val">{n(x.score)}/{n(100)} — {t(`assess.band.${x.band}`)}</span>
                   </>)}
               </li>);
           })}
@@ -111,6 +112,7 @@ export default function AssessmentPage() {
       {errs._form && <Alert>{t("assess.err.empty")}</Alert>}
       <form onSubmit={submit} noValidate>
         <p className="muted" aria-live="polite">{t("assess.progress", { n: n(Math.min(step + 1, STEPS.length + 1)), total: n(STEPS.length + 1) })}</p>
+        <ol className="onb-steps" aria-hidden="true">{Array.from({ length: STEPS.length + 1 }, (_, i) => <li key={i} className={i < step ? "done" : i === step ? "cur" : ""}><i /></li>)}</ol>
         {!last ? (
           <fieldset><legend>{t(`assess.step.${STEPS[step].id}`)}</legend>{STEPS[step].fields.map(control)}</fieldset>
         ) : (
