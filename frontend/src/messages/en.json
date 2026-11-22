@@ -1234,5 +1234,7 @@
  "today.resume": "You have an unfinished workout",
  "today.resume.cta": "Resume",
  "onb.eta": "About {m} steps left until your plan",
- "nut.shop.progress": "{a} of {b} bought"
+ "nut.shop.progress": "{a} of {b} bought",
+ "wk.focus.on": "Focus mode",
+ "wk.focus.off": "Show menu"
 }

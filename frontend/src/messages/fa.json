@@ -1234,5 +1234,7 @@
  "today.resume": "تمرین نیمه‌کاره داری",
  "today.resume.cta": "ادامه",
  "onb.eta": "حدود {m} مرحله دیگر تا ساخت برنامه",
- "nut.shop.progress": "{a} از {b} خریداری شد"
+ "nut.shop.progress": "{a} از {b} خریداری شد",
+ "wk.focus.on": "حالت تمرکز",
+ "wk.focus.off": "نمایش منو"
 }
