@@ -1,5 +1,6 @@
 "use client";
 import { PageArt } from "./PageArt.tsx";
+import { Tilt } from "./Gate.tsx";
 import Link from "next/link";
 import { cloneElement, isValidElement, useState, type ReactElement, type ReactNode } from "react";
 import type { ApiError } from "../lib/api/client.ts";
@@ -108,10 +109,10 @@ export function AuthCard({ title, children }: { title?: string; children: ReactN
   return (
     <div className="auth">
       <aside className="auth-art" aria-hidden="true">
-        <p className="auth-line"><span>{t("landing.h1a")}</span><span>{t("landing.h1b")}</span></p>
         <div className="auth-glow" /><AuthStage /><div className="lp-anvil" />
+        <p className="auth-line"><span>{t("landing.h1a")}</span> <span>{t("landing.h1b")}</span></p>
       </aside>
-      <Card title={title}>{children}</Card>
+      <Tilt><Card title={title}>{children}</Card></Tilt>
     </div>
   );
 }

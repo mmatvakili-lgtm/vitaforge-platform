@@ -1217,5 +1217,17 @@
  "tg.disconnect": "Disconnect",
  "tg.disconnect.title": "Disconnect Telegram?",
  "tg.disconnect.body": "After disconnecting, Telegram gets no messages from the site and can no longer see or control your account. Your account verification is unchanged and you can reconnect any time.",
- "tg.disconnect.yes": "Yes, disconnect"
+ "tg.disconnect.yes": "Yes, disconnect",
+ "g.hello.morning": "Good morning",
+ "g.hello.day": "Good afternoon",
+ "g.hello.evening": "Good evening",
+ "g.hello.night": "Late session?",
+ "g.q.email": "Who's training today?",
+ "g.q.pass": "Say the word",
+ "g.next": "Continue",
+ "g.back": "Change e-mail",
+ "g.step": "Step {a} of {b}",
+ "g.ready": "You're in",
+ "g.ready.sub": "The forge is lit",
+ "g.mail.invalid": "Enter a valid e-mail"
 }
