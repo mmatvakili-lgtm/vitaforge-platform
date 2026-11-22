@@ -12,6 +12,7 @@ export function Life() {
   useEffect(() => {
     if (off || typeof matchMedia !== "function" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const fine = matchMedia("(pointer: fine)").matches;
+    if (!fine) return;                                     // touch devices: no embers, no parallax (battery, jank, and nothing to hover)
     const root = document.documentElement;
     let raf = 0, px = 0, py = 0, lx = 9, ly = 9, pending = false, el: Element | null = null;
 

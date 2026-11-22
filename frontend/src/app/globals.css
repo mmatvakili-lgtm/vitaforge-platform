@@ -1244,3 +1244,13 @@ ul.mmeters { display: grid; gap: .9rem; }
 :root[data-gym] .site-header { display: none; }
 :root[data-gym] main { padding-block-start: 1rem; }
 .gym-menu { margin-block-end: .6rem; }
+
+/* Mobile lite v22: touch devices get a calm, cheap page */
+html, body { max-inline-size: 100%; overflow-x: clip; }
+main, .card, .formgrid, .row { min-inline-size: 0; }
+@media (pointer: coarse), (max-width: 720px) {
+  .life-embers { display: none; }
+  .site-header::before, .nav-main::before { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .card, .auth, .pf, .next { animation-duration: .01ms !important; }
+  img, svg, canvas, video { max-inline-size: 100%; }
+}
