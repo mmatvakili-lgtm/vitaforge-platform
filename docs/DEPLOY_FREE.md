@@ -35,6 +35,15 @@
 - Render رایگان ممکن است هر لحظه ری‌استارت شود؛ داده‌ها در Neon می‌مانند.
 - بک‌آپ خودکار نداریم؛ `manage.py backup_db` را دستی اجرا کن.
 
+## مسیر بدون کارت بانکی: بک‌اند هم روی Vercel (پیشنهاد نهایی)
+
+Hugging Face برای Docker پولی شد و Render کارت واقعی می‌خواهد. Vercel از Django پشتیبانی بدون پیکربندی دارد ([مستندات](https://vercel.com/docs/frameworks/backend/django)): پروژهٔ جدا با Root Directory برابر `backend`. فایل `backend/vercel.json` هنگام Build دستور `migrate` را روی Neon اجرا می‌کند (متغیرها باید قبل از اولین Deploy تنظیم شده باشند).
+
+- دو پروژهٔ Vercel: `vitaforge-api` (Root = `backend`) و `vitaforge` (Root = `frontend`، با `BACKEND_URL` برابر آدرس API).
+- متغیرهای API همان جدول Space/Render است؛ `ALLOWED_HOSTS` باید دقیقاً دامنهٔ پروژهٔ API باشد (wildcard در production ممنوع است).
+- بدون Shell و بدون دیسک ماندگار: آپلود فایل ادمین در این حالت ماندگار نیست؛ همهٔ داده‌ها در Neon است.
+- وضعیت: روی سرور واقعی اجرا و راستی‌آزمایی نشده؛ اولین Deploy را مالک انجام می‌دهد.
+
 ## جایگزین Render بدون کارت بانکی: `Hugging Face Space`
 
 اگر Render کارت بانکی خواست، بک‌اند را روی یک Space داکری رایگان Hugging Face بگذار (بدون کارت). Neon و Vercel بدون تغییر می‌مانند. هر push به `main` که `backend/` را عوض کند خودکار دیپلوی می‌شود (`.github/workflows/deploy-hf.yml`).
