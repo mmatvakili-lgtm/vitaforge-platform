@@ -56,6 +56,13 @@ export default function WorkoutPage() {
   const prog = progress(session, sets);
   const next = nextSet(session, sets);
   const finished = session !== undefined && session.status !== "in_progress";
+  const [menuShown, setMenuShown] = useState(false);
+  const focusMode = session !== undefined && !finished && !menuShown;
+  useEffect(() => {          // focus mode: hide site chrome while a session is running (toggle to bring the menu back)
+    const el = document.documentElement;
+    if (focusMode) el.setAttribute("data-gym", "1"); else el.removeAttribute("data-gym");
+    return () => el.removeAttribute("data-gym");
+  }, [focusMode]);
   useEffect(() => {          // a new exercise starts with its target rep count filled in; later sets of the same exercise keep what you just did
     if (!next || prefilled.current === next.exerciseId) return;
     prefilled.current = next.exerciseId;
@@ -125,6 +132,7 @@ export default function WorkoutPage() {
       <ApiErrorView error={error} />
       {!session && <Progression names={Object.fromEntries((day.exercises ?? []).map((x) => [x.exercise_id ?? "", x.name ?? ""]))} />}
       {!session && <Button type="button" busy={busy} onClick={start}>{t("wk.start")}</Button>}
+      {session && !finished && <button type="button" className="btn-secondary gym-menu" aria-pressed={menuShown} onClick={() => setMenuShown(!menuShown)}>{menuShown ? t("wk.focus.on") : t("wk.focus.off")}</button>}
       {session && (
         <>
           <p className="muted" aria-live="polite">{t("wk.progress", { done: n(prog.done), total: n(prog.total) })}</p>

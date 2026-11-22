@@ -1239,3 +1239,8 @@ ul.mmeters { display: grid; gap: .9rem; }
 .shopping li.got { opacity: .55; }
 .shopping li.got .sh-name { text-decoration: line-through; }
 .sh-tick { inline-size: 1.4rem; block-size: 1.4rem; accent-color: var(--accent); flex: none; }
+
+/* Gym focus v20 */
+:root[data-gym] .site-header { display: none; }
+:root[data-gym] main { padding-block-start: 1rem; }
+.gym-menu { margin-block-end: .6rem; }
