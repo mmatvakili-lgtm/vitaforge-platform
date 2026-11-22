@@ -1111,3 +1111,17 @@ main .card:focus-within, main .formgrid:focus-within { position: relative; z-ind
 .more-group { display: grid; gap: .1rem; padding-block: .3rem; }
 .more-group + .more-group { border-block-start: 1px solid var(--edge); }
 .more-group > small { padding: .3rem 1rem 0; color: var(--muted); font-size: .72rem; letter-spacing: .04em; }
+
+/* =====================================================================================================================
+   Gym mode: one set, one focus. Big title, thumb-reach actions pinned to the bottom edge, sets as a pill strip.
+   ===================================================================================================================== */
+.gym-set { padding-block-end: 1rem; }
+.gym-set h2 { font-size: clamp(1.6rem, 6vw, 2.4rem); line-height: 1.1; }
+.gym-set h2::before { display: none; }
+.gym-actions { position: sticky; inset-block-end: 0; z-index: 8; margin-inline: -1rem; padding: .8rem 1rem calc(.8rem + env(safe-area-inset-bottom)); gap: .6rem; background: linear-gradient(to top, var(--bg) 70%, transparent); }
+.gym-actions button { flex: 1; min-block-size: 3.4rem; font-size: 1.1rem; }
+.gym-actions button[type="button"] { background-image: none !important; background-color: var(--surface-2) !important; border: 1px solid var(--edge) !important; color: var(--fg) !important; box-shadow: none !important; }
+.sets { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; margin-block: 1rem; list-style: none; }
+.sets li { padding: .3rem .75rem; border-radius: 999px; border: 1px solid var(--edge); font-size: .8rem; color: var(--muted); background: var(--surface-1); transition: background .3s, color .3s; }
+.wk-sum { max-inline-size: 36rem; }
+progress { inline-size: 100%; block-size: .7rem; border-radius: 999px; }
