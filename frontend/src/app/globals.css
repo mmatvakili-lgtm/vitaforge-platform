@@ -1214,3 +1214,14 @@ ul.mmeters { display: grid; gap: .9rem; }
 .mm-tag { color: var(--muted); }
 @keyframes grow-x { from { transform: scaleX(0); } }
 @media (prefers-reduced-motion: reduce) { .mm-track i { animation: none; } }
+
+/* Onboarding v17: labelled step track */
+.onb-steps { list-style: none; display: flex; gap: .35rem; padding: 0; margin: .4rem 0 .2rem; }
+.onb-steps li { flex: 1; min-inline-size: 0; display: grid; gap: .3rem; font-size: .72rem; color: var(--muted); }
+.onb-steps i { display: block; block-size: 4px; border-radius: 4px; background: var(--edge); transition: background .3s var(--ease-ui); }
+.onb-steps li.done i { background: var(--heat-2); }
+.onb-steps li.cur i { background: linear-gradient(90deg, var(--heat-2), var(--heat-3)); }
+.onb-steps li.cur { color: var(--fg); font-weight: 600; }
+.onb-steps span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 640px) { .onb-steps li:not(.cur) span { display: none; } }
+.onb-eta { margin: 0 0 .6rem; }

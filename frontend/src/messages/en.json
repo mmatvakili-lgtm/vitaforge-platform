@@ -1232,5 +1232,6 @@
  "g.mail.invalid": "Enter a valid e-mail",
  "a11y.skip": "Skip to content",
  "today.resume": "You have an unfinished workout",
- "today.resume.cta": "Resume"
+ "today.resume.cta": "Resume",
+ "onb.eta": "About {m} steps left until your plan"
 }
