@@ -23,7 +23,7 @@ export default function LoginPage() {
     const r = await api.call("API-AUTH-003", { body: { identifier: identifier.trim(), password } });
     setBusy(false);
     if (!r.ok) return setError(r.error);
-    router.push(`/${locale}/${r.data.onboarding_status === "completed" ? "plan" : "onboarding"}`);
+    router.push(`/${locale}/${r.data.onboarding_status === "completed" ? "dashboard" : "onboarding"}`);
   }
 
   return (

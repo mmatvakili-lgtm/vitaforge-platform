@@ -6,7 +6,7 @@ import type { ApiError } from "../../../lib/api/client.ts";
 import type { SessionSummary, WorkoutDay, WorkoutSession } from "../../../lib/api/generated.ts";
 import { PAIN_REGIONS, buildSetLog, finishRequest, isLogged, newUuid, nextSet, plannedSets, progress, skipSetLog, type PlannedSet, type SetDraft } from "../../../lib/workout-log.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading, Celebrate } from "../../../components/ui.tsx";
+import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading, Celebrate, NumberChips, Stepper } from "../../../components/ui.tsx";
 import { Select } from "../../../components/Select.tsx";
 import { Progression } from "../../../components/Progression.tsx";
 import { RestTimer } from "../../../components/RestTimer.tsx";
@@ -24,6 +24,7 @@ export default function WorkoutPage() {
   const [session, setSession] = useState<WorkoutSession | undefined>();
   const [day, setDay] = useState<WorkoutDay | null | undefined>(undefined);       // undefined = loading, null = not found
   const [draft, setDraft] = useState<SetDraft>(EMPTY);
+  const prefilled = useRef<string>("");
   const [fieldErr, setFieldErr] = useState<Record<string, string>>({});
   const [error, setError] = useState<ApiError | null>(null);
   const [busy, setBusy] = useState(false);
@@ -55,6 +56,11 @@ export default function WorkoutPage() {
   const prog = progress(session, sets);
   const next = nextSet(session, sets);
   const finished = session !== undefined && session.status !== "in_progress";
+  useEffect(() => {          // a new exercise starts with its target rep count filled in; later sets of the same exercise keep what you just did
+    if (!next || prefilled.current === next.exerciseId) return;
+    prefilled.current = next.exerciseId;
+    if (next.repsMin !== undefined) setDraft((d) => (d.reps === "" ? { ...d, reps: String(next.repsMin) } : d));
+  }, [next]);
 
   async function start() {
     if (!dayId) return;
@@ -82,7 +88,7 @@ export default function WorkoutPage() {
     const r = await api.call("API-LOG-002", { path: { session_id: session.id }, body: { ...body, client_uuid: pending.current.uuid } });
     setBusy(false);
     if (!r.ok) return setError(r.error);
-    pending.current = null; setDraft(EMPTY); setPr(Boolean(r.data.personal_record));
+    pending.current = null; setDraft(skip ? EMPTY : { ...draft, rpe: "" });   // keep reps/load for the next set: people repeat them setPr(Boolean(r.data.personal_record));
     setRest(!skip && p.restSec !== undefined && p.restSec > 0 ? { id: Date.now(), sec: p.restSec } : null);
     await refresh(session.id);
   }
@@ -141,10 +147,10 @@ export default function WorkoutPage() {
               </p>
               <form onSubmit={(e) => { e.preventDefault(); submitSet(next, false); }} noValidate>
                 {!(next.durationSec !== undefined && next.repsMin === undefined) && (
-                  <Field id="reps" label={t("wk.reps")} error={fieldErr.reps ? t("wk.field.reps") : undefined}><input id="reps" inputMode="numeric" dir="ltr" value={draft.reps} onChange={(e) => setDraft({ ...draft, reps: e.target.value })} /></Field>
+                  <Field id="reps" label={t("wk.reps")} error={fieldErr.reps ? t("wk.field.reps") : undefined}><Stepper id="reps" value={draft.reps} onChange={(v) => setDraft({ ...draft, reps: v })} /></Field>
                 )}
-                <Field id="load" label={t("wk.load")} error={fieldErr.load ? t("wk.field.load") : undefined}><input id="load" inputMode="decimal" dir="ltr" value={draft.load} onChange={(e) => setDraft({ ...draft, load: e.target.value })} /></Field>
-                <Field id="rpe" label={t("wk.rpe")} error={fieldErr.rpe ? t("wk.field.rpe") : undefined}><input id="rpe" inputMode="decimal" dir="ltr" value={draft.rpe} onChange={(e) => setDraft({ ...draft, rpe: e.target.value })} /></Field>
+                <Field id="load" label={t("wk.load")} error={fieldErr.load ? t("wk.field.load") : undefined}><Stepper id="load" inputMode="decimal" step={2.5} value={draft.load} onChange={(v) => setDraft({ ...draft, load: v })} /></Field>
+                <Field id="rpe" label={t("wk.rpe")} error={fieldErr.rpe ? t("wk.field.rpe") : undefined}><NumberChips id="rpe" from={5} to={10} label={t("wk.rpe")} value={draft.rpe} onChange={(v) => setDraft({ ...draft, rpe: v })} /></Field>
                 <div className="row">
                   <Button type="submit" busy={busy}>{t("wk.log")}</Button>
                   <Button type="button" busy={busy} onClick={() => submitSet(next, true)}>{t("wk.skip")}</Button>

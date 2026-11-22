@@ -138,3 +138,33 @@ export function Flame() {
     </svg>
   );
 }
+
+
+/** Numeric input with big −/+ buttons (thumb-friendly in the gym). Value stays a string so the existing validators keep working. */
+export function Stepper({ id, value, onChange, step = 1, min = 0, max = 999, inputMode = "numeric" }: { id: string; value: string; onChange: (v: string) => void; step?: number; min?: number; max?: number; inputMode?: "numeric" | "decimal" }) {
+  const { t } = useT();
+  const bump = (d: number) => {
+    const cur = Number.parseFloat(value.replace(",", ".")) || 0;
+    const next = Math.min(max, Math.max(min, Math.round((cur + d * step) * 100) / 100));
+    onChange(String(next));
+  };
+  return (
+    <div className="stepper">
+      <button type="button" className="step" aria-label={t("common.decrease")} onClick={() => bump(-1)}>−</button>
+      <input id={id} inputMode={inputMode} dir="ltr" value={value} onChange={(e) => onChange(e.target.value)} />
+      <button type="button" className="step" aria-label={t("common.increase")} onClick={() => bump(1)}>+</button>
+    </div>
+  );
+}
+
+/** Pick one value from a short numeric range as chips (e.g. effort 6–10). Tapping the chosen one again clears it. */
+export function NumberChips({ id, value, onChange, from, to, label }: { id: string; value: string; onChange: (v: string) => void; from: number; to: number; label: string }) {
+  const { n } = useT();
+  return (
+    <div className="nchips" role="group" aria-label={label} id={id}>
+      {Array.from({ length: to - from + 1 }, (_, i) => String(from + i)).map((v) => (
+        <button key={v} type="button" className={value === v ? "on" : ""} aria-pressed={value === v} onClick={() => onChange(value === v ? "" : v)}>{n(Number(v))}</button>
+      ))}
+    </div>
+  );
+}
