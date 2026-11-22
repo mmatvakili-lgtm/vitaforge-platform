@@ -10,7 +10,7 @@ import {
 } from "../../../lib/onboarding.ts";
 import { permitsPlan } from "../../../lib/plan-view.ts";
 import { useApi, useT } from "../../../lib/react/context.tsx";
-import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading } from "../../../components/ui.tsx";
+import { Alert, ApiErrorView, Button, ButtonLink, Card, Field, Loading, NumberChips } from "../../../components/ui.tsx";
 import { Select } from "../../../components/Select.tsx";
 import { DecisionPanel } from "../../../components/DecisionPanel.tsx";
 
@@ -122,7 +122,12 @@ function Wizard() {
   return (
     <Card title={t("onb.title")}>
       <p className="muted" aria-live="polite">{t("common.step", { n: progress, total: STAGES.length })} · {label(stage)}</p>
-      <progress value={progress} max={STAGES.length} aria-label={t("onb.title")} />
+      <ol className="onb-steps" aria-label={t("onb.title")}>
+        {STAGES.map((s, i) => (
+          <li key={s} className={i < progress - 1 ? "done" : i === progress - 1 ? "cur" : ""} aria-current={i === progress - 1 ? "step" : undefined}><i /><span>{label(s)}</span></li>
+        ))}
+      </ol>
+      {stage !== "finish" && <p className="hint onb-eta">{t("onb.eta", { m: n(Math.max(1, STAGES.length - progress)) })}</p>}
       <ApiErrorView error={error} />
 
       {stage === "basics" && (
@@ -156,8 +161,11 @@ function Wizard() {
           const d = parseIntField(normalizeDigits(days)), m = parseIntField(normalizeDigits(minutes));
           saveStep("schedule", { days_per_week: d, session_minutes: m }, validateSchedule({ days_per_week: d, session_minutes: m }), "equipment");
         }}>
-          <Field id="days" label={t("onb.days")} hint="1–6" error={fe("days_per_week")}><input id="days" inputMode="numeric" dir="ltr" value={days} onChange={(e) => setDays(e.target.value)} /></Field>
-          <Field id="minutes" label={t("onb.minutes")} hint="20–180" error={fe("session_minutes")}><input id="minutes" inputMode="numeric" dir="ltr" value={minutes} onChange={(e) => setMinutes(e.target.value)} /></Field>
+          <Field id="days" label={t("onb.days")} hint="1–6" error={fe("days_per_week")}><NumberChips id="days" value={days} onChange={setDays} from={1} to={6} label={t("onb.days")} /></Field>
+          <Field id="minutes" label={t("onb.minutes")} hint="20–180" error={fe("session_minutes")}>
+            <div className="nchips" role="group" aria-label={t("onb.minutes")}>{["30", "45", "60", "75", "90"].map((v) => <button key={v} type="button" className={minutes === v ? "on" : ""} aria-pressed={minutes === v} onClick={() => setMinutes(v)}>{n(Number(v))}</button>)}</div>
+            <input id="minutes" inputMode="numeric" dir="ltr" value={minutes} onChange={(e) => setMinutes(e.target.value)} />
+          </Field>
           <div className="row"><button type="button" className="btn-secondary" onClick={() => setStage("goal")}>{t("common.back")}</button><Button type="submit" busy={busy}>{t("common.next")}</Button></div>
         </form>
       )}
