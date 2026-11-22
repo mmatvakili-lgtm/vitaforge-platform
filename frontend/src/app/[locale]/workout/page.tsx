@@ -132,7 +132,7 @@ export default function WorkoutPage() {
           {pr && <Alert kind="success">{t("wk.pr")}</Alert>}
           {rest && !finishing && <RestTimer key={rest.id} seconds={rest.sec} onDone={() => setRest(null)} />}
           {next && !finishing && (
-            <section className="day" aria-labelledby="cur">
+            <section className="day gym-set" aria-labelledby="cur">
               <h2 id="cur">{next.name} · {t("wk.set", { n: n(next.setNo) })}</h2>
               <ExerciseAnimById key={next.exerciseId} exerciseId={next.exerciseId} muscles={(day.exercises ?? []).find((x) => x.exercise_id === next.exerciseId)?.muscles} height={200} />
               {(() => {
@@ -151,14 +151,14 @@ export default function WorkoutPage() {
                 )}
                 <Field id="load" label={t("wk.load")} error={fieldErr.load ? t("wk.field.load") : undefined}><Stepper id="load" inputMode="decimal" step={2.5} value={draft.load} onChange={(v) => setDraft({ ...draft, load: v })} /></Field>
                 <Field id="rpe" label={t("wk.rpe")} error={fieldErr.rpe ? t("wk.field.rpe") : undefined}><NumberChips id="rpe" from={5} to={10} label={t("wk.rpe")} value={draft.rpe} onChange={(v) => setDraft({ ...draft, rpe: v })} /></Field>
-                <div className="row">
+                <div className="row gym-actions">
                   <Button type="submit" busy={busy}>{t("wk.log")}</Button>
                   <Button type="button" busy={busy} onClick={() => submitSet(next, true)}>{t("wk.skip")}</Button>
                 </div>
               </form>
             </section>
           )}
-          <ul className="plain sets">
+          <ul className="plain sets" aria-label={t("wk.progress", { done: n(prog.done), total: n(prog.total) })}>
             {sets.map((p) => <li key={`${p.exerciseId}:${p.setNo}`}>{isLogged(session, p) ? "✓" : "○"} {p.name} · {t("wk.set", { n: n(p.setNo) })}</li>)}
           </ul>
           {!finishing && <Button type="button" onClick={() => setFinishing(true)}>{t("wk.finish")}</Button>}
