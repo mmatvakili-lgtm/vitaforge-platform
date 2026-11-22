@@ -70,6 +70,11 @@ export default function TodayPage() {
 
   const w = (d?.weekly_summary ?? {}) as { sessions?: number; sets?: number; volume_kg?: number };
   const lastTitle = useMemo(() => [...sessions].sort((x, y) => (y.started_at ?? "").localeCompare(x.started_at ?? ""))[0]?.day_title, [sessions]);
+  const resume = useMemo(() => {
+    const open = sessions.find((x) => x.status === "in_progress");
+    const day = open ? (plan?.days ?? []).find((d) => d.title === open.day_title) : undefined;
+    return open && day?.day_id ? { day_title: open.day_title, day_id: day.day_id } : null;
+  }, [sessions, plan]);
   const today = useMemo(() => pickTodayDay(plan?.days ?? [], lastTitle), [plan, lastTitle]);
   const j = journey({
     onboardingDone: profile?.onboarding_status === "completed",
@@ -110,6 +115,12 @@ export default function TodayPage() {
 
           {(d.alerts ?? []).length > 0 && (<section className="card">{d.alerts!.map((a, i) => <DecisionPanel key={i} decision={a} />)}</section>)}
 
+          {resume && (
+            <aside className="nudge resume">
+              <div><strong>{t("today.resume")}</strong><p className="muted">{resume.day_title}</p></div>
+              <Link href={`/${locale}/workout?day=${resume.day_id}`} className="btn">{t("today.resume.cta")}</Link>
+            </aside>
+          )}
           {tgLinked === false && !nudgeOff && (
             <aside className="nudge">
               <div><strong>{t("tg.nudge.title")}</strong><p className="muted">{t("tg.nudge.body")}</p></div>
@@ -163,7 +174,7 @@ export default function TodayPage() {
           <ol className="wstrip" aria-hidden="true">
             {last7.map((x) => (
               <li key={x.key} className={`${x.done ? "done" : ""} ${x.today ? "today" : ""}`}>
-                <i />
+                <i>{x.done ? "✓" : ""}</i>
                 <small>{x.label}</small>
               </li>
             ))}
