@@ -19,8 +19,13 @@ const csp = [
   "object-src 'none'",
 ].join("; ");
 
+// Dev server opened from a phone / tunnel / LAN IP: Next blocks /_next dev assets from unknown origins, so the page stays an empty themed shell.
+// Extra hosts can be added with DEV_ORIGINS="a.example.com,b.example.com". For a real phone test prefer `npm run local` (production build).
+const extraOrigins = (process.env.DEV_ORIGINS ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+
 export default {
   reactStrictMode: true,
+  allowedDevOrigins: ["*.local", "192.168.*.*", "10.*.*.*", "172.16.*.*", "*.devtunnels.ms", "*.ngrok-free.app", "*.trycloudflare.com", "*.loca.lt", ...extraOrigins],
   // CSP without nonces: scripts only from our own origin plus Next's inline bootstrap ('unsafe-inline'); everything else (third-party scripts,
   // framing, plugins, cross-origin requests) is blocked. A nonce-based policy would force every page to render dynamically: tracked as hardening.
   // Verified by the real-browser e2e (no CSP violations on the register -> Telegram -> onboarding journey).
