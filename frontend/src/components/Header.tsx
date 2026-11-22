@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { MORE_NAV, PRIMARY_NAV } from "../lib/journey.ts";
+import { MORE_GROUPS, PRIMARY_NAV } from "../lib/journey.ts";
 import { otherLocale } from "../lib/i18n.ts";
 import { useApi, useT } from "../lib/react/context.tsx";
 import { adminCall } from "../lib/admin.ts";
@@ -93,7 +93,12 @@ export function Header() {
             <details className="more" key={pathname}>
               <summary className="tab"><Icon name="more" /><span>{t("nav.more")}</span></summary>
               <div className="more-panel">
-                {MORE_NAV.map((k) => <Link key={k} href={href(k)} aria-current={active(k) ? "page" : undefined}>{t(`nav.${k}`)}</Link>)}
+                {MORE_GROUPS.map((g) => (
+                  <div className="more-group" key={g.key} role="group" aria-label={t(`nav.group.${g.key}`)}>
+                    <small>{t(`nav.group.${g.key}`)}</small>
+                    {g.items.map((k) => <Link key={k} href={href(k)} aria-current={active(k) ? "page" : undefined}>{t(`nav.${k}`)}</Link>)}
+                  </div>
+                ))}
                 {staff && <Link href={href("admin")} aria-current={active("admin") ? "page" : undefined}>{t("nav.admin")}</Link>}
                 <div className="more-tools">{tools}</div>
                 <button type="button" className="linklike" onClick={logout}>{t("nav.logout")}</button>

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { journey, pickTodayDay, PRIMARY_NAV, MORE_NAV } from "./journey.ts";
+import { journey, pickTodayDay, PRIMARY_NAV, MORE_NAV, MORE_GROUPS } from "./journey.ts";
 
 const base = { onboardingDone: true, assessed: true, hasPlan: true, totalSessions: 5, sessionsThisWeek: 3, plannedPerWeek: 3 };
 
@@ -31,4 +31,9 @@ test("today's day follows the last trained day and wraps", () => {
 test("navigation groups do not overlap and keep the primary bar short", () => {
   assert.ok(PRIMARY_NAV.length <= 4);
   for (const k of PRIMARY_NAV) assert.ok(!(MORE_NAV as readonly string[]).includes(k));
+});
+
+test("More groups partition MORE_NAV exactly (no item lost or duplicated)", () => {
+  const flat = MORE_GROUPS.flatMap((g) => [...g.items]);
+  assert.deepEqual([...flat].sort(), [...MORE_NAV].sort());
 });

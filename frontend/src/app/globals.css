@@ -1102,3 +1102,12 @@ main .card:focus-within, main .formgrid:focus-within { position: relative; z-ind
 .nchips { display: flex; gap: .5rem; flex-wrap: wrap; }
 .nchips button { flex: 1; min-inline-size: 3rem; min-block-size: 3rem; padding: 0; border-radius: 1rem !important; background-image: none !important; background-color: var(--surface-2) !important; border: 1px solid var(--edge) !important; color: var(--fg) !important; box-shadow: none !important; font-weight: 700; }
 .nchips button.on { background-image: linear-gradient(145deg, var(--heat-2), var(--heat-1)) !important; border-color: transparent !important; color: #fff !important; }
+
+/* v15: login hierarchy, grouped More menu */
+.auth-aux { margin: -.2rem 0 .8rem; text-align: end; font-size: .88rem; }
+.auth-help { margin-block: 1rem; padding: 1rem 1.1rem; border-radius: 1rem; border: 1px dashed var(--edge-hot); background: color-mix(in srgb, var(--heat-2) 8%, transparent); }
+.auth-help p { margin: 0 0 .7rem; }
+.auth-alt { margin-block-start: 1.4rem; padding-block-start: 1rem; border-block-start: 1px solid var(--edge); text-align: center; }
+.more-group { display: grid; gap: .1rem; padding-block: .3rem; }
+.more-group + .more-group { border-block-start: 1px solid var(--edge); }
+.more-group > small { padding: .3rem 1rem 0; color: var(--muted); font-size: .72rem; letter-spacing: .04em; }
