@@ -96,6 +96,16 @@ class TelegramVerification:
         tg = self.s.users[uid].get("telegram")
         return {"linked": bool(tg), "notifications": bool(tg and tg.get("notifications"))}
 
+    def unlink(self, uid: str) -> dict:
+        """User disconnects Telegram: the chat loses every connection to the account (no messages, no commands) and pending links die.
+        Idempotent. Account verification is deliberately untouched: verified stays verified."""
+        u = self.s.users.get(uid)
+        if u is not None and u.get("telegram"):
+            self.forget(uid)
+            u.pop("telegram", None)
+            self.s.audit.append({"kind": "telegram_unlinked", "user": uid, "at": self.clock()})
+        return {"linked": False, "notifications": False}
+
     def forget(self, uid: str):
         u = self.s.users.get(uid) or {}
         tg = u.get("telegram")

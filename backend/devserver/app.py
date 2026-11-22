@@ -340,6 +340,9 @@ class App:
         token, exp = self.tgv.issue(c["uid"], "link")
         return {"deep_link": f"https://t.me/{self.tgrt.username}?start={token}", "bot_username": self.tgrt.username, "expires_at": iso(exp)}
 
+    def op_api_tg_005(self, c):
+        return self.tgv.unlink(c["uid"])
+
     def op_api_tg_003(self, c):
         if not self.tgv.status(c["uid"])["linked"]:
             raise Conflict("telegram_not_linked")

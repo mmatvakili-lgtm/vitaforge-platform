@@ -1125,3 +1125,6 @@ main .card:focus-within, main .formgrid:focus-within { position: relative; z-ind
 .sets li { padding: .3rem .75rem; border-radius: 999px; border: 1px solid var(--edge); font-size: .8rem; color: var(--muted); background: var(--surface-1); transition: background .3s, color .3s; }
 .wk-sum { max-inline-size: 36rem; }
 progress { inline-size: 100%; block-size: .7rem; border-radius: 999px; }
+.tg-ok { flex-wrap: wrap; } .tg-ok .tg-off { margin-inline-start: auto; }
+.tg-confirm { margin-block-start: .8rem; padding: 1rem 1.2rem; border-radius: 1rem; border: 1px solid color-mix(in srgb, var(--err) 50%, transparent); background: color-mix(in srgb, var(--err) 8%, transparent); }
+.tg-confirm p { margin: .3rem 0 .8rem; }

@@ -27,6 +27,8 @@ function TelegramCard({ tg, setTg }: { tg: TelegramStatus | null; setTg: (s: Tel
   const [expires, setExpires] = useState("");
   const [left, setLeft] = useState(0);
   const [justLinked, setJustLinked] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [offBusy, setOffBusy] = useState(false);
   const alive = useRef(true);
   useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
 
@@ -59,12 +61,34 @@ function TelegramCard({ tg, setTg }: { tg: TelegramStatus | null; setTg: (s: Tel
     return () => { stop = true; clearInterval(tick); clearTimeout(timer); };
   }, [phase, expires, api, setTg]);
 
+  async function disconnect() {
+    setOffBusy(true);
+    const r = await api.call("API-TG-005");
+    setOffBusy(false);
+    if (!alive.current) return;
+    if (r.ok) { setTg(r.data); setConfirming(false); setJustLinked(false); setPhase("idle"); }
+    else { setMsg("telegram.linkFailed"); setPhase("error"); setConfirming(false); }
+  }
+
   if (tg?.linked) {
     return (
+      <>
       <div className={`tg-ok ${justLinked ? "fresh" : ""}`}>
         <span className="tg-badge" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M20 4 3 11l5 2 2 6 3-4 5 4z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg></span>
         <div><strong>{justLinked ? t("tg.done") : t("tg.connected.title")}</strong><p className="hint">{t("telegram.settings.linked")}</p></div>
+        {!confirming && <button type="button" className="btn btn-secondary tg-off" onClick={() => setConfirming(true)}>{t("tg.disconnect")}</button>}
       </div>
+      {confirming && (
+        <div className="tg-confirm" role="alertdialog" aria-labelledby="tgc-t">
+          <strong id="tgc-t">{t("tg.disconnect.title")}</strong>
+          <p>{t("tg.disconnect.body")}</p>
+          <div className="row">
+            <Button type="button" busy={offBusy} onClick={disconnect}>{t("tg.disconnect.yes")}</Button>
+            <button type="button" className="btn btn-secondary" onClick={() => setConfirming(false)}>{t("sub.cancel")}</button>
+          </div>
+        </div>
+      )}
+      </>
     );
   }
   return (

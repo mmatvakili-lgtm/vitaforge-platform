@@ -124,6 +124,7 @@ def happy_path(h: Harness) -> Dict[str, str]:
     lk = v.call("POST", "/telegram/link", token=vt)
     v.tg_start(700200, lk.body["deep_link"].split("start=")[1])
     v.call("GET", "/telegram/status", token=vt)
+    v.call("DELETE", "/telegram", token=vt)
     # Telegram verification (primary channel)
     g = Harness(dev=True)
     g.register("tg@ex.com")

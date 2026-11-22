@@ -28,6 +28,7 @@
 | API-TG-001 | `POST /telegram/webhook` | فقط با secret header؛ ۲۰۰ / ۴۰۱ / ۵۰۳ |
 | API-TG-002 | `GET /telegram/status` | `{linked, notifications}` |
 | API-TG-004 | `POST /telegram/link` | کاربر واردشده؛ لینک یک‌بارمصرف اتصال تلگرام (purpose=link، وضعیت تأیید را تغییر نمی‌دهد)؛ ۲۰۰ / ۴۰۱ / ۴۰۹ (قبلاً وصل شده) / ۴۲۹ / ۵۰۳ |
+| API-TG-005 | `DELETE /telegram` | کاربر واردشده؛ قطع اتصال: پیوند چت، اعلان‌ها و لینک‌های در انتظار پاک می‌شوند؛ تلگرام دیگر پیامی نمی‌گیرد و دسترسی ندارد؛ وضعیت تأیید حساب دست‌نخورده؛ idempotent (۲۰۰ / ۴۰۱) |
 | API-TG-003 | `PUT /telegram/notifications` | `{enabled}`؛ ۴۰۹ اگر وصل نیست |
 
 مهاجرت پایگاه داده: ندارد (KV store؛ کلکسیون‌های `tg_tokens`, `tg_links`, `tg_limits` به `MAPS` اضافه شدند).
