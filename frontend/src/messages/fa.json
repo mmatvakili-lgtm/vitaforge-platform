@@ -1205,5 +1205,7 @@
  "tg.nudge.title": "تلگرامت را وصل کن",
  "tg.nudge.body": "برای یادآوری تمرین و امنیت بیشتر حساب؛ ۳۰ ثانیه طول می‌کشد.",
  "tg.nudge.cta": "اتصال",
- "tg.nudge.later": "بعداً"
+ "tg.nudge.later": "بعداً",
+ "common.increase": "افزایش",
+ "common.decrease": "کاهش"
 }

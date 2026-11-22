@@ -1205,5 +1205,7 @@
  "tg.nudge.title": "Connect your Telegram",
  "tg.nudge.body": "For workout reminders and a safer account; takes 30 seconds.",
  "tg.nudge.cta": "Connect",
- "tg.nudge.later": "Later"
+ "tg.nudge.later": "Later",
+ "common.increase": "Increase",
+ "common.decrease": "Decrease"
 }
